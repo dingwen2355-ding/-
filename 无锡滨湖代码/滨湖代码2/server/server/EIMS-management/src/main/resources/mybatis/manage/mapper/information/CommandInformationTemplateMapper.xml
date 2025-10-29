@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.znv.manage.dao.information.CommandInformationTemplateMapper" >
+  <resultMap id="BaseResultMap" type="com.znv.manage.common.bean.information.CommandInformationTemplate" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="template_title" property="templateTitle" jdbcType="VARCHAR" />
+    <result column="template_type1" property="templateType1" jdbcType="VARCHAR" />
+    <result column="template_type2" property="templateType2" jdbcType="VARCHAR" />
+    <result column="template_producer" property="templateProducer" jdbcType="VARCHAR" />
+    <result column="produce_time" property="produceTime" jdbcType="TIMESTAMP" />
+    <result column="template_content" property="templateContent" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, template_title, template_type1, template_type2, template_producer, produce_time, 
+    template_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_command_information_template
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_command_information_template
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.znv.manage.common.bean.information.CommandInformationTemplate" >
+    insert into t_command_information_template (id, template_title, template_type1, 
+      template_type2, template_producer, produce_time, 
+      template_content)
+    values (#{id,jdbcType=BIGINT}, #{templateTitle,jdbcType=VARCHAR}, #{templateType1,jdbcType=VARCHAR}, 
+      #{templateType2,jdbcType=VARCHAR}, #{templateProducer,jdbcType=VARCHAR}, #{produceTime,jdbcType=TIMESTAMP}, 
+      #{templateContent,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.znv.manage.common.bean.information.CommandInformationTemplate" >
+    insert into t_command_information_template
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="templateTitle != null" >
+        template_title,
+      </if>
+      <if test="templateType1 != null" >
+        template_type1,
+      </if>
+      <if test="templateType2 != null" >
+        template_type2,
+      </if>
+      <if test="templateProducer != null" >
+        template_producer,
+      </if>
+      <if test="produceTime != null" >
+        produce_time,
+      </if>
+      <if test="templateContent != null" >
+        template_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="templateTitle != null" >
+        #{templateTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType1 != null" >
+        #{templateType1,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType2 != null" >
+        #{templateType2,jdbcType=VARCHAR},
+      </if>
+      <if test="templateProducer != null" >
+        #{templateProducer,jdbcType=VARCHAR},
+      </if>
+      <if test="produceTime != null" >
+        #{produceTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="templateContent != null" >
+        #{templateContent,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.znv.manage.common.bean.information.CommandInformationTemplate" >
+    update t_command_information_template
+    <set >
+      <if test="templateTitle != null" >
+        template_title = #{templateTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType1 != null" >
+        template_type1 = #{templateType1,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType2 != null" >
+        template_type2 = #{templateType2,jdbcType=VARCHAR},
+      </if>
+      <if test="templateProducer != null" >
+        template_producer = #{templateProducer,jdbcType=VARCHAR},
+      </if>
+      <if test="produceTime != null" >
+        produce_time = #{produceTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="templateContent != null" >
+        template_content = #{templateContent,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.znv.manage.common.bean.information.CommandInformationTemplate" >
+    update t_command_information_template
+    set template_title = #{templateTitle,jdbcType=VARCHAR},
+      template_type1 = #{templateType1,jdbcType=VARCHAR},
+      template_type2 = #{templateType2,jdbcType=VARCHAR},
+      template_producer = #{templateProducer,jdbcType=VARCHAR},
+      produce_time = #{produceTime,jdbcType=TIMESTAMP},
+      template_content = #{templateContent,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="getTemplate" resultType="com.znv.manage.common.bean.information.CommandInformationTemplate">
+    select
+    <include refid="Base_Column_List" />
+    from t_command_information_template
+    where 1=1
+    <if test="id!=null and id!=''">
+      and id = #{id}
+    </if>
+    <if test="title!=null and title!=''">
+      and template_title like concat('%',#{title},'%')
+    </if>
+    <if test="type1!=null and type1!=''">
+      and template_type1 = #{type1}
+    </if>
+    <if test="type2!=null and type2!=''">
+      and template_type2 = #{type2}
+    </if>
+  </select>
+</mapper>

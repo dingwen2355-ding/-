@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.precinct.dao.PrecinctServiceMapper">
+    <!--通过<resultMap>映射实体类属性名和表的字段名对应关系 -->
+
+    <resultMap id="precinctMap" type="com.znv.manage.common.bean.Precinct">
+        <id property="precinctId" column="precinct_id"/>
+        <result property="precinctName" column="precinct_name"/>
+        <result property="upPrecinctId" column="up_precinct_id"/>
+        <result property="precinctKind" column="precinct_kind"/>
+        <result property="regionName" column="region_name"/>
+        <result property="streetName" column="street_name"/>
+        <result property="streetNo" column="street_no"/>
+        <result property="buildingNo" column="building_no"/>
+        <result property="unitNo" column="unit_no"/>
+        <result property="floorNo" column="floor_no"/>
+        <result property="houseNo" column="house_no"/>
+        <result property="gpsX" column="gpsx"/>
+        <result property="gpsY" column="gpsy"/>
+        <result property="regionXY" column="region_xy"/>
+        <result property="mapAddr" column="map_addr"/>
+        <result property="precinctAddr" column="precinct_addr"/>
+    </resultMap>
+
+    <resultMap id="precinctWithDeviceMap" type="java.util.HashMap">
+        <result property="precinctId" column="precinct_id"/>
+        <result property="precinctName" column="precinct_name"/>
+        <result property="mapFlag" column="map_flag"/>
+        <result property="deviceId" column="device_id"/>
+        <result property="deviceName" column="device_name"/>
+        <result property="cameraDomain" column="camera_domain"/>
+    </resultMap>
+    
+    <resultMap id="precinctSixActualPoweMap" type="java.util.HashMap">
+    	 <result property="buildNum" column="build_num"/>
+    	 <result property="personNum" column="person_num"/>
+    	 <result property="unitNum" column="unit_num"/>
+    	 <result property="deviceIotNum" column="device_iot_num"/>
+    	 <result property="policeNum" column="police_num"/>
+    	 <result property="policecarNum" column="policecar_num"/>
+    	  <result property="policeEventNum" column="police_event_num"/>
+    </resultMap>
+
+    <sql id="precinct_column_list">
+        precinct_id, precinct_name, up_precinct_id, precinct_kind,
+        region_name, street_name,
+        street_no, building_no, unit_no, floor_no,house_no,gpsx,gpsy,map_addr,precinct_addr
+    </sql>
+
+    <select id="queryPrecinctByPk" resultMap="precinctMap">
+        SELECT
+        <include refid="precinct_column_list"/><if test="precinctId!=null">,region_xy</if>
+        FROM t_cfg_precinct
+        WHERE precinct_id = #{precinctId}
+    </select>
+
+    <select id="queryPrecinctList" resultMap="precinctMap" parameterType="String">
+        SELECT
+        <include refid="precinct_column_list"/><if test="precinctId!=null">,region_xy</if>
+        FROM t_cfg_precinct
+        WHERE
+        <if test="precinctId!=null">precinct_id = #{precinctId} AND</if>
+        <if test="precinctName!=null">precinct_name=#{precinctName} AND</if>
+        <if test="upPrecinctId!=null">up_precinct_id=#{upPrecinctId} AND</if>
+        <if test="precinctKind!=null">precinct_kind=#{precinctKind} AND</if>
+        <if test="regionName!=null">region_name=#{regionName} AND</if>
+        <if test="streetName!=null">street_name=#{streetName} AND</if>
+        <if test="streetNo!=null">street_no=#{streetNo} AND</if>
+        <if test="buildingNo!=null">building_no=#{buildingNo} AND</if>
+        <if test="unitNo!=null">unit_no=#{unitNo} AND</if>
+        <if test="floorNo!=null">floor_no=#{floorNo} AND</if>
+        <if test="houseNo!=null">house_no=#{houseNo} AND</if>
+        1=1
+    </select>
+
+    <!--街道-->
+    <select id="queryStreetInfo" resultType="map">
+        select precinct_id as id,
+        precinct_kind as kind,
+        precinct_name as name,
+        street_name as streetName,
+        street_no as streetNo,
+        region_name as regionName,
+        up_precinct_id as pid
+        from t_cfg_precinct
+        where
+        <if test="precinctId != null and precinctId != 110"> precinct_id = #{precinctId}</if>
+        <if test="precinctId == 110">
+            precinct_kind = 100
+        </if>
+    </select>
+
+    <!--居委,权限-->
+    <resultMap id="CommitteeMap" type="java.util.Map">
+        <result property="id" column="id"/>
+        <result property="name" column="precinctname"/>
+        <result property="kind" column="kind"/>
+        <result property="parentId" column="pid"/>
+        <result property="streetName" column="streetName"/>
+        <result property="streetNo" column="streetNo"/>
+        <result property="precinctIds" column="precinctIds"/>
+        <association property="children" column="{parentId=id}" select="queryVillageList"/>
+    </resultMap>
+    <!--查社区,有权限-->
+    <select id="queryCommitteeList" resultMap="CommitteeMap">
+        SELECT
+            precinct_id as id,
+            precinct_kind as kind,
+            precinct_name as precinctname,
+            street_name as streetName,
+            street_no as streetNo,
+            up_precinct_id as pid,
+            #{precinctIds} as precinctIds
+        FROM
+            t_cfg_precinct
+        WHERE
+            precinct_kind in ('110','130')
+        order by sort desc
+          <!--AND (-->
+                    <!--precinct_id IN (-->
+                    <!--${precinctIds}-->
+                    <!--)-->
+                <!--OR precinct_id IN (-->
+                <!--SELECT-->
+                    <!--up_precinct_id-->
+                <!--FROM-->
+                    <!--t_cfg_precinct-->
+                <!--WHERE-->
+                    <!--precinct_kind = 120-->
+                  <!--AND precinct_id IN (-->
+                    <!--${precinctIds}-->
+                    <!--)-->
+            <!--))-->
+    </select>
+
+    <!--查网格，有权限-->
+    <select id="queryVillageList" resultType="map" >
+        select tcp.precinct_id as id,
+               tcp.precinct_kind as kind,
+               tcp.precinct_name as name,
+               tcp.street_name as streetName,
+               tcp.street_no as streetNo,
+               tcp.up_precinct_id as pid
+        from t_cfg_precinct tcp
+        where tcp.up_precinct_id = #{parentId} and tcp.precinct_kind = 120
+         # and tcp.precinct_id in (${precinctIds})
+    </select>
+
+    <select id="queryPrecinct" resultMap="precinctMap" parameterType="String">
+        SELECT *
+        FROM t_cfg_precinct
+        WHERE
+        <if test="precinctIds != null and precinctIds != ''">find_in_set(precinct_id,#{precinctIds}) AND</if>
+        <if test="precinctId!=null">left(precinct_id,9) = #{precinctId} AND</if>
+        <if test="upPrecinctId!=null">up_precinct_id=#{upPrecinctId} AND</if>
+<!--        <if test="precinctKind!=null and (precinctKind == 100 or precinctKind == 99)">-->
+<!--          precinct_kind= #{precinctKind}+1-->
+<!--            AND up_precinct_id=#{upPrecinctId} and-->
+<!--        </if>-->
+<!--        <if test="precinctKind!=null and precinctKind == 101">precinct_kind = 3-->
+<!--            AND up_precinct_id=#{upPrecinctId} and </if>-->
+<!--        <if test="precinctKind!=null and precinctKind == 3">precinct_kind = 4-->
+<!--            AND up_precinct_id=#{upPrecinctId} and </if>-->
+<!--        <if test="precinctKind == null">-->
+<!--          precinct_kind &lt;= 10-->
+<!--            and up_precinct_id like concat(#{upPrecinctId},'%') and-->
+<!--        </if>-->
+      <!--<if test="precinctKind != null and precinctKind != ''">precinct_kind = #{precinctKind} and </if>-->
+        1=1
+    </select>
+
+    <select id="queryPrecinctByKind" resultMap="precinctMap" parameterType="String">
+        SELECT *
+        FROM t_cfg_precinct
+        WHERE 1=1
+        <if test="precinctKind != null and precinctKind != ''">and precinct_kind = #{precinctKind}</if>
+        <if test='forStreet == "1"'>and street_no is not null</if>
+    </select>
+    
+    <select id="queryPrecinctListFor2d" resultMap="precinctMap" parameterType="String">
+        SELECT
+        a.precinct_id, a.precinct_name, a.up_precinct_id, a.precinct_kind,
+        a.region_name, a.street_name,
+        a.street_no, a.building_no, a.unit_no, a.floor_no, a.house_no, a.map_addr, a.precinct_addr
+        , aa.gpsx, aa.gpsy
+        <if test="precinctId!=null">, aa.region_xy</if>
+        FROM t_cfg_precinct a, t_cfg_precinct_gps aa
+        WHERE
+        a.precinct_id = aa.precinct_id and
+        <if test="precinctId!=null">a.precinct_id = #{precinctId} AND</if>
+        <if test="precinctName!=null">a.precinct_name=#{precinctName} AND</if>
+        <if test="upPrecinctId!=null">a.up_precinct_id=#{upPrecinctId} AND</if>
+        <if test="precinctKind!=null">a.precinct_kind=#{precinctKind} AND</if>
+        <if test="regionName!=null">a.region_name=#{regionName} AND</if>
+        <if test="streetName!=null">a.street_name=#{streetName} AND</if>
+        <if test="streetNo!=null">a.street_no=#{streetNo} AND</if>
+        <if test="buildingNo!=null">a.building_no=#{buildingNo} AND</if>
+        <if test="unitNo!=null">a.unit_no=#{unitNo} AND</if>
+        <if test="floorNo!=null">a.floor_no=#{floorNo} AND</if>
+        <if test="houseNo!=null">a.house_no=#{houseNo} AND</if>
+        1=1
+    </select>
+    
+    <select id="queryPrecinctListByKind" resultMap="precinctMap">
+        select a.precinct_name, a.precinct_id
+		from t_cfg_precinct a,
+  		(select @v_precinct_ids := fn_get_precinctdownbykind(#{precinctId},#{precinctKind})) b
+		where find_in_set(a.precinct_id,@v_precinct_ids)
+		and precinct_kind = #{precinctKind}
+    </select>
+
+    <!--<insert id="addPrecinctToDB" parameterType="map">-->
+    <!--INSERT INTO t_cfg_precinct (precinct_id,precinct_name)-->
+    <!--VALUES (#{precinctId,jdbcType=VARCHAR},#{precinctName,jdbcType=VARCHAR})-->
+    <!--</insert>-->
+
+    <select id="queryPrecinctCamera" resultMap="precinctWithDeviceMap"
+            useCache="false" statementType="CALLABLE">
+       <![CDATA[
+        	call up_query_camera_bymapflag (
+	        	#{precinctId,mode=IN,jdbcType=VARCHAR});
+       ]]>
+	</select>
+
+    <select id="queryBuildAndPopulationInPrecinct"  resultType="java.util.HashMap">
+        SELECT * FROM t_cfg_precinctinfo WHERE
+        <if test="precinctId!=null">precinct_id= #{precinctId} AND</if>
+        1=1
+    </select>
+    
+    <select id="queryPrecinctSixActualPower" resultMap="precinctSixActualPoweMap"
+            useCache="false" statementType="CALLABLE">
+        <![CDATA[
+            call up_get_precinctactualpower(#{precinctId});
+        ]]>
+    </select>
+
+    <select id="queryPrecinctIdByMapAddr" resultType="java.util.HashMap">
+        select precinct_id as precinctId
+        from t_cfg_precinct p,
+        (
+         SELECT precinct_id as id FROM t_cfg_precinct WHERE  map_addr = #{mapAddr}
+        ) pr
+        where FIND_IN_SET(precinct_id,fn_get_precinctup(pr.id))
+        and precinct_kind= #{precinctKind}
+    </select>
+
+    <select id="queryPrecinctKind" resultType="com.znv.manage.precinct.model.PrecinctKind">
+      select
+      precinct_kind as precinctKind,
+      name as name
+      from t_dict_precinctkind
+    </select>
+
+    <select id="queryLastPrecinctId" resultType="String">
+        SELECT MAX(precinct_id)
+        FROM t_cfg_precinct
+        where precinct_id LIKE concat(#{upPrecinctId},'___')
+    </select>
+    
+    <update id="updatePrecinctCoordinate">
+    	update t_cfg_precinct_gps
+    	<set>
+    		<if test="gpsX != null">gpsx = #{gpsX},</if>
+    		<if test="gpsY != null">gpsy = #{gpsY},</if>
+    		<if test="regionXY != null">region_xy = #{regionXY}</if>
+    	</set>
+    	where precinct_id = #{precinctId}
+    </update>
+
+    <update id="updatePrecinct">
+        update t_cfg_precinct
+        set
+        <if test="precinctName!=null">precinct_name=#{precinctName}, </if>
+        <if test="upPrecinctId!=null">up_precinct_id=#{upPrecinctId}, </if>
+        <if test="precinctKind!=null">precinct_kind=#{precinctKind}, </if>
+        <if test="regionName!=null">region_name=#{regionName}, </if>
+        <if test="streetName!=null">street_name=#{streetName}, </if>
+        <if test="streetNo!=null">street_no=#{streetNo}, </if>
+        <if test="buildingNo!=null">building_no=#{buildingNo}, </if>
+        <if test="unitNo!=null">unit_no=#{unitNo}, </if>
+        <if test="floorNo!=null">floor_no=#{floorNo}, </if>
+        <if test="houseNo!=null">house_no=#{houseNo}, </if>
+        <if test="houseNo!=null">precinct_addr = #{precinctAddr}, </if>
+        precinct_id = #{precinctId}
+        where precinct_id = #{precinctId}
+    </update>
+
+    <insert id="addPrecinct">
+        insert into t_cfg_precinct
+        (precinct_id,precinct_name,up_precinct_id,precinct_kind,region_name,
+        street_name,street_no,building_no,unit_no,floor_no,house_no,
+        <if test="gpsx !=null and gpsx != ''">gpsx,</if>
+        <if test="gpsy !=null and gpsx != ''">gpsy,</if>
+        precinct_addr)
+        values
+        (#{precinctId},#{precinctName},#{upPrecinctId},#{precinctKind},#{regionName},
+        #{streetName},#{streetNo},#{buildingNo},#{unitNo},#{floorNo},#{houseNo},
+        <if test="gpsx !=null and gpsx != ''">#{gpsx},</if>
+        <if test="gpsy !=null and gpsx != ''">#{gpsy},</if>
+        #{precinctAddr})
+    </insert>
+
+    <insert id="insertExcel">
+        insert into t_cfg_precinct
+        (precinct_id,precinct_name,up_precinct_id,precinct_kind,region_name,
+        street_name,street_no,building_no,unit_no,floor_no,house_no,precinct_addr,
+        map_addr,house_area,gpsx,gpsy,region_xy)
+        values
+        (#{precinctId},#{precinctName},#{upPrecinctId},#{precinctKind},#{regionName},
+        #{streetName},#{streetNo},#{buildingNo},#{unitNo},#{floorNo},#{houseNo},#{precinctAddr},
+        #{mapAddr},#{houseArea},#{gpsX},#{gpsY},#{regionXY})
+    </insert>
+
+    <delete id="deletePrecinct" >
+        delete from t_cfg_precinct
+        where precinct_id = #{precinctId}
+    </delete>
+
+    <delete id="deletePrecincts" parameterType="string" >
+        delete from t_cfg_precinct
+        WHERE
+        find_in_set(precinct_id, #{precinctId})
+    </delete>
+
+    <delete id="deleteUpPrecincts" parameterType="string" >
+        delete from t_cfg_precinct
+        WHERE
+        up_precinct_id = #{upPrecinctId}
+    </delete>
+
+
+    <update id="updatePrecinctIds">
+        update t_cfg_user set precinct_tree_id = #{precinctIds} where user_id = #{userId}
+    </update>
+
+    <select id="queryCity" resultType="String">
+        SELECT area_name
+        FROM t_dict_area_code
+        where area_code = #{areaCode} limit 1
+    </select>
+</mapper>

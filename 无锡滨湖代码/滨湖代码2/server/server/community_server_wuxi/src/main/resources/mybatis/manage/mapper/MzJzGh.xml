@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.MzJzGhDao">
+
+    <insert id="insertMzJzGhList">
+        INSERT INTO t_32_mzjzgh
+        (
+        `idno` ,
+        `personname`,
+        `idtype`,
+        `idcard` ,
+        `visit_date` ,
+        `visit_time` ,
+        `ghsj` ,
+        `organ_name` ,
+        `storage_time`
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.idno} ,
+            #{item.personname},
+            #{item.idtype},
+            #{item.idcard} ,
+            #{item.visitdate} ,
+            #{item.visittime} ,
+            #{item.ghsj} ,
+            #{item.organname} ,
+            current_timestamp
+            )
+        </foreach>
+    </insert>
+
+    <delete id="delAll">
+       DELETE FROM t_32_mzjzgh where DATE(storage_time) = CURDATE()
+    </delete>
+
+    <select id="getOutpatientEmergencyCount" resultType="int">
+        select count(1) from t_32_mzjzgh a left join t_hospital_info b on a.organ_name = b.hospital_name
+        left join  t_cfg_precinct c ON b.street = c.precinct_id
+        where 1=1
+        <if test="beginTime != null">
+            and a.ghsj &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and a.ghsj &lt;= #{endTime}
+        </if>
+        <if test="beginTime == null and endTime == null ">
+            and DATE(a.ghsj) = CURDATE()
+        </if>
+        <if test="precinctId != null and precinctId != '' ">
+            and b.street =  #{precinctId}
+        </if>
+        <if test="precinctName != null and precinctName != '' ">
+            and c.precinct_name =  #{precinctName}
+        </if>
+    </select>
+</mapper>

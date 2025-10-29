@@ -1,0 +1,97 @@
+html,
+body {
+  font-size: 20px;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+ul,
+li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+/*弹框确认按钮局右*/
+.dialog-footer{
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+// 卡片视图上下间隔
+.box-card{
+  margin-top: 30px;
+  padding-bottom: 20px;
+  // height: 96%;
+  // overflow: auto;
+  // overflow-x: hidden;
+  header {
+    display: flex;
+    justify-content: space-between;
+    .title {
+      font-size: 18px;
+      color: #4E5A6E;
+      font-weight: bold;
+    }
+  }
+}
+// 事件列表状态显示颜色
+.overdueStatRed{
+  color:#D9001B;
+}
+.overdueStatyellow{
+  color: #F59A23;
+}
+
+.znv-el-form {
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+  margin-top: 20px;
+  border-radius: 4px;
+}
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.total-container {
+  font-size: 14px;
+  color: #303133;
+  padding-top: 7px;
+}
+
+.el-popover {
+  .down-button {
+    margin-bottom: 5px;
+  }
+  .el-button {
+    width: 150px;
+    margin-bottom: 8px;
+  }
+}
+/*chrome滚动条颜色设置*/
+*::-webkit-scrollbar {
+  width: 7px;
+  height: 10px;
+  background-color: transparent;
+}
+
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+*::-webkit-scrollbar-track {
+  background-color: transparent;
+  height: 10px;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+*::-webkit-scrollbar-thumb {
+  background: rgba(144, 147, 153, .3);
+  border-radius: 6px;
+}
+

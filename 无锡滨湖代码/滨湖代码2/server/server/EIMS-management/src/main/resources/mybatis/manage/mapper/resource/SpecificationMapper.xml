@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.resource.SpecificationDao">
+    <resultMap id="BaseResultMap" type="com.znv.manage.common.bean.resource.Specification">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
+        <result column="preparation_unit" jdbcType="VARCHAR" property="preparationUnit"/>
+        <result column="management_type" jdbcType="VARCHAR" property="managementType"/>
+        <result column="regulatory_industry" jdbcType="VARCHAR" property="regulatoryIndustry"/>
+        <result column="prepared_date" jdbcType="VARCHAR" property="preparedDate"/>
+        <result column="effective_date" jdbcType="VARCHAR" property="effectiveDate"/>
+        <result column="document_type" jdbcType="VARCHAR" property="documentType"/>
+        <result column="content_summary" jdbcType="VARCHAR" property="contentSummary"/>
+        <result column="notes" jdbcType="VARCHAR" property="notes"/>
+        <result column="annex_url" jdbcType="VARCHAR" property="annexUrl"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, file_name, preparation_unit, management_type, regulatory_industry, prepared_date,
+    effective_date, document_type, content_summary, notes, annex_url
+    </sql>
+    <select id="queryAnnexUrl" resultType="String">
+        select annex_url annexUrl
+        from t_data_specification
+        where id = #{id}
+    </select>
+
+    <select id="querySpecificationList" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_data_specification
+        where 1=1
+        <if test="fileName != null and fileName != ''">
+            AND file_name like concat('%',#{fileName},'%')
+        </if>
+        <if test="preparationUnit != null and preparationUnit != ''">
+            AND preparation_unit like concat('%',#{preparationUnit},'%')
+        </if>
+    </select>
+    <delete id="deleteByPrimaryKey">
+        delete
+        from t_data_specification
+        where find_in_set(id, #{ids})
+    </delete>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.znv.manage.common.bean.resource.Specification" useGeneratedKeys="true">
+        insert into t_data_specification
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fileName != null">
+                file_name,
+            </if>
+            <if test="preparationUnit != null">
+                preparation_unit,
+            </if>
+            <if test="managementType != null">
+                management_type,
+            </if>
+            <if test="regulatoryIndustry != null">
+                regulatory_industry,
+            </if>
+            <if test="preparedDate != null">
+                prepared_date,
+            </if>
+            <if test="effectiveDate != null">
+                effective_date,
+            </if>
+            <if test="documentType != null">
+                document_type,
+            </if>
+            <if test="contentSummary != null">
+                content_summary,
+            </if>
+            <if test="notes != null">
+                notes,
+            </if>
+            <if test="annexUrl != null">
+                annex_url,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fileName != null">
+                #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="preparationUnit != null">
+                #{preparationUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="managementType != null">
+                #{managementType,jdbcType=VARCHAR},
+            </if>
+            <if test="regulatoryIndustry != null">
+                #{regulatoryIndustry,jdbcType=VARCHAR},
+            </if>
+            <if test="preparedDate != null">
+                #{preparedDate,jdbcType=VARCHAR},
+            </if>
+            <if test="effectiveDate != null">
+                #{effectiveDate,jdbcType=VARCHAR},
+            </if>
+            <if test="documentType != null">
+                #{documentType,jdbcType=VARCHAR},
+            </if>
+            <if test="contentSummary != null">
+                #{contentSummary,jdbcType=VARCHAR},
+            </if>
+            <if test="notes != null">
+                #{notes,jdbcType=VARCHAR},
+            </if>
+            <if test="annexUrl != null">
+                #{annexUrl,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.znv.manage.common.bean.resource.Specification">
+        update t_data_specification
+        <set>
+            <if test="fileName != null">
+                file_name = #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="preparationUnit != null">
+                preparation_unit = #{preparationUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="managementType != null">
+                management_type = #{managementType,jdbcType=VARCHAR},
+            </if>
+            <if test="regulatoryIndustry != null">
+                regulatory_industry = #{regulatoryIndustry,jdbcType=VARCHAR},
+            </if>
+            <if test="preparedDate != null">
+                prepared_date = #{preparedDate,jdbcType=VARCHAR},
+            </if>
+            <if test="effectiveDate != null">
+                effective_date = #{effectiveDate,jdbcType=VARCHAR},
+            </if>
+            <if test="documentType != null">
+                document_type = #{documentType,jdbcType=VARCHAR},
+            </if>
+            <if test="contentSummary != null">
+                content_summary = #{contentSummary,jdbcType=VARCHAR},
+            </if>
+            <if test="notes != null">
+                notes = #{notes,jdbcType=VARCHAR},
+            </if>
+            <if test="annexUrl != null">
+                annex_url = #{annexUrl,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

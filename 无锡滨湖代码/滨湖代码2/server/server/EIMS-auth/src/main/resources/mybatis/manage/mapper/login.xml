@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.LoginUserDao">
+
+
+	<!-- 根据查询字段查询监控服务所有信息 -->
+	<select id="loginUserVerify"  resultType="java.lang.Integer" >
+		SELECT count(1) FROM t_cfg_user m
+		<where>
+		<if  test="userName!=null and userName!=''">
+			 m.user_name=#{userName}
+		</if>
+		<if  test="password!=null and password!=''">
+			AND m.password=#{password}
+		</if>
+		</where>
+	</select>
+	
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.WeatherForecastDao">
+    <insert id="insertWeatherForecastList">
+        INSERT INTO t_60_weather_forecast
+        (
+        t,
+        weatherCode,
+        weatherName,
+        ws,
+        wd,
+        updateTime
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.t},
+            #{item.weatherCode},
+            #{item.weatherName},
+            #{item.ws},
+            #{item.wd},
+            #{item.updateTime}
+            )
+        </foreach>
+    </insert>
+
+    <select id="queryWeatherForecastList" resultType="int">
+        select count(1) from t_60_weather_forecast where SJWXHXPMC=#{SJWXHXPMC} and RKSJ = #{RKSJ}
+    </select>
+
+    <delete id="deleteWeatherForecastList">
+        delete from t_60_weather_forecast
+    </delete>
+</mapper>

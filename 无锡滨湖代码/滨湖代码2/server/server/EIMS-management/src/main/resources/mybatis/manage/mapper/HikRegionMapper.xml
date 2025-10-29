@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.HikRegionDao">
+
+    <select id="queryRegionList" resultType="com.znv.manage.common.bean.Region">
+        select *
+        from t_data_hik_regions
+        where 1=1
+        <if test="regionIds != null and regionIds != ''">and find_in_set(indexCode,#{regionIds})</if>
+    </select>
+
+    <select id="queryRegionListByUpId" resultType="com.znv.manage.common.bean.Region">
+        select id indexCode,
+        org_name name,
+        parent_id parentIndexCode
+        from community_wuxi_rhzh.t_cfg_device_org
+        where 1=1
+          <choose>
+            <when test="UpRegionId != null and UpRegionId != ''">
+                and parent_id = #{UpRegionId}
+            </when>
+            <otherwise>
+                and org_name = '城运中心'
+            </otherwise>
+          </choose>
+    </select>
+
+    <select id="queryStaticRegionListByUpId" resultType="com.znv.manage.common.bean.Region">
+        select id indexCode,
+        org_name name,
+        parent_id parentIndexCode
+        from community_wuxi_rhzh.t_cfg_device_org_static
+        where 1=1
+        <choose>
+            <when test="UpRegionId != null and UpRegionId != ''">
+                and parent_id = #{UpRegionId}
+            </when>
+            <otherwise>
+                and org_name = '城运中心'
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="queryRegionDownDevices" resultType="map">
+        SELECT
+            a.device_id deviceId,
+            a.device_name deviceName,
+            a.unit regionName
+        FROM
+            t_cfg_device a,
+            (
+                SELECT
+                    @v_down_region_id := fn_get_regiondown (
+                            #{regionId}
+                        )
+            ) b
+        WHERE
+            FIND_IN_SET(
+                    platform_id,
+                    @v_down_region_id
+                )
+        <if test="pageStart != null and pageLen != null">limit ${pageStart},${pageLen}</if>
+    </select>
+
+    <select id="queryRegionDownDevices2" resultType="map">
+        SELECT
+        a.device_id deviceId,
+        a.device_name deviceName,
+        b.org_name fullName,
+        a.onoffline_state onofflineState,
+        ifnull(a.gpsx,'') gpsx,
+        ifnull(a.gpsy,'') gpsy,
+        ifnull(c.precinct_name,'') precinctName,
+        ifnull(a.precinct_id,'') precinctId,
+        device_type as deviceType,
+        CASE device_type
+        WHEN 1 THEN '高清'
+        WHEN 2 THEN '高清云台'
+        else ''
+        END AS deviceTypeName
+        FROM
+        community_wuxi_rhzh.t_cfg_device a
+        LEFT JOIN community_wuxi_rhzh.t_cfg_device_org b on a.org_id = b.id
+        LEFT JOIN community_wuxi_eims.t_cfg_precinct c on a.precinct_id = c.precinct_id
+        WHERE a.device_kind = '666'
+        and a.onoffline_state != 2
+        <if test="list != null">
+            and a.org_id in
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deviceName != null and deviceName != ''">and (a.device_name like CONCAT('%',#{deviceName},'%') or a.device_id like CONCAT('%',#{deviceName},'%'))</if>
+        <if test="precinctId != null and precinctId != ''">and a.precinct_id = #{precinctId}</if>
+        <if test="onofflineState != null and onofflineState != ''">and a.onoffline_state = #{onofflineState}</if>
+        <if test='gpsState == "1"'>
+            and ifnull(a.gpsx,'') != '' and ifnull(a.gpsy,'') != ''
+        </if>
+        <if test='gpsState == "2"'>
+            and (ifnull(a.gpsx,'') = '' or ifnull(a.gpsy,'') = '')
+        </if>
+        <if test="regionName != null and regionName != ''">and a.unit like CONCAT('%',#{regionName},'%')</if>
+        <if test="pageStart != null and pageLen != null">limit ${pageStart},${pageLen}</if>
+    </select>
+
+    <select id="queryStaticRegionDownDevices2" resultType="map">
+        SELECT
+        a.device_id deviceId,
+        a.device_name deviceName,
+        b.org_name fullName,
+        a.onoffline_state onofflineState,
+        ifnull(a.gpsx,'') gpsx,
+        ifnull(a.gpsy,'') gpsy,
+        ifnull(c.precinct_name,'') precinctName,
+        ifnull(a.precinct_id,'') precinctId,
+        device_type as deviceType,
+        CASE device_type
+        WHEN 1 THEN '高清'
+        WHEN 2 THEN '高清云台'
+        else ''
+        END AS deviceTypeName
+        FROM
+        community_wuxi_rhzh.t_cfg_device_static a
+        LEFT JOIN community_wuxi_rhzh.t_cfg_device_org_static b on a.org_id = b.id
+        LEFT JOIN community_wuxi_eims.t_cfg_precinct c on a.precinct_id = c.precinct_id
+        WHERE a.device_kind = '666'
+        and a.onoffline_state != 2
+        <if test="list != null">
+            and a.org_id in
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deviceName != null and deviceName != ''">and (a.device_name like CONCAT('%',#{deviceName},'%') or a.device_id like CONCAT('%',#{deviceName},'%'))</if>
+        <if test="precinctId != null and precinctId != ''">and a.precinct_id = #{precinctId}</if>
+        <if test="onofflineState != null and onofflineState != ''">and a.onoffline_state = #{onofflineState}</if>
+        <if test='gpsState == "1"'>
+            and ifnull(a.gpsx,'') != '' and ifnull(a.gpsy,'') != ''
+        </if>
+        <if test='gpsState == "2"'>
+            and (ifnull(a.gpsx,'') = '' or ifnull(a.gpsy,'') = '')
+        </if>
+        <if test="regionName != null and regionName != ''">and a.unit like CONCAT('%',#{regionName},'%')</if>
+        <if test="pageStart != null and pageLen != null">limit ${pageStart},${pageLen}</if>
+    </select>
+
+    <select id="queryRegionDownDevicesCount" resultType="string">
+        SELECT
+        count(1)
+        FROM
+        community_wuxi_rhzh.t_cfg_device a
+        WHERE a.device_kind = '666'
+        and a.onoffline_state != 2
+        <if test="list != null">
+            and a.org_id in
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deviceName != null and deviceName != ''">and (a.device_name like CONCAT('%',#{deviceName},'%') or a.device_id like CONCAT('%',#{deviceName},'%'))</if>
+        <if test="precinctId != null and precinctId != ''">and a.precinct_id = #{precinctId}</if>
+        <if test="onofflineState != null and onofflineState != ''">and a.onoffline_state = #{onofflineState}</if>
+        <if test='gpsState == "1"'>
+            and ifnull(a.gpsx,'') != '' and ifnull(a.gpsy,'') != ''
+        </if>
+        <if test='gpsState == "2"'>
+            and (ifnull(a.gpsx,'') = '' or ifnull(a.gpsy,'') = '')
+        </if>
+        <if test="regionName != null and regionName != ''">and a.unit like CONCAT('%',#{regionName},'%')</if>
+    </select>
+
+    <select id="queryStaticRegionDownDevicesCount" resultType="string">
+        SELECT
+        count(1)
+        FROM
+        t_cfg_device_static a
+        WHERE a.device_kind = '6'
+        <if test="list != null">
+            and a.platform_id in
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="deviceName != null and deviceName != ''">and (a.device_name like CONCAT('%',#{deviceName},'%') or a.device_id like CONCAT('%',#{deviceName},'%'))</if>
+        <if test="precinctId != null and precinctId != ''">and a.precinct_id = #{precinctId}</if>
+        <if test="onofflineState != null and onofflineState != ''">and a.onoffline_state = #{onofflineState}</if>
+        <if test='gpsState == "1"'>
+            and ifnull(a.gpsx,'') != '' and ifnull(a.gpsy,'') != ''
+        </if>
+        <if test='gpsState == "2"'>
+            and (ifnull(a.gpsx,'') = '' or ifnull(a.gpsy,'') = '')
+        </if>
+        <if test="regionName != null and regionName != ''">and a.unit like CONCAT('%',#{regionName},'%')</if>
+    </select>
+
+    <select id="queryRegionDown" resultType="string">
+        SELECT
+            @v_down_region_id := community_wuxi_rhzh.fn_get_regiondown (
+                    #{regionId}
+                )
+    </select>
+
+    <select id="queryStaticRegionDown" resultType="string">
+        SELECT
+            @v_down_region_id := community_wuxi_rhzh.fn_get_static_regiondown (
+                #{regionId}
+                )
+    </select>
+
+    <select id="queryDeviceByRegionId" resultType="map">
+        select device_id indexCode,
+               device_name `name`,
+               device_id deviceId,
+               device_name deviceName,
+               gpsx,
+               gpsy,
+               device_state deviceStatus,
+               true isLeaf
+        from community_wuxi_rhzh.t_cfg_device where org_id=#{regionId}
+    </select>
+    <select id="queryRegionListByUpIdNew" resultType="java.util.Map">
+        select id indexCode,
+        org_name name,
+        parent_id parentIndexCode
+        from community_wuxi_rhzh.t_cfg_device_org
+        where 1=1
+        <choose>
+            <when test="UpRegionId != null and UpRegionId != ''">
+                and parent_id = #{UpRegionId}
+            </when>
+            <otherwise>
+                and org_name = '城运中心'
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="queryStaticRegionListByUpIdNew" resultType="java.util.Map">
+        select id indexCode,
+        org_name name,
+        parent_id parentIndexCode
+        from community_wuxi_rhzh.t_cfg_device_org_static
+        where 1=1
+        <choose>
+            <when test="UpRegionId != null and UpRegionId != ''">
+                and parent_id = #{UpRegionId}
+            </when>
+            <otherwise>
+                and org_name = '城运中心'
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="queryStaticDeviceByRegionId" resultType="java.util.Map">
+        select device_id indexCode,
+               device_name `name`,
+               device_id deviceId,
+               device_name deviceName,
+               gpsx,
+               gpsy,
+               device_state deviceStatus,
+               true isLeaf
+        from community_wuxi_rhzh.t_cfg_device_static where org_id=#{regionId}
+    </select>
+
+    <update id="editCameraDevices" parameterType="com.znv.manage.common.bean.HikCameraInfo">
+        update t_cfg_device set
+            <if test="deviceName != null and deviceName != ''">device_alias_name = #{deviceName},</if>
+        <if test="deviceType != null">device_type = #{deviceType},</if>
+        <if test="precinctId != null">precinct_id = #{precinctId},</if>
+        <if test="unit != null">unit = #{unit},</if>
+        <if test="gpsx != null"> gpsx = #{gpsx},</if>
+        <if test="gpsy != null">  gpsy = #{gpsy},</if>
+        <if test="tag != null">tag = #{tag},</if>
+        <if test="remark != null and remark != '' ">remark = #{remark},</if>
+            replace_date = #{replaceDate}
+        where device_id = #{deviceId}
+    </update>
+
+</mapper>

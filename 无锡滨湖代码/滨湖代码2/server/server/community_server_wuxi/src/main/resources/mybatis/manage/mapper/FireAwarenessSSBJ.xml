@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.FireAwarenessSSBJDao">
+
+	<insert id="insertSSBJData">
+		insert into t_22_ssbj(
+		deviceType,
+		userlist,
+		callAddress,
+		pxpy,
+		alarmTime,
+		deviceId,
+		deviceStatus,
+		positionName,
+		loopType,
+		valueType,
+		deviceValue,
+		unitId,
+		collect_time,
+		zoneBit,
+		create_time
+		 )values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.deviceType},
+			#{item.userlist},
+			#{item.callAddress},
+			#{item.pxpy},
+			#{item.alarmTime},
+			#{item.deviceId},
+			#{item.deviceStatus},
+			#{item.positionName},
+			#{item.loopType},
+			#{item.valueType},
+			#{item.deviceValue},
+			#{item.unitId},
+			#{item.collectTime},
+			#{item.zoneBit},
+			current_timestamp
+			)
+		</foreach>
+	</insert>
+
+	<select id="queryExist" parameterType="com.znv.manage.common.bean.FireAwarenessSyncSSBJ" resultType="java.lang.Integer">
+		select count(1) as num from t_22_ssbj
+		where 1=1
+		<if test="deviceType != null and deviceType != '' "> and deviceType = #{deviceType}</if>
+		<if test="userlist != null and userlist != '' "> and userlist = #{userlist}</if>
+		<if test="callAddress != null and callAddress != '' "> and callAddress = #{callAddress}</if>
+		<if test="pxpy != null and pxpy != '' "> and pxpy = #{pxpy}</if>
+		<if test="alarmTime != null and alarmTime != '' "> and alarmTime = #{alarmTime}</if>
+		<if test="deviceId != null and deviceId != '' "> and deviceId = #{deviceId}</if>
+		<if test="deviceStatus != null and deviceStatus != '' "> and deviceStatus = #{deviceStatus}</if>
+		<if test="positionName != null and positionName != '' "> and positionName = #{positionName}</if>
+		<if test="loopType != null and loopType != '' "> and loopType = #{loopType}</if>
+		<if test="valueType != null and valueType != '' "> and valueType = #{valueType}</if>
+		<if test="deviceValue != null and deviceValue != '' "> and deviceValue = #{deviceValue}</if>
+		<if test="unitId != null and unitId != '' "> and unitId = #{unitId}</if>
+		<if test="collectTime != null and collectTime != '' "> and collect_time = #{collectTime}</if>
+		<if test="zoneBit != null and zoneBit != '' "> and zoneBit = #{zoneBit}</if>
+		and DATE(create_time) = CURDATE()
+	</select>
+
+
+	
+</mapper>

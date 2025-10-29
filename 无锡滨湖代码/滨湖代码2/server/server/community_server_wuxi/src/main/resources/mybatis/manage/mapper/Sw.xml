@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.SwDao">
+
+    <insert id="insertSwList">
+        INSERT IGNORE INTO t_68_sw
+        (
+        `q`,
+        `stcd`,
+        `tm` ,
+        `z` ,
+        `storage_time`
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.q},
+            #{item.stcd},
+            #{item.tm} ,
+            #{item.z} ,
+            current_timestamp
+            )
+        </foreach>
+    </insert>
+
+    <delete id="delAll">
+       DELETE FROM t_68_sw where DATE(storage_time) = CURDATE()
+    </delete>
+
+    <select id="selectHistoryWaterAndRainList" resultType="map">
+        SELECT
+        q,
+        stcd,
+        DATE_FORMAT(tm, '%Y-%m-%d %H:%i:%s') AS tm,
+        z
+        FROM
+        t_68_sw
+        WHERE
+        1=1
+        <if test="stcd != null">and stcd= #{stcd}</if>
+        <if test="beginTime != null">and tm&gt;= #{beginTime}</if>
+        <if test="endTime != null">and tm &lt;= #{endTime}</if>
+        ORDER BY tm DESC
+        <if test="limit != null">limit #{limit}</if>
+    </select>
+
+    <select id="selectRealWaterAndRainList" resultType="map">
+        SELECT
+        q,
+        stcd,
+        MAX(DATE_FORMAT(tm, '%Y-%m-%d %H:%i:%s'))AS tm,
+        z
+        FROM
+        t_68_sw
+        WHERE
+        1=1
+        <if test="stcd != null">and stcd= #{stcd}</if>
+    </select>
+</mapper>

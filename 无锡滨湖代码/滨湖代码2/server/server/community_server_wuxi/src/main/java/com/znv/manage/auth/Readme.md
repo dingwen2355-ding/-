@@ -1,0 +1,5 @@
+接口鉴权相关说明：
+1. 接口鉴权基于token进行校验，ApiTokenController接口类中提供2个接口对外使用，获取token接口和校验token有效性的接口，第三方可按需进行调用；
+2. 默认所有接口不进行鉴权，只有对配置了注解@ApiTokenCheck的接口才进行鉴权，该注解支持token是否需要加密的配置；
+3. 鉴权相关配置参考application-dev.properties中以auth.apitokencheck开头的配置项；
+4. ApiTokenController接口类中提供三个demo鉴权接口给不同场景做参考，有token有过期时间，第三方在调用时应先校验token有效性再进行调用；

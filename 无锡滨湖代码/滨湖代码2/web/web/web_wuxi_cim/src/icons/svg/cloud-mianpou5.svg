@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>插值</title>
+    <g id="崂山" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="空间分析" transform="translate(-253.000000, -528.000000)">
+            <g id="插值" transform="translate(253.000000, 528.000000)">
+                <polyline id="路径-29" stroke="#FFFFFF" stroke-width="1.5" points="9.24813398 0.297788069 13 11 0.61072229 21.2977881"></polyline>
+                <line x1="20.9383657" y1="21.2977881" x2="13" y2="11" id="路径-30" stroke="#FFFFFF" stroke-width="1.5"></line>
+                <circle id="椭圆形" fill="#FFFFFF" cx="17" cy="5" r="2"></circle>
+                <circle id="椭圆形备份-6" fill="#FFFFFF" cx="19" cy="10" r="2"></circle>
+                <circle id="椭圆形备份-4" fill="#FFFFFF" cx="12" cy="19" r="2"></circle>
+                <circle id="椭圆形备份-5" fill="#FFFFFF" cx="6" cy="9" r="2"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.znv.manage.dao.resource.CompanyDictMapper">
+
+
+    <select id="queryRegion" resultType="map">
+        SELECT precinct_name as regionName,precinct_id as regionId FROM `t_cfg_precinct` where precinct_kind = '110'
+    </select>
+
+    <select id="queryCompanyTypeParent" resultType="map">
+        SELECT DICT_CH_NAME as companyTypeName,id as companyType FROM `sys_business_dict` where PARENT_ID = '410' and IS_USING = 'Y'
+    </select>
+
+    <select id="queryCompanyType" resultType="map">
+        SELECT DICT_CH_NAME as companyTypeName,id as companyType FROM `sys_business_dict` where PARENT_ID = #{parentId} and IS_USING = 'Y'
+    </select>
+
+    <select id="queryStandLevel" resultType="map">
+        SELECT DICT_CH_NAME as standardLevelName,id as standardLevel FROM `sys_business_dict` where PARENT_ID = '396' and IS_USING = 'Y'
+    </select>
+
+    <select id="queryCompanyState" resultType="map">
+        SELECT DICT_CH_NAME as companyStateName,id as companyState FROM `sys_business_dict` where PARENT_ID = '405' and IS_USING = 'Y'
+    </select>
+
+    <select id="queryIndustry" resultType="map">
+        SELECT DICT_CH_NAME as industryName,id as industry FROM `sys_business_dict` where PARENT_ID = '573' and IS_USING = 'Y'
+    </select>
+
+</mapper>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.YwgdDao">
+
+    <insert id="insertYwgdList">
+        INSERT IGNORE INTO t_13_ywgd
+        (
+        `gdbh`,
+        `jzclfs`,
+        `jzcg`,
+        `pdrq` ,
+        `jdysrq` ,
+        `jdshry`,
+        `jdshzt`,
+        `fssj`,
+        `jzdz`,
+        `wjczzp`,
+        `qtxx`,
+        `enable`,
+        `xcsbrq`,
+        `xcsbzt`,
+        `djzh`,
+        `jdbhly`,
+        `xcsbzp`,
+        `dygb`,
+        `jzmj`,
+        `qbhly`,
+        `qshry`,
+        `wjccrq`,
+        `djrq`,
+        `gdjg`,
+        `qshrq`,
+        `lxfs`,
+        `wjbj`,
+        `upperzt`,
+        `wjccry`,
+        `qshzt`,
+        `yzxm`,
+        `jzlx`,
+        `xcsbry`,
+        `zrwg`,
+        `sfzh`,
+        `qkms`,
+        `xxly`,
+        `jdesrq`,
+        `geometry`,
+        `wjchzp`,
+        `jtzz`,
+        `mark`,
+        `zdmj`,
+        `jzjg`,
+        `sjpc`,
+        `storage_time`
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.gdbh},
+            #{item.jzclfs},
+            #{item.jzcg},
+            #{item.pdrq},
+            #{item.jdysrq},
+            #{item.jdshry},
+            #{item.jdshzt},
+            #{item.fssj},
+            #{item.jzdz},
+            #{item.wjczzp},
+            #{item.qtxx},
+            #{item.enable},
+            #{item.xcsbrq},
+            #{item.xcsbzt},
+            #{item.djzh},
+            #{item.jdbhly},
+            #{item.xcsbzp},
+            #{item.dygb},
+            #{item.jzmj},
+            #{item.qbhly},
+            #{item.qshry},
+            #{item.wjccrq},
+            #{item.djrq},
+            #{item.gdjg},
+            #{item.qshrq},
+            #{item.lxfs},
+            #{item.wjbj},
+            #{item.upperzt},
+            #{item.wjccry},
+            #{item.qshzt},
+            #{item.yzxm},
+            #{item.jzlx},
+            #{item.xcsbry},
+            #{item.zrwg},
+            #{item.sfzh},
+            #{item.qkms},
+            #{item.xxly},
+            #{item.jdesrq},
+            #{item.geometry},
+            #{item.wjchzp},
+            #{item.jtzz},
+            #{item.mark},
+            #{item.zdmj},
+            #{item.jzjg},
+            #{item.sjpc},
+            current_timestamp)
+        </foreach>
+    </insert>
+
+    <select id="selectConformingBuildingAlarm" resultType="map">
+        SELECT
+        jzdz,
+        djrq
+        FROM
+        t_13_ywgd
+        WHERE
+        1=1
+        and jzlx IN(0,1)
+        <if test="beginTime != null">and djrq&gt;= #{beginTime}</if>
+        <if test="endTime != null">and djrq &lt;= #{endTime}</if>
+        <if test="limit != null">limit #{limit}</if>
+    </select>
+
+    <select id="getConformingBuildingAlarmCount" resultType="int">
+        select
+        count(1)
+        from
+        t_13_ywgd
+        where
+        1=1
+        and jzlx IN(0,1)
+        <if test="beginTime != null">and djrq&gt;= #{beginTime}</if>
+        <if test="endTime != null">and djrq &lt;= #{endTime}</if>
+    </select>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.HolidayDao">
+
+    <select id="queryAllHoliday" resultType="String">
+        select
+            `DATE` date
+        from t_cfg_holiday
+        where 1=1
+        <if test="type != null and type != ''">and TYPE = #{type}</if>
+    </select>
+
+    <select id="queryAllHolidayByYear" resultType="string">
+        select
+        `DATE` `date`
+        from t_cfg_holiday
+        where 1=1
+        <if test="null != type and '' != type">and `TYPE` = #{type}</if>
+        <if test="null != year and '' != year">and `DATE` like CONCAT(#{year},'-%')</if>
+    </select>
+</mapper>

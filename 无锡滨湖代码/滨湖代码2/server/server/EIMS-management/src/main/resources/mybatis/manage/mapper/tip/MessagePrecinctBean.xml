@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.tip.MessagePrecinctBeanDao">
+    <insert id="saveMessagePrecinctInfo" parameterType="java.util.List">
+        insert into `t_data_message_precinct`(
+        `p_message_id`,
+        `message_type`,
+        `receive_person`,
+        `receive_precinct_name`,
+        `receive_phone`
+        )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.pMessageId},
+            #{item.messageType},
+            #{item.receivePerson},
+            #{item.receivePrecinctName},
+            #{item.receivePhone}
+            )
+        </foreach>
+    </insert>
+
+    <select id="queryMessagePrecinct" resultType="com.znv.manage.common.bean.tip.MessagePrecinctBean">
+        select
+        `receive_person`,
+        IF(receive_time='0000-00-00 00:00:00','null',receive_time) receiveTime,
+        `receive_phone`,
+        `receive_precinct_name` receivePrecinctName
+        from t_data_message_precinct where 1=1
+        <if test="pMessageId != null">and p_message_id = #{pMessageId}</if>
+    </select>
+
+    <select id="countMessage" resultType="Integer">
+            select count(message_type)
+            from t_data_message_precinct
+            where message_type =1
+            <if test="receivePerson != null" >and receive_person = #{receivePerson}</if>
+    </select>
+
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.DingDingDao">
+
+    <insert id="insertDeptData" parameterType="com.znv.manage.common.bean.DeptInfo">
+		insert into base_unit(
+            id,
+            name,
+            super_id
+		  )values
+			(
+			#{deptId},
+			#{name},
+			#{parentId}
+			)
+	</insert>
+
+    <insert id="insertCommunicationData">
+        insert into base_communication(
+        id,
+        telephone,
+        name,
+        unit_id,
+        avatar,
+        unionid,
+        duty
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.userId},
+            #{item.mobile},
+            #{item.name},
+            #{item.deptIdList},
+            #{item.avatar},
+            #{item.unionId},
+            #{item.title}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateCommunicationData">
+        <foreach collection="list" separator=";" item="item" index="index">
+            update base_communication
+            <set>
+                <if test="item.mobile !=null and item.mobile != '' ">telephone= #{item.mobile},</if>
+                <if test="item.name !=null and item.name != '' ">name= #{item.name},</if>
+                <if test="item.deptIdList !=null and item.deptIdList != '' ">unit_id= #{item.deptIdList},</if>
+                <if test="item.avatar !=null and item.avatar != '' ">avatar= #{item.avatar},</if>
+                <if test="item.unionId !=null and item.unionId != '' ">unionid= #{item.unionId},</if>
+            </set>
+            where id = #{item.userId}
+        </foreach>
+    </update>
+
+    <select id="queryDeptExist" resultType="Integer">
+        select count(1) as num from base_unit
+        where 1=1
+        <if test="id != null and id != '' ">and id = #{id}</if>
+    </select>
+
+    <select id="queryCommunicationExist" resultType="Integer">
+        select count(1) as num from base_communication
+        where 1=1
+        <if test="id != null and id != '' ">and id = #{id}</if>
+    </select>
+
+</mapper>

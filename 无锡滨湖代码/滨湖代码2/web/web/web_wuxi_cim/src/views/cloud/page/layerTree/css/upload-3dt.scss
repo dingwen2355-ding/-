@@ -1,0 +1,217 @@
+/* 上传3dt */
+.upload_3dt,
+.application_scenario {
+  margin-top: 24px;
+
+  .el-form-item {
+    margin-bottom: 20px;
+
+    .el-form-item__label {
+      font-size: 16px;
+      font-weight: 400;
+      color: #9B9EA3;
+      line-height: 22px;
+      padding-bottom: 6px;
+
+      &::before {
+        color: #9B9EA3 !important;
+      }
+    }
+
+    .el-form-item__error {
+      left: auto;
+      right: 0;
+    }
+  }
+
+  .el-select {
+    width: 100%;
+  }
+
+  .el-input.is-focus .el-input__inner,
+  .el-input__inner:hover {
+    border-color: #646B6F !important;
+  }
+
+  textarea,
+  .el-input__inner {
+    background: #494D52;
+    border-radius: 4px;
+    border: 1px solid #646B6F;
+    color: #ffffff;
+  }
+
+  .el-checkbox-group {
+    .el-checkbox {
+
+      &:nth-child(3),
+      &:nth-child(4) {
+        margin-top: 6px;
+      }
+
+      .el-checkbox__label {
+        color: #EEEEEE;
+      }
+    }
+
+    .el-checkbox__inner {
+      border-color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .form-footer {
+    text-align: center;
+
+    .el-button {
+      font-size: 16px;
+      color: #FFFFFF;
+      height: 38px;
+      padding: 0;
+      border-radius: 5px;
+      border: 1px solid #029EFF;
+      background: transparent;
+      min-width: 126px;
+
+      &.el-button--primary {
+        background: #029EFF;
+      }
+    }
+  }
+
+  /* 上传3DT */
+  .upload-demo {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    background: #4D515A;
+    box-shadow: 0px 0px 0px 0px rgba(255, 255, 255, 0.15), 0px 0px 0px 0px rgba(0, 0, 0, 0.5);
+    border-radius: 7px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 20px 0;
+
+    .upload {
+      i {
+        font-size: 30px;
+        color: #9B9EA3;
+      }
+
+      p {
+        margin: 0 0 4px 0;
+        font-size: 12px;
+        font-weight: 400;
+        color: #9B9EA3;
+        line-height: normal;
+      }
+
+      h4 {
+        padding: 0;
+        margin: 6px 0 0 0;
+        font-size: 12px;
+        color: #65708A;
+        line-height: 18px;
+      }
+    }
+
+    .el-upload-list {
+      .el-upload-list__item {
+        &:hover {
+          background-color: transparent;
+        }
+
+        &:first-child {
+          margin-top: 0;
+        }
+
+        .el-upload-list__item-name {
+
+          &,
+          &>i {
+            color: rgba(255, 255, 255, 0.8);
+          }
+        }
+
+        .el-icon-close {
+          color: #ffffff;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  /* 折叠面板 */
+  .el-collapse {
+    border-top: none;
+    border-bottom: none;
+
+    .el-collapse-item__header {
+      background-color: transparent;
+      border-bottom: none;
+      color: #ffffff;
+      font-size: 18px;
+      line-height: 22px;
+    }
+
+    .el-collapse-item__wrap {
+      background-color: transparent;
+      border-bottom: none;
+      margin-top: 6px;
+
+      .el-form-item {
+        margin-bottom: 6px;
+
+        span {
+          line-height: 16px;
+          display: block;
+          margin-top: 2px;
+          text-align: center;
+          color: #9B9EA3;
+        }
+      }
+    }
+
+    .el-collapse-item__content {
+      padding-bottom: 0;
+
+      .data-title {
+        font-size: 16px;
+        color: #9B9EA3;
+
+        i {
+          color: #ffffff;
+          float: right;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+/* el-select */
+.el_sel {
+  background: rgba(46, 52, 65, 0.9);
+  box-shadow: 0px 0px 0px 0px rgba(255, 255, 255, 0.4),
+    0px 0px 0px 0px rgba(0, 0, 0, 0.5), 0px 2px 5px 0px rgba(38, 38, 44, 0.5);
+  border: 0;
+  border-radius: 2px;
+
+  .el-select-dropdown__item {
+    font-size: 16px;
+    font-weight: 400;
+    color: #ffffff;
+
+    &.selected,
+    &.hover {
+      background: #aed6ff33;
+      color: #ffffff;
+    }
+  }
+
+  .popper__arrow {
+    border-bottom-color: transparent !important;
+
+    &::after {
+      border-bottom-color: rgba(46, 52, 65, 0.9) !important;
+    }
+  }
+}

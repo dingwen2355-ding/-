@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.AirQualityDao">
+    <insert id="insertDqhjxssjbList">
+        INSERT IGNORE INTO t_06_dqhjxssjb
+        (id,
+        starttime,
+        endtime,
+        maxaqiitemname,
+        aqilevelstep,
+        maxaqiitem,
+        stationname,
+        pm25_value,
+        no2_value,
+        pm25_aqi,
+        no2_aqi,
+        so2_aqi,
+        temperature,
+        humidity,
+        pm10_value,
+        co_aqi,
+        o3_value,
+        so2_value,
+        pressure,
+        co_value,
+        winddirection,
+        pm10_aqi,
+        aqi,
+        windspeed,
+        create_time)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},
+            #{item.starttime},
+            #{item.endtime},
+            #{item.maxaqiitemname},
+            #{item.aqilevelstep},
+            #{item.maxaqiitem},
+            #{item.stationname},
+            #{item.pm25Value},
+            #{item.no2Value},
+            #{item.pm25Aqi},
+            #{item.no2Aqi},
+            #{item.so2Aqi},
+            #{item.temperature},
+            #{item.humidity},
+            #{item.pm10Value},
+            #{item.coAqi},
+            #{item.o3Value},
+            #{item.so2Value},
+            #{item.pressure},
+            #{item.coValue},
+            #{item.winddirection},
+            #{item.pm10Aqi},
+            #{item.aqi},
+            #{item.windspeed},
+            current_timestamp)
+        </foreach>
+    </insert>
+
+    <select id="queryDqhjxssjbAllId" resultType="java.util.Map">
+        select id from t_06_dqhjxssjb
+    </select>
+
+    <select id="selectAirReal" resultType="map">
+        SELECT
+        id,
+        MAX(DATE_FORMAT(starttime, '%Y-%m-%d %H:%i:%s'))AS starttime,
+        MAX(DATE_FORMAT(endtime, '%Y-%m-%d %H:%i:%s'))AS endtime,
+        maxaqiitemname,
+        aqilevelstep,
+        maxaqiitem,
+        stationname,
+        pm25_value as pm25value,
+        no2_value as no2value,
+        pm25_aqi as pm25aqi,
+        no2_aqi as no2aqi,
+        so2_aqi as so2aqi,
+        temperature,
+        humidity,
+        pm10_value as pm10value,
+        co_aqi as coaqi,
+        o3_value as o3value,
+        so2_value as so2value,
+        pressure,
+        co_value as covalue,
+        winddirection,
+        pm10_aqi as pm10aqi,
+        aqi,
+        windspeed,
+        DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') AS create_time
+        FROM
+        t_06_dqhjxssjb
+        where
+        1=1
+        <if test="stationname != null">and stationname= #{stationname}</if>
+    </select>
+
+
+    <select id="selectAirHistory" resultType="map">
+        SELECT
+        id,
+        DATE_FORMAT(starttime, '%Y-%m-%d %H:%i:%s') AS starttime,
+        DATE_FORMAT(endtime, '%Y-%m-%d %H:%i:%s') AS endtime,
+        maxaqiitemname,
+        aqilevelstep,
+        maxaqiitem,
+        stationname,
+        pm25_value as pm25value,
+        no2_value as no2value,
+        pm25_aqi as pm25aqi,
+        no2_aqi as no2aqi,
+        so2_aqi as so2aqi,
+        temperature,
+        humidity,
+        pm10_value as pm10value,
+        co_aqi as coaqi,
+        o3_value as o3value,
+        so2_value as so2value,
+        pressure,
+        co_value as covalue,
+        winddirection,
+        pm10_aqi as pm10aqi,
+        aqi,
+        windspeed,
+        DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') AS create_time
+        FROM
+        t_06_dqhjxssjb
+        where
+        1=1
+        <if test="stationname != null">and stationname= #{stationname}</if>
+        <if test="beginTime != null">and endtime&gt;= #{beginTime}</if>
+        <if test="endTime != null">and endtime &lt;= #{endTime}</if>
+        ORDER BY endtime DESC
+        <if test="limit != null">limit #{limit}</if>
+    </select>
+
+</mapper>

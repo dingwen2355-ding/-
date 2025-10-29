@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.PrecinctDao">
+    <select id="queryPrecinctList" resultType="com.znv.manage.common.bean.Precinct">
+        select * from t_cfg_precinct
+    </select>
+
+    <select id="queryWxUserId" resultType="string">
+        select operator_userid from t_cfg_precinct where precinct_id = #{precinctId}
+    </select>
+</mapper>

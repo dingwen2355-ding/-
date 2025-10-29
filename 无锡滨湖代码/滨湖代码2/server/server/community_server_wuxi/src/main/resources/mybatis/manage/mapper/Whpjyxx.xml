@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.WhpjyxxDao">
+    <insert id="insertWhpjyxxList">
+        INSERT INTO t_49_Whpjyxx
+        (
+        ZYFZR,
+        CCCSDZ,
+        YXQQSR,
+        YZBM,
+        DWMC,
+        CCCSSZJD,
+        JYCSSZJD,
+        GXRQ,
+        QYLX,
+        ZSBH,
+        ZCDZ,
+        CCCSZDMJ,
+        JYCSXCSFYWXHXPCC,
+        JYCSDZ,
+        ZSZT,
+        CCCSCQ,
+        SFGCZDWXY,
+        JYCSSZDS,
+        ZCDZSZQX,
+        YXQZZR,
+        JYCSCQ,
+        JYCSSZQX,
+        CCCSSZQX,
+        ZCDZSZDS,
+        YCCJYLX,
+        YYZZH,
+        CPYJYLX,
+        CYRYS,
+        ZCDZSZJD,
+        FZJG,
+        FZRQ,
+        LXDH,
+        CCCSSZQY,
+        RKSJ,
+        AQGLRYSL,
+        WCCJYLX,
+        JYLX,
+        CCCSSZDS,
+        DWDM,
+        XKJYFW
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.ZYFZR},
+            #{item.CCCSDZ},
+            #{item.YXQQSR},
+            #{item.YZBM},
+            #{item.DWMC},
+            #{item.CCCSSZJD},
+            #{item.JYCSSZJD},
+            #{item.GXRQ},
+            #{item.QYLX},
+            #{item.ZSBH},
+            #{item.ZCDZ},
+            #{item.CCCSZDMJ},
+            #{item.JYCSXCSFYWXHXPCC},
+            #{item.JYCSDZ},
+            #{item.ZSZT},
+            #{item.CCCSCQ},
+            #{item.SFGCZDWXY},
+            #{item.JYCSSZDS},
+            #{item.ZCDZSZQX},
+            #{item.YXQZZR},
+            #{item.JYCSCQ},
+            #{item.JYCSSZQX},
+            #{item.CCCSSZQX},
+            #{item.ZCDZSZDS},
+            #{item.YCCJYLX},
+            #{item.YYZZH},
+            #{item.CPYJYLX},
+            #{item.CYRYS},
+            #{item.ZCDZSZJD},
+            #{item.FZJG},
+            #{item.FZRQ},
+            #{item.LXDH},
+            #{item.CCCSSZQY},
+            #{item.RKSJ},
+            #{item.AQGLRYSL},
+            #{item.WCCJYLX},
+            #{item.JYLX},
+            #{item.CCCSSZDS},
+            #{item.DWDM},
+            #{item.XKJYFW}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateWhpjyxxList">
+        <foreach collection="list" separator=";" item="item" index="index">
+            update t_49_Whpjyxx
+            <set>
+                <if test="item.ZYFZR != null and item.ZYFZR != ''">ZYFZR=#{item.ZYFZR},</if>
+                <if test="item.CCCSDZ != null and item.CCCSDZ != ''">CCCSDZ=#{item.CCCSDZ},</if>
+                <if test="item.YXQQSR != null and item.YXQQSR != ''">YXQQSR=#{item.YXQQSR},</if>
+                <if test="item.YZBM != null and item.YZBM != ''">YZBM=#{item.YZBM},</if>
+                <if test="item.DWMC != null and item.DWMC != ''">DWMC=#{item.DWMC},</if>
+                <if test="item.CCCSSZJD != null and item.CCCSSZJD != ''">CCCSSZJD=#{item.CCCSSZJD},</if>
+                <if test="item.JYCSSZJD != null and item.JYCSSZJD != ''">JYCSSZJD=#{item.JYCSSZJD},</if>
+                <if test="item.GXRQ != null and item.GXRQ != ''">GXRQ=#{item.GXRQ},</if>
+                <if test="item.QYLX != null and item.QYLX != ''">QYLX=#{item.QYLX},</if>
+                <if test="item.ZSBH != null and item.ZSBH != ''">ZSBH=#{item.ZSBH},</if>
+                <if test="item.ZCDZ != null and item.ZCDZ != ''">ZCDZ=#{item.ZCDZ},</if>
+                <if test="item.CCCSZDMJ != null and item.CCCSZDMJ != ''">CCCSZDMJ=#{item.CCCSZDMJ},</if>
+                <if test="item.JYCSXCSFYWXHXPCC != null and item.JYCSXCSFYWXHXPCC != ''">
+                    JYCSXCSFYWXHXPCC=#{item.JYCSXCSFYWXHXPCC},
+                </if>
+                <if test="item.JYCSDZ != null and item.JYCSDZ != ''">JYCSDZ=#{item.JYCSDZ},</if>
+                <if test="item.ZSZT != null and item.ZSZT != ''">ZSZT=#{item.ZSZT},</if>
+                <if test="item.CCCSCQ != null and item.CCCSCQ != ''">CCCSCQ=#{item.CCCSCQ},</if>
+                <if test="item.SFGCZDWXY != null and item.SFGCZDWXY != ''">SFGCZDWXY=#{item.SFGCZDWXY},</if>
+                <if test="item.JYCSSZDS != null and item.JYCSSZDS != ''">JYCSSZDS=#{item.JYCSSZDS},</if>
+                <if test="item.ZCDZSZQX != null and item.ZCDZSZQX != ''">ZCDZSZQX=#{item.ZCDZSZQX},</if>
+                <if test="item.YXQZZR != null and item.YXQZZR != ''">YXQZZR=#{item.YXQZZR},</if>
+                <if test="item.JYCSCQ != null and item.JYCSCQ != ''">JYCSCQ=#{item.JYCSCQ},</if>
+                <if test="item.JYCSSZQX != null and item.JYCSSZQX != ''">JYCSSZQX=#{item.JYCSSZQX},</if>
+                <if test="item.CCCSSZQX != null and item.CCCSSZQX != ''">CCCSSZQX=#{item.CCCSSZQX},</if>
+                <if test="item.ZCDZSZDS != null and item.ZCDZSZDS != ''">ZCDZSZDS=#{item.ZCDZSZDS},</if>
+                <if test="item.YCCJYLX != null and item.YCCJYLX != ''">YCCJYLX=#{item.YCCJYLX},</if>
+                <if test="item.YYZZH != null and item.YYZZH != ''">YYZZH=#{item.YYZZH},</if>
+                <if test="item.CPYJYLX != null and item.CPYJYLX != ''">CPYJYLX=#{item.CPYJYLX},</if>
+                <if test="item.CYRYS != null and item.CYRYS != ''">CYRYS=#{item.CYRYS},</if>
+                <if test="item.ZCDZSZJD != null and item.ZCDZSZJD != ''">ZCDZSZJD=#{item.ZCDZSZJD},</if>
+                <if test="item.FZJG != null and item.FZJG != ''">FZJG=#{item.FZJG},</if>
+                <if test="item.FZRQ != null and item.FZRQ != ''">FZRQ=#{item.FZRQ},</if>
+                <if test="item.LXDH != null and item.LXDH != ''">LXDH=#{item.LXDH},</if>
+                <if test="item.CCCSSZQY != null and item.CCCSSZQY != ''">CCCSSZQY=#{item.CCCSSZQY},</if>
+                <if test="item.RKSJ != null and item.RKSJ != ''">RKSJ=#{item.RKSJ},</if>
+                <if test="item.AQGLRYSL != null and item.AQGLRYSL != ''">AQGLRYSL=#{item.AQGLRYSL},</if>
+                <if test="item.WCCJYLX != null and item.WCCJYLX != ''">WCCJYLX=#{item.WCCJYLX},</if>
+                <if test="item.JYLX != null and item.JYLX != ''">JYLX=#{item.JYLX},</if>
+                <if test="item.CCCSSZDS != null and item.CCCSSZDS != ''">CCCSSZDS=#{item.CCCSSZDS},</if>
+                <if test="item.DWDM != null and item.DWDM != ''">DWDM=#{item.DWDM},</if>
+                <if test="item.XKJYFW != null and item.XKJYFW != ''">XKJYFW=#{item.XKJYFW}</if>
+            </set>
+            where `SJWXHXPMC`=#{item.SJWXHXPMC}
+        </foreach>
+    </update>
+
+    <select id="queryWhpjyxxList" resultType="map">
+        select
+        `id`,
+        `voice`,
+        `vis`,
+        `hourr`,
+        `bg`,
+        `warmList`,
+        `updateTime`,
+        `next3day`,
+        `wd`,
+        `fireLlevel`,
+        `t`,
+        `obtid`,
+        `humidity`,
+        `stationName`,
+        `hour24r`,
+        `countryName`,
+        `ws`,
+        `insert_time`
+         from t_59_zdzskjcsj where 1=1
+        <if test="beginTime != null and beginTime != ''">and ENTRYTIME >=#{beginTime}</if>
+        <if test="endTime != null and endTime != ''">and ENTRYTIME &lt;= #{endTime}</if>
+        <if test="limit != null"> limit = #{limit}</if>
+    </select>
+
+    <select id="queryWhpjyxxCount" resultType="int">
+        select count(1) from t_59_zdzskjcsj where 1=1
+        <if test="beginTime != null and beginTime != ''">and updateTime >=#{beginTime}</if>
+        <if test="endTime != null and endTime != ''">and updateTime &lt;= #{endTime}</if>
+        <if test="limit != null"> limit = #{limit}</if>
+    </select>
+
+    <delete id="deleteWhpjyxxList">
+        delete from t_49_Whpjyxx
+    </delete>
+</mapper>

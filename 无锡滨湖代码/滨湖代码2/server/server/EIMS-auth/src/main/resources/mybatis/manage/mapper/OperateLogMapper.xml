@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.OperateLogDao">
+
+	<insert id="insertOperateLog">
+		insert into 
+		t_data_operate_log
+		(username, client_ip, operate_time, 
+		operate_module, operate_function, 
+		operate_type, operate_detail, operate_result) 
+		values (
+		  #{operateLog.username},
+		  #{operateLog.clientIp},
+		  #{operateLog.operateTime},
+		  #{operateLog.operateModule},
+		  #{operateLog.operateFunction},
+		  #{operateLog.operateType},
+		  #{operateLog.operateDetail},
+		  #{operateLog.operateResult}
+		)
+	</insert>
+
+	<select id="queryOperateLog" resultType="java.util.Map">
+		select
+		id,
+		ifnull(username,'') as username,
+		ifnull(client_ip,'') as clientIp,
+		DATE_FORMAT(ifnull(operate_time,''), '%Y-%m-%d %H:%i:%s') as operateTime,
+		ifnull(operate_module,'') as operateModule,
+		ifnull(operate_function,'') as operateFunction,
+		ifnull(operate_type,'') as operateType,
+		ifnull(operate_detail,'') as operateDetail,
+		ifnull(operate_result ,'') as operateResult
+		from t_data_operate_log
+		where 1=1
+		<if test="username!=null">and username = #{username}</if>
+		<if test="operateModule!=null">and operate_module like concat('%',#{operateModule},'%')</if>
+		<if test="operateDetail!=null">and operate_detail like concat('%',#{operateDetail},'%')</if>
+		<if test="beginTime!=null">and operate_time &gt;= #{beginTime}</if>
+		<if test="endTime!=null">and operate_time &lt; #{endTime}</if>
+<!--		<if test="userNameList != null">-->
+<!--			and username IN-->
+<!--			<foreach collection="userNameList" item="userNameIndex" index="index" open="(" close=")" separator=",">-->
+<!--				#{userNameIndex}-->
+<!--			</foreach>-->
+<!--		</if>-->
+		order by operate_time desc
+	</select>
+
+    <select id="queryPrecinctId" resultType="java.lang.String">
+		select precinct_id from t_cfg_precinct where precinct_kind  = 100
+	</select>
+</mapper>

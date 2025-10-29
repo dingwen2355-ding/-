@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.resource.HistoricalEventDao">
+    <resultMap id="BaseResultMap" type="com.znv.manage.common.bean.resource.HistoricalEvent">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="accident_title" jdbcType="VARCHAR" property="accidentTitle"/>
+        <result column="accident_address" jdbcType="VARCHAR" property="accidentAddress"/>
+        <result column="accident_cases_type" jdbcType="VARCHAR" property="accidentCasesType"/>
+        <result column="accident_type" jdbcType="VARCHAR" property="accidentType"/>
+        <result column="occurrence_date" jdbcType="TIMESTAMP" property="occurrenceDate"/>
+        <result column="regulatory_industry" jdbcType="VARCHAR" property="regulatoryIndustry"/>
+        <result column="accident_model" jdbcType="VARCHAR" property="accidentModel"/>
+        <result column="minor_num" jdbcType="INTEGER" property="minorNum"/>
+        <result column="serious_num" jdbcType="INTEGER" property="seriousNum"/>
+        <result column="death_num" jdbcType="INTEGER" property="deathNum"/>
+        <result column="economic_loss" jdbcType="INTEGER" property="economicLoss"/>
+        <result column="accident_cause" jdbcType="VARCHAR" property="accidentCause"/>
+        <result column="preventive_measure" jdbcType="VARCHAR" property="preventiveMeasure"/>
+        <result column="annex_url" jdbcType="VARCHAR" property="annexUrl"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, accident_title, accident_address, accident_cases_type, accident_type, occurrence_date,
+    regulatory_industry, accident_model, minor_num, serious_num, death_num, economic_loss,
+    accident_cause, preventive_measure, annex_url
+    </sql>
+    <select id="queryAnnexUrl" resultType="String">
+        select annex_url annexUrl
+        from t_data_historical_event
+        where id = #{id}
+    </select>
+    <select id="queryHistoricalEventList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_data_historical_event
+        where 1=1
+        <if test="accidentTitle != null and accidentTitle != ''">
+            AND accident_title like concat('%',#{accidentTitle},'%')
+        </if>
+        <if test="accidentAddress != null and accidentAddress != ''">
+            AND accident_address like concat('%',#{accidentAddress},'%')
+        </if>
+        <if test="accidentType != null and accidentType != ''">
+            AND accident_type like concat('%',#{accidentType},'%')
+        </if>
+    </select>
+    <delete id="deleteHistoricalEvent">
+        delete
+        from t_data_historical_event
+        where find_in_set(id, #{ids})
+    </delete>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.znv.manage.common.bean.resource.HistoricalEvent" useGeneratedKeys="true">
+        insert into t_data_historical_event
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accidentTitle != null">
+                accident_title,
+            </if>
+            <if test="accidentAddress != null">
+                accident_address,
+            </if>
+            <if test="accidentCasesType != null">
+                accident_cases_type,
+            </if>
+            <if test="accidentType != null">
+                accident_type,
+            </if>
+            <if test="occurrenceDate != null">
+                occurrence_date,
+            </if>
+            <if test="regulatoryIndustry != null">
+                regulatory_industry,
+            </if>
+            <if test="accidentModel != null">
+                accident_model,
+            </if>
+            <if test="minorNum != null">
+                minor_num,
+            </if>
+            <if test="seriousNum != null">
+                serious_num,
+            </if>
+            <if test="deathNum != null">
+                death_num,
+            </if>
+            <if test="economicLoss != null">
+                economic_loss,
+            </if>
+            <if test="accidentCause != null">
+                accident_cause,
+            </if>
+            <if test="preventiveMeasure != null">
+                preventive_measure,
+            </if>
+            <if test="annexUrl != null">
+                annex_url,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accidentTitle != null">
+                #{accidentTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="accidentAddress != null">
+                #{accidentAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="accidentCasesType != null">
+                #{accidentCasesType,jdbcType=VARCHAR},
+            </if>
+            <if test="accidentType != null">
+                #{accidentType,jdbcType=VARCHAR},
+            </if>
+            <if test="occurrenceDate != null">
+                #{occurrenceDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="regulatoryIndustry != null">
+                #{regulatoryIndustry,jdbcType=VARCHAR},
+            </if>
+            <if test="accidentModel != null">
+                #{accidentModel,jdbcType=VARCHAR},
+            </if>
+            <if test="minorNum != null">
+                #{minorNum,jdbcType=INTEGER},
+            </if>
+            <if test="seriousNum != null">
+                #{seriousNum,jdbcType=INTEGER},
+            </if>
+            <if test="deathNum != null">
+                #{deathNum,jdbcType=INTEGER},
+            </if>
+            <if test="economicLoss != null">
+                #{economicLoss,jdbcType=INTEGER},
+            </if>
+            <if test="accidentCause != null">
+                #{accidentCause,jdbcType=VARCHAR},
+            </if>
+            <if test="preventiveMeasure != null">
+                #{preventiveMeasure,jdbcType=VARCHAR},
+            </if>
+            <if test="annexUrl != null">
+                #{annexUrl,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.znv.manage.common.bean.resource.HistoricalEvent">
+        update t_data_historical_event
+        <set>
+            <if test="accidentTitle != null">
+                accident_title = #{accidentTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="accidentAddress != null">
+                accident_address = #{accidentAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="accidentCasesType != null">
+                accident_cases_type = #{accidentCasesType,jdbcType=VARCHAR},
+            </if>
+            <if test="accidentType != null">
+                accident_type = #{accidentType,jdbcType=VARCHAR},
+            </if>
+            <if test="occurrenceDate != null">
+                occurrence_date = #{occurrenceDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="regulatoryIndustry != null">
+                regulatory_industry = #{regulatoryIndustry,jdbcType=VARCHAR},
+            </if>
+            <if test="accidentModel != null">
+                accident_model = #{accidentModel,jdbcType=VARCHAR},
+            </if>
+            <if test="minorNum != null">
+                minor_num = #{minorNum,jdbcType=INTEGER},
+            </if>
+            <if test="seriousNum != null">
+                serious_num = #{seriousNum,jdbcType=INTEGER},
+            </if>
+            <if test="deathNum != null">
+                death_num = #{deathNum,jdbcType=INTEGER},
+            </if>
+            <if test="economicLoss != null">
+                economic_loss = #{economicLoss,jdbcType=INTEGER},
+            </if>
+            <if test="accidentCause != null">
+                accident_cause = #{accidentCause,jdbcType=VARCHAR},
+            </if>
+            <if test="preventiveMeasure != null">
+                preventive_measure = #{preventiveMeasure,jdbcType=VARCHAR},
+            </if>
+            <if test="annexUrl != null">
+                annex_url = #{annexUrl,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

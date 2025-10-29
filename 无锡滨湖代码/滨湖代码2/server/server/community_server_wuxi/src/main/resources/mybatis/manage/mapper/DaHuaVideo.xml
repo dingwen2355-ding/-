@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.DaHuaVideoDao">
+
+    <select id="getDeviceList" resultType="map">
+        select device_id deviceId,
+        device_name deviceName,
+        device_kind deviceKind,
+        device_state deviceState,
+        precinct_id precinctId,
+        gpsx,
+        gpsy,
+        alarm_state alarmState,
+        onoffline_state onofflineState,
+        fault_state fault,
+        time_stamp `timeStamp`
+        from t_cfg_device where 1=1 and (device_kind = 6 or device_kind = 666) and gpsx !='0.0' and gpsx is not null and
+         gpsy !='0.0' and gpsy is not null
+        <if test="name!= null  and name != ''">
+            and (device_name LIKE concat('%', #{name}, '%') or device_id LIKE concat('%', #{name}, '%'))
+        </if>
+    </select>
+
+
+    <select id="getDeviceListNew" resultType="map">
+        select * from t_cfg_device where 1=1 and (device_kind = 6) and gpsx !='0.0' and gpsx is not null and
+        gpsy !='0.0' and gpsy is not null
+        <if test="name!= null  and name != ''">
+            and (device_name LIKE concat('%', #{name}, '%') or device_id LIKE concat('%', #{name}, '%'))
+        </if>
+    </select>
+
+
+
+    <insert id="insertSyncDevice">
+        insert into t_cfg_device(
+        `device_id`,
+        `device_name`,
+        `device_kind`,
+        `precinct_id`,
+        `gpsx`,
+        `gpsy`
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.deviceId},
+            #{item.deviceName},
+            666,
+            left(#{item.deviceId},6),
+            #{item.longitude},
+            #{item.latitude}
+            )
+        </foreach>
+        on duplicate key update
+        device_name = values(device_name),
+        precinct_id = values(precinct_id),
+        gpsx = values(gpsx),
+        gpsy = values(gpsy)
+    </insert>
+
+    <delete id="deleteTempDevice">
+        delete from t_temp_device
+    </delete>
+
+    <insert id="insertTempDevice">
+        replace into t_temp_device(
+        `device_id`,
+        `device_name`,
+        `device_kind`,
+        `precinct_id`,
+        `gpsx`,
+        `gpsy`
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.deviceId},
+            #{item.deviceName},
+            666,
+            left(#{item.deviceId},6),
+            #{item.longitude},
+            #{item.latitude}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteUselessDevice">
+        DELETE from t_cfg_device where device_kind = '666' and device_id not in (SELECT device_id from t_temp_device)
+    </delete>
+
+    <insert id="insertAddDevice">
+        replace INTO t_cfg_device
+        SELECT * from t_temp_device where device_kind = '666' and device_id not in (SELECT device_id from t_cfg_device)
+    </insert>
+
+    <update id="updatePrecinctId1">
+        update t_temp_device set precinct_id = '510187' where device_kind = '666'and left(device_id,6) = '510109';
+    </update>
+
+    <update id="updatePrecinctId2">
+        update t_temp_device set precinct_id = '510186' where device_kind = '666'and left(device_id,6) = '510173';
+    </update>
+
+    <update id="updatePrecinctId3">
+        update t_temp_device set precinct_id = '510110' where device_kind = '666'and left(device_id,6) = '510156';
+    </update>
+
+
+</mapper>

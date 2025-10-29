@@ -1,0 +1,23 @@
+{
+  "result": 0,
+  "remark": "",
+  "data": [
+    {
+      "precinctId": "31011513",
+      "precinctName": "航头镇",
+      "upPrecinctId": "110",
+      "precinctKind": 100,
+      "regionName": "浦东新区",
+      "streetName": "Null",
+      "streetNo": "Null",
+      "buildingNo": "Null",
+      "unitNo": "Null",
+      "floorNo": "Null",
+      "houseNo": "Null",
+      "gpsX": "119.039090",
+      "gpsY": "31.664200",
+      "regionXY": "",
+      "mapAddr": null
+    }
+  ]
+}

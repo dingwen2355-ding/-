@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.ImportPlanDao">
+    <select id="queryPlan" resultType="map">
+        select id,
+               warn_unit warnUnit,
+               type,
+               dispatch_basis dispatchBasis
+        from t_cfg_import_plan
+        where 1=1
+        <if test="planId!=null and planId!=''">
+            and id=#{planId}
+        </if>
+    </select>
+
+    <select id="queryRequirement" resultType="map">
+        select id,
+               level,
+               deal_unit dealUnit,
+               requirement
+        from t_cfg_import_plan_requirement
+        where 1=1
+        <if test="planId!=null and planId!=''">
+            and plan_id=#{planId}
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.ImportantPeopleDao">
+
+    <resultMap id="ImportantPeople" type="com.znv.manage.common.bean.ImportantPeople">
+        <association property="gpsList" column="{name = name}" select="queryImportantPeopleGpsList"></association>
+    </resultMap>
+
+    <select id="queryImportantPeopleList" resultMap="ImportantPeople">
+        SELECT
+            a.*
+        FROM
+            t_data_important_people a
+        where 1=1
+        <if test="name != null and name != ''">and a.name like CONCAT('%',#{name},'%')</if>
+        <if test="id != null and id != ''">and a.id = #{id}</if>
+    </select>
+
+    <select id="queryImportantPeopleGpsList" resultType="map">
+        SELECT
+            ifnull(id,'') id,
+            ifnull(start_address,'') startAddress,
+            ifnull(end_address,'') endAddress,
+            ifnull(start_gpsx,'') startGpsx,
+            ifnull(start_gpsy,'') startGpsy,
+            ifnull(end_gpsx,'') endGpsx,
+            ifnull(end_gpsy,'') endGpsy,
+            ifnull(start_time,'') startTime,
+            ifnull(end_time,'') endTime
+        FROM
+            t_data_important_people_gps
+        WHERE
+            ( ifnull( start_time, '' ) != '' OR ifnull( end_time, '' ) != '' )
+            and (ifnull(start_gpsx,'') != '' and ifnull(start_gpsy,'') != '' and ifnull(end_gpsx,'') != '' and ifnull(end_gpsy,'') != '')
+          AND `name` = #{name}
+        ORDER BY
+            ifnull( start_time, end_time )
+    </select>
+    
+    <resultMap id="ImportantRoute" type="map">
+        <result column="date" property="date"></result>
+        <result column="names" property="names"></result>
+        <association property="routeList" column="{date = date,names=names}" select="queryRouteList"></association>
+    </resultMap>
+
+    <select id="queryImportantRouteList" resultMap="ImportantRoute">
+        SELECT
+            DATE_FORMAT(IFNULL(start_time,end_time),'%Y.%m.%d') AS date,
+            #{names} names
+        FROM
+            t_data_important_people_gps a
+        WHERE ( ifnull( start_time, '' ) != '' OR ifnull( end_time, '' ) != '' )
+            <if test="names != null and names != ''">and FIND_IN_SET(a.name,#{names})</if>
+        GROUP BY date
+        ORDER BY date desc
+    </select>
+
+    <select id="queryRouteList" resultType="map">
+        SELECT
+            `name`,
+            CASE
+                WHEN IFNULL(start_time,'') != '' AND IFNULL(end_time,'') != '' THEN CONCAT(DATE_FORMAT(start_time,'%H:%i'),'-',DATE_FORMAT(end_time,'%H:%i'),'通过',transportation,'从',start_address,'前往',end_address)
+                WHEN IFNULL(start_time,'') != '' AND IFNULL(end_time,'') = '' THEN CONCAT(DATE_FORMAT(start_time,'%H:%i'),'通过',transportation,'从',start_address,'前往',end_address)
+                WHEN IFNULL(start_time,'') = '' AND IFNULL(end_time,'') != '' THEN CONCAT(DATE_FORMAT(end_time,'%H:%i'),'通过',transportation,'从',start_address,'到达',end_address)
+                END AS routeInfo,
+            id as ID,
+            start_address startAddress,
+            end_address endAddress
+        FROM
+            t_data_important_people_gps
+        WHERE ( IFNULL( start_time, '' ) != '' OR IFNULL( end_time, '' ) != '' ) and DATE_FORMAT(IFNULL(start_time,end_time),'%Y.%m.%d') = #{date}
+          and FIND_IN_SET(name,#{names})
+        ORDER BY DATE_FORMAT(IFNULL(start_time,end_time),'%Y-%m-%d %H:%i:%S') DESC
+    </select>
+
+    <select id="queryImportantGpsList" resultType="com.znv.manage.common.bean.ImportantPeopleGps">
+        SELECT
+            *
+        FROM
+            t_data_important_people_gps
+        WHERE ifnull(start_gpsx,'') = ''
+                or ifnull(start_gpsy,'') = ''
+            or ifnull(end_gpsx,'') = ''
+                or ifnull(end_gpsy,'') = ''
+    </select>
+
+    <update id="updateRouteGps" parameterType="list">
+        update t_data_important_people_gps
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="start_gpsx = case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    when id=#{item.id} then #{item.startGpsx}
+                </foreach>
+            </trim>
+            <trim prefix="start_gpsy = case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    when id=#{item.id} then #{item.startGpsy}
+                </foreach>
+            </trim>
+            <trim prefix="end_gpsx = case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    when id=#{item.id} then #{item.endGpsx}
+                </foreach>
+            </trim>
+            <trim prefix="end_gpsy = case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    when id=#{item.id} then #{item.endGpsy}
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+
+    <select id="queryImportantGpsList2" resultType="com.znv.manage.common.bean.ImportantPeopleGps">
+        SELECT
+            *
+        FROM
+            t_data_important_people_gps
+        WHERE 1=1
+        <if test="id != null and id != ''">and id = #{id}</if>
+        <if test="name != null and name != ''">and `name` = #{name}</if>
+    </select>
+
+    <insert id="saveImportantPeopleInfo" parameterType="com.znv.manage.common.bean.ImportantPeople">
+        INSERT INTO t_data_important_people(
+            `id`,
+            `name`,
+            `card_id`,
+            `card_type`,
+            `sex`,
+            `age`,
+            `address`,
+            `village`,
+            `committee`,
+            `street`,
+            `area`,
+            `city`,
+            `province`
+        )
+        VALUES
+            (#{id},#{name},
+            #{cardId},#{cardType},#{sex},#{age},#{address},#{village},#{committee},#{street},#{area},#{city},#{province})
+        ON duplicate KEY UPDATE
+            `name`=VALUES(`name`)
+        ,card_id=VALUES(card_id)
+        ,card_type=VALUES(card_type)
+        ,sex=VALUES(sex)
+        ,age=VALUES(age)
+        ,address=VALUES(address)
+        ,village=VALUES(village)
+        ,committee=VALUES(committee)
+        ,street=VALUES(street)
+        ,area=VALUES(area)
+        ,city=VALUES(city)
+        ,province=VALUES(province)
+    </insert>
+
+    <delete id="deleteImportantPeopleByIds">
+        delete from t_data_important_people where find_in_set(id,#{ids})
+    </delete>
+
+    <insert id="saveImportantRouteInfo" parameterType="com.znv.manage.common.bean.ImportantPeopleGps">
+        INSERT INTO t_data_important_people_gps(
+            `id`,
+            `name`,
+            `card_id`,
+            `start_time`,
+            `end_time`,
+            `transportation`,
+            `start_address`,
+            `end_address`,
+            `start_gpsx`,
+            `start_gpsy`,
+            `end_gpsx`,
+            `end_gpsy`
+        )
+        VALUES
+        (#{id},#{name},
+         #{cardId},#{startTime},#{endTime},#{transportation},#{startAddress},#{endAddress},
+         #{startGpsx},#{startGpsy},#{endGpsx},#{endGpsy})
+        ON duplicate KEY UPDATE
+            `name`=VALUES(`name`)
+                              ,card_id=VALUES(card_id)
+                              ,start_time=VALUES(start_time)
+                              ,end_time=VALUES(end_time)
+                              ,transportation=VALUES(transportation)
+                              ,start_address=VALUES(start_address)
+                              ,end_address=VALUES(end_address)
+                              ,start_gpsx=VALUES(start_gpsx)
+                              ,start_gpsy=VALUES(start_gpsy)
+                              ,end_gpsx=VALUES(end_gpsx)
+                              ,end_gpsy=VALUES(end_gpsy)
+    </insert>
+
+    <delete id="deleteImportantRouteByIds">
+        delete from t_data_important_people_gps where find_in_set(id,#{ids})
+    </delete>
+</mapper>

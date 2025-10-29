@@ -1,0 +1,164 @@
+.van-cell {
+  font-size: 28rem;
+  line-height: 40rem;
+}
+
+.main-page .van-icon {
+  font-size: 28rem;
+}
+.van-toast__loading {
+  padding: 10rem;
+}
+.van-uploader__loading,
+.van-loading__spinner {
+  width: 40rem;
+  height: 40rem;
+}
+
+.van-uploader__mask-message {
+  margin-top: 10rem;
+  padding: 0;
+  font-size: 28rem;
+  line-height: 30rem;
+}
+
+.van-field__error-message {
+  font-size: 22rem;
+}
+
+.van-button {
+  font-size: 28rem;
+  height: 70rem;
+}
+
+.van-notify {
+  font-size: 28rem;
+  padding: 20rem 40rem;
+}
+
+.van-swipe__indicator {
+  width: 10rem;
+  height: 10rem;
+}
+
+.van-image__error-icon {
+  font-size: 40rem;
+}
+
+.van-pull-refresh__head {
+  height: 80rem;
+  font-size: 28rem;
+  line-height: 80rem;
+}
+
+.van-loading__text {
+  font-size: 28rem;
+}
+
+.van-list__loading {
+  line-height: 80rem;
+}
+
+.van-list__error-text,
+.van-list__finished-text,
+.van-list__loading {
+  font-size: 28rem;
+  line-height: 80rem;
+}
+
+// search组件
+.van-search {
+  padding: 15rem;
+  .van-cell {
+    padding: 12rem 10rem 12rem 0;
+  }
+}
+.van-search__content {
+  padding-left: 30rem;
+}
+.van-field__clear,
+.van-field__right-icon {
+  margin-right: 10rem;
+  padding: 0 10rem;
+}
+
+// tab组件
+.van-tabs--line .van-tabs__wrap {
+  height: 90rem;
+}
+.van-tabs__nav--line {
+  padding-bottom: 12rem;
+}
+.van-tab {
+  padding: 0 20rem;
+  color: #333438;
+  font-size: 29rem;
+  line-height: 58rem;
+  .iconfont {
+    font-size: inherit;
+  }
+}
+.van-tab--active {
+  color: #427de5;
+}
+.van-tabs__line {
+  width: 156rem;
+  bottom: 12rem;
+  height: 7rem;
+  background-color: #427de5;
+  border-radius: 3rem;
+}
+
+// picker
+.van-picker__toolbar {
+  height: 80rem;
+}
+.van-picker__cancel, .van-picker__confirm {
+  font-size: 28rem;
+  padding: 0 30rem;
+}
+.van-picker-column {
+  font-size: 28rem;
+}
+
+// toast
+.van-toast {
+  width: 200rem;
+  padding: 40rem;
+  min-height: 200rem;
+  font-size: 25rem;
+  line-height: 50rem;
+  border-radius: 10rem;
+}
+.van-toast__icon {
+  font-size: 50rem;
+}
+
+// dialog
+.van-dialog {
+  width: 700rem;
+  color: #323233;
+  font-size: 28rem;
+  border-radius: 20rem;
+}
+.van-dialog__header {
+  padding-top: 40rem;
+  line-height: 40rem;
+}
+.van-dialog__message {
+  padding: 40rem 30rem;
+  font-size: 28rem;
+  line-height: 40rem;
+}
+.van-dialog__message--has-title {
+  padding-top: 20rem;
+}
+.van-dialog__cancel, .van-dialog__confirm {
+  height: 80rem;
+}
+
+// image-preview
+.van-image-preview__index {
+  font-size: 28rem;
+  line-height: 40rem;
+}

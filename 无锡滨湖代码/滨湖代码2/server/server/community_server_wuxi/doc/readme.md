@@ -1,0 +1,11 @@
+base_area:区域编码
+base_arrived_resources:到场资源力量
+base_data_instruction_implement：落实情况
+base_data_leader_instruction:领导批示
+base_dict_resource：资源力量字典表
+base_event_info：事件基础信息
+base_leader_name：领导字典表
+data_emergency_plan：应急预案
+data_history_event_deal_content：事件动态
+deal_event_accpciated_communication：事件单位负责人关联表
+dict_event_type：事件类型

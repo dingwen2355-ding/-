@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.FireAwarenessJCSJDao">
+
+	<insert id="insertJCSJData">
+		insert into t_25_jcsj(
+		deviceType,
+		loopType,
+		alarmTime,
+		valueType,
+		deviceValue,
+		id,
+		collect_time,
+		deviceId,
+		zoneBit,
+		deviceStatus,
+		create_time
+		 )values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.deviceType},
+			#{item.loopType},
+			#{item.alarmTime},
+			#{item.valueType},
+			#{item.deviceValue},
+			#{item.id},
+			#{item.collectTime},
+			#{item.deviceId},
+			#{item.zoneBit},
+			#{item.deviceStatus},
+			current_timestamp
+			)
+		</foreach>
+	</insert>
+
+
+	<select id="queryExist" parameterType="com.znv.manage.common.bean.FireAwarenessSyncJCSJ" resultType="java.lang.Integer">
+		select count(1) as num from t_25_jcsj
+		where 1=1
+		<if test="deviceType != null and deviceType != '' "> and deviceType = #{deviceType}</if>
+		<if test="id != null and id != '' "> and id = #{id}</if>
+		and DATE(create_time) = CURDATE()
+	</select>
+
+	<delete id="deleteJCSJData">
+        delete from t_25_jcsj where  DATE(create_time) = CURDATE()
+    </delete>
+
+	
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.DepartmentDao">
+
+    <select id="queryDepartment" resultType="java.util.Map">
+        select
+        id,
+        department,
+        department_alias as departmentAlias,
+        type,
+        ifnull(address,'') as address,
+        ifnull(telephone,'')as telephone,
+        ifnull(precinct_id,'') as precinctId,
+        on_duty as onDuty,
+        alias,
+        postcode
+        from t_cfg_department
+        where 1=1
+        <if test="id != null"> and id = #{id}</if>
+        <if test="department != null"> and department like concat('%',#{department},'%') </if>
+        <if test="type != null"> and id = #{type}</if>
+        <if test="address != null"> and id = #{address}</if>
+        <if test="precinct_id != null and precinct_id !=''"> and precinct_id = #{precinct_id}</if>
+        ORDER BY eorder ASC;
+    </select>
+
+    <insert id="insertDepartment" parameterType="com.znv.manage.bean.user.Department" useGeneratedKeys="false">
+      INSERT INTO t_cfg_department (department,
+      department_alias,
+      type,
+      address,
+      telephone,
+      precinct_id,
+      on_duty,
+      alias,
+      postcode,
+      eorder)
+        VALUES (
+        #{department},
+        #{departmentAlias},
+        #{type},
+        #{address},
+        #{telephone},
+        #{precinctId},
+        #{onDuty},
+        #{alias},
+        #{postcode},
+        #{eorder}
+        )
+    </insert>
+
+    <update id="updateDepartment" parameterType="com.znv.manage.bean.user.Department" useGeneratedKeys="false">
+        update t_cfg_department
+        <set>
+            <if test="department != null">department = #{department}, </if>
+            <if test="departmentAlias != null">department_alias = #{departmentAlias},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="address != null">address = #{address}, </if>
+            <if test="telephone != null">telephone = #{telephone},</if>
+            <if test="precinctId != null">precinct_id = #{precinctId},</if>
+            <if test="onDuty != null">on_duty = #{onDuty},</if>
+            <if test="alias != null">alias = #{alias}, </if>
+            <if test="postcode != null">postcode = #{postcode},</if>
+            <if test="eorder != null">eorder = #{eorder}</if>
+        </set>
+        WHERE id = #{id};
+    </update>
+
+    <delete id="deleteDepartment" parameterType="map">
+        DELETE FROM t_cfg_department
+        WHERE 1=1
+        <if test="id != null">and id in (${id}) </if>
+        <if test="department != null">and department = #{department} </if>
+    </delete>
+    <select id="queryDepartmentByName" resultType="java.util.Map">
+        select
+        id,
+        department,
+        department_alias as departmentAlias,
+        type,
+        ifnull(address,'') as address,
+        ifnull(telephone,'')as telephone,
+        ifnull(precinct_id,'') as precinctId,
+        on_duty as onDuty,
+        alias,
+        postcode
+        from t_cfg_department
+        where 1=1
+        <if test="department != null"> and department =#{department} </if>
+        <if test="precinctId != null">and precinct_id = #{precinctId}</if>
+    </select>
+</mapper>

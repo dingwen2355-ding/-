@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.KqzlzsDao">
+    <insert id="insertKqzlzsList">
+        INSERT INTO t_61_aqi_kqzlzs
+        (
+        aqi,
+        airLevel,
+        stationName,
+        airKind
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.aqi},
+            #{item.airLevel},
+            #{item.stationName},
+            #{item.airKind}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateKqzlzsList">
+        <foreach collection="list" separator=";" item="item" index="index">
+            update t_61_aqi_kqzlzs
+            <set>
+                <if test="item.aqi != null and item.aqi != ''">aqi=#{item.aqi},</if>
+                <if test="item.airLevel != null and item.airLevel != ''">airLevel=#{item.airLevel},</if>
+                <if test="item.stationName != null and item.stationName != ''">stationName=#{item.stationName},</if>
+                <if test="item.airKind != null and item.airKind != ''">airKind=#{item.airKind},</if>
+            </set>
+            where `SJWXHXPMC`=#{item.SJWXHXPMC}
+        </foreach>
+    </update>
+
+    <select id="queryKqzlzsList" resultType="int">
+        select
+          `aqi`,
+          `airLevel`,
+          `stationName`,
+          `airKind`,
+          `street`
+         from t_61_aqi_kqzlzs
+    </select>
+
+    <delete id="deleteKqzlzsList">
+        delete from t_61_aqi_kqzlzs
+    </delete>
+</mapper>

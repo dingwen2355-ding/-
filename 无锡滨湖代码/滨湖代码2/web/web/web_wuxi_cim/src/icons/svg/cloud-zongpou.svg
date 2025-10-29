@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>纵剖</title>
+    <g id="页面-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="剖切-剖切" transform="translate(-107.000000, -225.000000)">
+            <g id="面剖切备份-2" transform="translate(107.000000, 225.000000)">
+                <rect id="矩形" fill="#000000" fill-rule="nonzero" opacity="0" x="0" y="0" width="24" height="24"></rect>
+                <g id="编组" transform="translate(12.500000, 12.000000) rotate(-270.000000) translate(-12.500000, -12.000000) translate(2.000000, -0.000000)">
+                    <path d="M12,18.9543209 L1.09090909,18.9543209 C0.488416637,18.9543209 0,18.3946768 0,17.7043209 L0,5.20432091 C0,4.51396497 0.488416637,3.95432091 1.09090909,3.95432091 L12,3.95432091" id="路径" stroke="#FFFFFF" stroke-width="1.5" stroke-dasharray="1.8,2"></path>
+                    <path d="M14,3.95432091 L19.8333333,3.95432091 C20.4776655,3.95432091 21,4.51396497 21,5.20432091 L21,17.7043209 C21,18.3946768 20.4776655,18.9543209 19.8333333,18.9543209 L14,18.9543209" id="路径" stroke="#FFFFFF" stroke-width="1.5"></path>
+                    <rect id="矩形" fill="#FFFFFF" opacity="0.5" x="3" y="6.95432091" width="7" height="9"></rect>
+                    <line x1="12.5" y1="0.454320905" x2="12.5" y2="22.4543209" id="路径-5" stroke="#FFFFFF" stroke-width="1.5"></line>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,1516 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.WarehouseDao">
+
+    <select id="queryStuffDict" resultType="java.util.HashMap">
+        SELECT STUFF_NAME stuffName, cast(ID as char) id
+        FROM resource_list
+        where 1 = 1
+          and IS_USING = 'Y'
+    </select>
+
+    <select id="queryWarehouseDict" resultType="java.util.HashMap">
+        SELECT STOCK_NAME stockName, cast(ID as char) id
+        FROM resource_stock_info
+        where 1 = 1
+    </select>
+
+    <select id="queryStuffNum" resultType="java.math.BigDecimal">
+        SELECT ifnull(STUFF_NUMBER, 0) num, price, life
+        from resource_stock_stuff
+        where BELONG_STOCK_ID = #{warehouseId}
+          and STUFF_ID = #{stuffId}
+          and iFNULL(brand, '') = ifnull(#{brand}, '')
+          and iFNULL(model, '') = ifnull(#{model}, '')
+          limit 1
+    </select>
+
+    <insert id="saveStuffOperationRecord">
+        INSERT INTO t_stuff_operation_record (
+        id,
+        file_name,
+        warehouse,
+        user_id,
+        operation_type,
+        operation_time,
+        identifier
+        )
+        VALUES
+        <foreach collection="datas" item="data" separator=",">
+            (
+            #{data.id},
+            #{data.fileName},
+            #{data.warehouse},
+            #{data.userId},
+            #{data.operationType},
+            #{data.operationTime},
+            #{data.identifier}
+            )
+        </foreach>
+
+    </insert>
+
+    <insert id="saveStuffOperationRecordInfo">
+        INSERT INTO t_stuff_operation_info (
+        operation_id,
+        stock_id,
+        stock_name,
+        operation_time,
+        manager,
+        source,
+        operation_type,
+        help_type_id,
+        help_type,
+        stuff_id,
+        stuff_name,
+        stuff_brand,
+        stuff_model,
+        stuff_operation_num,
+        stock_stuff_num,
+        report_time
+        )
+        VALUES
+        <foreach collection="datas" item="data" separator=",">
+            (
+            #{data.operationId},
+            #{data.stockId},
+            #{data.仓库名称},
+            #{data.出入库日期},
+            #{data.经办人},
+            #{data.物资来源/领用单位},
+            #{data.操作类型},
+            #{data.helpTypeId},
+            #{data.救援类别},
+            #{data.stuffId},
+            #{data.物资名称},
+            #{data.物资品牌},
+            #{data.物资型号},
+            #{data.物资数量},
+            #{data.stockStuffNum},
+            #{data.operationTime}
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="completionStuffOperationInfo">
+        UPDATE t_stuff_operation_info a
+        INNER JOIN (SELECT a.ID,a.HELP_TYPE,GROUP_CONCAT(b.DICT_CH_NAME) helpName,a.STUFF_NAME from resource_list a
+        INNER JOIN sys_business_dict b on FIND_IN_SET(b.ID,a.HELP_TYPE)
+        GROUP BY a.ID) b on a.stuff_id=b.ID
+        INNER JOIN resource_stock_info c on a.stock_id=c.ID
+        SET a.help_type_id=b.HELP_TYPE,a.help_type=b.helpName,a.stock_name=c.STOCK_NAME,a.stuff_name=b.STUFF_NAME
+        WHERE
+            a.operation_id = #{operationId}
+    </update>
+
+    <select id="stuffRecordDetail" resultType="java.util.HashMap">
+        SELECT
+        a.id,
+        a.operation_id,
+        f.ORGA_NAME unit,
+        a.stock_id,
+        a.stock_name,
+        a.operation_time,
+        a.manager,
+        a.manager_phone,
+        a.source,
+        a.recipient,
+        a.recipient_unit,
+        a.recipient_phone,
+        a.operation_type,
+        a.help_type_id,
+        a.help_type,
+        a.stock_id,
+        a.stuff_name,
+        a.stuff_brand,
+        a.stuff_model,
+        a.stuff_operation_num,
+        a.stock_stuff_num,
+        a.price,
+        a.life,
+        a.stuff_create_date,
+        a.report_time,
+        a.`use`,
+        c.area_name,
+        e.DICT_CH_NAME stockUnit,
+        h.stuff_unit,
+        i.identifier
+        FROM
+        t_stuff_operation_info a
+        INNER JOIN resource_stock_info d ON a.stock_id = d.ID
+        INNER JOIN sys_business_dict b ON d.REGION = b.id
+        INNER JOIN t_dict_area c ON b.ID = c.dict_id
+        LEFT JOIN sys_business_dict e on d.BELONG_UNIT=e.ID
+        LEFT JOIN basic_organization f on d.BELONG_UNIT = f.id
+        LEFT JOIN  resource_list h ON a.stuff_id = h.id
+        INNER JOIN t_stuff_operation_record i on a.operation_id = i.id
+        where 1=1
+        <if test="areaId!=null">
+            and c.area_code=#{areaId}
+        </if>
+        <if test="stockName!=null">
+            and a.stock_name like concat('%',#{stockName},'%')
+        </if>
+        <if test="stuffName!=null">
+            and a.stuff_name like concat('%',#{stuffName},'%')
+        </if>
+        <if test="stuffModel!=null">
+            and a.stuff_model like concat('%',#{stuffModel},'%')
+        </if>
+        <if test="stuffBrand!=null">
+            and a.stuff_brand like concat('%',#{stuffBrand},'%')
+        </if>
+        <if test="helpTypeId!=null">
+            and find_in_set(#{helpTypeId},a.help_type_id)
+        </if>
+        <if test="operationType!=null">
+            and a.operation_type =#{operationType}
+        </if>
+        <if test="startTime!=null">
+            and a.operation_time>=date_format(#{startTime},'%Y-%m-%d')
+        </if>
+        <if test="endTime!=null">
+            and a.operation_time&lt;=date_format(#{endTime},'%Y-%m-%d')
+        </if>
+        <if test="manager!=null">
+            and a.manager like concat('%',#{manager},'%')
+        </if>
+        <if test="userId!=null">
+            and find_in_set(stock_id,(select stock_id from t_cfg_user where user_id = #{userId}))
+        </if>
+        order by a.report_time desc
+    </select>
+
+    <delete id = "deleteOperationRecordByStock">
+        delete from t_stuff_operation_record where warehouse = #{stockId} and user_id = #{userId}
+    </delete>
+
+    <delete id = "deleteOperationInfoById">
+        delete from t_stuff_operation_info where id = #{id}
+    </delete>
+
+    <select id="stuffRecordManagement" resultType="java.util.HashMap">
+        select d.DICT_CH_NAME region,
+        b.id stockId,
+        b.STOCK_NAME stockName,
+        b.stock_type stockType,
+        date_format(check_time,'%Y-%m-%d') checkTime,
+        concat(count2-count(check_time),'/',count2) schedule,
+        if(count2=count(check_time),'已完成','未完成') status
+        from resource_stock_stuff a
+        left join resource_stock_info b on a.BELONG_STOCK_ID = b.ID
+        left join resource_list c on a.STUFF_ID =c.ID
+        left join sys_business_dict d on b.REGION =d.ID
+        left join (select BELONG_STOCK_ID,count(1) count2 from resource_stock_stuff group by BELONG_STOCK_ID) e
+        on a.BELONG_STOCK_ID =e.BELONG_STOCK_ID
+        WHERE
+        1 = 1
+          and b.STOCK_NAME is not null
+        <if test="region!=null">
+            and b.REGION = #{region}
+        </if>
+        <if test="stockName!=null">
+            and b.STOCK_NAME like concat('%',#{stockName},'%')
+        </if>
+        <if test="stockType!=null">
+            and b.stock_type=#{stockType}
+        </if>
+        <if test="userId!=null">
+            and find_in_set(b.id,(select stock_id from t_cfg_user where user_id = #{userId}))
+        </if>
+        <if test="checkStartTime!=null">
+            and a.check_time &gt;= #{checkStartTime}
+        </if>
+        <if test="checkEndTime!=null">
+            and a.check_time &lt;= #{checkEndTime}
+        </if>
+        group by a.BELONG_STOCK_ID ,date_format(check_time,'%Y-%m-%d')
+        order by REGION &lt;&gt; '741',count(check_time) desc
+    </select>
+
+    <select id="stuffRecordDetailByStockId" resultType="java.util.HashMap">
+        select
+            b.STUFF_NAME stuffName,
+            brand,
+            model,
+            STUFF_NUMBER stuffNumber,
+            b.STUFF_UNIT stuffUnit,
+            DATE_FORMAT(check_time, '%Y-%m-%d %H:%i:%s') checkTime
+        from resource_stock_stuff a
+        left join resource_list b on a.STUFF_ID =b.ID
+        where 1=1
+        <if test="stockId!=null and stockId!=''">
+            and a.BELONG_STOCK_ID=#{stockId}
+        </if>
+        <choose>
+            <when test="checkTime!=null">
+                and date_format(a.check_time,'%Y-%m-%d')=#{checkTime}
+            </when>
+            <when test="checkTime==null">
+                and a.check_time is null
+            </when>
+        </choose>
+        order by check_time desc
+    </select>
+
+
+    <update id="saveResourceStockStuffNum">
+        INSERT INTO resource_stock_stuff (
+        BELONG_STOCK_ID,
+        STUFF_ID,
+        STUFF_NUMBER,
+        HELP_TYPE,
+        brand,
+        model,
+        IS_USE_ABLE,
+        VALID_DATE,
+        price,
+        life
+        )
+        VALUES
+        <foreach collection="datas" item="data" separator=",">
+            (
+            #{data.stockId},
+            #{data.stuffId},
+            #{data.stockStuffNum},
+            #{data.helpTypeId},
+            #{data.物资品牌},
+            #{data.物资型号},
+            'Y',
+            #{data.overdueTime},
+            #{data.物资单价（元）},
+            #{data.使用年限（年）}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE STUFF_NUMBER=values(STUFF_NUMBER)
+    </update>
+
+    <select id="stuffInventory" resultType="java.util.HashMap">
+        SELECT
+        c.area_name,
+        b.id stockId,
+        b.STOCK_NAME stockName,
+        f.ORGA_NAME BELONG_UNIT,
+        e.ID stuffId,
+        e.STUFF_NAME stuff_name,
+        a.brand,
+        a.model,
+        a.BUY_DATE stuff_create_date,
+        STUFF_NUMBER,
+        GROUP_CONCAT(d.DICT_CH_NAME) helpName,
+        life,
+        price,
+        STUFF_NUMBER * (ifnull(price, 0)) totalPirce,
+        MANAGER,
+        MANAGER_PHONE,
+        e.STUFF_UNIT,
+        DATE_FORMAT(a.check_time, '%Y-%m-%d %H:%i:%s') check_time
+        FROM
+        resource_stock_stuff a
+        INNER JOIN resource_stock_info b ON a.BELONG_STOCK_ID = b.id
+        INNER JOIN resource_list e on a.STUFF_ID=e.ID
+        INNER JOIN t_dict_area c ON b.REGION = c.dict_id
+        left JOIN (SELECT * from sys_business_dict WHERE
+        PARENT_ID = '17'
+        AND IS_USING = 'Y') d on FIND_IN_SET(d.id,e.HELP_TYPE)
+        LEFT JOIN basic_organization f ON b.BELONG_UNIT = f.id
+        where 1=1
+        <if test="regionId != null and regionId != ''">
+            and b.region = #{regionId}
+        </if>
+        <if test="areaId!=null">
+            and c.area_code=#{areaId}
+        </if>
+        <if test="stuffName!=null">
+            and e.stuff_name like concat('%',#{stuffName},'%')
+        </if>
+        <if test="stuffModel!=null">
+            and a.model like concat('%',#{stuffModel},'%')
+        </if>
+        <if test="stuffBrand!=null">
+            and a.brand like concat('%',#{stuffBrand},'%')
+        </if>
+        <if test="stuffName!=null">
+            and e.stuff_name like concat('%',#{stuffName},'%')
+        </if>
+        <if test="stockName!=null">
+            and b.STOCK_NAME like concat('%',#{stockName},'%')
+        </if>
+        <if test="helpTypeId!=null">
+            and find_in_set(d.ID,#{helpTypeId})
+        </if>
+        <if test="userId != null">
+            and find_in_set(b.id,(select stock_id from t_cfg_user where user_id = #{userId}))
+        </if>
+        GROUP BY a.BELONG_STOCK_ID,a.STUFF_ID,a.brand,a.model
+        order by c.order_id,stock_name,stuff_name
+    </select>
+
+    <select id="queryStuffOperationDeatil" resultType="java.util.HashMap">
+        SELECT concat(a.STUFF_ID,'-',a.brand,'-',a.model) tm,ifnull(GROUP_CONCAT(distinct d.DICT_CH_NAME order by
+        d.DICT_ORDER),'无救援类型') helpName,b.STOCK_NAME,f.STUFF_NAME stuffName,ifnull(a.brand,'') brand,ifnull(a.model,'')
+        model,
+        ifnull(f.STUFF_UNIT,'') stuffUnit,a.opType operation_type,
+        cast(ifnull(round(c.num),0) AS CHAR) num,
+        ifnull(f.help_type,'') helpType
+        from (SELECT a.*,e.opType from resource_stock_stuff a
+        INNER JOIN (SELECT '1' opType
+        union SELECT '2' opType
+        union SELECT '3' opType) e) a
+        INNER JOIN resource_stock_info b on b.ID=a.BELONG_STOCK_ID
+        LEFT JOIN (
+        SELECT
+        stock_id,
+        stuff_id,
+        operation_type,
+        stuff_brand,
+        stuff_model,
+        sum(stuff_operation_num) num
+        FROM
+        t_stuff_operation_info
+        where
+        1=1
+        <if test="beginTime!=null">
+            and operation_time >=#{beginTime}
+        </if>
+        <if test="endTime!=null">
+            and operation_time &lt;=#{endTime}
+        </if>
+        <choose>
+            <when test="stockId!=null">
+                and FIND_IN_SET(stock_id,#{stockId})
+            </when>
+        </choose>
+        GROUP BY stock_id,stuff_id,stuff_brand,stuff_model,operation_type
+        union ALL
+        (SELECT
+        a.stock_id,
+        a.stuff_id,
+        '3' operation_type,
+        a.stuff_brand,
+        a.stuff_model,
+        round(a.stock_stuff_num) num
+        FROM
+        t_stuff_operation_info a
+        INNER JOIN (
+        SELECT
+        stock_id,
+        stuff_id,
+        stuff_brand,
+        stuff_model,
+        max(report_time) time
+        FROM
+        t_stuff_operation_info
+        WHERE
+        1=1
+        <if test="beginTime!=null">
+            and operation_time >=#{beginTime}
+        </if>
+        <if test="endTime!=null">
+            and operation_time &lt;=#{endTime}
+        </if>
+        <choose>
+            <when test="stockId!=null">
+                and FIND_IN_SET(stock_id,#{stockId})
+            </when>
+        </choose>
+        GROUP BY
+        stock_id,
+        stuff_id,
+        stuff_brand,
+        stuff_model
+        ) b ON a.stock_id = b.stock_id
+        AND a.stuff_id = b.stuff_id
+        AND a.stuff_brand=b.stuff_brand
+        AND a.stuff_model = b.stuff_model
+        AND a.report_time=b.time)
+        union ALL
+        SELECT
+        BELONG_STOCK_ID stock_id,
+        stuff_id,
+        '3' operation_type,
+        brand stuff_brand,
+        model stuff_model,
+        round(STUFF_NUMBER) num from resource_stock_stuff where id not in(
+        SELECT a.id from resource_stock_stuff a
+        INNER JOIN (
+        SELECT
+        stock_id,
+        stuff_id,
+        stuff_brand,
+        stuff_model,
+        max(report_time) time
+        FROM
+        t_stuff_operation_info
+        WHERE
+        1=1
+        <if test="beginTime!=null">
+            and operation_time >=#{beginTime}
+        </if>
+        <if test="endTime!=null">
+            and operation_time &lt;=#{endTime}
+        </if>
+        <choose>
+            <when test="stockId!=null">
+                and FIND_IN_SET(stock_id,#{stockId})
+            </when>
+        </choose>
+        GROUP BY
+        stock_id,
+        stuff_id,
+        stuff_brand,
+        stuff_model
+        ) b on a.BELONG_STOCK_ID = b.stock_id
+        and a.stuff_id = b.stuff_id
+        and a.brand=b.stuff_brand
+        and a.model = b.stuff_model)
+        <choose>
+            <when test="stockId!=null">
+                and FIND_IN_SET(BELONG_STOCK_ID,#{stockId})
+            </when>
+        </choose>
+        ) c on a.BELONG_STOCK_ID=c.stock_id
+        and a.STUFF_ID=c.stuff_id and a.brand=c.stuff_brand and a.model=c.stuff_model
+        and a.opType=c.operation_type
+        INNER JOIN resource_list f ON a.STUFF_ID = f.ID
+        LEFT JOIN (
+        SELECT
+        *
+        FROM
+        sys_business_dict
+        WHERE
+        PARENT_ID = '17'
+        AND IS_USING = 'Y'
+        ) d ON FIND_IN_SET(d.id, f.HELP_TYPE)
+        where 1=1
+        <choose>
+            <when test="stockId!=null">
+                and FIND_IN_SET(a.BELONG_STOCK_ID,#{stockId})
+            </when>
+        </choose>
+        <if test="stuffIds!=null and stuffIds!=''">
+            and find_in_set(f.id,#{stuffIds})
+        </if>
+        GROUP BY
+        a.BELONG_STOCK_ID,
+        a.STUFF_ID,
+        a.brand,
+        a.model,
+        a.opType
+        ORDER BY CONVERT(ifnull(GROUP_CONCAT(d.DICT_CH_NAME order by d.DICT_ORDER),'无救援类型') using
+        gbk),a.STUFF_ID,a.brand,a.model,c.operation_type,a.BELONG_STOCK_ID
+    </select>
+
+    <select id="queryStuffOperationDeatilByArea" resultType="java.util.HashMap">
+        SELECT concat(a.STUFF_ID,'-',a.brand,'-',a.model) tm,ifnull(GROUP_CONCAT(d.DICT_CH_NAME order by
+        d.DICT_ORDER),'无救援类型') helpName,d.area_name STOCK_NAME,f.STUFF_NAME stuffName,ifnull(a.brand,'')
+        brand,ifnull(a.model,'') model,
+        ifnull(f.STUFF_UNIT,'') stuffUnit,a.opType operation_type,
+        cast(ifnull(round(c.num),0) AS CHAR) num,
+        ifnull(f.help_type,'') helpType
+        from (SELECT a.*,e.opType from resource_stock_stuff a
+        INNER JOIN (SELECT '1' opType
+        union SELECT '2' opType
+        union SELECT '3' opType) e) a
+        INNER JOIN resource_stock_info b on b.ID=a.BELONG_STOCK_ID
+        INNER JOIN t_dict_area d on b.REGION=d.dict_id
+        LEFT JOIN (
+        SELECT
+        stock_id,
+        stuff_id,
+        operation_type,
+        stuff_brand,
+        stuff_model,
+        sum(stuff_operation_num) num
+        FROM
+        t_stuff_operation_info
+        where
+        1=1
+        <if test="beginTime!=null">
+            and operation_time >=#{beginTime}
+        </if>
+        <if test="endTime!=null">
+            and operation_time &lt;=#{endTime}
+        </if>
+        GROUP BY stock_id,stuff_id,stuff_brand,stuff_model,operation_type
+        union ALL
+        (SELECT
+        a.stock_id,
+        a.stuff_id,
+        '3' operation_type,
+        a.stuff_brand,
+        a.stuff_model,
+        round(a.stock_stuff_num) num
+        FROM
+        t_stuff_operation_info a
+        INNER JOIN (
+        SELECT
+        stock_id,
+        stuff_id,
+        stuff_brand,
+        stuff_model,
+        max(report_time) time
+        FROM
+        t_stuff_operation_info
+        WHERE
+        1=1
+        <if test="beginTime!=null">
+            and operation_time >=#{beginTime}
+        </if>
+        <if test="endTime!=null">
+            and operation_time &lt;=#{endTime}
+        </if>
+        GROUP BY
+        stock_id,
+        stuff_id,
+        stuff_brand,
+        stuff_model
+        ) b ON a.stock_id = b.stock_id
+        AND a.stuff_id = b.stuff_id
+        AND a.stuff_brand=b.stuff_brand
+        AND a.stuff_model = b.stuff_model
+        AND a.report_time=b.time)
+        union ALL
+        SELECT
+        BELONG_STOCK_ID stock_id,
+        stuff_id,
+        '3' operation_type,
+        brand stuff_brand,
+        model stuff_model,
+        round(STUFF_NUMBER) num from resource_stock_stuff where id not in(
+        SELECT a.id from resource_stock_stuff a
+        INNER JOIN (
+        SELECT
+        stock_id,
+        stuff_id,
+        stuff_brand,
+        stuff_model,
+        max(report_time) time
+        FROM
+        t_stuff_operation_info
+        WHERE
+        1=1
+        <if test="beginTime!=null">
+            and operation_time >=#{beginTime}
+        </if>
+        <if test="endTime!=null">
+            and operation_time &lt;=#{endTime}
+        </if>
+        GROUP BY
+        stock_id,
+        stuff_id,
+        stuff_brand,
+        stuff_model
+        ) b on a.BELONG_STOCK_ID = b.stock_id
+        and a.stuff_id = b.stuff_id
+        and a.brand=b.stuff_brand
+        and a.model = b.stuff_model)
+        ) c on a.BELONG_STOCK_ID=c.stock_id
+        and a.STUFF_ID=c.stuff_id and a.brand=c.stuff_brand and a.model=c.stuff_model
+        and a.opType=c.operation_type
+        INNER JOIN resource_list f ON a.STUFF_ID = f.ID
+        LEFT JOIN (
+        SELECT
+        *
+        FROM
+        sys_business_dict
+        WHERE
+        PARENT_ID = '17'
+        AND IS_USING = 'Y'
+        ) d ON FIND_IN_SET(d.id, f.HELP_TYPE)
+        where 1=1
+        <if test="stockId!=null and stockIds!=''">
+            AND FIND_IN_SET(d.area_code,#{stockId})
+        </if>
+        <if test="stuffIds!=null and stuffIds!=''">
+            AND FIND_IN_SET(f.id,#{stuffIds})
+        </if>
+        GROUP BY
+        b.REGION,
+        a.STUFF_ID,
+        a.brand,
+        a.model,
+        a.opType
+        ORDER BY CONVERT(ifnull(GROUP_CONCAT(d.DICT_CH_NAME order by d.DICT_ORDER),'无救援类型') using
+        gbk),a.STUFF_ID,a.brand,a.model,c.operation_type,b.REGION
+    </select>
+
+    <select id="queryWareHouseInfo" resultType="java.util.HashMap">
+        SELECT c.area_code, c.area_name, a.id, a.STOCK_NAME, ifnull(a.HELP_TYPE,'') HELP_TYPE,
+               ifnull(a.STORAGE_LEVEL,'') storageLevel,ifnull(BE_MANAGED_TYPE,'') beManagedType,
+               case a.stock_type
+                   when 1 then '物资库'
+                   when 2 then '装备库'
+                   when 4 then '救援队伍'
+                   when 5 then '社会力量'
+                   when 6 then '监管企业'
+                   else '其他' end stockType
+        from resource_stock_info a
+                 INNER JOIN sys_business_dict b on a.REGION = b.id
+                 INNER JOIN t_dict_area c on b.id = c.dict_id
+        ORDER BY c.order_id
+    </select>
+
+    <select id="queryWareHouseInfoById" resultType="java.util.HashMap">
+        SELECT c.area_code, c.area_name, a.id, a.STOCK_NAME, a.id stockId, ifnull(a.HELP_TYPE,'') HELP_TYPE
+        from resource_stock_info a
+                 INNER JOIN sys_business_dict b on a.REGION = b.id
+                 INNER JOIN t_dict_area c on b.id = c.dict_id
+        where find_in_set(a.id, (select stock_id from t_cfg_user where user_id = #{userId}))
+        ORDER BY c.order_id
+    </select>
+
+    <select id="warehouseStuffInfo" resultType="java.util.HashMap">
+        SELECT
+        b.STOCK_NAME stockName,
+        c.STUFF_NAME stuffName,
+        a.brand,
+        model,
+        a.buy_date buyDate,
+        a.STUFF_NUMBER num,
+        a.life,
+        a.price,
+        a.VALID_DATE validDate,
+        GROUP_CONCAT(d.name) helpName
+        FROM
+        resource_stock_stuff a
+        INNER JOIN resource_stock_info b ON a.BELONG_STOCK_ID = b.ID
+        INNER JOIN resource_list c ON a.STUFF_ID = c.ID
+        LEFT JOIN (
+        SELECT
+        id,
+        DICT_CH_NAME NAME
+        FROM
+        sys_business_dict
+        WHERE
+        PARENT_ID = '17'
+        AND IS_USING = 'Y'
+        ) d ON FIND_IN_SET(d.id, c.HELP_TYPE)
+        WHERE
+        1=1
+        <if test="stockId!=null">
+            and a.BELONG_STOCK_ID = #{stockId}
+        </if>
+        <if test="helpId!=null">
+            and FIND_IN_SET(d.id,#{helpId})
+        </if>
+        GROUP BY
+        a.BELONG_STOCK_ID,a.STUFF_ID,a.brand,a.model,a.BUY_DATE;
+    </select>
+
+    <select id="queryOperationInfo" resultType="java.util.HashMap">
+        SELECT
+        concat(a.stuff_id,a.stuff_brand,a.stuff_model) stuffCode,
+        a.unit,
+        a.stock_id stockId,
+        a.stock_name stockName,
+        a.operation_time operationTime,
+        a.manager,
+        a.manager_phone managerPhone,
+        a.source,
+        a.recipient,
+        a.recipient_unit recipientUnit,
+        a.recipient_phone recipientPhone,
+        a.stuff_id stuffId,
+        a.stuff_name stuffName,
+        a.stuff_brand stuffBrand,
+        a.stuff_model stuffModel,
+        ifnull(c.HELP_TYPE,'') helpType,
+        round(sum(a.stuff_operation_num)) stuffOperationNum,
+        round(d.STUFF_NUMBER) stockStuffNum,
+        a.price,
+        a.life,
+        a.stuff_create_date stuffCreateDate,
+        a.operation_type operationtype,
+        c.stuff_unit stuffUnit
+        FROM
+        t_stuff_operation_info a
+        left JOIN resource_list c ON a.stuff_id = c.id
+        left JOIN (
+        SELECT
+        stock_id,
+        stuff_id,
+        stuff_brand,
+        stuff_model,
+        stuff_create_date,
+        stock_stuff_num,
+        operation_type,
+        max(report_time) time
+        FROM
+        t_stuff_operation_info
+        GROUP BY
+        stock_id,
+        stuff_id,
+        stuff_brand,
+        stuff_model,
+        operation_type,
+        TO_DAYS(operation_time)
+        ) b ON a.stock_id = b.stock_id
+        AND a.stuff_id = b.stuff_id
+        AND a.stuff_brand = b.stuff_brand
+        AND a.stuff_model = b.stuff_model
+        AND a.operation_type=b.operation_type
+        AND a.report_time = b.time
+        left join resource_stock_stuff d
+        on a.stock_id =d.BELONG_STOCK_ID
+        and a.stuff_id =d.STUFF_ID
+        and a.stuff_brand =d.brand
+        and a.stuff_model =d.model
+        where 1=1
+        <if test="type!=null">
+            AND a.operation_type=#{type}
+        </if>
+        and FIND_IN_SET(a.stock_id,#{stockId})
+        <if test="beginTime!=null">
+            and a.operation_time>=#{beginTime}
+        </if>
+        <if test="endTime!=null">
+            and a.operation_time&lt;=#{endTime}
+        </if>
+        <if test="stuffIds!=null and stuffIds!=''">
+            and find_in_set(c.id,#{stuffIds})
+        </if>
+        group by a.stock_name,a.stuff_brand,a.stuff_model,a.operation_time,a.operation_type
+        ORDER BY a.report_time
+    </select>
+
+    <select id="selDictArea" resultType="java.util.LinkedHashMap">
+        SELECT IF(area_name = '市辖区','市直管',area_name) AS areaName,dict_id dictId
+        FROM t_dict_area
+        order by order_id asc
+    </select>
+
+    <select id="selStorageType" resultType="java.util.Map">
+        SELECT ifnull(t6.DICT_CH_NAME,'') storageName,t6.id
+        FROM resource_stock_info a
+        left join sys_business_dict t6 on a.STORAGE_TYPE = t6.ID
+        GROUP BY t6.ID
+    </select>
+
+
+    <select id="selMaterialsCount" resultType="java.math.BigDecimal">
+        SELECT IFNULL(substring_index(SUM(STUFF_NUMBER),'.',1),0)  count
+        FROM resource_stock_stuff a
+        INNER JOIN resource_stock_info b ON a.BELONG_STOCK_ID = b.id
+        INNER JOIN resource_list e on a.STUFF_ID=e.ID
+        INNER JOIN t_dict_area c ON b.REGION = c.dict_id
+        left JOIN (SELECT * from sys_business_dict WHERE
+        PARENT_ID = '17'
+        AND IS_USING = 'Y') d on FIND_IN_SET(d.id,e.HELP_TYPE)
+        LEFT JOIN basic_organization f ON b.BELONG_UNIT = f.id
+        where 1=1
+        <if test="dictId != null">
+        and BELONG_STOCK_ID IN (SELECT a.id FROM resource_stock_info a
+                LEFT JOIN t_dict_area b on a.REGION=b.dict_id
+                where b.area_name = #{dictId})
+        </if>
+        <if test="helpTypeId != null">
+            and  find_in_set(d.ID,#{helpTypeId})
+        </if>
+        <if test="storageId != null">
+            and BELONG_STOCK_ID IN (SELECT a.id FROM resource_stock_info a
+            where a.STORAGE_TYPE = #{storageId})
+        </if>
+    </select>
+
+    <select id="selDictAreaByAreaName" resultType="java.util.LinkedHashMap">
+        SELECT e.stuff_name,a.model name,IFNULL(SUM( STUFF_NUMBER), 0 ) num
+        FROM resource_stock_stuff a
+                INNER JOIN resource_stock_info b ON a.BELONG_STOCK_ID = b.id
+                INNER JOIN resource_list e on a.STUFF_ID=e.ID
+                INNER JOIN t_dict_area c ON b.REGION = c.dict_id
+                left JOIN (SELECT * from sys_business_dict WHERE
+                PARENT_ID = '17'
+                AND IS_USING = 'Y') d on FIND_IN_SET(d.id,e.HELP_TYPE)
+                LEFT JOIN basic_organization f ON b.BELONG_UNIT = f.id
+        where 1=1
+        <if test="secondLevelType != '全市'.toString()">
+        and BELONG_STOCK_ID IN (SELECT a.id FROM resource_stock_info a
+                LEFT JOIN t_dict_area b on a.REGION=b.dict_id
+                where b.area_name = #{secondLevelType})
+        </if>
+        <if test="keyword!=null">
+            and e.stuff_name like concat('%',#{keyword},'%')
+        </if>
+        <if test="stuffName!=null">
+            and e.stuff_name = #{stuffName}
+        </if>
+        GROUP BY a.model
+        ORDER BY num desc
+    </select>
+
+    <select id="selStuffNameByAreaName" resultType="java.util.Map">
+        SELECT  e.stuff_name stuffName
+        FROM resource_stock_stuff a
+                     INNER JOIN resource_stock_info b ON a.BELONG_STOCK_ID = b.id
+                     INNER JOIN resource_list e on a.STUFF_ID=e.ID
+                     INNER JOIN t_dict_area c ON b.REGION = c.dict_id
+                     left JOIN (SELECT * from sys_business_dict WHERE
+                PARENT_ID = '17'
+                                                                  AND IS_USING = 'Y') d on FIND_IN_SET(d.id,e.HELP_TYPE)
+                     LEFT JOIN basic_organization f ON b.BELONG_UNIT = f.id
+            <if test="secondLevelType != '全市'.toString()">
+                WHERE BELONG_STOCK_ID IN (SELECT a.id FROM resource_stock_info a
+                LEFT JOIN t_dict_area b on a.REGION=b.dict_id
+                where b.area_name = #{secondLevelType})
+            </if>
+        GROUP BY e.stuff_name
+        order by e.stuff_name asc
+    </select>
+
+    <select id="selMaterialsBystorageType" resultType="java.util.LinkedHashMap">
+        SELECT  e.stuff_name stuffName
+        FROM resource_stock_stuff a
+                     INNER JOIN resource_stock_info b ON a.BELONG_STOCK_ID = b.id
+                     INNER JOIN resource_list e on a.STUFF_ID=e.ID
+                     INNER JOIN t_dict_area c ON b.REGION = c.dict_id
+                     left JOIN (SELECT * from sys_business_dict WHERE
+                PARENT_ID = '17'
+                                                                  AND IS_USING = 'Y') d on FIND_IN_SET(d.id,e.HELP_TYPE)
+                     LEFT JOIN basic_organization f ON b.BELONG_UNIT = f.id
+        WHERE BELONG_STOCK_ID IN (SELECT a.id FROM resource_stock_info a
+                                                           LEFT JOIN sys_business_dict b on b.id = a.STORAGE_TYPE
+                                  where b.DICT_CH_NAME = #{secondLevelType})
+
+        GROUP BY e.stuff_name
+        order by e.stuff_name asc
+    </select>
+
+    <select id="selMaterialsBystorageType1" resultType="java.util.Map">
+        SELECT e.stuff_name,a.model name,IFNULL(SUM( STUFF_NUMBER), 0 ) num
+        FROM resource_stock_stuff a
+                     INNER JOIN resource_stock_info b ON a.BELONG_STOCK_ID = b.id
+                     INNER JOIN resource_list e on a.STUFF_ID=e.ID
+                     INNER JOIN t_dict_area c ON b.REGION = c.dict_id
+                     left JOIN (SELECT * from sys_business_dict WHERE
+                PARENT_ID = '17'
+                                                                  AND IS_USING = 'Y') d on FIND_IN_SET(d.id,e.HELP_TYPE)
+                     LEFT JOIN basic_organization f ON b.BELONG_UNIT = f.id
+        WHERE BELONG_STOCK_ID IN (SELECT a.id FROM resource_stock_info a
+                                                           LEFT JOIN sys_business_dict b on b.id = a.STORAGE_TYPE
+                                  where b.DICT_CH_NAME = #{secondLevelType})
+        <if test="keyword!=null">
+            and e.stuff_name like concat('%',#{keyword},'%')
+        </if>
+        <if test="stuffName!=null">
+            and e.stuff_name = #{stuffName}
+        </if>
+        GROUP BY a.model
+        ORDER BY num desc
+    </select>
+
+    <select id="selMaterialsByEmergencyPowerDict" resultType="java.util.Map">
+        select * from(
+        SELECT  e.stuff_name stuffName,IFNULL(SUM( STUFF_NUMBER)+ifnull(k.stuff_quantity,0), 0 ) num,
+        ifnull(g.DICT_CH_NAME,'') type,ifnull(if(h.ID=47,g.DICT_CH_NAME,h.DICT_CH_NAME),'') parentType
+        FROM resource_stock_stuff a
+        INNER JOIN resource_stock_info b ON a.BELONG_STOCK_ID = b.id
+        INNER JOIN resource_list e on a.STUFF_ID=e.ID
+        INNER JOIN t_dict_area c ON b.REGION = c.dict_id
+        left join sys_business_dict g
+        on g.ID =e.STUFF_TYPE_CODE
+        left join sys_business_dict h
+        on g.PARENT_ID =h.id
+        left join resource_agreement j on b.STOCK_NAME = j.stock_name
+        left join resource_agreement_stuff k on k.agreement =j.id and k.stuff_id =a.STUFF_ID
+        <if test="nameType != null">
+                     left JOIN (SELECT * from sys_business_dict WHERE
+                PARENT_ID = '17' AND IS_USING = 'Y') d on FIND_IN_SET(d.id,e.HELP_TYPE)
+        </if>
+                     LEFT JOIN basic_organization f ON b.BELONG_UNIT = f.id
+        where 1=1
+        <if test="nameType != null">
+          and  find_in_set(d.DICT_CH_NAME,#{nameType})
+        </if>
+        <if test="keyword!=null">
+            and e.stuff_name like concat('%',#{keyword},'%')
+        </if>
+        <if test="secondLevelType != null">
+            and BELONG_STOCK_ID IN (SELECT a.id FROM resource_stock_info a
+            LEFT JOIN t_dict_area b on a.REGION=b.dict_id
+            where b.area_name = #{secondLevelType})
+        </if>
+        GROUP BY e.stuff_name
+        union
+        select e.stuff_name,
+        sum(stuff_quantity),ifnull(g.DICT_CH_NAME,'') type,ifnull(if(h.ID=47,g.DICT_CH_NAME,h.DICT_CH_NAME),'') parentType
+        from resource_agreement_stuff a
+        left join resource_list e on a.STUFF_ID=e.ID
+        left join sys_business_dict g on g.ID =e.STUFF_TYPE_CODE
+        left join sys_business_dict h on g.PARENT_ID =h.id
+        left join resource_agreement i on a.agreement=i.id
+        INNER JOIN resource_stock_info b ON i.stock_name = b.stock_name
+        <if test="nameType != null">
+            left JOIN (SELECT * from sys_business_dict WHERE
+            PARENT_ID = '17' AND IS_USING = 'Y') d on FIND_IN_SET(d.id,e.HELP_TYPE)
+        </if>
+        where agreement is not null and a.stuff_id not in (select stuff_id from resource_stock_stuff group by stuff_id)
+        <if test="nameType != null">
+            and  find_in_set(d.DICT_CH_NAME,#{nameType})
+        </if>
+        <if test="keyword!=null">
+            and e.stuff_name like concat('%',#{keyword},'%')
+        </if>
+        <if test="secondLevelType != null">
+            and BELONG_STOCK_ID IN (SELECT a.id FROM resource_stock_info a
+            LEFT JOIN t_dict_area b on a.REGION=b.dict_id
+            where b.area_name = #{secondLevelType})
+        </if>
+        GROUP BY e.stuff_name) a
+        order by stuffName asc
+        <if test="start != null">
+            limit ${start},${pageSize}</if>
+    </select>
+
+    <select id="selMaterialsByEmergencyPowerDict1" resultType="java.util.Map">
+        select * from (
+        SELECT e.stuff_name,a.model name,
+        IFNULL(SUM( STUFF_NUMBER)+ifnull(k.stuff_quantity,0), 0 ) num,
+        IFNULL(e.STUFF_UNIT,'') stuffUnit
+        FROM resource_stock_stuff a
+        INNER JOIN resource_stock_info b ON a.BELONG_STOCK_ID = b.id
+        INNER JOIN resource_list e on a.STUFF_ID=e.ID
+        INNER JOIN t_dict_area c ON b.REGION = c.dict_id
+        left join resource_agreement j on b.STOCK_NAME = j.stock_name
+        left join resource_agreement_stuff k on k.agreement =j.id and k.stuff_id =a.STUFF_ID
+        <if test="nameType != null">left JOIN (SELECT * from sys_business_dict WHERE
+            PARENT_ID = '17' AND IS_USING = 'Y') d on FIND_IN_SET(d.id,e.HELP_TYPE)
+        </if>
+         LEFT JOIN basic_organization f ON b.BELONG_UNIT = f.id
+        where 1=1
+        <if test="nameType != null">
+            and find_in_set(d.DICT_CH_NAME,#{nameType})
+        </if>
+        <if test="secondLevelType != null">
+            and BELONG_STOCK_ID IN (SELECT a.id FROM resource_stock_info a
+            LEFT JOIN t_dict_area b on a.REGION=b.dict_id
+            where b.area_name = #{secondLevelType})
+        </if>
+        <if test="keyword!=null">
+            and e.stuff_name like concat('%',#{keyword},'%')
+        </if>
+        <if test="stuffName!=null">
+            and e.stuff_name = #{stuffName}
+        </if>
+        <if test="keyword != null">
+            GROUP BY e.stuff_name
+        </if>
+        <if test="keyword == null">
+            GROUP BY a.model
+        </if>
+        union
+        select a.stuff_name,a.stuff_model,sum(stuff_quantity) num,a.stuff_unit
+        from resource_agreement_stuff a
+        left join resource_list e on a.STUFF_ID=e.ID
+        left join sys_business_dict g on g.ID =e.STUFF_TYPE_CODE
+        left join sys_business_dict h on g.PARENT_ID =h.id
+        left join resource_agreement i on a.agreement=i.id
+        INNER JOIN resource_stock_info b ON i.stock_name = b.stock_name
+        <if test="nameType != null">
+            left JOIN (SELECT * from sys_business_dict WHERE
+            PARENT_ID = '17' AND IS_USING = 'Y') d on FIND_IN_SET(d.id,e.HELP_TYPE)
+        </if>
+        where agreement is not null and a.stuff_id not in (select stuff_id from resource_stock_stuff group by stuff_id)
+        <if test="nameType != null">
+            and find_in_set (d.DICT_CH_NAME,#{nameType})
+        </if>
+        <if test="secondLevelType != null">
+            and BELONG_STOCK_ID IN (SELECT a.id FROM resource_stock_info a
+            LEFT JOIN t_dict_area b on a.REGION=b.dict_id
+            where b.area_name = #{secondLevelType})
+        </if>
+        <if test="keyword!=null">
+            and e.stuff_name like concat('%',#{keyword},'%')
+        </if>
+        <if test="stuffName!=null">
+            and e.stuff_name = #{stuffName}
+        </if>
+        <if test="keyword != null">
+            GROUP BY e.stuff_name
+        </if>
+        <if test="keyword == null">
+            GROUP BY a.stuff_model
+        </if>
+            ) a
+        ORDER BY a.num desc
+        <if test="start != null">
+            limit ${start},${pageSize}</if>
+    </select>
+
+    <select id="selMaterialsByAll" resultType="java.util.Map">
+        SELECT  e.stuff_name stuffName
+        FROM resource_stock_stuff a
+                     INNER JOIN resource_stock_info b ON a.BELONG_STOCK_ID = b.id
+                     INNER JOIN resource_list e on a.STUFF_ID=e.ID
+                     INNER JOIN t_dict_area c ON b.REGION = c.dict_id
+                     left JOIN (SELECT * from sys_business_dict WHERE
+                PARENT_ID = '17'
+                                                                  AND IS_USING = 'Y') d on FIND_IN_SET(d.id,e.HELP_TYPE)
+                     LEFT JOIN basic_organization f ON b.BELONG_UNIT = f.id
+        GROUP BY e.stuff_name
+    </select>
+
+    <select id="selMaterialsByAll1" resultType="java.util.Map">
+        SELECT e.stuff_name,a.model name,IFNULL(SUM( STUFF_NUMBER), 0 ) num
+        FROM resource_stock_stuff a
+                     INNER JOIN resource_stock_info b ON a.BELONG_STOCK_ID = b.id
+                     INNER JOIN resource_list e on a.STUFF_ID=e.ID
+                     INNER JOIN t_dict_area c ON b.REGION = c.dict_id
+                     left JOIN (SELECT * from sys_business_dict WHERE
+                PARENT_ID = '17'
+                                                                  AND IS_USING = 'Y') d on FIND_IN_SET(d.id,e.HELP_TYPE)
+                     LEFT JOIN basic_organization f ON b.BELONG_UNIT = f.id
+        <if test="keyword!=null">
+            where e.stuff_name like concat('%',#{keyword},'%')
+        </if>
+        <if test="stuffName!=null">
+            where e.stuff_name = #{stuffName}
+        </if>
+        GROUP BY a.model
+        ORDER BY num desc
+    </select>
+
+    <select id="materialWarehouse" resultType="java.util.LinkedHashMap">
+        SELECT * FROM (
+        SELECT e.stuff_name,a.model name,IFNULL(round(SUM( a.STUFF_NUMBER)), 0 ) stuffNumber,
+        b.MAIN_PEOPLE mainPeople,b.DUTY_PHONE dutyPhone,b.STOCK_NAME,e.stuff_unit stuffUnit
+        FROM resource_stock_stuff a
+        INNER JOIN resource_stock_info b ON a.BELONG_STOCK_ID = b.id
+        INNER JOIN resource_list e on a.STUFF_ID=e.ID
+        INNER JOIN t_dict_area c ON b.REGION = c.dict_id
+        left JOIN (SELECT * from sys_business_dict WHERE
+        PARENT_ID = '17'
+        AND IS_USING = 'Y') d on FIND_IN_SET(d.id,e.HELP_TYPE)
+        LEFT JOIN basic_organization f ON b.BELONG_UNIT = f.id
+        where 1=1
+<!--        <if test="type == 1 and secondLevelType != '全市'.toString()">-->
+<!--            and BELONG_STOCK_ID IN (SELECT a.id FROM resource_stock_info a-->
+<!--            LEFT JOIN t_dict_area b on a.REGION=b.dict_id-->
+<!--            where b.area_name = #{secondLevelType})-->
+<!--        </if>-->
+<!--        <if test="type == 2">-->
+<!--            and BELONG_STOCK_ID IN (SELECT a.id FROM resource_stock_info a-->
+<!--            LEFT JOIN sys_business_dict b on b.id = a.STORAGE_TYPE-->
+<!--            where b.DICT_CH_NAME = #{secondLevelType})-->
+<!--        </if>-->
+<!--        <if test="type == 3">-->
+        <if test="secondLevelType!=null">
+        and BELONG_STOCK_ID IN (SELECT a.id FROM resource_stock_info a
+        LEFT JOIN t_dict_area b on a.REGION=b.dict_id
+        where b.area_name = #{secondLevelType})
+        </if>
+<!--        </if>-->
+        <if test="nameType != null">
+        and  find_in_set(d.DICT_CH_NAME,#{nameType})
+        </if>
+        <if test="thirdLevelType!=null">
+            and e.stuff_name = #{thirdLevelType}
+        </if>
+        <if test="fifthLevelType!=null">
+            and a.model = #{fifthLevelType}
+        </if>
+        <if test="stockName!=null">
+            and b.STOCK_NAME =#{stockName}
+        </if>
+        <if test="stuffId != null">
+            and a.STUFF_ID = #{stuffId}
+        </if>
+        <if test="keyword!=null">
+            and (b.STOCK_NAME like CONCAT('%',#{keyword},'%')
+            or e.stuff_name like CONCAT('%',#{keyword},'%')
+            or a.model like CONCAT('%',#{keyword},'%'))
+        </if>
+        GROUP BY a.model
+        order by a.STUFF_NUMBER desc
+        ) g HAVING g.stuffNumber != 0
+    </select>
+    <select id="materialWarehouse1" resultType="java.util.LinkedHashMap">
+        SELECT * FROM (
+        SELECT
+        e.stuff_name name,
+        IFNULL(cast(round(SUM(a.STUFF_NUMBER)/count(d.id)) as char), 0 ) stuffNumber,
+        IFNULL(e.stuff_unit,'') stuffUnit
+        FROM resource_stock_stuff a
+        INNER JOIN resource_stock_info b ON a.BELONG_STOCK_ID = b.id
+        INNER JOIN resource_list e on a.STUFF_ID=e.ID
+        INNER JOIN t_dict_area c ON b.REGION = c.dict_id
+        left JOIN (SELECT * from sys_business_dict WHERE
+        PARENT_ID = '17'
+        AND IS_USING = 'Y') d on FIND_IN_SET(d.id,e.HELP_TYPE)
+        where 1=1
+        <!--        <if test="type == 1 and secondLevelType != '全市'.toString()">-->
+        <!--            and BELONG_STOCK_ID IN (SELECT a.id FROM resource_stock_info a-->
+        <!--            LEFT JOIN t_dict_area b on a.REGION=b.dict_id-->
+        <!--            where b.area_name = #{secondLevelType})-->
+        <!--        </if>-->
+        <!--        <if test="type == 2">-->
+        <!--            and BELONG_STOCK_ID IN (SELECT a.id FROM resource_stock_info a-->
+        <!--            LEFT JOIN sys_business_dict b on b.id = a.STORAGE_TYPE-->
+        <!--            where b.DICT_CH_NAME = #{secondLevelType})-->
+        <!--        </if>-->
+        <!--        <if test="type == 3">-->
+        <if test="secondLevelType!=null">
+            and BELONG_STOCK_ID IN (SELECT a.id FROM resource_stock_info a
+            LEFT JOIN t_dict_area b on a.REGION=b.dict_id
+            where b.area_name = #{secondLevelType})
+        </if>
+        <!--        </if>-->
+        <if test="nameType != null">
+            and  find_in_set(d.DICT_CH_NAME,#{nameType})
+        </if>
+        <if test="thirdLevelType!=null">
+            and e.stuff_name = #{thirdLevelType}
+        </if>
+        <if test="fifthLevelType!=null">
+            and a.model = #{fifthLevelType}
+        </if>
+        <if test="stockName!=null">
+            and b.STOCK_NAME =#{stockName}
+        </if>
+        <if test="stuffId != null">
+            and a.STUFF_ID = #{stuffId}
+        </if>
+        <if test="keyword!=null">
+            and (b.STOCK_NAME like CONCAT('%',#{keyword},'%')
+            or e.stuff_name like CONCAT('%',#{keyword},'%')
+            or a.model like CONCAT('%',#{keyword},'%'))
+        </if>
+        GROUP BY STUFF_ID
+        order by `order` asc, stuffNumber desc
+        ) g HAVING g.stuffNumber != 0
+    </select>
+
+    <select id="materialDetail" resultType="java.util.LinkedHashMap">
+        SELECT
+        CONCAT( a.stuff_name,'-', a.stuff_model) name,
+        g.STUFF_UNIT stuffUnit,
+        a.stuff_operation_num stuff_operation_num,
+        a.stock_stuff_num STUFF_NUMBER,
+        IF (
+        a.operation_type = 1,
+        '出库',
+        '入库'
+        ) operation_type,
+        a.stuff_brand brand,
+        a.stock_name STOCK_NAME,
+        ifnull(a.MANAGER ,'') manager ,
+        ifnull(a.MANAGER_PHONE,'') managerPhone,
+        d.MAIN_PEOPLE mainPeople,
+        d.DUTY_PHONE dutyPhone,
+        d.INTRODUCTION introduction,
+        a.operation_time operationTime,
+        a.source recipientUnit
+        FROM
+        t_stuff_operation_info a
+        INNER JOIN resource_stock_info d ON a.stock_id = d.ID
+        INNER JOIN sys_business_dict b ON d.REGION = b.id
+        INNER JOIN t_dict_area c ON b.ID = c.dict_id
+        LEFT JOIN sys_business_dict e on d.BELONG_UNIT=e.ID
+        LEFT JOIN basic_organization f on d.BELONG_UNIT = f.id
+        LEFT JOIN resource_list g on a.stuff_id=g.id
+        where 1=1
+        <if test="nameType!= null">
+            and  find_in_set(#{nameType},a.help_type)
+        </if>
+        <if test="secondLevelType!= null">
+            and a.stock_id IN (SELECT a.id FROM resource_stock_info a
+            LEFT JOIN t_dict_area b on a.REGION=b.dict_id
+            where b.area_name = #{secondLevelType})
+        </if>
+        <if test="thirdLevelType!=null">
+            and a.stuff_name = #{thirdLevelType}
+        </if>
+        <if test="fifthLevelType!=null">
+            and a.stuff_model like CONCAT('%',#{fifthLevelType},'%')
+        </if>
+        <if test="fourthLevelType!=null">
+            and a.stock_name =#{fourthLevelType}
+        </if>
+        <if test="keyword!=null">
+            and a.stock_name like CONCAT('%',#{keyword},'%')
+        </if>
+        <if test="startTime!=null">
+            and a.operation_time &gt;= #{startTime}
+        </if>
+        <if test="endTime!=null">
+            and a.operation_time &lt;= #{endTime}
+        </if>
+        <if test="operationType!=null">
+            and a.operation_type = #{operationType}
+        </if>
+        order by a.report_time desc
+    </select>
+
+    <select id="getStockNameList" resultType="java.util.Map">
+        SELECT DISTINCT
+                b.STOCK_NAME stockName,IFNULL(SUM( a.STUFF_NUMBER), 0 ) stuffNumber,a.STUFF_ID STUFF_ID
+        FROM resource_stock_stuff a
+        INNER JOIN resource_stock_info b ON a.BELONG_STOCK_ID = b.id
+        INNER JOIN resource_list e on a.STUFF_ID=e.ID
+        INNER JOIN t_dict_area c ON b.REGION = c.dict_id
+        left JOIN (SELECT * from sys_business_dict WHERE
+        PARENT_ID = '17'
+        AND IS_USING = 'Y') d on FIND_IN_SET(d.id,e.HELP_TYPE)
+        LEFT JOIN basic_organization f ON b.BELONG_UNIT = f.id
+        where 1=1
+        <if test="secondLevelType != null">
+            and BELONG_STOCK_ID IN (SELECT a.id FROM resource_stock_info a
+            LEFT JOIN t_dict_area b on a.REGION=b.dict_id
+            where b.area_name = #{secondLevelType})
+        </if>
+        <if test="nameType != null">
+        and  find_in_set(d.DICT_CH_NAME,#{nameType})
+        </if>
+        <if test="thirdLevelType != null">
+        and e.stuff_name = #{thirdLevelType}
+        </if>
+        <if test="keyword!=null">
+            and (b.STOCK_NAME like CONCAT('%',#{keyword},'%')
+            or e.stuff_name like CONCAT('%',#{keyword},'%')
+            or a.model like CONCAT('%',#{keyword},'%'))
+        </if>
+        GROUP BY STOCK_NAME
+        ORDER BY stuffNumber desc
+    </select>
+
+    <select id="queryStockByUserId" resultType="java.lang.String">
+        select STOCK_NAME from resource_stock_info where find_in_set(id,(
+            select stock_id from t_cfg_user where user_id=#{id}
+            ))
+    </select>
+
+    <select id="selStockNameList" resultType="java.util.Map">
+        SELECT DISTINCT
+        b.STOCK_NAME stockName,
+        b.ADDRESS address,
+        b.DUTY_PHONE dutyPhone,
+        b.MANAGER manager,
+        b.MANAGER_PHONE managerPhone,
+        b.MAIN_PEOPLE mainPeople,
+        b.INTRODUCTION introduction
+        FROM resource_stock_stuff a
+        INNER JOIN resource_stock_info b ON a.BELONG_STOCK_ID = b.id
+        INNER JOIN resource_list e on a.STUFF_ID=e.ID
+        INNER JOIN t_dict_area c ON b.REGION = c.dict_id
+        left JOIN (SELECT * from sys_business_dict WHERE
+        PARENT_ID = '17'
+        AND IS_USING = 'Y') d on FIND_IN_SET(d.id,b.HELP_TYPE)
+        LEFT JOIN basic_organization f ON b.BELONG_UNIT = f.id
+        where 1=1
+        <if test="secondLevelType != null">
+            and BELONG_STOCK_ID IN (SELECT a.id FROM resource_stock_info a
+            LEFT JOIN t_dict_area b on a.REGION=b.dict_id
+            where b.area_name = #{secondLevelType})
+        </if>
+        <if test="nameType != null">
+            and  find_in_set(d.DICT_CH_NAME,#{nameType})
+        </if>
+        <if test="keyword!=null">
+            and (b.STOCK_NAME like CONCAT('%',#{keyword},'%')
+            or e.stuff_name like CONCAT('%',#{keyword},'%')
+            or a.model like CONCAT('%',#{keyword},'%'))
+        </if>
+        ORDER BY stockName desc
+        <if test="start != null">
+            limit ${start},${pageSize}</if>
+    </select>
+
+    <select id="selOperatiionInfoById" resultType="java.util.LinkedHashMap">
+        SELECT
+                id,
+                stock_id stockId,
+                stuff_id stuffId,
+                operation_type,
+                stuff_brand brand,
+                stuff_model model,
+                stuff_operation_num operationNum
+        FROM
+                t_stuff_operation_info
+        where  id = #{id}
+    </select>
+
+    <update id="updateStockStuffNumIn">
+        update resource_stock_stuff set STUFF_NUMBER=STUFF_NUMBER+#{operationNum} where
+        BELONG_STOCK_ID=#{stockId}
+        and STUFF_ID=#{stuffId}
+        <if test="brand != null and brand != ''"> and brand=#{brand} </if>
+        <if test="model != null and model != ''">  and model=#{model}  </if> limit 1
+    </update>
+
+    <update id="updateStockStuffNumOut">
+        update resource_stock_stuff set STUFF_NUMBER=STUFF_NUMBER-#{operationNum} where
+        BELONG_STOCK_ID=#{stockId}
+        and STUFF_ID=#{stuffId}
+        <if test="brand != null and brand != ''"> and brand=#{brand} </if>
+        <if test="model != null and model != ''">  and model=#{model}  </if> limit 1
+    </update>
+
+    <update id="updateStockStuffCheckTime">
+        update resource_stock_stuff set check_time=now() where
+        BELONG_STOCK_ID=#{stockId}
+        and STUFF_ID=#{stuffId}
+        <if test="brand != null and brand != ''"> and brand=#{brand} </if>
+        <if test="model != null and model != ''">  and model=#{model}  </if> limit 1
+    </update>
+
+    <select id="queryStuffNumByName" resultType="java.lang.String">
+        select ifnull(cast(round(sum(STUFF_NUMBER)) as char),'0')
+        from resource_stock_stuff a
+        left join resource_stock_info b
+        on a.BELONG_STOCK_ID =b.ID
+        left join resource_list c
+        on a.STUFF_ID =c.ID
+        where c.STUFF_NAME = #{stuffName}
+          and a.model = #{model}
+          and a.brand = #{brand}
+        <if test="type==1">
+        and b.STOCK_NAME = #{stockName}
+        </if>
+        <if test="type==2">
+        and b.REGION =(select id from sys_business_dict where DICT_CH_NAME=#{stockName} and PARENT_ID=1)
+        </if>
+    </select>
+
+    <select id="stuffExcelExport3" resultType="map">
+        select
+        ifnull((select DICT_CH_NAME from sys_business_dict where id=si.STORAGE_LEVEL),'') gx,
+        bd.DICT_CH_NAME area,
+        bd.DICT_ORDER areaOrder,
+        case si.stock_type
+        when 1 then '物资库'
+        when 2 then '装备库'
+        when 4 then '救援队伍'
+        when 5 then '社会力量'
+        when 6 then '监管企业'
+        else '其他' end stockType,
+        si.stock_name stockName,
+        rl.STUFF_NAME stuff,
+        concat(rl.STUFF_NAME,char(10),'-',ss.model) stuffModel,
+        ss.model model,
+        ifnull(rl.HELP_TYPE,'') helpType,
+        cast(round(STUFF_NUMBER) as char) stuffNumber,
+        ifnull(ras.stuff_quantity,0) agreementNumber,
+        ifnull(if(nbd.PARENT_ID = 47,nbd.DICT_CH_NAME,(select DICT_CH_NAME from sys_business_dict where id=nbd.PARENT_ID)),'') parentType,
+        ifnull(if(nbd.PARENT_ID = 47,'',nbd.DICT_CH_NAME),'') stuffType
+        from resource_stock_stuff ss
+        left join resource_stock_info si
+        on ss.BELONG_STOCK_ID = si.id
+        left join resource_list rl
+        on ss.STUFF_ID =rl.id
+        left join resource_agreement ra
+        on si.STOCK_NAME =ra.stock_name
+        left join resource_agreement_stuff ras
+        on ras.stuff_name =rl.STUFF_NAME
+        and ras.stuff_model =ss.model
+        and ras.agreement = ra.id
+        and ras.agreement is not null
+        left join sys_business_dict bd
+        on si.REGION =bd.id
+        left join sys_business_dict nbd
+        on rl.STUFF_TYPE_CODE = nbd.id
+        where si.STOCK_NAME is not null
+        and ss.STUFF_NUMBER &lt;&gt;0
+        <if test="stockIds!=null and stockIds!=''">
+         and find_in_set(si.ID,#{stockIds})
+        </if>
+        <if test="stuffIds!=null and stuffIds!=''">
+            and find_in_set(rl.ID,#{stuffIds})
+        </if>
+        group by ss.STUFF_ID,ss.model,ss.BELONG_STOCK_ID
+        union
+        select
+        ifnull((select DICT_CH_NAME from sys_business_dict where id=si2.STORAGE_LEVEL),'') gx,
+        bd2.DICT_CH_NAME area,
+        bd2.DICT_ORDER areaOrder,
+        case si2.stock_type
+        when 1 then '物资库'
+        when 2 then '装备库'
+        when 4 then '救援队伍'
+        when 5 then '社会力量'
+        when 6 then '监管企业'
+        else '其他' end stockType,
+        ra2.stock_name stockName,
+        ras2.stuff_name stuff,
+        concat(ras2.stuff_name,char(10),'-',ras2.stuff_model) stuffModel,
+        ras2.stuff_model model,
+        ifnull(rl2.HELP_TYPE,'') helpType,
+        "0" stuffNumber,
+        sum(ifnull(ras2.stuff_quantity,0))  agreementNumber,
+        ifnull(if(nbd2.PARENT_ID = 47,nbd2.DICT_CH_NAME,(select DICT_CH_NAME from sys_business_dict where id=nbd2.PARENT_ID)),'') parentType,
+        ifnull(if(nbd2.PARENT_ID = 47,'',nbd2.DICT_CH_NAME),'') stuffType
+        from resource_agreement_stuff ras2
+        left join resource_agreement ra2
+        on ras2.agreement = ra2.id
+        left join resource_stock_info si2
+        on ra2.stock_name = si2.STOCK_NAME
+        left join sys_business_dict bd2
+        on si2.REGION =bd2.ID
+        left join resource_list rl2
+        on ras2.stuff_id=rl2.ID
+        left join sys_business_dict nbd2
+        on rl2.STUFF_TYPE_CODE =nbd2.ID
+        where si2.STOCK_NAME is not null
+        and bd2.DICT_CH_NAME is not null
+        and ras2.stuff_quantity &lt;&gt;0
+        and (select count(*) from resource_stock_stuff ss2 where ss2.STUFF_ID=ras2.stuff_id and ss2.BELONG_STOCK_ID=si2.ID and ss2.model=ras2.stuff_model)=0
+        <if test="stockIds!=null and stockIds!=''">
+         and find_in_set(si2.ID,#{stockIds})
+        </if>
+        <if test="stuffIds!=null and stuffIds!=''">
+            and find_in_set(rl2.ID,#{stuffIds})
+        </if>
+        group by ras2.stuff_id ,ra2.stock_name,ras2.stuff_model
+        order by areaOrder,stockName
+    </select>
+
+    <select id="queryStockIdByArea" resultType="java.lang.String">
+        select group_concat(id) from resource_stock_info
+        where 1=1
+        <if test="regionId!=null and regionId!=''">
+            and REGION=#{regionId}
+        </if>
+        and stock_type in (1,2,3)
+    </select>
+
+    <select id="getIdByName" resultType="java.lang.String">
+        select id from resource_list where STUFF_NAME = #{name}
+    </select>
+
+    <update id="updateStockStuff">
+        update resource_stock_stuff set stuff_id=#{id1} where stuff_id =#{id2}
+    </update>
+
+    <update id="updateOperation">
+        update t_stuff_operation_info set stuff_id=#{id1} where stuff_id =#{id2}
+    </update>
+
+    <update id="updateAgreement">
+        update resource_agreement_stuff set stuff_id=#{id1} where stuff_id =#{id2}
+    </update>
+
+    <delete id="deleteById">
+        delete from resource_list where id = #{id}
+    </delete>
+
+    <select id="stuffInventoryLinZi" resultType="map">
+        select b.stock_name stockName,
+               c.STUFF_NAME stuffName,
+               a.STUFF_NUMBER stuffNumber,
+               b.MANAGER manager,
+               b.MANAGER_PHONE managerPhone,
+               b.ADDRESS address,
+               b.LONGITUDE lon,
+               b.LATITUDE lat
+        from resource_stock_stuff a
+                 left join resource_stock_info b on a.BELONG_STOCK_ID =b.ID
+                 left join resource_list c on a.STUFF_ID =c.ID
+                 left join sys_business_dict d on c.STUFF_TYPE_CODE =d.id
+        where d.DICT_CH_NAME = #{stuffType} and b.REGION ='7'
+    </select>
+
+    <select id="getUserStreetId" resultType="String">
+		select dict_id from t_dict_area
+		 where area_code = (select if(street_id='370300','3703',street_id) from t_cfg_user where user_id = #{userId})
+	</select>
+</mapper>

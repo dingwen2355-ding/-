@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.EmergencyPlanMapper">
+
+    <select id="getEmergencyInfo" resultType="java.util.HashMap">
+      SELECT id, emergency_plan_title emergencyPlanTitle, emergency_plan_abstract emergencyPlanAbstract, emergency_plan_file emergencyPlanFile
+      from base_data_emergency_plan where id in (SELECT plan_id from base_event_info where event_id = #{eventId})
+    </select>
+
+    <select id="getEmergencyInfoNew" resultType="java.util.Map">
+        select PB_ID emergencyPlanId, PB_NAME emergencyPlanName, PB_DEPID pbDepId, M_CREATEDEPID mCreateDepId, PLANTYPENAME planTypeName, PLANTYPEID planTypeId, PLAN_LEVEL planLevel, RN rn, D_NAME dName
+        from data_emergency_plan where PB_ID in (
+	            SELECT emergency_plan_id from relation_event_type where event_type_id in
+	                    (SELECT event_type from base_event_info WHERE event_id = #{eventId})
+        )
+    </select>
+    <select id="queryEmergencyInfoNew" resultType="java.util.Map">
+        select a.PB_ID emergencyPlanId, a.PB_NAME emergencyPlanName, a.PB_DEPID pbDepId, a.M_CREATEDEPID mCreateDepId,
+        ifnull(b.type_name,'') typeName, a.PLANTYPEID planTypeId, a.PLAN_LEVEL planLevel, a.RN rn, a.D_NAME dName,ifnull(a.file_url,'') fileUrl,ifnull(c.precinct_name,'') precinctName
+        from data_emergency_plan a left join t_dict_plan_type b on a.PLANTYPEID = b.type_id
+        left join t_cfg_precinct c on a.precinct_id = c.precinct_id
+        where
+        1=1
+        <if test="keyWords!= null and keyWords!= ''"> and contains(a.PB_NAME, #{keyWords})</if>
+        <if test="emIds != null and emIds != ''"> and find_in_set(a.PB_ID, #{emIds})</if>
+        <if test="eventId != null and eventId != ''"> and  FIND_IN_SET(a.PB_ID,(select plan_id from base_event_info where event_id = #{eventId}))</if>
+        <if test="precinctId != null and precinctId !=''">and a.precinct_id = #{precinctId}</if>
+        <if test="typeName != null and typeName != ''">and b.type_name like CONCAT('%',#{typeName},'%')</if>
+        <if test="typeId != null and typeId != ''">and b.type_id = #{typeId}</if>
+    </select>
+
+    <update id="updateEmergencyById" parameterType="com.znv.manage.common.bean.EmergencyPlan">
+        update base_data_emergency_plan
+        <set>
+            <if test="emergencyPlanTitle != null">
+                emergency_plan_title = #{emergencyPlanTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="emergencyPlanAbstract != null">
+                emergency_plan_abstract = #{emergencyPlanAbstract,jdbcType=VARCHAR},
+            </if>
+            <if test="emergencyPlanFile != null">
+                emergency_plan_file = #{emergencyPlanFile,jdbcType=VARCHAR},
+            </if>
+            <if test="eventType != null">
+                event_type = #{eventType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <insert id="insertEmergencyInfo">
+        insert into base_data_emergency_plan (emergency_plan_title, emergency_plan_abstract,
+              emergency_plan_file)
+        values (#{emergencyPlanTitle}, #{emergencyPlanAbstract},
+              #{emergencyPlanFile})
+    </insert>
+
+    <insert id="deleteEmergencyInfo">
+        delete from base_data_emergency_plan
+        where find_in_set(id, #{emergencyPlanIds})
+    </insert>
+
+    <select id="queryEmergencyInfo" resultType="map">
+        select id,
+               ifnull(`name`,'') planName,
+               ifnull(level_name,'') levelName,
+               ifnull(event_type_name,'') typeName
+        from community_wuxi_eims.t_cfg_plan_info_event
+        where event_id=#{eventId} limit 1
+    </select>
+
+    <update id="updateEmergencyPlanCfg">
+        UPDATE t_cfg_emergency_plan
+        <trim prefix="set" suffixOverrides=",">
+            <if test="planLevel!=null">plan_level=#{planLevel},</if>
+            <if test="planStatus!=null">plan_status=#{planStatus},</if>
+            <if test="startTime!=null">start_time=#{startTime},</if>
+            <if test="endTime!=null">end_time=#{endTime},</if>
+            <if test="operator!=null">operator=#{operator},</if>
+            <if test="startPerson!=null">start_person=#{startPerson},</if>
+        </trim>
+        where event_id = #{eventId} and plan_id = #{planId}
+    </update>
+
+
+    <select id="queryPlanList" resultType="com.znv.manage.common.bean.Plan">
+        SELECT
+            a.PB_ID id,
+            a.PB_NAME planName,
+            a.file_url planFile,
+            a.precinct_id precinctId,
+            ifnull(b.type_name,'') typeName,
+            ifnull(c.precinct_name,'') precinctName
+        FROM
+            data_emergency_plan a left join t_dict_plan_type b on a.PLANTYPEID = b. type_id
+            left join t_cfg_precinct c on a.precinct_id = c.precinct_id
+        where 1=1
+        <if test="name != null and name !=''">and a.PB_NAME like CONCAT('%',#{name},'%')</if>
+        <if test="precinctId != null and precinctId != ''">and a.precinct_id = #{precinctId}</if>
+        <if test="planId != null and planId != ''">and a.PB_ID = #{planId}</if>
+        <if test="typeName != null and typeName != ''">and b.type_name like CONCAT('%',#{typeName},'%')</if>
+        <if test="typeId != null and typeId != ''">and b.type_id = #{typeId}</if>
+    </select>
+
+    <delete id="deletePlanByIds">
+        delete from data_emergency_plan where find_in_set(PB_ID,#{ids})
+    </delete>
+
+    <insert id="savePlan">
+        replace into data_emergency_plan(PB_ID,PB_NAME,file_url,PLANTYPEID,precinct_id)
+            values (#{id},#{planName},#{planFile},#{typeId},#{precinctId})
+    </insert>
+
+    <select id="queryPlanTypeList" resultType="map">
+        SELECT type_id typeId,type_name typeName
+        FROM
+            t_dict_plan_type
+    </select>
+
+    <select id="querySimilarPlan" resultType="java.util.Map">
+        select ifnull(`name`,'') planName,
+               file_url fileUrl
+        from community_wuxi_eims.t_cfg_plan_info a
+        left join community_wuxi_eims.t_cfg_plan_data b on a.id=b.plan_id
+        where event_type_name = #{typeName} group by b.plan_id order by a.name=#{planName} desc
+    </select>
+
+</mapper>

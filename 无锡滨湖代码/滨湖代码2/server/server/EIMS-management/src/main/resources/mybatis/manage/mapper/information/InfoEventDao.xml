@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.information.InfoEventDao">
+    <select id="queryEventType" resultType="java.util.HashMap">
+        SELECT b.DICT_CH_NAME emergency,
+               c.DICT_CH_NAME helpType
+        FROM helptype_mapping a
+                 INNER JOIN sys_business_dict b ON a.emergency_id = b.ID
+                 INNER JOIN sys_business_dict c ON a.help_type = c.ID
+    </select>
+
+    <select id="queryEventList" resultType="java.util.HashMap">
+        SELECT
+        tce.id,
+        tce.type,
+        tce.type2,
+        tce.title,
+        tce.details,
+        tce.event_level eventLevel,
+        tce.casualty_death casualtyDeath,
+        tce.casualty_injured casualtyInjured,
+        tce.casualty_danger casualtyDanger,
+        tce.happen_time happenTime,
+        tce.address,
+        tce.report_people reportPeople,
+        tce.report_people_phone reportPeoplePhone,
+        tce.attachment,
+        tce.`status`,
+        tce.gpsx,
+        tce.gpsy,
+        cast(tce.report_time as char) reportTime,
+        ifnull(res.deal_result, 0) dealResult,
+        tce.handle_unit handleUnit,
+        a.precinct_name handleUnitName
+        FROM
+        t_command_event tce
+        left join (
+        select event_id, max(deal_result) deal_result
+        from t_command_event_handle_result
+        group by event_id
+        ) res
+        on tce.id = res.event_id
+        left join t_cfg_precinct a on a.precinct_id=tce.handle_unit
+        WHERE
+        1 = 1
+        <if test="eventType!=null and eventType != ''">
+            AND type = #{eventType}
+        </if>
+        <if test="eventType2!=null and eventType2 != ''">
+            AND type2 = #{eventType2}
+        </if>
+        <if test="text!=null">
+            AND CONCAT(title, details, address) LIKE concat('%' ,#{text}, '%')
+        </if>
+        <if test="eventId!=null">
+            and id=#{eventId}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and <![CDATA[happen_time >= #{startTime}]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and <![CDATA[happen_time <= #{endTime}]]>
+        </if>
+        <if test="reportPeople!=null and reportPeople != ''">
+            AND report_people LIKE concat('%' ,#{reportPeople}, '%')
+        </if>
+        order by tce.report_time desc
+    </select>
+
+    <select id="queryEventInstructions" resultType="java.util.HashMap">
+        SELECT
+        id,
+        event_id eventId,
+        content,
+        attachment,
+        instructions_time instructionsTime,
+        cast(report_time as char) reportTime
+        FROM
+        t_command_event_instructions
+        WHERE 1=1
+        <if test="eventId!=null">
+            and event_id=#{eventId}
+        </if>
+        ORDER BY instructions_time desc
+    </select>
+
+    <select id="queryEventProgress" resultType="java.util.HashMap">
+        SELECT
+        id,
+        event_id eventId,
+        details,
+        progress_type progressType,
+        attachment,
+        report_people reportPeople,
+        report_people_phone reportPeoplePhone,
+        progress_time progressTime,
+        cast(report_time as char) reportTime
+        FROM
+        t_command_event_progress
+        where 1=1
+        <if test="eventId!=null">
+            and event_id=#{eventId}
+        </if>
+        ORDER BY progress_time desc
+    </select>
+
+    <select id="queryDealResults" resultType="java.util.Map">
+        SELECT a.id, a.event_id, a.deal_result, a.remark,
+        DATE_FORMAT(a.deal_time,'%Y-%m-%d %H:%i:%s') as deal_time,
+        b.handle_unit,
+        (select c.precinct_name from t_cfg_precinct c where c.precinct_id=b.handle_unit) as precinct_name
+        FROM t_command_event_handle_result a
+        left join t_command_event b on b.id=a.event_id
+        WHERE a.event_id=#{eventId}
+        group by a.id
+    </select>
+
+    <select id="queryJudges" resultType="java.util.Map">
+        SELECT id, event_id,
+        DATE_FORMAT(judge_time,'%Y-%m-%d %H:%i:%s') as judge_time,
+        DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') as create_time,
+        judge_expert, opinion, file_url
+        FROM t_command_event_judge WHERE event_id=#{eventId}
+    </select>
+
+    <select id="queryPlans" resultType="java.util.Map">
+        SELECT a.id, a.event_id, a.plan_id,
+        DATE_FORMAT(a.create_time,'%Y-%m-%d %H:%i:%s') as create_time,
+        b.name as planName, b.level_id, b.level_name,
+        b.event_type_id, b.event_type_name, b.emergency_type_id, b.emergency_type_name
+         FROM t_command_event_plan a
+        left join  t_cfg_plan_info b on b.id=a.plan_id
+        WHERE a.event_id=#{eventId}
+    </select>
+
+    <select id="queryFiles" resultType="java.util.Map">
+        SELECT
+        id, event_id,
+        DATE_FORMAT(file_time,'%Y-%m-%d %H:%i:%s') as file_time,
+        DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') as create_time,
+        operator,file_url
+        FROM t_command_event_file WHERE event_id=#{eventId}
+    </select>
+</mapper>

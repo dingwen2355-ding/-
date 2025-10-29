@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.JdjlGhDao">
+
+    <insert id="insertJdjlList">
+        INSERT IGNORE INTO t_33_jdjl
+        (
+        `recordid` ,
+        `date`,
+        `ticketNumber`,
+        `statusStr` ,
+        `idNumber` ,
+        `typeStr` ,
+        `windowTicketNumber` ,
+        `name` ,
+        `time` ,
+        `collect_time` ,
+        `isAppointment` ,
+        `isGroup` ,
+        `remarks` ,
+        `storage_time`
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.recordid} ,
+            #{item.date},
+            #{item.ticketNumber},
+            #{item.statusStr} ,
+            #{item.idNumber} ,
+            #{item.typeStr} ,
+            #{item.windowTicketNumber} ,
+            #{item.name} ,
+            #{item.time} ,
+            #{item.collecttime} ,
+            #{item.isAppointment} ,
+            #{item.isGroup} ,
+            #{item.remarks} ,
+            current_timestamp
+            )
+        </foreach>
+    </insert>
+
+    <select id="getLettersAndVisitsCount" resultType="int">
+        select count(1) from t_33_jdjl
+        where 1=1
+        <if test="beginTime != null">
+            and date &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and date &lt;= #{endTime}
+        </if>
+        <if test="beginTime == null and endTime == null ">
+            and DATE(date) = CURDATE()
+        </if>
+    </select>
+</mapper>

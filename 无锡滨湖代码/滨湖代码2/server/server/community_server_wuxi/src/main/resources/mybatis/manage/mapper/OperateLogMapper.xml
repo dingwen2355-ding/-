@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.OperateLogDao">
+
+    <insert id="saveLog">
+        INSERT INTO t_data_operate_log (`name`, area, state, precinct_id,`time`)
+        VALUES(#{name},#{area},#{state},#{precinctId},#{time})
+    </insert>
+
+    <select id="queryOperatelogList" resultType="com.znv.manage.common.bean.OperateLog">
+        select a.*,ifnull(b.precinct_name,'') precinctName
+        from t_data_operate_log a left join t_cfg_precinct b on a.precinct_id = b.precinct_id
+        where 1=1
+        <if test="operatorName != null and operatorName != ''">and a.`name`like CONCAT('%',#{operatorName},'%')</if>
+        <if test="precinctId != null and precinctId != ''">and a.precinct_id = #{precinctId}</if>
+        <if test="beginTime != null">and a.`time` >=#{beginTime}</if>
+        <if test="endTime != null">and a.`time` &lt;= #{endTime}</if>
+        ORDER BY
+        `time` DESC
+        <if test="pageStart != null and pageLen != null">limit ${pageStart},${pageLen}</if>
+    </select>
+
+</mapper>

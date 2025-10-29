@@ -1,0 +1,108 @@
+// el-date-picker
+.large-screen.el-date-picker {
+  background-color: #082239;
+  border-color: #406489;
+}
+.el-picker-panel__footer {
+  background-color: #082239;
+  border-color: #406489;
+}
+
+.large-screen.el-date-picker .el-picker-panel__body-wrapper .el-date-table .available div span {
+  color: #FFFFFF;
+}
+.large-screen.el-date-picker .el-picker-panel__body-wrapper .el-date-table .next-month div span {
+  color: #97989b;
+}
+.large-screen.el-date-picker .el-picker-panel__body-wrapper .el-date-table .prev-month div span {
+  color: #97989b;
+}
+.el-date-table th {
+  border-color: #406489;
+  color: #FFFFFF;
+}
+.large-screen.el-date-picker .el-picker-panel__body-wrapper .el-date-picker__header .el-date-picker__header-label {
+  color: #FFFFFF;
+}
+.large-screen.el-date-picker .el-picker-panel__body-wrapper .el-date-picker__time-header .el-input__inner {
+  color: #FFFFFF;
+}
+.large-screen.el-date-picker .el-picker-panel__body-wrapper div {
+  border-color: #406489;
+  background-color: #082239;
+}
+.large-screen.el-date-picker .el-picker-panel__body-wrapper .el-date-picker__time-header .el-time-panel .el-time-panel__content .el-time-spinner .el-time-spinner__item {
+  color: #FFFFFF;
+}
+.large-screen.el-date-picker .el-picker-panel__body-wrapper .el-date-picker__time-header .el-time-panel .el-time-panel__footer .cancel {
+  color: #FFFFFF;
+}
+.large-screen.el-date-picker .el-picker-panel__body-wrapper .el-date-picker__header .el-picker-panel__icon-btn {
+  color: #FFFFFF;
+}
+// 时间段
+.el-date-range-picker .el-picker-panel__body {
+  background-color: #082239;
+  border-color: #406489;
+}
+.large-screen.el-date-range-picker .el-picker-panel__body-wrapper .el-picker-panel__body .el-date-table .available div span {
+  color: #FFFFFF;
+}
+.large-screen.el-date-range-picker .el-picker-panel__body-wrapper .el-picker-panel__body .el-date-table .next-month div span {
+  color: #97989b;
+}
+.large-screen.el-date-range-picker .el-picker-panel__body-wrapper .el-picker-panel__body .el-date-table .prev-month div span {
+  color: #97989b;
+}
+.large-screen.el-date-range-picker .el-picker-panel__body-wrapper .el-picker-panel__body .el-date-table .in-range div span {
+  background-color: #409eff;
+}
+.large-screen.el-date-range-picker .el-picker-panel__body-wrapper .el-picker-panel__body .el-date-table td div {
+  background-color: #082239;
+}
+
+.large-screen.el-date-range-picker .el-picker-panel__body-wrapper .el-picker-panel__body div {
+  color: #FFFFFF;
+}
+.large-screen.el-date-range-picker .el-picker-panel__body-wrapper .el-picker-panel__body .el-date-range-picker__time-header .el-time-panel {
+  background-color: #082239;
+  border-color: #406489;
+}
+.large-screen.el-date-range-picker .el-picker-panel__body-wrapper .el-picker-panel__body div {
+  border-color: #406489;
+}
+.large-screen.el-date-range-picker .el-picker-panel__body-wrapper .el-picker-panel__body .el-date-range-picker__time-header .el-time-panel .el-time-panel__content .el-time-spinner .el-time-spinner__item {
+  color: #FFFFFF;
+}
+.large-screen.el-date-range-picker .el-picker-panel__body-wrapper .el-picker-panel__body .el-date-range-picker__time-header .el-time-panel .el-time-panel__footer .cancel {
+  color: #FFFFFF;
+}
+.large-screen.el-date-range-picker .el-picker-panel__body-wrapper .el-picker-panel__body .el-date-range-picker__time-header .el-input__inner {
+  color: #FFFFFF;
+}
+
+
+.large-screen.el-select-dropdown .el-select-dropdown__wrap .el-select-dropdown__item {
+  background-color: #082239;
+}
+.large-screen.el-select-dropdown .el-select-dropdown__wrap .el-select-dropdown__item {
+  color: #FFFFFF;
+}
+.el-select-dropdown__item.hover, .el-select-dropdown__item:hover {
+  background-color: #FFFFFF;
+}
+.el-popper[x-placement^=bottom] {
+  border-color: #406489;
+}
+// 下拉框的边框
+.el-select-dropdown__list {
+  padding: 0;
+}
+
+//新增指令的处置人的选择后删除按钮
+.large-screen.el-cascader .el-cascader__tags .el-tag {
+  padding: 20rem 45rem;
+}
+.large-screen.el-cascader .el-cascader__tags .el-tag {
+  height: 90rem;
+}

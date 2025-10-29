@@ -1,0 +1,843 @@
+﻿@font-face {
+    font-family: 'supermap-icon';
+    src:    url('./fonts/supermap-icon.eot?ttrekr');
+    src:    url('./fonts/supermap-icon.eot?ttrekr#iefix') format('embedded-opentype'),
+    url('./fonts/supermap-icon.ttf?ttrekr') format('truetype'),
+    url('./fonts/supermap-icon.woff?ttrekr') format('woff'),
+    url('./fonts/supermap-icon.svg?ttrekr#supermap-icon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="supermapol-icons-"], [class*=" supermapol-icons-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'supermap-icon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.supermapol-icons-save:before {
+    content: "\e900";
+}
+.supermapol-icons-baselayer:before {
+    content: "\e901";
+}
+.supermapol-icons-marker:before {
+    content: "\e902";
+}
+.supermapol-icons-uncheck:before {
+    content: "\e903";
+}
+.supermapol-icons-checked:before {
+    content: "\e904";
+}
+.supermapol-icons-zoom-in:before {
+    content: "\e906";
+}
+.supermapol-icons-share:before {
+    content: "\e907";
+}
+.supermapol-icons-clear:before {
+    content: "\e908";
+    color: whitesmoke;
+}
+.supermapol-icons-setting:before {
+    content: "\e909";
+}
+.supermapol-icons-polygon:before {
+    content: "\e90a";
+}
+.supermapol-icons-default-layer:before {
+    content: "\e90b";
+}
+.supermapol-icons-uniE90C:before {
+    content: "\e90c";
+}
+.supermapol-icons-delete:before {
+    content: "\e90d";
+}
+.supermapol-icons-up:before {
+    content: "\e90e";
+}
+.supermapol-icons-warning:before {
+    content: "\e90f";
+}
+.supermapol-icons-back:before {
+    content: "\e910";
+}
+.supermapol-icons-retract:before {
+    content: "\e911";
+}
+.supermapol-icons-search:before {
+    content: "\e912";
+}
+.supermapol-icons-zoom-to:before {
+    content: "\e913";
+}
+.supermapol-icons-zoom-out:before {
+    content: "\e914";
+}
+.supermapol-icons-layers:before {
+    content: "\e915";
+}
+.supermapol-icons-add:before {
+    content: "\e916";
+}
+.supermapol-icons-addlayer:before {
+    content: "\e917";
+}
+.supermapol-icons-triangle:before {
+    content: "\e918";
+}
+.supermapol-icons-brush:before {
+    content: "\e919";
+}
+.supermapol-icons-more:before {
+    content: "\e91a";
+}
+.supermapol-icons-down:before {
+    content: "\e91b";
+}
+.supermapol-icons-line:before {
+    content: "\e91c";
+}
+.supermapol-icons-pen:before {
+    content: "\e91d";
+}
+.supermapol-icons-user:before {
+    content: "\e91e";
+}
+.supermapol-icons-down-end:before {
+    content: "\e91f";
+}
+.supermapol-icons-up-end:before {
+    content: "\e920";
+}
+.supermapol-icons-text:before {
+    content: "\e921";
+}
+.supermapol-icons-customize:before {
+    content: "\e922";
+}
+
+
+div.smMap {
+    z-index: 0;
+    padding: 0rem!important;
+    margin: 0rem!important;
+    cursor: url("../images/cursors/Pan.cur"),default;
+    /*border:1rem solid #3473b7;*/
+}
+
+div.smMapViewport {
+    text-align: left;
+}
+
+div.smLayerDiv {
+    -moz-user-select: none;
+}
+
+.smLayerGoogleCopyright {
+    left: 2rem;
+    bottom: 2rem;
+}
+.smLayerGooglePoweredBy {
+    left: 2rem;
+    bottom: 15rem;
+}
+.smControlAttribution {
+    font-size: smaller;
+    right: 3rem;
+    bottom: 0.5em;
+    position: absolute;
+    display: block;
+}
+.smControlScale {
+    right: 3rem;
+    bottom: 3em;
+    display: block;
+    position: absolute;
+    font-size: smaller;
+}
+.smControlScaleLine {
+    display: block;
+    position: absolute;
+    left: 10rem;
+    bottom: 15rem;
+    font-size: xx-small;
+}
+.smControlScaleLineBottom {
+    border: solid 2rem black;
+    border-bottom: none;
+    margin-top:-2rem;
+    text-align: center;
+}
+.smControlScaleLineTop {
+    border: solid 2rem black;
+    border-top: none;
+    text-align: center;
+}
+
+.smControlPermalink {
+    right: 3rem;
+    bottom: 1.5em;
+    display: block;
+    position: absolute;
+    font-size: smaller;
+}
+
+div.smControlMousePosition {
+    bottom: 0em;
+    right: 3rem;
+    display: block;
+    position: absolute;
+    font-family: Arial;
+    font-size: smaller;
+}
+
+.smControlOverviewMapContainer {
+    position: absolute;
+    bottom: 0rem;
+    right: 0rem;
+    background-color: #e5f3ff;
+}
+
+
+.smControlOverviewMapElement {
+    border-left:1rem solid #3473b7;
+    border-top:1rem solid #3473b7;
+    padding-top: 4rem;
+    padding-left: 4rem;
+}
+
+.smControlOverviewMapMinimizeButton {
+    right: 0rem;
+    bottom: 1rem;
+    cursor: pointer;
+}
+
+.smControlOverviewMapMaximizeButton {
+    right: 0rem;
+    bottom: 1rem;
+    cursor: pointer;
+}
+
+.smControlOverviewMapExtentRectangle {
+    overflow: hidden;
+    /*background-image:url(../../image/blank.gif);*/
+    border: 1rem solid red;
+    background:#69F;
+    filter:alpha(opacity=50);/* IE */
+    -moz-opacity:0.5;/* Moz + FF */
+    opacity: 0.5; /* 支持CSS3的浏览器（FF 1.5也支持）*/
+}
+.smControlOverviewMapRectReplacement {
+    overflow: hidden;
+    cursor: url("../images/cursors/PanDown.cur"),move;
+    background-image: url(../images/overview_replacement.gif);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.smLayerGeoRSSDescription {
+    float:left;
+    width:100%;
+    overflow:auto;
+    font-size:1.0em;
+}
+.smLayerGeoRSSClose {
+    float:right;
+    color:gray;
+    font-size:1.2em;
+    margin-right:6rem;
+    font-family:sans-serif;
+}
+.smLayerGeoRSSTitle {
+    float:left;font-size:1.2em;
+}
+
+.smPopupContent {
+    padding:5rem;
+    overflow: auto;
+}
+
+.smHandlerBoxZoomBox {
+    border: 2rem solid red;
+    position: absolute;
+    background-color: white;
+    opacity: 0.50;
+    font-size: 1rem;
+    filter: alpha(opacity=50);
+}
+.smHandlerBoxSelectFeature {
+    border: 2rem solid blue;
+    position: absolute;
+    background-color: white;
+    opacity: 0.50;
+    font-size: 1rem;
+    filter: alpha(opacity=50);
+}
+
+.smPopupCloseBox {
+    background: url("../images/close.gif") no-repeat;
+    cursor: pointer;
+}
+
+.smFramedCloudPopupContent {
+    padding: 5rem;
+    overflow: auto;
+}
+
+.smImageLoadError {
+    background-color: pink;
+    opacity: 0.5;
+    filter: alpha(opacity=50); /* IE */
+    display: none;
+}
+
+/**
+ * Cursor styles
+ */
+.smDefault {
+    cursor: default;
+}
+.smCursorWait {
+    cursor: wait;
+}
+.smDragDown {
+    cursor: url("../images/cursors/PanDown.cur"),move;
+}
+.smDragDownCanvas {
+    cursor: move;
+}
+.smDragUp {
+    cursor: url("../images/cursors/Pan.cur"),auto;
+}
+
+.smCursorPointer {
+    cursor: pointer;
+}
+
+.smDrawBox {
+    cursor: crosshair;
+}
+.smControlDragFeatureOver {
+    /*cursor: move;*/
+}
+.smControlDragFeatureActive.smControlDragFeatureOver.smDragDown {
+    /* cursor: -moz-grabbing;*/
+}
+
+/**
+ * Layer switcher
+ */
+.smControlLayerSwitcher {
+    position: absolute;
+    top: 25rem;
+    right: 0rem;
+    width: 20em;
+    font-family: sans-serif;
+    font-weight: bold;
+    margin-top: 3rem;
+    margin-left: 3rem;
+    margin-bottom: 3rem;
+    font-size: smaller;
+    color: white;
+    background-color: transparent;
+    cursor: default;
+}
+
+.smControlLayerSwitcher .layersDiv {
+    padding-top: 5rem;
+    padding-left: 10rem;
+    padding-bottom: 5rem;
+    background-color: darkblue;
+    width: 100%;
+    height: 100%;
+}
+/*白色样式下*/
+.smControlLayerSwitcher .layersDivWhite {
+    padding-top: 5rem;
+    padding-left: 10rem;
+    padding-bottom: 5rem;
+    background-color: darkblue;
+    width: 100%;
+    height: 100%;
+}
+
+.smControlLayerSwitcher .layersDiv .baseLbl,
+.smControlLayerSwitcher .layersDiv .dataLbl {
+    margin-top: 3rem;
+    margin-left: 3rem;
+    margin-bottom: 3rem;
+}
+
+.smControlLayerSwitcher .layersDiv .baseLayersDiv,
+.smControlLayerSwitcher .layersDiv .dataLayersDiv {
+    padding-left: 3rem;
+}
+
+.smControlLayerSwitcher .maximizeDiv,
+.smControlLayerSwitcher .minimizeDiv {
+    top: 0rem;
+    right: 0rem;
+    text-align: left;
+    cursor: pointer;
+}
+.smControlLayerSwitcher .maximizeDiv{
+    border: 3rem solid #a5c8ec;
+}
+
+.smControlLayerSwitcher .maximizeDivWhite{
+    top: 0rem;
+    right: 0rem;
+    cursor: pointer;
+}
+
+div.smControlLayerSwitcher {
+    position: absolute;
+    top: 50rem;
+    right: 0rem;
+    width: 171rem;
+    font-family: sans-serif;
+    font-weight: bold;
+    margin: 0rem 3rem 3rem;
+    font-size: smaller;
+    font-size: 13rem;
+    color: #4083c2;
+    background-color: transparent;
+    border: 3rem solid #a5c8ec;
+}
+div.smControlLayerSwitcher div.layersDiv {
+    padding-top: 25rem;
+    padding-left: 5rem;
+    padding-bottom: 5rem;
+    background-color: #FFFFFF;
+    width: 166rem;
+    height: 100%;
+}
+div.smControlLayerSwitcher div.layersDivWhite {
+    padding-top: 10rem;
+    padding-left: 5rem;
+    padding-bottom: 10rem;
+    background-color: #FFFFFF;
+    width: 166rem;
+    height: 100%;
+    color: #565656;
+    box-shadow:0rem 0rem 3rem #ababab;
+    border:1rem solid #d7d7d7;
+    border-radius:4rem;
+}
+
+.layerSwitcherHR{
+    width: 95%;
+    margin: 7rem auto 7rem auto;
+}
+
+input.inputElem {
+    width: 14rem;
+    height:14rem;
+    margin-left: 3rem;
+    margin-right:4rem;
+    margin-bottom: 4rem;
+    margin-top: 4rem;
+    vertical-align: middle;
+    border: 0rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0%,0%;
+    cursor: pointer;
+}
+span.labelSpan {
+    margin-left: 5rem;
+    padding-bottom: 3rem;
+    padding-top: 3rem;
+    height:20rem;
+    vertical-align: middle;
+}
+div.minimizeDiv .layerSwitcherContent{
+    position: absolute;
+    padding: 2rem 40rem;
+}
+
+
+/**
+ * Animations
+ */
+
+.smLayerDiv .smTileImage {
+    -webkit-transition: opacity 0.2s linear;
+    -moz-transition: opacity 0.2s linear;
+    -o-transition: opacity 0.2s linear;
+    transition: opacity 0.2s linear;
+}
+
+#popwin img{
+    max-width: none;
+}
+/**
+*绘制矩形框
+*/
+.qByBoundsBoxDiv {
+    background-color: #304DBE;
+    border: 2rem solid #060abe;
+    opacity: 0.3;
+}
+/**
+* TiledVectorLayerEditor
+*/
+.smControlTiledVectorLayerEditor{
+    width: 850rem;
+    height: 0rem;
+    cursor: default;
+    color: #34495e;
+}
+.smControlTiledVectorLayerEditor form{
+    width: 92%;
+    margin: auto;
+}
+.smControlTiledVectorLayerEditor li{
+    margin: 3rem 0 3rem;
+    padding: 2rem;
+    text-indent: 4rem;
+}
+.smControlTiledVectorLayerEditor li[data-layertype="point"]{
+    list-style-image: url("../images/point.png");
+}
+.smControlTiledVectorLayerEditor li[data-layertype="line"]{
+    list-style-image: url("../images/line.png");
+}
+.smControlTiledVectorLayerEditor li[data-layertype="region"]{
+    list-style-image: url("../images/region.png");
+}
+.smControlTiledVectorLayerEditor li[data-layertype="text"]{
+    list-style-image: url("../images/text.png");
+}
+.smSubPanel-body>ul>li{
+    margin-bottom: 7rem;
+}
+.smSubPanel-body ul>li li{
+    list-style: circle;
+}
+/*.smShowHideBtn-container{
+    content: "";
+    height: 32rem;
+    width: 32rem;
+    background-image: url("../images/radial.png");
+    border-radius: 5rem;
+}
+.smShowHideBtn-container.move{
+    cursor: move;
+    opacity: 0.8;
+}
+.smShowHideBtn-container.move:hover{
+    opacity: 1;
+}
+.smShowHideBtn-container.hidebtn{
+    content: "";
+    height: 16rem;
+    width: 16rem;
+    //background-image: url("../images/hide.png");
+    border-radius: 0rem;
+    top: 10rem;
+    right: 28rem;
+    opacity: 0.8;
+    z-index: 999;
+
+}
+.smShowHideBtn-container.hidebtn:hover{
+    background-image: url("../images/hide_hover.png");
+    opacity: 0.9;
+}
+.smShowHideBtn-container .smShowHideBtn{
+    content: "";
+    width: 16rem;
+    height: 16rem;
+    cursor: pointer;
+    float: left;
+}*/
+span.smCloseBtn-container{
+    height: 15rem;
+    width: 15rem;
+    top: 13rem;
+    right: 25rem;
+    opacity: 0.6;
+    z-index: 999;
+    position: absolute;
+}
+.smMainPanel{
+    width: 100%;
+    height: 0;
+    box-sizing: border-box;
+    font-size: 14rem;
+    font-family: "Microsoft YaHei";
+}
+.smMainPanel.hide{
+    display: none;
+}
+.smPanel-header{
+    border-top-left-radius: 2rem;
+    border-top-right-radius: 2rem;
+    background-color:#0083cb;
+    height:41rem;
+    padding:10rem 10rem 10rem 10rem;
+    border-bottom-color: rgb(229,229,229);
+    border-bottom-style: solid;
+    border-bottom-width: 1rem;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    box-sizing: border-box;
+    cursor: move;
+}
+.smMainPanel-title{
+    margin: 0;
+    font-size: 15rem;
+    color: white;
+    height: 21rem;
+    line-height: 21rem;
+    padding: 0;
+    font-weight: normal;
+}
+.smMainPanel-body{
+    border: 1rem solid #ddd;
+    box-sizing: border-box;
+    background-color: white;
+    color:#7c7c7c;
+    border-bottom-left-radius: 2rem;
+    border-bottom-right-radius: 2rem;
+}
+.smPanelPointer{
+    border: 2rem solid rgba(0,0,0,0);
+}
+.smPanelPointer:hover{
+    background-color: #f2f2f2;
+}
+.smPanelPointer.select{
+    cursor: pointer;
+    border: 1rem solid #56b781;
+}
+.smLayerInfoPanel{
+    width: 40%;
+    display: inline-block;
+}
+.smSubPanel{
+    border: 2rem solid #ddd;
+    margin: 3rem 5rem 5rem 5rem;
+    overflow-y: auto;
+}
+.smSubPanel ul{
+    margin: 0rem 3rem 0 0;
+    overflow: hidden;
+}
+.smPanel-title{
+    padding-left: 14rem;
+    padding-top: 14rem;
+    color: #7c7c7c;
+}
+.smSubPanel-header {
+    background-color: #fff;
+    z-index: 99;
+    padding-bottom: 8rem;
+}
+.smSubPanel-body{
+    height: 270rem;
+    margin-top: 11rem;
+}
+.smLayerInfoLI{
+    height: inherit;
+}
+.smLayerInfoLI ul{
+    height: 0rem;
+    transition: 300ms height;
+}
+.smEditPanel{
+    display: none;
+    width: 56.6%;
+    float: right;
+    right: 0rem
+}
+.smEditPanel table{
+    color: #7c7c7c;
+}
+.smEditPanel.show{
+    display: block;
+}
+.smEditPanelControl{
+
+    vertical-align:middle !important;
+}
+.smPanelCheckbox{
+    float:left;
+    margin-right: 10rem;
+    width: 32rem;
+}
+.smEditPanel .smEditPanelInputContainer{
+    height: 24rem;
+    width: 51rem;
+    border: 1rem solid #888;
+    margin: 5rem;
+}
+.smEditPanel .smEditPanelInputContainer .smEditPanelInput{
+    width: 25rem;
+    height: 18rem !important;
+    position: relative;
+    margin: 2rem;
+    float: left;
+    border: 1rem solid;
+}
+.smEditPanel .smEditPanelInputContainer .smEditPanelInput.activebtn:hover{
+    border: 1rem inset #aaa;
+}
+.smEditPanel .smEditPanelInputBtn{
+    content: "";
+    height: 16rem;
+    width: 16rem;
+    position: relative;
+    background: url("../images/colorbtn.png") 3rem 4rem no-repeat;
+    float: right;
+    right: 2rem;
+    top: 1rem;
+    margin: 2rem;
+}
+.smEditPanel .smEditPanelInputBtn.activebtn:hover{
+    background-color: #ebeff2;
+}
+.smEditPanel .smEditPanelInput,.smEditPanel input{
+    margin: 5rem;
+    padding: 0rem;
+    border-radius: 0rem;
+    -webkit-border-radius: 0rem;
+    -moz-border-radius: 0rem;
+    text-indent: 1rem;
+}
+.smToolSlider.smEditPanelInput{
+    top: 4rem;
+}
+.smEditPanel input:not([type="checkbox"]){
+    height: 25rem;
+    border: 1rem solid #aaa;
+}
+input.smPanelValueInput[type="text"]{
+    width: 40rem;
+    margin-left: 7rem;
+    text-align: center;
+    border: 1rem solid #dddddd;
+}
+.smControlTiledVectorLayerEditor .smAdvanceTable{
+    display: none;
+}
+.smControlTiledVectorLayerEditor .smAdvanceTable tr{
+    overflow: hidden;
+    transition: 20ms height;
+}
+.smControlTiledVectorLayerEditor .smSecondTd{
+    text-align: right;
+}
+.smRegularTable .smSecondTd{
+    width: 104rem;
+}
+.smAdvanceTable .smSecondTd{
+    width: 136rem;
+}
+.smControlTiledVectorLayerEditor .smSplitLine{
+    border-top: 1rem solid #ececec;
+    text-align: right;
+    padding-top: 15rem;
+    margin-top: 15rem;
+    color: #eee;
+}
+.smSplitLineBottom{
+    margin-bottom: 18rem;
+}
+.smSplitLine a{
+    color: white;
+    text-decoration: blink;
+    background-color: #0083cb;
+    display: inline-block;
+    padding: 0;
+    width: 108rem;
+    height: 38rem;
+    line-height: 38rem;
+    text-align: center;
+    border-radius: 2rem;
+}
+.smSplitLine a:hover{
+    background-color: #0075b7;
+}
+.smControlTiledVectorLayerEditor .smSplitLineTop.hide{
+    display: none;
+}
+
+/**
+* SuperMap.Tool.Slider
+*/
+.smToolSlider{
+    height: 4rem;
+    position: relative;
+    display: inline-block;
+    background-color: rgb(178, 185, 191);
+    border-bottom-left-radius: 4rem !important;
+    border-bottom-right-radius: 4rem !important;
+    border-top-left-radius: 4rem !important;
+    border-top-right-radius: 4rem !important;
+    box-sizing: border-box;
+    cursor: pointer;
+
+}
+
+.smToolSlider .smToolSliderBar{
+    content: " ";
+    height: 14rem;
+    width: 14rem !important;
+    position: absolute;
+    top: -6rem;
+    color: rgb(124,124,124);
+    background-color: rgb(124,124,124);
+    cursor: pointer;
+    border-color: rgb(124,124,124) ;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+
+}
+.smToolSlider .smToolSliderBar.down{
+    cursor: pointer;
+    opacity: 1;
+    background-color:rgb(77,145,189);
+}
+span.supermapol-icons-clear{
+    opacity: 0.7;
+    cursor: default;
+}
+span.supermapol-icons-clear:hover{
+    opacity: 1.0;
+}
+.ANIMATION_BOUNCE{
+    animation: ANIMATION_BOUNCE 1.5s ease-in-out infinite;
+}
+@keyframes ANIMATION_BOUNCE {
+    0%, 100%{
+        animation-timing-function: ease-out;
+        transform: translate3d(0,0,0);
+    }
+
+    50% {
+        animation-timing-function: ease-in;
+        transform: translate3d(0, -40rem, 0);
+    }
+
+    90% {
+        animation-timing-function: ease-in;
+        transform: translate3d(0,-5rem,0);
+    }
+}

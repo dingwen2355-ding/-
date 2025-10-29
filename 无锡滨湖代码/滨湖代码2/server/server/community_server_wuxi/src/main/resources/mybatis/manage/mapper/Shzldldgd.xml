@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.ShzldldgdDao">
+
+    <insert id="insertShzldldgdList">
+        REPLACE INTO t_47_shzldldgd
+        (
+        EVENT_POS_DESC,
+        EVENT_OCCUR_TIME,
+        EVENT_ATTACH_LIST,
+        CLOSED_TIME,
+        EVENT_CODE,
+        EVENT_TYPE_NAME,
+        EXTENDED,
+        EVENT_NAME,
+        EVENT_DESC,
+        RPT_CHANNEL_NAME,
+        EVENTDISP_DEMAND_DEADLINE,
+        EVENT_LEVEL_NAME,
+        EVENT_GRID_NAME,
+        EVENT_STATUS_NAME,
+        RPT_TYPE_NAME,
+        EVENT_DAMG_LEVEL_NAME,
+        EVENT_SUBJECT_NAME,
+        EVENT_POS_X,
+        EVENT_POS_Y,
+        EVENT_GRID_ID,
+        EVENT_REP_DEPART_NAME,
+        EVENT_ATTACH_ID,
+        RPT_TIME,
+        EVENT_ID
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.EVENTPOSDESC},
+            #{item.EVENTOCCURTIME},
+            #{item.EVENTATTACHLIST},
+            #{item.CLOSEDTIME},
+            #{item.EVENTCODE},
+            #{item.EVENTTYPENAME},
+            #{item.EXTENDED},
+            #{item.EVENTNAME},
+            #{item.EVENTDESC},
+            #{item.RPTCHANNELNAME},
+            #{item.EVENTDISPDEMANDDEADLINE},
+            #{item.EVENTLEVELNAME},
+            #{item.EVENTGRIDNAME},
+            #{item.EVENTSTATUSNAME},
+            #{item.RPTTYPENAME},
+            #{item.EVENTDAMGLEVELNAME},
+            #{item.EVENTSUBJECTNAME},
+            #{item.EVENTPOSX},
+            #{item.EVENTPOSY},
+            #{item.EVENTGRIDID},
+            #{item.EVENTREPDEPARTNAME},
+            #{item.EVENTATTACHID},
+            #{item.RPTTIME},
+            #{item.EVENTID}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateShzldldgdList">
+        <foreach collection="list" separator=";" item="item" index="index">
+            update t_47_shzldldgd
+            <set>
+                <if test="item.EVENTPOSDESC != null and item.EVENTPOSDESC != ''">EVENT_POS_DESC =#{item.EVENTPOSDESC},
+                </if>
+                <if test="item.EVENTOCCURTIME != null and item.EVENTOCCURTIME != ''">
+                    EVENT_OCCUR_TIME=#{item.EVENTOCCURTIME},
+                </if>
+                <if test="item.EVENTATTACHLIST != null and item.EVENTATTACHLIST != ''">
+                    EVENT_ATTACH_LIST=#{item.EVENTATTACHLIST},
+                </if>
+                <if test="item.CLOSEDTIME != null and item.CLOSEDTIME != ''">CLOSED_TIME=#{item.CLOSEDTIME},</if>
+                <if test="item.EVENTCODE != null and item.EVENTCODE != ''">EVENT_CODE=#{item.EVENTCODE},</if>
+                <if test="item.EVENTTYPENAME != null and item.EVENTTYPENAME != ''">
+                    EVENT_TYPE_NAME=#{item.EVENTTYPENAME},
+                </if>
+                <if test="item.EXTENDED != null and item.EXTENDED != ''">EXTENDED=#{item.EXTENDED},</if>
+                <if test="item.EVENTNAME != null and item.EVENTNAME != ''">EVENT_NAME=#{item.EVENTNAME},</if>
+                <if test="item.EVENTDESC != null and item.EVENTDESC != ''">EVENT_DESC=#{item.EVENTDESC},</if>
+                <if test="item.RPTCHANNELNAME != null and item.RPTCHANNELNAME != ''">
+                    RPT_CHANNEL_NAME=#{item.RPTCHANNELNAME},
+                </if>
+                <if test="item.EVENTDISPDEMANDDEADLINE != null and item.EVENTDISPDEMANDDEADLINE != ''">
+                    EVENTDISP_DEMAND_DEADLINE=#{item.EVENTDISPDEMANDDEADLINE},
+                </if>
+                <if test="item.EVENTLEVELNAME != null and item.EVENTLEVELNAME != ''">
+                    EVENT_LEVEL_NAME=#{item.EVENTLEVELNAME},
+                </if>
+                <if test="item.EVENTGRIDNAME != null and item.EVENTGRIDNAME != ''">
+                    EVENT_GRID_NAME=#{item.EVENTGRIDNAME},
+                </if>
+                <if test="item.EVENTSTATUSNAME != null and item.EVENTSTATUSNAME != ''">
+                    EVENT_STATUS_NAME=#{item.EVENTSTATUSNAME},
+                </if>
+                <if test="item.RPTTYPENAME != null and item.RPTTYPENAME != ''">RPT_TYPE_NAME=#{item.RPTTYPENAME},</if>
+                <if test="item.EVENTDAMGLEVELNAME != null and item.EVENTDAMGLEVELNAME != ''">
+                    EVENT_DAMG_LEVEL_NAME=#{item.EVENTDAMGLEVELNAME},
+                </if>
+                <if test="item.EVENTSUBJECTNAME != null and item.EVENTSUBJECTNAME != ''">
+                    EVENT_SUBJECT_NAME=#{item.EVENTSUBJECTNAME},
+                </if>
+                <if test="item.EVENTPOSX != null and item.EVENTPOSX != ''">EVENT_POS_X=#{item.EVENTPOSX},</if>
+                <if test="item.EVENTPOSY != null and item.EVENTPOSY != ''">#{item.EVENTPOSY},</if>
+                <if test="item.EVENTGRIDID != null and item.EVENTGRIDID != ''">#{item.EVENTGRIDID},</if>
+                <if test="item.EVENTREPDEPARTNAME != null and item.EVENTREPDEPARTNAME != ''">
+                    #{item.EVENTREPDEPARTNAME},
+                </if>
+                <if test="item.EVENTATTACHID != null and item.EVENTATTACHID != ''">#{item.EVENTATTACHID},</if>
+                <if test="item.RPTTIME != null and item.RPTTIME != ''">#{item.RPTTIME}</if>
+            </set>
+            where `EVENT_ID`=#{item.EVENTID}
+        </foreach>
+    </update>
+
+    <select id="queryShzldldgdListByEventId" resultType="int">
+        select count(1) from t_47_shzldldgd where `EVENT_ID`=#{EVENTID}
+    </select>
+
+    <select id="queryShzldldgdList" resultType="map">
+        select
+        `EVENT_POS_DESC` as EVENTPOSDESC,
+        DATE_FORMAT(`EVENT_OCCUR_TIME`, '%Y-%m-%d %H:%i:%S') as EVENTOCCURTIME,
+        `EVENT_ATTACH_LIST` as EVENTATTACHLIST,
+        DATE_FORMAT(`CLOSED_TIME`, '%Y-%m-%d %H:%i:%S') as CLOSEDTIME,
+        `EVENT_CODE` as EVENTCODE,
+        `EVENT_TYPE_NAME` as EVENTTYPENAME,
+        `EXTENDED` as EXTENDED,
+        `EVENT_NAME` as EVENTNAME,
+        `EVENT_DESC` as EVENTDESC,
+        `RPT_CHANNEL_NAME` as RPTCHANNELNAME,
+        `EVENTDISP_DEMAND_DEADLINE` as EVENTDISPDEMANDDEADLINE,
+        `EVENT_LEVEL_NAME` as EVENTLEVELNAME,
+        `EVENT_GRID_NAME` as EVENTGRIDNAME,
+        `EVENT_STATUS_NAME` as EVENTSTATUSNAME,
+        `RPT_TYPE_NAME` as RPTTYPENAME,
+        `EVENT_DAMG_LEVEL_NAME` as EVENTDAMGLEVELNAME,
+        `EVENT_SUBJECT_NAME` as EVENTSUBJECTNAME,
+        `EVENT_ID` as EVENTID,
+        `EVENT_POS_X` as EVENTPOSX,
+        `EVENT_POS_Y` as EVENTPOSY,
+        `EVENT_GRID_ID` as EVENTGRIDID,
+        `EVENT_REP_DEPART_NAME` as EVENTREPDEPARTNAME,
+        `EVENT_ATTACH_ID` as EVENTATTACHID,
+        DATE_FORMAT(`RPT_TIME`, '%Y-%m-%d %H:%i:%S') as RPTTIME
+        from t_47_shzldldgd where 1=1
+        <if test="beginTime != null and beginTime != ''">and EVENT_OCCUR_TIME >=#{beginTime}</if>
+        <if test="endTime != null and endTime != ''">and EVENT_OCCUR_TIME &lt;= #{endTime}</if>
+        <if test="EVENTSUBJECTNAME != null and EVENTSUBJECTNAME != ''">and EVENT_SUBJECT_NAME = #{EVENTSUBJECTNAME}</if>
+        <if test="precinctName != null and precinctName != ''">and locate(#{precinctName},EVENT_GRID_NAME)</if>
+        <if test="limit != null">limit = #{limit}</if>
+    </select>
+
+    <select id="queryShzldldgdCount" resultType="int">
+        select count(1) from t_47_shzldldgd where 1=1
+        <if test="beginTime != null and beginTime != ''">and EVENT_OCCUR_TIME >=#{beginTime}</if>
+        <if test="endTime != null and endTime != ''">and EVENT_OCCUR_TIME &lt;= #{endTime}</if>
+        <if test="EVENTSUBJECTNAME != null and EVENTSUBJECTNAME != ''">and EVENT_SUBJECT_NAME = #{EVENTSUBJECTNAME}</if>
+        <if test="precinctName != null and precinctName != ''">and locate(#{precinctName},EVENT_GRID_NAME)</if>
+        <if test="limit != null">limit = #{limit}</if>
+    </select>
+
+    <select id="queryShzldldgdType" resultType="map">
+        select distinct EVENT_SUBJECT_NAME EVENTSUBJECTNAME from t_47_shzldldgd where 1=1
+        <if test="precinctName != null and precinctName != ''">and locate(#{precinctName},EVENT_GRID_NAME)</if>
+    </select>
+
+    <select id="queryShzldldgdStatusAll" resultType="int">
+        SELECT count(1) FROM `t_47_shzldldgd` where 1=1
+        <if test="beginTime != null and beginTime != ''">and EVENT_OCCUR_TIME >=#{beginTime}</if>
+        <if test="endTime != null and endTime != ''">and EVENT_OCCUR_TIME &lt;= #{endTime}</if>
+        <if test="precinctName != null and precinctName != ''">and locate(#{precinctName},EVENT_GRID_NAME)</if>
+    </select>
+
+    <select id="queryShzldldgdStatusUnDeal" resultType="int">
+        SELECT count(1) FROM `t_47_shzldldgd` where EVENT_STATUS_NAME !='已结案'
+        <if test="beginTime != null and beginTime != ''">and EVENT_OCCUR_TIME >=#{beginTime}</if>
+        <if test="endTime != null and endTime != ''">and EVENT_OCCUR_TIME &lt;= #{endTime}</if>
+        <if test="precinctName != null and precinctName != ''">and locate(#{precinctName},EVENT_GRID_NAME)</if>
+    </select>
+
+    <select id="queryShzldldgdStatusDeal" resultType="int">
+        SELECT count(1) FROM `t_47_shzldldgd` where EVENT_STATUS_NAME ='已结案'
+        <if test="beginTime != null and beginTime != ''">and EVENT_OCCUR_TIME >=#{beginTime}</if>
+        <if test="endTime != null and endTime != ''">and EVENT_OCCUR_TIME &lt;= #{endTime}</if>
+        <if test="precinctName != null and precinctName != ''">and locate(#{precinctName},EVENT_GRID_NAME)</if>
+    </select>
+</mapper>

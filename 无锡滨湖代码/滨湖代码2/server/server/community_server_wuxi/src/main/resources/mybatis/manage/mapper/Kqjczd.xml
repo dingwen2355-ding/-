@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.KqjczdDao">
+
+    <select id="selectSiteList" resultType="map">
+        SELECT
+        b.precinct_name,
+        stationname,
+        lgtd,
+        lttd,
+        street
+        FROM
+        t_07_kqjczd a left join t_cfg_precinct b on a.street = b.precinct_id where 1=1
+        <if test="precinctId != null and precinctId != null ">
+            and street = #{precinctId}
+        </if>
+        <if test="precinctName != null and precinctName != null ">
+            and b.precinct_name = #{precinctName}
+        </if>
+    </select>
+</mapper>

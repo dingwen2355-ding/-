@@ -1,0 +1,83 @@
+package com.znv.manage.common.bean;
+
+import lombok.Data;
+import lombok.ToString;
+
+@Data
+@ToString
+public class HospitalSyncJZGH {
+
+        private Integer id;
+        private Double JZLGFY;
+        private String REC_CODE;
+        private String SCSJ;
+        private Double BLFY;
+        private Double JMJE2;
+        private String EXPERT_CODE;
+        private String ORGAN_CODE;
+        private String PERSONNAME;
+        private String PACT_NAME;
+        private String YYLSH;
+        private String YLFYJSFSDM_MC;
+        private String HZLYDL;
+        private String YLFYLYLBDM_MC;
+        private String SFYY;
+        private Double CZFY;
+        private String GHFSDM_MC;
+        private String REC_NAME;
+        private String OP_EM_SD_NO;
+        private Double JMJE;
+        private String REC_IDCARD;
+        private String CNAME_VISIT_STATUS;
+        private String BIRTHDAY;
+        private String IDTYPE;
+        private Double UND_PAY;
+        private String OP_EM_NO;
+        private String ZJFY;
+        private String GHLSH;
+        private String ZHXGJG_DM;
+        private String OTHERCARDNO;
+        private Double OTH_FEE;
+        private Double ZFY;
+        private String ZFBZ;
+        private String EXPERT_IDCARD;
+        private String STFBH;
+        private String GHLB_DM;
+        private String SYS_CODE;
+        private String ADDRESS;
+        private String IDNO;
+        private String ZHXGJG_MC;
+        private String GHFS_DM;
+        private String JSSJ;
+        private String OTHERCARDTYPE;
+        private String IDCARD;
+        private String ADDRESSTYPE;
+        private String OP_EM_MARK;
+        private String YLFYLYLB_DM;
+        private String VISIT_DATE;
+        private String YLFYJFS_DM;
+        private String CONTACTNO;
+        private String CNAME_OP_EM_MARK;
+        private String GHSJ;
+        private String DPT_NAME;
+        private String Last_modified;
+        private String CARDNO;
+        private String SFYYBS;
+        private String CNAME_VISIT_TIME;
+        private Double DIAG_FEE;
+        private String REC_DT;
+        private String SEXCODE;
+        private String PACT_CODE;
+        private String EXPERT_NAME;
+        private String THSJ;
+        private String VISIT_STATUS;
+        private String ORGAN_NAME;
+        private String FPHM;
+        private String VISIT_TIME;
+        private String DPT_CODE;
+        private Double REGI_FEE;
+        private String PHRID;
+        private String GHLBDM_MC;
+        private String CNAME_OTHERCARDTYPE;
+        private String create_time;
+}

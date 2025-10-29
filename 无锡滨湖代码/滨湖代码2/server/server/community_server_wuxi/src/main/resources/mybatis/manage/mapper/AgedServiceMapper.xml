@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.FwgdbDao">
+    <select id="countFwgdbToday" resultType="java.lang.Integer">
+        SELECT  count(1) FROM t_30_fwgdb
+        WHERE 1=1
+        <if test="beginTime != null">
+            AND  begin_service_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            AND begin_service_time &lt;= #{endTime}
+        </if>
+        <if test="beginTime == null and endTime == null ">
+            AND DATE(begin_service_time) = CURDATE()
+        </if>
+    </select>
+
+
+    <insert id="insertFwgdbList">
+        INSERT IGNORE INTO t_30_fwgdb
+        (id,
+        end_service_time,
+        assign_time,
+        begin_service_time,
+        login_name,
+        community_id,
+        satisfaction,
+        person_name,
+        person_tel,
+        street_id,
+        order_code,
+        item_name,
+        create_time)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.ID},
+            #{item.EndServiceTime},
+            #{item.AssignTime},
+            #{item.BeginServiceTime},
+            #{item.LoginName},
+            #{item.CommunityID},
+            #{item.Satisfaction},
+            #{item.PersonName},
+            #{item.PersonTel},
+            #{item.streetID},
+            #{item.OrderCode},
+            #{item.ItemName},
+            current_timestamp)
+        </foreach>
+    </insert>
+
+    <select id="queryFwgdbAllId" resultType="java.util.Map">
+        select id from t_30_fwgdb
+    </select>
+</mapper>

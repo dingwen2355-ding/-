@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.FireAwarenessSBXXDao">
+
+	<insert id="insertSBXXData">
+		insert into t_26_sbxx(
+		positionName,
+		deviceType,
+		userlist,
+		addTime,
+		callAddress,
+		pxpy,
+		unitId,
+		collect_time,
+		deviceId,
+		orgid,
+		status,
+		create_time
+		 )values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.positionName},
+			#{item.deviceType},
+			#{item.userlist},
+			#{item.addTime},
+			#{item.callAddress},
+			#{item.pxpy},
+			#{item.unitId},
+			#{item.collectTime},
+			#{item.deviceId},
+			#{item.orgid},
+			#{item.status},
+			current_timestamp
+			)
+		</foreach>
+	</insert>
+
+
+	<update id="updateSBXXData">
+		<foreach collection="list" separator=";" item="item" index="index">
+			update t_26_sbxx
+			<set>
+				<if test="item.positionName !=null and item.positionName != '' ">positionName= #{item.positionName},</if>
+				<if test="item.deviceType !=null and item.deviceType != '' ">deviceType= #{item.deviceType},</if>
+				<if test="item.userlist !=null and item.userlist != '' ">userlist= #{item.userlist},</if>
+				<if test="item.addTime !=null and item.addTime != '' ">addTime= #{item.addTime},</if>
+				<if test="item.callAddress !=null and item.callAddress != '' ">callAddress= #{item.callAddress},</if>
+				<if test="item.pxpy !=null and item.pxpy != '' ">pxpy= #{item.pxpy},</if>
+				<if test="item.unitId !=null and item.unitId != '' ">unitId= #{item.unitId},</if>
+				<if test="item.collectTime !=null and item.collectTime != '' ">collect_time= #{item.collectTime},</if>
+				<if test="item.orgid !=null and item.orgid != '' ">orgid= #{item.orgid},</if>
+				<if test="item.status !=null and item.status != '' ">status= #{item.status}</if>
+			</set>
+			where deviceId = #{item.deviceId}
+		</foreach>
+	</update>
+
+
+	<select id="queryExist" parameterType="com.znv.manage.common.bean.FireAwarenessSyncSBXX" resultType="java.lang.Integer">
+		select count(1) as num from t_26_sbxx
+		where 1=1
+		<if test="deviceId != null and deviceId != '' "> and deviceId = #{deviceId}</if>
+	</select>
+
+
+	<delete id="truncateSBXXData">
+        TRUNCATE table t_26_sbxx
+    </delete>
+
+	
+</mapper>

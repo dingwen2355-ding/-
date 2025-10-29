@@ -1,0 +1,20 @@
+@import "base";
+// el-pagination
+.el-pagination {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.el-pager li.active {
+  //background: $--color-primary;
+  color: #fff !important;
+}
+
+// el-button
+.el-button--primary {
+  background: linear-gradient(90deg, #0093FF 0%, #056CF2 100%);
+}
+
+.el-button--success {
+  background: linear-gradient(90deg, #52C41A 0%, #88D544 100%);
+}

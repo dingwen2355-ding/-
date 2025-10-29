@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.IAlarmInformMapper">
+
+    <select id="selAlarmInform" resultType="java.util.LinkedHashMap">
+        SELECT t.alarm_id                                                  alarmId,
+        CASE
+            WHEN t.announcement_type = 1 THEN '超期告警'
+            WHEN t.announcement_type = 2 THEN '催办告警'
+            WHEN t.announcement_type = 3 THEN '即将超期'
+        ELSE ''
+        END                                                       announcementType,
+        IF(t.is_accept = 1, '未接收', '已接收')                           isAccept,
+        IFNULL(t.announcement_content, '')                          content,
+        t.event_id                                                  eventId,
+        IFNULL(t.event_name, '')                                   eventTitle,
+        IFNULL(t.happen_time, '')                                  startTime,
+        IFNULL(t.deadline_time, '')                                endTime,
+        IFNULL(t.deal_person_id, '')                               personId,
+        IFNULL(tcu.true_name, '')                                     personName,
+        IFNULL(tcu.mobile_phone, '')                                  phone,
+        IFNULL(tcd.department, NULL)                                  department,
+        IFNULL(DATE_FORMAT(t.create_time, '%Y-%m-%d %H:%i:%S'), '') create_time,
+        IFNULL(t.creator, '')                                       creator,
+        IFNULL(t.record_id, '')                                    recordId,
+        IFNULL(t.address, '')                                      address,
+        IFNULL(t.damage_degree, '')                                damageDegree,
+        IFNULL(t.topic_name, '')                                   topicName,
+        IFNULL(t.`desc`, '')                                       eventDesc,
+        CASE
+            WHEN t.event_state = '10' THEN '报废'
+            WHEN t.event_state = '20' THEN '已反馈'
+            WHEN t.event_state = '30' THEN '待派遣'
+            WHEN t.event_state = '40' THEN '待接收'
+            WHEN t.event_state = '50' THEN '处置中'
+            WHEN t.event_state = '60' THEN '已处置'
+            ELSE ''
+        END                                                       eventState,
+        CASE
+            WHEN t.overdue_state = 10 THEN '正常'
+            WHEN t.overdue_state = 20 THEN '即将超期'
+            WHEN t.overdue_state = 30 THEN '已超期'
+            ELSE ''
+        END                                                       overdueState,
+        CASE
+            WHEN t.event_tag = 1 THEN '产业经济'
+            WHEN t.event_tag = 2 THEN '城市管理'
+            WHEN t.event_tag = 3 THEN '民生服务'
+            WHEN t.event_tag = 4 THEN '平安建设'
+            WHEN t.event_tag = 5 THEN '应急管理'
+            WHEN t.event_tag = 6 THEN '综合执法'
+            ELSE ''
+        END                                                       eventTag,
+        IFNULL(event_type, '')                                        eventType,
+        IFNULL(t.level, '')                                        level,
+        CASE
+            WHEN t.report_source = 0 THEN '坐席登机事件'
+            WHEN t.report_source = 1 THEN '网格事件'
+            WHEN t.report_source = 2 THEN '12345事件'
+            WHEN t.report_source = 3 THEN '12319事件'
+            WHEN t.report_source = 4 THEN '党员e加事件'
+            WHEN t.report_source = 5 THEN '百姓上报事件'
+            WHEN t.report_source = 6 THEN 'AI事件'
+            WHEN t.report_source = 9 THEN '已删除'
+            ELSE ''
+        END                                                       reportSource,
+        IFNULL(t.channel, '')                                      channel,
+        IFNULL(tcp.precinct_name, '')                                 precinctName,
+        IFNULL(t.gpsx, '')                                         gpsx,
+        IFNULL(t.gpsy, '')                                         gpsy,
+        IFNULL(t.end_time, '')                                     eventEndTime,
+        IFNULL(t.sync_time, '')                                    syncTime,
+        IFNULL(t.report_person, '')                                reportPerson,
+        IFNULL(t.report_phone, '')                                 reportPhone,
+        IFNULL(t.push_person_number, '')                            pushPersonNumber,
+        IFNULL(tcua.user_name, '')                                    pushPersonName,
+        IFNULL(tcua.mobile_phone, '')                                 pushPhone,
+        IFNULL(t.files, '')                                        files,
+        CASE
+            WHEN t.info_source = '1' THEN '上级派遣'
+            WHEN t.info_source = '2' THEN '自登记'
+            WHEN t.info_source = '3' THEN '市民投诉'
+            ELSE '其他'
+        END                                                       infoSource
+        FROM (
+            SELECT tai.alarm_id,
+            tai.announcement_type,
+            tai.is_accept,
+            tai.announcement_content,
+            tai.event_id,
+            tdei.event_name,
+            tdei.happen_time,
+            tdei.deadline_time,
+            tdei.deal_person_id,
+            tai.create_time,
+            tai.creator,
+            tdei.record_id,
+            tdei.address,
+            tdei.damage_degree,
+            tdei.topic_name,
+            tdei.`desc`,
+            tdei.event_state,
+            tdei.overdue_state,
+            tdei.event_tag,
+            tdei.event_type,
+            tdei.level,
+            tdei.report_source,
+            tdei.channel,
+            tdei.gpsx,
+            tdei.gpsy,
+            tdei.end_time,
+            tdei.sync_time,
+            tdei.report_person,
+            tdei.report_phone,
+            tai.push_person_number,
+            tai.push_department_number,
+            tdei.files,
+            tdei.grid_id,
+            tdei.info_source
+            FROM t_alarm_inform tai
+            LEFT JOIN t_data_event_info tdei ON tai.event_id = tdei.event_id
+            <where>
+                1 = 1
+                <if test="alarmId != null">
+                    AND tai.alarm_id = #{alarmId}
+                </if>
+                <if test="content != null">
+                    AND LOCATE(#{content}, tai.announcement_content) &gt; 0
+                </if>
+                <if test="isAccept != null">
+                    <choose>
+                        <when test="'未接收' == isAccept">
+                            AND tai.is_accept = 1
+                        </when>
+                        <when test="'已接收' == isAccept">
+                            AND tai.is_accept = 2
+                        </when>
+                        <otherwise></otherwise>
+                    </choose>
+                </if>
+                <if test="eventId != null">
+                    AND tai.event_id LIKE concat(#{eventId},'%')
+                </if>
+                <if test="null != reportSource and '' != reportSource">
+                    AND tdei.report_source IN
+                    <foreach collection="reportSource.split(',')" index="index" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="startTime != null and null != endTime">
+                    AND tdei.happen_time &gt;= #{startTime} AND tdei.happen_time &lt;= #{endTime}
+                </if>
+                <if test="userId != null">
+                    AND tdei.deal_person_id = #{userId}
+                </if>
+                <if test="userId == null and departmentId != null">
+                    AND tdei.deal_dept_id = #{departmentId}
+                    <if test="null != queryUserIdIsEmpty and 1 == queryUserIdIsEmpty">
+                        AND (tdei.deal_person_id = '' OR tdei.deal_person_id IS NULL)
+                    </if>
+                </if>
+                <if test="announcementType != null">
+                    AND tai.announcement_type= #{announcementType}
+                </if>
+            </where>
+            ORDER BY tai.create_time DESC
+            <if test="pageStart != null and pageLen != null">LIMIT ${pageStart}, ${pageLen}</if>
+        ) t
+        LEFT JOIN t_cfg_user tcu ON tcu.user_id = t.deal_person_id
+        LEFT JOIN t_cfg_user tcua ON tcua.user_id = t.push_person_number
+        LEFT JOIN t_cfg_department tcd ON tcd.id = t.push_department_number
+        LEFT JOIN t_cfg_precinct tcp ON tcp.precinct_id = t.grid_id
+    </select>
+
+    <select id="selAlarmInformCount" resultType="long">
+        SELECT COUNT(0)
+        FROM t_alarm_inform tai
+        LEFT JOIN t_data_event_info tdei on tai.event_id = tdei.event_id
+        <where>
+            1 = 1
+            <if test="alarmId != null">
+                AND tai.alarm_id = #{alarmId}
+            </if>
+            <if test="content != null">
+                AND LOCATE(#{content}, tai.announcement_content) &gt; 0
+            </if>
+            <if test="isAccept != null">
+                <choose>
+                    <when test="'未接收' == isAccept">
+                        AND tai.is_accept = 1
+                    </when>
+                    <when test="'已接收' == isAccept">
+                        AND tai.is_accept = 2
+                    </when>
+                    <otherwise></otherwise>
+                </choose>
+            </if>
+            <if test="eventId != null">
+                AND tai.event_id LIKE concat(#{eventId},'%')
+            </if>
+            <if test="null != reportSource and '' != reportSource">
+                AND tdei.report_source IN
+                <foreach collection="reportSource.split(',')" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="startTime != null and null != endTime">
+                AND tdei.happen_time &gt;= #{startTime} AND tdei.happen_time &lt;= #{endTime}
+            </if>
+            <if test="userId != null">
+                AND tdei.deal_person_id = #{userId}
+            </if>
+            <if test="userId == null and departmentId != null">
+                AND tdei.deal_dept_id = #{departmentId}
+                <if test="null != queryUserIdIsEmpty and 1 == queryUserIdIsEmpty">
+                    AND (tdei.deal_person_id = '' OR tdei.deal_person_id IS NULL)
+                </if>
+            </if>
+            <if test="announcementType != null">
+                AND tai.announcement_type= #{announcementType}
+            </if>
+        </where>
+    </select>
+
+    <update id="update" parameterType="string">
+
+            update t_alarm_inform
+            <set>
+                <if test="isAccept != null">
+                is_accept = #{isAccept},
+                </if>
+                <if test="remark != null">
+                remark = #{remark}</if>
+            </set>
+            where alarm_id in
+        <foreach item="id" collection="alarmIds" index="index" open="(" separator="," close=")">
+         #{id}
+        </foreach>
+    </update>
+
+    <select id="selOverTimeAlarm" resultType="java.util.LinkedHashMap">
+        SELECT
+                a.event_id,
+                a.task_id,
+                a.record_id,
+                a.address,
+                a.happen_time,
+                a.files,
+                a.end_time,
+                a.event_type,
+                a.event_name,
+                a.`desc`,
+                a.channel,
+                a.deadline_time,
+                a.`level`,
+                h.precinct_name grid_name,
+                a.grid_id,
+                a.event_state eventStateId,
+                b.state_name eventState,
+                c.source_name `reportSource`,
+                i.source_name `infoSource`,
+                a.damage_degree,
+                a.topic_name,
+                a.gpsx,
+                a.gpsy,
+                a.sync_time,
+                d.tag_name eventTag,
+                e.overdue_name overdueState,
+                a.report_person,
+                a.report_phone,
+                g.precinct_name deal_dept_name,
+                f.true_name deal_person_name,
+                a.deal_person_id,
+                a.deal_dept_id
+        FROM
+                t_data_event_info a
+                LEFT JOIN t_dict_event_state b on a.event_state = b.state_id
+                LEFT JOIN t_dict_event_report_source c on a.report_source = c.source_id
+                LEFT JOIN t_dict_event_tag d on a.event_tag = d.tag_id
+                LEFT JOIN t_dict_event_overdue e on a.overdue_state = e.overdue_id
+                left join t_cfg_user f on a.deal_person_id = f.user_id
+                left join t_cfg_precinct g on a.deal_dept_id = g.precinct_id
+                left join t_cfg_precinct h on a.grid_id = h.precinct_id
+                left join t_dict_event_info_source i on a.info_source = i.source_id
+        where 1=1
+          and (a.end_time is null or a.end_time = '')
+          and a.is_alarm = 0
+            <if test="time != null">
+             and TO_DAYS(a.deadline_time) &gt;= TO_DAYS(#{time})
+            </if>
+          and TO_DAYS(a.deadline_time) &lt;= TO_DAYS(now())
+          ORDER BY deadline_time desc
+    </select>
+
+    <select id="selOverTimeAlarmByCursor" resultType="map" fetchSize="1000">
+        SELECT
+        a.*,
+        h.precinct_name grid_name,
+        b.state_name    eventState,
+        c.source_name   `reportSource`,
+        i.source_name   `infoSource`,
+        d.tag_name      eventTag,
+        e.overdue_name  overdueState,
+        g.precinct_name deal_dept_name,
+        f.true_name     deal_person_name
+        FROM (
+            SELECT event_id,
+            task_id,
+            record_id,
+            address,
+            happen_time,
+            files,
+            end_time,
+            event_type,
+            event_name,
+            `desc`,
+            channel,
+            deadline_time,
+            `level`,
+            grid_id,
+            event_state eventStateId,
+            damage_degree,
+            topic_name,
+            gpsx,
+            gpsy,
+            sync_time,
+            report_person,
+            report_phone,
+            deal_person_id,
+            deal_dept_id,
+            event_state,
+            report_source,
+            event_tag,
+            overdue_state,
+            info_source
+            FROM t_data_event_info
+            <where>
+                (end_time IS NULL OR end_time = '') AND event_state IN ('40', '50')
+                <choose>
+                    <when test="1 == announcementType">
+                        AND LOCATE(is_alarm, '023') > 0
+                    </when>
+                    <when test="3 == announcementType">
+                        AND LOCATE(is_alarm, '02') > 0
+                    </when>
+                    <otherwise></otherwise>
+                </choose>
+                <if test="null != reportSource">
+                    AND report_source = #{reportSource}
+                </if>
+                <choose>
+                    <when test="null != dateTime">
+                        AND TO_DAYS(deadline_time) = TO_DAYS(#{dateTime})
+                    </when>
+                    <otherwise>
+                        AND TO_SECONDS(deadline_time) &lt;= TO_SECONDS(now())
+                    </otherwise>
+                </choose>
+            </where>
+        ) a
+        LEFT JOIN t_dict_event_state b ON a.event_state = b.state_id
+        LEFT JOIN t_dict_event_report_source c ON a.report_source = c.source_id
+        LEFT JOIN t_dict_event_tag d ON a.event_tag = d.tag_id
+        LEFT JOIN t_dict_event_overdue e ON a.overdue_state = e.overdue_id
+        LEFT JOIN t_cfg_user f ON a.deal_person_id = f.user_id
+        LEFT JOIN t_cfg_precinct g ON a.deal_dept_id = g.precinct_id
+        LEFT JOIN t_cfg_precinct h ON a.grid_id = h.precinct_id
+        LEFT JOIN t_dict_event_info_source i ON a.info_source = i.source_id
+    </select>
+
+</mapper>

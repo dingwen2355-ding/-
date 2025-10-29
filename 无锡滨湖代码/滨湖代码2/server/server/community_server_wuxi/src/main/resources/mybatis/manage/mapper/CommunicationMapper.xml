@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.CommunicationMapper">
+    <resultMap id="BaseResultMap" type="com.znv.manage.common.bean.Communication">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="age" jdbcType="INTEGER" property="age"/>
+        <result column="sex" jdbcType="VARCHAR" property="sex"/>
+        <result column="unit_id" jdbcType="VARCHAR" property="unitId"/>
+        <result column="unit" jdbcType="VARCHAR" property="unit"/>
+        <result column="id_card" jdbcType="VARCHAR" property="idCard"/>
+        <result column="duty" jdbcType="VARCHAR" property="duty"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
+        <result column="fox" jdbcType="VARCHAR" property="fox"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    id, name, age, sex, unit_id, unit, id_card, duty, phone, telephone, fox
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from base_communication
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from base_communication
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.znv.manage.common.bean.Communication">
+    insert into base_communication (id, name, age, 
+      sex, unit_id, unit, 
+      id_card, duty, phone, 
+      telephone, fox)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, 
+      #{sex,jdbcType=VARCHAR}, #{unitId,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
+      #{idCard,jdbcType=VARCHAR}, #{duty,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{telephone,jdbcType=VARCHAR}, #{fox,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.znv.manage.common.bean.Communication">
+        insert into base_communication
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="age != null">
+                age,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="unitId != null">
+                unit_id,
+            </if>
+            <if test="unit != null">
+                unit,
+            </if>
+            <if test="idCard != null">
+                id_card,
+            </if>
+            <if test="duty != null">
+                duty,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="telephone != null">
+                telephone,
+            </if>
+            <if test="fox != null">
+                fox,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                #{age,jdbcType=INTEGER},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="unitId != null">
+                #{unitId,jdbcType=VARCHAR},
+            </if>
+            <if test="unit != null">
+                #{unit,jdbcType=VARCHAR},
+            </if>
+            <if test="idCard != null">
+                #{idCard,jdbcType=VARCHAR},
+            </if>
+            <if test="duty != null">
+                #{duty,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="telephone != null">
+                #{telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="fox != null">
+                #{fox,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.znv.manage.common.bean.Communication">
+        update base_communication
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                age = #{age,jdbcType=INTEGER},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="unitId != null">
+                unit_id = #{unitId,jdbcType=VARCHAR},
+            </if>
+            <if test="unit != null">
+                unit = #{unit,jdbcType=VARCHAR},
+            </if>
+            <if test="idCard != null">
+                id_card = #{idCard,jdbcType=VARCHAR},
+            </if>
+            <if test="duty != null">
+                duty = #{duty,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="telephone != null">
+                telephone = #{telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="fox != null">
+                fox = #{fox,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.znv.manage.common.bean.Communication">
+    update base_communication
+    set name = #{name,jdbcType=VARCHAR},
+      age = #{age,jdbcType=INTEGER},
+      sex = #{sex,jdbcType=VARCHAR},
+      unit_id = #{unitId,jdbcType=VARCHAR},
+      unit = #{unit,jdbcType=VARCHAR},
+      id_card = #{idCard,jdbcType=VARCHAR},
+      duty = #{duty,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      fox = #{fox,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+    <select id="baseInfo" resultType="java.util.HashMap">
+        SELECT a.id,a.`name`,a.age,a.sex,a.unit,a.unit_id as unitId,a.duty,a.phone,a.telephone,a.fox,a.wx,a.unionid
+        from base_communication a
+        inner JOIN base_unit b on find_in_set(b.id,a.unit_id)
+        WHERE 1=1
+        <if test="text!=null">
+            and
+            CONCAT(ifnull(a.name,''),ifnull(a.age,''),ifnull(a.sex,''),ifnull(a.unit,''),IFNULL(a.phone,''),ifnull(a.telephone,''),ifnull(a.fox,''),ifnull(a.duty,''))
+            like concat('%',#{text},'%')
+        </if>
+        <if test="type !=null">
+            and find_in_set(b.type,#{type})
+        </if>
+        <if test="unitId != null and unitId != ''">and find_in_set(#{unitId},a.unit_id)</if>
+        <if test="precinctId != null and precinctId != ''">and b.area_id = #{precinctId}</if>
+        ORDER BY b.sort,a.sort
+        <if test="pageStart != null and pageLen != null">limit ${pageStart},${pageLen}</if>
+    </select>
+
+    <select id="areaInfo" resultType="java.util.HashMap">
+        SELECT
+        precinct_id areaCode,
+        precinct_name name
+        FROM
+        community_wuxi_eims.t_cfg_precinct
+        WHERE
+        1 = 1
+        <if test="precinctId != null">
+            and precinct_id = #{precinctId}
+        </if>
+        <if test="level != null">
+            and find_in_set(precinct_kind,#{level})
+        </if>
+        <if test="topId != null">
+            and up_precinct_id = #{topId}
+        </if>
+    </select>
+
+    <select id="unitInfo" resultType="java.util.HashMap">
+        SELECT a.id,a.name,a.type<if test="eventId != null">,b.duty_level dutyLevel</if> from base_unit a
+        <if test="eventId !=null">
+            LEFT JOIN (SELECT * from deal_event_accpciated_communication where event_id=#{eventId}) b on a.id=b.unit_id
+        </if>
+        where 1=1
+        <if test="type!=null">
+            and  find_in_set(a.type,#{type})
+        </if>
+        <if test="text!=null">
+            and a.name like concat('%',#{text},'%')
+        </if>
+        <if test="precinctId != null and precinctId != ''">and a.area_id = #{precinctId}</if>
+        <choose>
+            <when test="eventId!=null">
+                ORDER BY cast(a.type as decimal),cast(ifnull(b.duty_level,'99999') as decimal),cast(ifnull(b.sort,'99999') as decimal),cast(a.sort as decimal)
+            </when>
+            <otherwise>
+                ORDER BY cast(a.sort as decimal)
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="unitInfo2" resultType="com.znv.manage.common.bean.Unit">
+        SELECT a.id,a.name,a.type,a.area_id,a.super_id from base_unit a
+
+        where 1=1
+        <if test="type!=null">
+            and  find_in_set(a.type,#{type})
+        </if>
+        <if test="text!=null">
+            and a.name like concat('%',#{text},'%')
+        </if>
+        <if test="precinctId != null and precinctId != ''">and a.area_id = #{precinctId}</if>
+        order by a.sort
+    </select>
+
+    <select id="queryCommunication" resultType="java.util.HashMap">
+        select id,phone,telephone,telephonehome from base_communication;
+    </select>
+
+    <insert id="saveCommunicationAesPhone">
+        INSERT INTO base_communication (id,phone,telephone,telephonehome)
+        VALUES
+            <foreach collection="lists" item="list" separator=",">
+                (#{list.id},#{list.phone},#{list.telephone},#{list.telephonehome})
+            </foreach>
+        ON DUPLICATE KEY UPDATE id=values(id),phone=values(phone),telephone=values(telephone),telephonehome=values(telephonehome)
+    </insert>
+
+    <insert id="saveCommunicationOrder">
+        INSERT INTO base_communication (
+            id,
+            sort
+        )
+        VALUES
+        <foreach collection="maps" item="map" separator=",">
+            (#{map.id},#{map.sort})
+        </foreach>
+        ON DUPLICATE KEY UPDATE id=values(id),sort=values(sort)
+    </insert>
+
+    <select id="queryByUnitId" resultType="String">
+        select name from base_unit
+        where 1=1
+        <if test="id != null and id != '' ">and id = #{id}</if>
+    </select>
+
+    <insert id="saveZFPeople" parameterType="list">
+        INSERT INTO t_data_zf_people(
+        user_id,
+        user_name,
+        account,
+        pwd,
+        phone,
+        org_id,
+        org_name
+        )
+        VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.userId},#{item.userName},#{item.account},#{item.pwd},
+            #{item.phone},#{item.orgId},#{item.orgName})
+        </foreach>
+        ON duplicate KEY UPDATE
+        user_name=VALUES(user_name)
+        ,account=VALUES(account)
+        ,pwd=VALUES(pwd)
+        ,phone=VALUES(phone)
+        ,org_id=VALUES(org_id)
+        ,org_name=VALUES(org_name)
+    </insert>
+
+    <insert id="saveZFPeopleGps" parameterType="list">
+        INSERT INTO t_data_zf_people(
+        user_id,
+        gpsx,
+        gpsy
+        )
+        VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.userId},#{item.lng},#{item.lat})
+        </foreach>
+        ON duplicate KEY UPDATE
+        gpsx=VALUES(gpsx)
+        ,gpsy=VALUES(gpsy)
+    </insert>
+
+    <select id="queryZFUserIds" resultType="string">
+        select
+            user_id userId
+        from t_data_zf_people
+    </select>
+
+    <select id="queryZFPeopleList" resultType="map">
+        SELECT
+            a.user_id userId,
+            a.user_name userName,
+            ifnull(b.name,'') name,
+            a.account,
+            ifnull(a.pwd,'') pwd,
+            a.phone,
+            ifnull(a.gpsx,'') gpsx,
+            ifnull(a.gpsy,'') gpsy,
+            ifnull(b.duty,'') duty,
+            (SELECT GROUP_CONCAT(c.name) unitName from base_unit c where FIND_IN_SET(c.id,b.unit_id)) unitName
+        FROM
+            t_data_zf_people a LEFT JOIN base_communication b on a.phone = b.phone
+        where 1=1
+        and ifnull(a.gpsx,'') != '' and ifnull(a.gpsy,'') != ''
+        <if test="phone != null and phone != ''">and a.phone = #{phone}</if>
+        <if test="precinctName != null and precinctName != ''">and a.org_name = #{precinctName}</if>
+    </select>
+    <select id="queryUnitList" resultType="com.znv.manage.common.bean.Unit">
+
+        SELECT
+        a.id,
+        a.`name`,
+        a.super_id superId,
+        ifnull(b.`name`,'') superName,
+        a.type,
+        ifnull(c.precinct_name,'') precinctName
+        FROM
+        base_unit a LEFT JOIN base_unit b on a.super_id = b.id
+        left join t_cfg_precinct c on a.area_id = c.precinct_id
+        WHERE
+        1 = 1
+            <if test="name != null and name !=''">and a.`name` like CONCAT('%',#{name},'%')</if>
+            <if test="precinctId != null and precinctId !=''">and a.area_id = #{precinctId}</if>
+        order by a.sort
+    </select>
+
+    <delete id="deleteUnitById">
+        delete from base_unit where find_in_set(id,#{ids})
+    </delete>
+
+    <insert id="saveUnit">
+        insert into base_unit(
+            id,
+            `name`,
+            area_id,
+            super_id,
+            type
+        )values
+        (
+            #{id},
+            #{name},
+            #{areaId},
+            #{superId},
+            #{type}
+        )on duplicate key update
+            `name` = values(`name`),
+            area_id = values(area_id),
+            super_id = values(super_id),
+            type = values(type)
+    </insert>
+
+    <insert id="savePrecinct">
+        insert into t_cfg_precinct(
+            precinct_id,
+            precinct_name,
+            up_precinct_id,
+            precinct_kind
+        )values
+        (
+            #{id},
+            #{name},
+            #{areaId},
+            #{precinctKind}
+        )on duplicate key update
+            precinct_name = values(precinct_name)
+    </insert>
+
+    <insert id="savePrecinctList" parameterType="list">
+        INSERT INTO t_cfg_precinct(
+        precinct_id,
+        precinct_name,
+        up_precinct_id,
+        precinct_kind
+        )
+        VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.id},#{item.name},#{item.areaId},#{item.precinctKind})
+        </foreach>
+        ON duplicate KEY UPDATE
+        precinct_name=VALUES(precinct_name)
+    </insert>
+
+    <insert id="saveUnitList" parameterType="list">
+        INSERT INTO base_unit(
+        id,
+        full_name,
+        `name`,
+        area_id,
+        super_id,
+        type
+        )
+        VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.id},#{item.name},#{item.name},#{item.areaId},#{item.superId},#{item.type})
+        </foreach>
+        ON duplicate KEY UPDATE
+        `name`=VALUES(`name`)
+        ,area_id=VALUES(area_id)
+        ,type=VALUES(type)
+    </insert>
+
+    <select id="queryPeopleList" resultType="com.znv.manage.common.bean.People">
+        SELECT
+        a.id id,
+        a.`name`,
+        a.unit_id unitId,
+        a.phone,
+        ifnull(b.`name`,'') unitName,
+        a.duty,
+        a.telephonehome landLine
+        FROM
+        base_communication a LEFT JOIN base_unit b on a.unit_id = b.id
+        WHERE
+        1 = 1
+        <if test="name != null and name !=''">and (a.`name` like CONCAT('%',#{name},'%') or b.`name` like CONCAT('%',#{name},'%')or a.`phone` like CONCAT('%',#{name},'%'))</if>
+        <if test="unitName != null and unitName !=''">and b.`name` like CONCAT('%',#{unitName},'%')</if>
+        <if test="precinctId != null and precinctId !=''">and b.area_id = #{precinctId}</if>
+    </select>
+
+    <delete id="deletePeopleById">
+        delete from base_communication where find_in_set(id,#{ids})
+    </delete>
+
+    <insert id="savePeople">
+        insert into base_communication(
+            id,
+            `name`,
+            unit_id,
+            unit,
+            phone,
+            telephonehome,
+            duty
+        )values
+        (
+            #{id},
+            #{name},
+            #{unitId},
+            #{unitName},
+            #{phone},
+            #{landLine},
+            #{duty}
+        )on duplicate key update
+             `name` = values(`name`),
+             unit_id = values(unit_id),
+             unit = values(unit),
+             phone = values(phone),
+             telephonehome = values(telephonehome),
+             duty = values(duty)
+    </insert>
+
+    <insert id="savePeopleList" parameterType="list">
+        INSERT INTO base_communication(
+        id,
+        `name`,
+        unit_id,
+        unit,
+        phone,
+        telephonehome,
+        duty
+        )
+        VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.id},#{item.name},#{item.unitId},#{item.unitName},#{item.phone},#{item.landLine},#{item.duty})
+        </foreach>
+        ON duplicate KEY UPDATE
+        `name`=VALUES(`name`)
+        ,unit_id=VALUES(unit_id)
+        ,unit=VALUES(unit)
+        ,phone=VALUES(phone),
+        telephonehome = values(telephonehome),
+        duty = values(duty)
+    </insert>
+
+    <select id="queryPrecinctList" resultType="map">
+        SELECT
+            precinct_id areaCode,
+            precinct_name `name`
+        FROM
+        community_wuxi_eims.t_cfg_precinct
+        where 1=1
+            <if test="precinctKind != null and precinctKind != ''">
+                and FIND_IN_SET(precinct_kind,#{precinctKind})
+            </if>
+            <if test="upPrecinctId != null and upPrecinctId != ''">
+                and up_precinct_id = #{upPrecinctId}
+            </if>
+        <if test="precinctId != null and precinctId != ''">
+            and precinct_id = #{precinctId}
+        </if>
+        order by sort desc
+    </select>
+</mapper>

@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.znv.manage.dao.information.DisasterManageDao">
+
+    <insert id="addDisaster" parameterType="com.znv.manage.common.bean.information.DisasterBean"
+            useGeneratedKeys="true" keyProperty="disasterBean.id">
+        insert into t_cfg_disaster_rep
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="disasterBean.disName != null and disasterBean.disName != ''" >dis_name,</if>
+            <if test="disasterBean.typeId != null and disasterBean.typeId != ''" >type_id,</if>
+            <if test="disasterBean.typeName != null and disasterBean.typeName != ''" >type_name,</if>
+            <if test="disasterBean.repPrecinctId != null and disasterBean.repPrecinctId != ''" >rep_precinct_id,</if>
+            <if test="disasterBean.repPersonId != null and disasterBean.repPersonId != ''" >rep_person_id,</if>
+            <if test="disasterBean.repPersonName != null and disasterBean.repPersonName != ''" >rep_person_name,</if>
+            <if test="disasterBean.repTime != null and disasterBean.repTime != ''" >rep_time,</if>
+            <if test="disasterBean.precinctId != null and disasterBean.precinctId != ''" >precinct_id,</if>
+            <if test="disasterBean.createId != null and disasterBean.createId != ''" >create_id,</if>
+            <if test="disasterBean.createName != null and disasterBean.createName != ''" >create_name,</if>
+            <if test="disasterBean.status != null and disasterBean.status != ''" >status,</if>
+            <if test="disasterBean.remark != null and disasterBean.remark != ''" >remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="disasterBean.disName != null and disasterBean.disName != ''" >#{disasterBean.disName},</if>
+            <if test="disasterBean.typeId != null and disasterBean.typeId != ''" >#{disasterBean.typeId},</if>
+            <if test="disasterBean.typeName != null and disasterBean.typeName != ''" >#{disasterBean.typeName},</if>
+            <if test="disasterBean.repPrecinctId != null and disasterBean.repPrecinctId != ''" >#{disasterBean.repPrecinctId},</if>
+            <if test="disasterBean.repPersonId != null and disasterBean.repPersonId != ''" >#{disasterBean.repPersonId},</if>
+            <if test="disasterBean.repPersonName != null and disasterBean.repPersonName != ''" >#{disasterBean.repPersonName},</if>
+            <if test="disasterBean.repTime != null and disasterBean.repTime != ''" >#{disasterBean.repTime},</if>
+            <if test="disasterBean.precinctId != null and disasterBean.precinctId != ''" >#{disasterBean.precinctId},</if>
+            <if test="disasterBean.createId != null and disasterBean.createId != ''" >#{disasterBean.createId},</if>
+            <if test="disasterBean.createName != null and disasterBean.createName != ''" >#{disasterBean.createName},</if>
+            <if test="disasterBean.status != null and disasterBean.status != ''" >#{disasterBean.status},</if>
+            <if test="disasterBean.remark != null and disasterBean.remark != ''" >#{disasterBean.remark},</if>
+        </trim>
+    </insert>
+
+    <insert id="addRelEvent" parameterType="com.znv.manage.common.bean.information.DisasterBean">
+        insert into t_cfg_disaster_event
+        (
+        dis_id,
+        event_id
+        )
+        VALUES
+        <foreach collection="disasterBean.eventIds" item="item" index= "index" separator =",">
+            (
+            #{disasterBean.id},
+            #{item}
+            )
+        </foreach >
+    </insert>
+
+    <insert id="addRelWarn" parameterType="com.znv.manage.common.bean.information.DisasterBean">
+        insert into t_cfg_disaster_warn
+        (
+        dis_id,
+        warn_id
+        )
+        VALUES
+        <foreach collection="disasterBean.warnIds" item="item" index= "index" separator =",">
+            (
+            #{disasterBean.id},
+            #{item}
+            )
+        </foreach >
+    </insert>
+
+    <insert id="addDisasterData" parameterType="com.znv.manage.common.bean.information.DisasterDataBean" >
+    INSERT INTO t_cfg_disaster_data
+    (dis_id,file_name,file_url)
+    VALUES
+    <foreach collection="disasterDataBeans" item="item" separator=",">
+        (
+        #{item.disId},
+        #{item.fileName},
+        #{item.fileUrl}
+        )
+    </foreach>
+    </insert>
+
+    <update id="editDisaster" parameterType="com.znv.manage.common.bean.information.DisasterBean" >
+        update t_cfg_disaster_rep
+        <set>
+            <if test="disasterBean.disName != null and disasterBean.disName != ''" >dis_name=#{disasterBean.disName},</if>
+            <if test="disasterBean.typeId != null and disasterBean.typeId != ''" >type_id=#{disasterBean.typeId},</if>
+            <if test="disasterBean.typeName != null and disasterBean.typeName != ''" >type_name=#{disasterBean.typeName},</if>
+            <if test="disasterBean.repPrecinctId != null and disasterBean.repPrecinctId != ''" >rep_precinct_id=#{disasterBean.repPrecinctId},</if>
+            <if test="disasterBean.repPersonId != null and disasterBean.repPersonId != ''" >rep_person_id=#{disasterBean.repPersonId},</if>
+            <if test="disasterBean.repPersonName != null and disasterBean.repPersonName != ''" >rep_person_name=#{disasterBean.repPersonName},</if>
+            <if test="disasterBean.repTime != null and disasterBean.repTime != ''" >rep_time=#{disasterBean.repTime},</if>
+            <if test="disasterBean.precinctId != null and disasterBean.precinctId != ''" >precinct_id=#{disasterBean.precinctId},</if>
+            <if test="disasterBean.createId != null and disasterBean.createId != ''" >create_id=#{disasterBean.createId},</if>
+            <if test="disasterBean.createName != null and disasterBean.createName != ''" >create_name=#{disasterBean.createName},</if>
+            <if test="disasterBean.status != null and disasterBean.status != ''" >status=#{disasterBean.status},</if>
+            <if test="disasterBean.remark != null and disasterBean.remark != ''" >remark=#{disasterBean.remark},</if>
+        </set>
+        where id = #{disasterBean.id}
+    </update>
+
+    <delete id="delRelEvent" parameterType="java.lang.String">
+        DELETE FROM t_cfg_disaster_event where
+        dis_id = #{disId}
+    </delete>
+
+    <delete id="delRelWarn" parameterType="java.lang.String">
+        DELETE FROM t_cfg_disaster_warn where
+        dis_id = #{disId}
+    </delete>
+
+    <delete id="delRelData" parameterType="java.lang.String">
+        DELETE FROM t_cfg_disaster_data where
+        dis_id = #{disId}
+    </delete>
+
+    <delete id="delDisaster" parameterType="java.lang.String">
+        DELETE FROM t_cfg_disaster_rep where
+        id = #{disId}
+    </delete>
+
+    <update id="repDisaster" parameterType="com.znv.manage.common.bean.information.DisasterBean" >
+        update t_cfg_disaster_rep
+        <set>
+            status='1'
+        </set>
+        where id = #{disId}
+    </update>
+
+    <resultMap id="DisasterMap" type="com.znv.manage.common.bean.information.DisasterBean" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="dis_name" property="disName" jdbcType="VARCHAR" />
+        <result column="type_id" property="typeId" jdbcType="VARCHAR" />
+        <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+        <result column="rep_precinct_id" property="repPrecinctId" jdbcType="VARCHAR" />
+        <result column="rep_person_id" property="repPersonId" jdbcType="VARCHAR" />
+        <result column="rep_person_name" property="repPersonName" jdbcType="VARCHAR" />
+        <result column="repTime" property="repTime" jdbcType="VARCHAR" />
+        <result column="precinct_id" property="precinctId" jdbcType="VARCHAR" />
+        <result column="create_id" property="createId" jdbcType="VARCHAR" />
+        <result column="create_name" property="createName" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="precinctName" property="repPrecinctName" jdbcType="VARCHAR" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="getDisaster" parameterType="com.znv.manage.common.bean.information.GetDisasterBean" resultMap="DisasterMap">
+        select a.*, DATE_FORMAT(a.rep_time, '%Y-%m-%d %H:%i:%S') AS repTime,
+        (SELECT GROUP_CONCAT(precinct_name) FROM t_cfg_precinct WHERE FIND_IN_SET(precinct_id, a.rep_precinct_id)) precinctName
+        from t_cfg_disaster_rep a
+        <where>
+            <if test="getDisasterBean.text != null and getDisasterBean.text != ''">
+                and (
+                dis_name like CONCAT('%',#{getDisasterBean.text},'%')
+                <if test="getDisasterBean.status != null and getDisasterBean.status != ''">
+                    or status = #{getDisasterBean.status}
+                </if>
+                <if test="getDisasterBean.textPrecinctIds != null and getDisasterBean.textPrecinctIds.size() >0 ">
+                    <foreach collection="getDisasterBean.textPrecinctIds" item="item">
+                        OR FIND_IN_SET(#{item},a.rep_precinct_id)
+                    </foreach>
+                </if>
+                )
+            </if>
+            <choose>
+                <when test="getDisasterBean.userId != null and getDisasterBean.userId == '57'">
+                </when>
+                <when test="getDisasterBean.userId != null and getDisasterBean.userId != ''">
+                    <if test="getDisasterBean.precinctId != null and getDisasterBean.precinctId != ''">
+                        and (
+                        find_in_set(#{getDisasterBean.precinctId},a.precinct_id)
+                        or find_in_set(#{getDisasterBean.precinctId},a.rep_precinct_id))
+                    </if>
+                </when>
+            </choose>
+            <if test="getDisasterBean.repBeginTime != null and getDisasterBean.repBeginTime != ''">
+                AND rep_time>=#{getDisasterBean.repBeginTime}
+            </if>
+            <if test="getDisasterBean.repEndTime != null and getDisasterBean.repEndTime != ''">
+                AND rep_time&lt;=#{getDisasterBean.repEndTime}
+            </if>
+        </where>
+        group by a.id
+    </select>
+
+    <select id="getDisasterDate" parameterType="com.znv.manage.common.bean.information.GetDisasterBean" resultMap="DisasterMap">
+        select a.*, DATE_FORMAT(a.rep_time, '%Y-%m-%d %H:%i:%S') AS repTime,
+        (SELECT GROUP_CONCAT(precinct_name) FROM t_cfg_precinct WHERE FIND_IN_SET(precinct_id, a.rep_precinct_id)) precinctName
+        from t_cfg_disaster_rep a
+        where
+        a.id=#{id}
+        group by a.id  limit 1
+    </select>
+
+    <select id="getEventBean" resultType="com.znv.manage.common.bean.information.EventBean">
+         SELECT a.id as id,a.`event_id` as eventId, tce.id,
+        tce.type,
+        tce.type2,
+        tce.title,
+        tce.details,
+        tce.event_level eventLevel,
+        tce.casualty_death casualtyDeath,
+        tce.casualty_injured casualtyInjured,
+        tce.casualty_danger casualtyDanger,
+        tce.happen_time happenTime,
+        tce.address,
+        tce.report_people reportPeople,
+        tce.report_people_phone reportPeoplePhone,
+        tce.attachment,
+        tce.`status`,
+        tce.gpsx,
+        tce.gpsy,
+        CAST(tce.report_time AS CHAR) reportTime,
+        IFNULL(res.deal_result, 0) dealResult
+       FROM `t_cfg_disaster_event` a
+       LEFT JOIN t_command_event tce ON a.event_id=tce.id
+       LEFT JOIN (
+            SELECT event_id, MAX(deal_result) deal_result
+            FROM t_command_event_handle_result
+            GROUP BY event_id
+        ) res
+        ON tce.id = res.event_id
+       WHERE a.`dis_id`=#{id}
+       GROUP BY a.`event_id`
+       ORDER BY tce.report_time DESC
+    </select>
+
+    <select id="getDate" resultType="com.znv.manage.common.bean.information.DisasterDataBean">
+         SELECT id as id, dis_id as disId, file_url as fileUrl, file_name as fileName
+         FROM t_cfg_disaster_data WHERE dis_id=#{id}
+    </select>
+
+    <select id="getWarnBean" resultType="com.znv.manage.common.bean.information.WarnBean">
+        SELECT a.id AS id,a.warn_id AS warnId,
+            IFNULL(warning_title,'') warningTitle,
+            IFNULL(warning_type1,'') warningType1,
+            IFNULL(warning_type2,'') warningType2,
+            IFNULL(warning_level,'') warningLevel,
+            IFNULL(DATE_FORMAT(release_time, '%Y-%m-%d %H:%i:%s'),'') releaseTime,
+            IFNULL(warning_content,'') WarningContent,
+            IFNULL(warning_influence,'') warningInfluence,
+            IFNULL(defense_advice,'') defenseAdvice,
+            IFNULL(deal,2) deal,
+            IFNULL(GRZ,'') GRZ ,
+            IFNULL(CRZ,'') CRZ,
+            IFNULL(WRZ,'') WRZ,
+            IFNULL(deal_content,'') AS dealContent
+            FROM `t_cfg_disaster_warn` a
+            LEFT JOIN t_command_warning_release b ON a.warn_id=b.id
+            WHERE a.`dis_id`=#{id}
+    </select>
+</mapper>

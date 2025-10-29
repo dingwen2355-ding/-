@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.event.EventSyncDao">
+    <insert id="insertOrUpdate">
+        insert into t_cfg_event_sync(
+            flow_no,
+            class_1,
+            city_name,
+            class_2,
+            class_3,
+            urgency,
+            neighborhood_name,
+            report_time,
+            create_user_name,
+            `source`,
+            is_del,
+            flow_title,
+            street_name,
+            appeal_address
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.flowNo},
+            #{item.$class_1$},
+            #{item.CITY_NAME},
+            #{item.$class_2$},
+            #{item.$class_3$},
+            #{item.$urgency$},
+            #{item.NEIGHBORHOOD_NAME},
+            #{item.discovery_time},
+            #{item.createUserName},
+            #{source},
+            #{item.isDel},
+            #{item.$flowTitle$},
+            #{item.disposal_unit},
+            #{item.AppealAddress}
+            )
+        </foreach>
+            on duplicate key update
+            class_1 = values(class_1),
+            city_name = values(city_name),
+            class_2 = values(class_2),
+            class_3 = values(class_3),
+            urgency = values(urgency),
+            neighborhood_name = values(neighborhood_name),
+            report_time = values(report_time),
+            create_user_name = values(create_user_name),
+            is_del = values(is_del),
+            flow_title = values(flow_title),
+            street_name = values(street_name),
+            `source` = values(`source`),
+            appeal_address = values(appeal_address)
+    </insert>
+</mapper>

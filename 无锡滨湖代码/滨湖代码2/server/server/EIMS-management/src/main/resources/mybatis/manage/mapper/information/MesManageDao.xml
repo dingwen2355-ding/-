@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.znv.manage.dao.information.MesManageDao">
+    <insert id="addMesRel" parameterType="com.znv.manage.common.bean.information.MesRelBean">
+        insert into t_cfg_mes_rel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mesRelBean.relName != null">rel_name,</if>
+            <if test="mesRelBean.typeId != null">type_id,</if>
+            <if test="mesRelBean.typeName != null">type_name,</if>
+            <if test="mesRelBean.createId != null">create_id,</if>
+            <if test="mesRelBean.createName != null">create_name,</if>
+            <if test="mesRelBean.remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mesRelBean.relName != null">#{mesRelBean.relName},</if>
+            <if test="mesRelBean.typeId != null">#{mesRelBean.typeId},</if>
+            <if test="mesRelBean.typeName != null">#{mesRelBean.typeName},</if>
+            <if test="mesRelBean.createId != null">#{mesRelBean.createId},</if>
+            <if test="mesRelBean.createName != null">#{mesRelBean.createName},</if>
+            <if test="mesRelBean.remark != null">#{mesRelBean.remark},</if>
+        </trim>
+    </insert>
+
+    <insert id="addMesReview" parameterType="com.znv.manage.common.bean.information.MesReviewBean">
+        insert into t_cfg_mes_review
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mesReviewBean.relId != null and mesReviewBean.relId !=''">rel_id,</if>
+            <if test="mesReviewBean.relName != null and mesReviewBean.relName !=''">rel_name,</if>
+            <if test="mesReviewBean.adviceId != null and mesReviewBean.adviceId !=''">advice_id,</if>
+            <if test="mesReviewBean.adviceName != null and mesReviewBean.adviceName !=''">advice_name,</if>
+            <if test="mesReviewBean.reviewTime != null and mesReviewBean.reviewTime !=''">review_time,</if>
+            <if test="mesReviewBean.status != null and mesReviewBean.status !=''">status,</if>
+            <if test="mesReviewBean.remark != null and mesReviewBean.remark !=''">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mesReviewBean.relId != null and mesReviewBean.relId !=''">#{mesReviewBean.relId},</if>
+            <if test="mesReviewBean.relName != null and mesReviewBean.relName !=''">#{mesReviewBean.relName},</if>
+            <if test="mesReviewBean.adviceId != null and mesReviewBean.adviceId !=''">#{mesReviewBean.adviceId},</if>
+            <if test="mesReviewBean.adviceName != null and mesReviewBean.adviceName !=''">#{mesReviewBean.adviceName},
+            </if>
+            <if test="mesReviewBean.reviewTime != null and mesReviewBean.reviewTime !=''">#{mesReviewBean.reviewTime},
+            </if>
+            <if test="mesReviewBean.status != null and mesReviewBean.status !=''">#{mesReviewBean.status},</if>
+            <if test="mesReviewBean.remark != null and mesReviewBean.remark !=''">#{mesReviewBean.remark},</if>
+        </trim>
+    </insert>
+
+    <update id="editMesRel" parameterType="com.znv.manage.common.bean.information.MesRelBean">
+        update t_cfg_mes_rel
+        <set>
+            <if test="mesRelBean.relName != null">rel_name=#{mesRelBean.relName},</if>
+            <if test="mesRelBean.typeId != null">type_id=#{mesRelBean.typeId},</if>
+            <if test="mesRelBean.typeName != null">type_name=#{mesRelBean.typeName},</if>
+            <if test="mesRelBean.createId != null">create_id=#{mesRelBean.createId},</if>
+            <if test="mesRelBean.createName != null">create_name=#{mesRelBean.createName},</if>
+            <if test="mesRelBean.remark != null">remark=#{mesRelBean.remark},</if>
+        </set>
+        where id = #{mesRelBean.id}
+    </update>
+
+    <delete id="delMesRel" parameterType="java.lang.String">
+		DELETE FROM t_cfg_mes_rel where
+		id=#{id}
+	</delete>
+
+    <delete id="delMesInfo" parameterType="java.lang.String">
+		DELETE FROM t_cfg_mes_info where
+		id=#{id}
+	</delete>
+
+    <select id="getMesRel" parameterType="java.lang.String" resultType="com.znv.manage.common.bean.information.MesRelBean">
+        select id as id, rel_name as relName, type_id as typeId,type_name AS typeName,
+        create_id as createId, create_name as createName, DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime,
+        DATE_FORMAT(modify_time, '%Y-%m-%d %H:%i:%S') as modifyTime, remark as remark
+        from t_cfg_mes_rel
+        <where>
+            <if test="text!=null and text!=''">
+                rel_name like CONCAT('%',#{text},'%')
+                OR type_name like CONCAT('%',#{text},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getMesReview" parameterType="com.znv.manage.common.bean.information.GetMesReviewBean"
+            resultType="com.znv.manage.common.bean.information.MesReviewBean">
+        SELECT a.id AS id, a.rel_id AS relId, a.rel_name AS relName, advice_id AS adviceId,
+        advice_name AS adviceName, DATE_FORMAT(review_time, '%Y-%m-%d %H:%i:%S') AS reviewTime, a.remark AS remark,
+        STATUS AS STATUS, b.type_name AS typeName
+        from t_cfg_mes_review a
+        left join t_cfg_mes_rel b on b.id=a.rel_id
+        <where>
+            <if test="getMesReviewBean.relName!=null and getMesReviewBean.relName!=''">
+                AND a.rel_name like CONCAT('%',#{getMesReviewBean.relName},'%')
+            </if>
+            <if test="getMesReviewBean.beginTime != null and getMesReviewBean.beginTime != ''">
+                AND a.review_time>=#{getMesReviewBean.beginTime}
+            </if>
+            <if test="getMesReviewBean.endTime != null and getMesReviewBean.endTime != ''">
+                AND a.review_time&lt;=#{getMesReviewBean.endTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="addMesGroup" parameterType="com.znv.manage.common.bean.information.MesGroupBean">
+        INSERT INTO t_cfg_mes_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mesGroupBean.precinctId != null">precinct_id,</if>
+            <if test="mesGroupBean.groupName != null">group_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mesGroupBean.precinctId != null">#{mesGroupBean.precinctId},</if>
+            <if test="mesGroupBean.groupName != null">#{mesGroupBean.groupName},</if>
+        </trim>
+    </insert>
+
+    <select id="getPrecinctId" resultType="java.lang.String">
+        select precinct_tree_id from t_cfg_user where user_id=#{userId} limit 1
+    </select>
+
+    <select id="getPrecinctIdByName" resultType="java.lang.String">
+        select precinct_id from t_cfg_precinct where precinct_name like CONCAT('%',#{name},'%')
+    </select>
+
+    <select id="getPrecinctNameById" resultType="java.lang.String">
+        SELECT IFNULL(GROUP_CONCAT( precinct_name),'') precinct_id FROM t_cfg_precinct
+        WHERE FIND_IN_SET(precinct_id, #{precinctId})
+    </select>
+
+    <update id="updateMesGroup" parameterType="com.znv.manage.common.bean.information.MesGroupBean">
+        update t_cfg_mes_group
+        <set>
+            <if test="mesGroupBean.groupName != null">group_name = #{mesGroupBean.groupName},</if>
+        </set>
+        where id = #{mesGroupBean.id}
+    </update>
+
+    <select id="getPersonIdById" resultType="java.lang.String">
+        select id from t_cfg_mes_group_person where group_id=#{groupId}
+    </select>
+
+    <delete id="delMesGroup" parameterType="java.lang.String">
+        DELETE FROM t_cfg_mes_group where
+        id = #{id}
+    </delete>
+
+    <delete id="delMesGroupPerson" parameterType="java.lang.String">
+        DELETE FROM t_cfg_mes_group_person where
+        group_id = #{id}
+    </delete>
+
+    <delete id="delMesRelPerson" parameterType="java.lang.String">
+        DELETE FROM t_cfg_mes_rel_status where
+        person_id in
+        <foreach item="item" index="index" collection="personIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <insert id="addMesGroupPerson" parameterType="com.znv.manage.common.bean.information.MesGroupBeanPerson">
+        insert into t_cfg_mes_group_person
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mesGroupBeanPerson.groupId != null and mesGroupBeanPerson.groupId != ''">group_id,</if>
+            <if test="mesGroupBeanPerson.personName != null and mesGroupBeanPerson.personName != ''">person_name,</if>
+            <if test="mesGroupBeanPerson.post != null and mesGroupBeanPerson.post != ''">post,</if>
+            <if test="mesGroupBeanPerson.phoneNumber != null and mesGroupBeanPerson.phoneNumber != ''">phone_number,
+            </if>
+            <if test="mesGroupBeanPerson.office != null and mesGroupBeanPerson.office != ''">office,</if>
+            <if test="mesGroupBeanPerson.duty != null and mesGroupBeanPerson.duty != ''">duty,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mesGroupBeanPerson.groupId != null and mesGroupBeanPerson.groupId != ''">
+                #{mesGroupBeanPerson.groupId},
+            </if>
+            <if test="mesGroupBeanPerson.personName != null and mesGroupBeanPerson.personName != ''">
+                #{mesGroupBeanPerson.personName},
+            </if>
+            <if test="mesGroupBeanPerson.post != null and mesGroupBeanPerson.post != ''">#{mesGroupBeanPerson.post},
+            </if>
+            <if test="mesGroupBeanPerson.phoneNumber != null and mesGroupBeanPerson.phoneNumber != ''">
+                #{mesGroupBeanPerson.phoneNumber},
+            </if>
+            <if test="mesGroupBeanPerson.office != null and mesGroupBeanPerson.office != ''">
+                #{mesGroupBeanPerson.office},
+            </if>
+            <if test="mesGroupBeanPerson.duty != null and mesGroupBeanPerson.duty != ''">#{mesGroupBeanPerson.duty},
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delMesGroupPersonById" parameterType="java.lang.String">
+        DELETE FROM t_cfg_mes_group_person where
+        id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="getMesGroupPerson" parameterType="java.lang.String"
+            resultType="com.znv.manage.common.bean.information.MesGroupBeanPerson">
+        select id, group_id as groupId, person_name as personName,
+        post as post, phone_number as phoneNumber, office, duty
+        from t_cfg_mes_group_person where group_id=#{groupId}
+    </select>
+
+    <select id="getMesGroup" resultType="com.znv.manage.common.bean.information.MesGroupBean">
+        select id, group_name as groupName
+        from t_cfg_mes_group
+        <where>
+            <choose>
+                <when test="userId != null and userId == '57'">
+                </when>
+                <when test="userId != null and userId != ''">
+                    precinct_id = #{precinctId}
+                </when>
+            </choose>
+        </where>
+    </select>
+
+    <insert id="addMesInfo" parameterType="com.znv.manage.common.bean.information.MesInfoBean"
+            useGeneratedKeys="true" keyProperty="mesInfoBean.id">
+        insert into t_cfg_mes_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mesInfoBean.mesName != null and mesInfoBean.mesName != ''">mes_name,</if>
+            <if test="mesInfoBean.typeId != null and mesInfoBean.typeId != '' ">type_id,</if>
+            <if test="mesInfoBean.typeName != null and mesInfoBean.typeName != '' ">type_name,</if>
+            <if test="mesInfoBean.relId != null and mesInfoBean.relId != '' ">rel_id,</if>
+            <if test="mesInfoBean.relName != null and mesInfoBean.relName != '' ">rel_name,</if>
+            <if test="mesInfoBean.relObjectId != null and mesInfoBean.relObjectId != '' ">rel_object_id,</if>
+            <if test="mesInfoBean.relObjectName != null and mesInfoBean.relObjectName != '' ">rel_object_name,</if>
+            <if test="mesInfoBean.relTime != null and mesInfoBean.relTime != '' ">rel_time,</if>
+            <if test="mesInfoBean.relPerson != null and mesInfoBean.relPerson != '' ">rel_person,</if>
+            <if test="mesInfoBean.createId != null and mesInfoBean.createId != '' ">create_id,</if>
+            <if test="mesInfoBean.createName != null and mesInfoBean.createName != '' ">create_name,</if>
+            <if test="mesInfoBean.status != null and mesInfoBean.status != '' ">status,</if>
+            <if test="mesInfoBean.processTime != null and mesInfoBean.processTime != '' ">process_time,</if>
+            <if test="mesInfoBean.remark != null and mesInfoBean.remark != ''">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mesInfoBean.mesName != null and mesInfoBean.mesName != ''">#{mesInfoBean.mesName},</if>
+            <if test="mesInfoBean.typeId != null and mesInfoBean.typeId != '' ">#{mesInfoBean.typeId},</if>
+            <if test="mesInfoBean.typeName != null and mesInfoBean.typeName != '' ">#{mesInfoBean.typeName},</if>
+            <if test="mesInfoBean.relId != null and mesInfoBean.relId != '' ">#{mesInfoBean.relId},</if>
+            <if test="mesInfoBean.relName != null and mesInfoBean.relName != '' ">#{mesInfoBean.relName},</if>
+            <if test="mesInfoBean.relObjectId != null and mesInfoBean.relObjectId != '' ">#{mesInfoBean.relObjectId},
+            </if>
+            <if test="mesInfoBean.relObjectName != null and mesInfoBean.relObjectName != '' ">
+                #{mesInfoBean.relObjectName},
+            </if>
+            <if test="mesInfoBean.relTime != null and mesInfoBean.relTime != '' ">#{mesInfoBean.relTime},</if>
+            <if test="mesInfoBean.relPerson != null and mesInfoBean.relPerson != '' ">#{mesInfoBean.relPerson},</if>
+            <if test="mesInfoBean.createId != null and mesInfoBean.createId != '' ">#{mesInfoBean.createId},</if>
+            <if test="mesInfoBean.createName != null and mesInfoBean.createName != '' ">#{mesInfoBean.createName},</if>
+            <if test="mesInfoBean.status != null and mesInfoBean.status != '' ">#{mesInfoBean.status},</if>
+            <if test="mesInfoBean.processTime != null and mesInfoBean.processTime != '' ">#{mesInfoBean.processTime},
+            </if>
+            <if test="mesInfoBean.remark != null and mesInfoBean.remark != ''">#{mesInfoBean.remark},</if>
+        </trim>
+    </insert>
+
+    <insert id="addMesRelStatus" parameterType="com.znv.manage.common.bean.information.MesInfoBean">
+        insert into t_cfg_mes_rel_status(
+        `mes_id`,
+        `rel_type`,
+        `person_id`,
+        `status`
+        )values
+        <foreach collection="mesInfoBean.personIds" item="item" index="index" separator=",">
+            (
+            #{mesInfoBean.id},
+            #{mesInfoBean.relObjectId},
+            #{item},
+            '2'
+            )
+        </foreach>
+    </insert>
+
+    <select id="getNameById" resultType="java.lang.String">
+         SELECT rel_name FROM t_cfg_mes_rel WHERE id = #{id} limit 1
+    </select>
+
+    <update id="editMesInfo" parameterType="com.znv.manage.common.bean.information.MesInfoBean">
+        update t_cfg_mes_info
+        <set>
+            <if test="mesInfoBean.mesName != null and mesInfoBean.mesName != ''">mes_name=#{mesInfoBean.mesName},</if>
+            <if test="mesInfoBean.typeId != null and mesInfoBean.typeId != '' ">type_id=#{mesInfoBean.typeId},</if>
+            <if test="mesInfoBean.typeName != null and mesInfoBean.typeName != '' ">type_name=#{mesInfoBean.typeName},
+            </if>
+            <if test="mesInfoBean.relId != null and mesInfoBean.relId != '' ">rel_id=#{mesInfoBean.relId},</if>
+            <if test="mesInfoBean.relName != null and mesInfoBean.relName != '' ">rel_name=#{mesInfoBean.relName},</if>
+            <if test="mesInfoBean.relObjectId != null and mesInfoBean.relObjectId != '' ">
+                rel_object_id=#{mesInfoBean.relObjectId},
+            </if>
+            <if test="mesInfoBean.relObjectName != null and mesInfoBean.relObjectName != '' ">
+                rel_object_name=#{mesInfoBean.relObjectName},
+            </if>
+            <if test="mesInfoBean.relTime != null and mesInfoBean.relTime != '' ">rel_time=#{mesInfoBean.relTime},</if>
+            <if test="mesInfoBean.relPerson != null and mesInfoBean.relPerson != '' ">
+                rel_person=#{mesInfoBean.relPerson},
+            </if>
+            <if test="mesInfoBean.createId != null and mesInfoBean.createId != '' ">create_id=#{mesInfoBean.createId},
+            </if>
+            <if test="mesInfoBean.createName != null and mesInfoBean.createName != '' ">
+                create_name=#{mesInfoBean.createName},
+            </if>
+            <if test="mesInfoBean.status != null and mesInfoBean.status != '' ">status=#{mesInfoBean.status},</if>
+            <if test="mesInfoBean.processTime != null and mesInfoBean.processTime != '' ">
+                process_time=#{mesInfoBean.processTime},
+            </if>
+            <if test="mesInfoBean.remark != null and mesInfoBean.remark != ''">remark=#{mesInfoBean.remark},</if>
+        </set>
+        where id = #{mesInfoBean.id}
+    </update>
+
+    <delete id="delMesRelStatus" parameterType="java.lang.String">
+        DELETE FROM t_cfg_mes_rel_status where
+        mes_id=#{id}
+    </delete>
+
+    <select id="getRelObjectIdById" parameterType="java.lang.String" resultType="java.lang.String">
+         SELECT rel_object_id FROM t_cfg_mes_info WHERE id = #{id} limit 1
+    </select>
+
+    <select id="getMesInfo" parameterType="com.znv.manage.common.bean.information.GetMesInfoBean"
+            resultType="com.znv.manage.common.bean.information.MesInfoBean">
+        SELECT a.id as id, mes_name as mesName, type_id as typeId, type_name as typeName,
+        rel_id as relId, rel_name as relName, rel_object_id as relObjectId, rel_object_name as relObjectName,
+        DATE_FORMAT(rel_time, '%Y-%m-%d %H:%i:%S') as relTime, rel_person as relPerson, create_id as createId,
+        create_name as createName,
+        a.status as status, audit_opinion as auditOpinion, auditor_id as auditorId, auditor_name as auditorName,
+        DATE_FORMAT(process_time, '%Y-%m-%d %H:%i:%S') as processTime, remark as remark,
+        IFNULL(GROUP_CONCAT(DISTINCT b.`person_id`),'') allPersonIds
+        FROM t_cfg_mes_info a
+        left join t_cfg_mes_rel_status b
+        ON b.mes_id = a.id
+        <where>
+            <if test="getMesInfoBean.text!=null and getMesInfoBean.text!=''">
+                and (a.mes_name like CONCAT('%',#{getMesInfoBean.text},'%')
+                or a.remark like CONCAT('%',#{getMesInfoBean.text},'%'))
+            </if>
+            <if test="getMesInfoBean.status!=null and getMesInfoBean.status!=''">
+                and find_in_set(a.status,#{getMesInfoBean.status})
+            </if>
+            <if test="getMesInfoBean.typeId!=null and getMesInfoBean.typeId!=''">
+                and (a.type_id=#{getMesInfoBean.typeId}
+                or find_in_set(#{getMesInfoBean.typeId},a.type_id))
+            </if>
+            <if test="getMesInfoBean.relBeginTime != null and getMesInfoBean.relBeginTime != ''">
+                AND a.rel_time>=#{getMesInfoBean.relBeginTime}
+            </if>
+            <if test="getMesInfoBean.relEndTime != null and getMesInfoBean.relEndTime != ''">
+                AND a.rel_time&lt;=#{getMesInfoBean.relEndTime}
+            </if>
+        </where>
+        GROUP BY a.id
+    </select>
+
+    <select id="getMesById"  resultType="com.znv.manage.common.bean.information.MesInfoBean">
+        SELECT a.id as id, mes_name as mesName, type_id as typeId, type_name as typeName,
+        rel_id as relId, rel_name as relName, rel_object_id as relObjectId, rel_object_name as relObjectName,
+        DATE_FORMAT(rel_time, '%Y-%m-%d %H:%i:%S') as relTime, rel_person as relPerson, create_id as createId,
+        create_name as createName,
+        a.status as status, audit_opinion as auditOpinion, auditor_id as auditorId, auditor_name as auditorName,
+        DATE_FORMAT(process_time, '%Y-%m-%d %H:%i:%S') as processTime, remark as remark,
+        IFNULL(GROUP_CONCAT(DISTINCT b.`person_id`),'') allPersonIds
+        FROM t_cfg_mes_info a
+        left join t_cfg_mes_rel_status b
+        ON b.mes_id = a.id
+        where a.id=#{id}
+        GROUP BY a.id
+    </select>
+
+    <select id="getMesRelLog" parameterType="com.znv.manage.common.bean.information.GetMesRelLogBean"
+            resultType="com.znv.manage.common.bean.information.MesRelLogBean">
+        SELECT a.id as id, mes_name as mesName, type_id as typeId, type_name as typeName,
+        rel_id as relId, rel_name as relName, rel_object_id as relObjectId, rel_object_name as relObjectName,
+        DATE_FORMAT(rel_time, '%Y-%m-%d %H:%i:%S') as relTime, rel_person as relPerson, create_id as createId,
+        create_name as createName,
+        a.status as status, audit_opinion as auditOpinion, auditor_id as auditorId, auditor_name as auditorName,
+        DATE_FORMAT(process_time, '%Y-%m-%d %H:%i:%S') as processTime, remark as remark,
+        SUM(CASE WHEN b.`status`='0' THEN 1 ELSE 0 END) AS successCount,
+        SUM(CASE WHEN b.`status`!='0' THEN 1 ELSE 0 END) AS failCount
+        FROM t_cfg_mes_info a
+        left join t_cfg_mes_rel_status b
+        ON b.mes_id = a.id
+        <where>
+            a.status='2' and a.rel_object_id='1'
+            <if test="getMesRelLogBean.text!=null and getMesRelLogBean.text!=''">
+                and (a.mes_name like CONCAT('%',#{getMesRelLogBean.text},'%')
+                or a.remark like CONCAT('%',#{getMesRelLogBean.text},'%'))
+            </if>
+            <if test="getMesRelLogBean.typeId!=null and getMesRelLogBean.typeId!=''">
+                and (a.type_id=#{getMesRelLogBean.typeId}
+                or find_in_set(#{getMesRelLogBean.typeId},a.type_id))
+            </if>
+            <if test="getMesRelLogBean.relBeginTime != null and getMesRelLogBean.relBeginTime != ''">
+                AND a.rel_time>=#{getMesRelLogBean.relBeginTime}
+            </if>
+            <if test="getMesRelLogBean.relEndTime != null and getMesRelLogBean.relEndTime != ''">
+                AND a.rel_time&lt;=#{getMesRelLogBean.relEndTime}
+            </if>
+        </where>
+        GROUP BY a.id
+    </select>
+
+    <select id="getMesInfoProcess" parameterType="com.znv.manage.common.bean.information.GetMesInfoBean"
+            resultType="com.znv.manage.common.bean.information.MesInfoBean">
+        SELECT a.id as id, mes_name as mesName, type_id as typeId, type_name as typeName,
+        rel_id as relId, rel_name as relName, rel_object_id as relObjectId, rel_object_name as relObjectName,
+        DATE_FORMAT(rel_time, '%Y-%m-%d %H:%i:%S') as relTime, rel_person as relPerson, create_id as createId,
+        create_name as createName,
+        a.status as status, audit_opinion as auditOpinion, auditor_id as auditorId, auditor_name as auditorName,
+        DATE_FORMAT(process_time, '%Y-%m-%d %H:%i:%S') as processTime, remark as remark,
+        IFNULL(GROUP_CONCAT(DISTINCT b.`person_id`),'') allPersonIds
+        FROM t_cfg_mes_info a
+        left join t_cfg_mes_rel_status b
+        ON b.mes_id = a.id
+        <where>
+            <if test="getMesInfoBean.text!=null and getMesInfoBean.text!=''">
+                and (a.mes_name like CONCAT('%',#{getMesInfoBean.text},'%')
+                or find_in_set(a.status,#{getMesInfoBean.status}))
+            </if>
+            and a.status!='0'
+            <if test="getMesInfoBean.relBeginTime != null and getMesInfoBean.relBeginTime != ''">
+                AND a.rel_time>=#{getMesInfoBean.relBeginTime}
+            </if>
+            <if test="getMesInfoBean.relEndTime != null and getMesInfoBean.relEndTime != ''">
+                AND a.rel_time&lt;=#{getMesInfoBean.relEndTime}
+            </if>
+        </where>
+        GROUP BY a.id
+    </select>
+
+    <update id="auditMesInfo" parameterType="com.znv.manage.common.bean.information.AuditMesBean">
+        update t_cfg_mes_info
+        <set>
+            <if test="auditMesBean.status != null and auditMesBean.status != ''">status=#{auditMesBean.status},</if>
+            <if test="auditMesBean.auditOpinion != null and auditMesBean.auditOpinion != ''">
+                audit_opinion=#{auditMesBean.auditOpinion},
+            </if>
+            <if test="auditMesBean.auditorId != null and auditMesBean.auditorId != ''">
+                auditor_id=#{auditMesBean.auditorId},
+            </if>
+            <if test="auditMesBean.auditorName != null and auditMesBean.auditorName != ''">
+                auditor_name=#{auditMesBean.auditorName},
+            </if>
+            <if test="auditMesBean.processTime != null and auditMesBean.processTime != ''">
+                process_time=#{auditMesBean.processTime},
+            </if>
+        </set>
+        where id = #{auditMesBean.id}
+    </update>
+
+    <update id="updateMesRelStatus">
+        update t_cfg_mes_rel_status
+        <set>
+            <if test=" status!= null and  status!= ''">status=#{status},</if>
+        </set>
+        <where>
+            <if test=" id!= null and  id!= ''">and mes_id=#{id}</if>
+            <if test=" personId!= null and  personId!= ''">and person_id=#{personId}</if>
+        </where>
+    </update>
+
+    <select id="getMesRelStatusBean" resultType="com.znv.manage.common.bean.information.MesRelStatusBean">
+        SELECT a.id as id, a.mes_id as mesId, a.rel_type as relType, a.person_id as personId,
+        b.phone_number as phoneNumber, a.status as status, c.remark as content
+        FROM t_cfg_mes_rel_status a
+        left join t_cfg_mes_group_person b on b.id=a.person_id
+        left join t_cfg_mes_info c on c.id=#{id}
+        where a.mes_id=#{id}
+    </select>
+
+    <select id="getMesRelStatusById" resultType="com.znv.manage.common.bean.information.MesRelPersonBean">
+        SELECT a.id as id, a.person_id as personId,
+        b.phone_number as phoneNumber,
+        a.status as statusId,
+        CASE a.status
+        WHEN '0' THEN
+        '成功'
+        else '失败'
+        END AS status,
+        b.person_name as personName
+        FROM t_cfg_mes_rel_status a
+        left join t_cfg_mes_group_person b on b.id=a.person_id
+        where a.mes_id=#{id}
+    </select>
+</mapper>

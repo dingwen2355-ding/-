@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.SyncCityManageDataMapper">
+
+
+    <insert id="syncData">
+       insert into t_city_manage_category
+       (
+        id,
+        WMS_address,
+        map_catalogue,
+        coordinate_system,
+        map_name,
+        collect_time,
+        department,
+        category,
+        REST_address
+       )
+       values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id},
+            #{item.WMS_address} ,
+            #{item.map_catalogue} ,
+            #{item.coordinate_system} ,
+            #{item.map_name} ,
+            #{item.collect_time} ,
+            #{item.department} ,
+            #{item.category},
+            #{item.REST_address}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

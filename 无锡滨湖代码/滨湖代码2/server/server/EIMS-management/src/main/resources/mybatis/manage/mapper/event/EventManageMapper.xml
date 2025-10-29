@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.event.EventManageDao">
+
+
+    <select id="queryDictFlowNode" resultType="map">
+        SELECT node_id   nodeId,
+               node_name nodeName
+        FROM t_dict_event_flow_node
+    </select>
+
+    <select id="queryDictOverDue" resultType="map">
+        SELECT overdue_id   overdueId,
+               overdue_name overdueName
+        FROM t_dict_event_overdue
+    </select>
+
+    <select id="queryDictEventInfoSource" resultType="map">
+        SELECT source_id   sourceId,
+               source_name sourceName
+        FROM t_dict_event_info_source
+        order by sort desc
+    </select>
+
+    <select id="queryDictEventState" resultType="map">
+        SELECT state_id   stateId,
+               state_name stateName
+        FROM t_dict_event_state
+    </select>
+
+    <update id="updateEventIsAlarm">
+        update t_data_event_info
+        <set>
+            <if test="null != announcementType and '' != announcementType">
+                is_alarm = #{announcementType},
+            </if>
+            <if test="null != overDueState and '' != overDueState">
+                overdue_state = #{overDueState}
+            </if>
+        </set>
+        where event_id in
+        <foreach collection="eventIdList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="queryDictEventReportSource" resultType="map">
+        SELECT
+        source_id sourceId,
+        source_name sourceName,
+        source_code sourceCode
+        FROM
+        t_dict_event_report_source
+        where 1=1
+        <if test="id != null and id != ''">and source_id = #{id}</if>
+        order by sort desc
+    </select>
+
+</mapper>

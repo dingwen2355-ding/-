@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.WorkOrderDao">
+    <insert id="insertWorkOrderList">
+        insert INTO t_42_12345_work_order
+        (
+        evlrelate,
+        evlresult,
+        serialnum,
+        cstatus,
+        feedbackresult,
+        rqstsource,
+        rowguid,
+        cagouguid,
+        cagou,
+        rqsttime,
+        finishtime,
+        rqstnumber,
+        accordtypefive,
+        cagousub,
+        evlresult1,
+        accordtypefour,
+        issecret,
+        enttime,
+        accordtypeone,
+        cagousubguid,
+        accordtypethree,
+        rqstarea,
+        accordtypesix,
+        replaytype,
+        isimpt,
+        linknumber,
+        rqstsex,
+        accordtypetwo,
+        rqsttype,
+        rqstcontent,
+        managetype,
+        rqsttitle,
+        answercontent,
+        linknumber2,
+        rqstperson,
+        rqstaddress,
+        rqstareatwo,
+        extendnumber,
+        extendnumber2,
+        accordtypeseven,
+        oufinishtime,
+        collect_time,
+        evlway,
+        gpsx,
+        gpsy
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.evlrelate},
+            #{item.evlresult},
+            #{item.serialnum},
+            #{item.cstatus},
+            #{item.feedbackresult},
+            #{item.rqstsource},
+            #{item.rowguid},
+            #{item.cagouguid},
+            #{item.cagou},
+            #{item.rqsttime},
+            #{item.finishtime},
+            #{item.rqstnumber},
+            #{item.accordtypefive},
+            #{item.cagousub},
+            #{item.evlresult1},
+            #{item.accordtypefour},
+            #{item.issecret},
+            #{item.enttime},
+            #{item.accordtypeone},
+            #{item.cagousubguid},
+            #{item.accordtypethree},
+            #{item.rqstarea},
+            #{item.accordtypesix},
+            #{item.replaytype},
+            #{item.isimpt},
+            #{item.linknumber},
+            #{item.rqstsex},
+            #{item.accordtypetwo},
+            #{item.rqsttype},
+            #{item.rqstcontent},
+            #{item.managetype},
+            #{item.rqsttitle},
+            #{item.answercontent},
+            #{item.linknumber2},
+            #{item.rqstperson},
+            #{item.rqstaddress},
+            #{item.rqstareatwo},
+            #{item.extendnumber},
+            #{item.extendnumber2},
+            #{item.accordtypeseven},
+            #{item.oufinishtime},
+            #{item.collect_time},
+            #{item.evlway},
+            #{item.gpsx},
+            #{item.gpsy}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateWorkOrderList">
+        <foreach collection="list" separator=";" item="item" index="index">
+            update t_42_12345_work_order
+            <set>
+                <if test="item.evlrelate != null and item.evlrelate != ''">evlrelate=#{item.evlrelate},</if>
+                <if test="item.evlresult != null and item.evlresult != ''">evlresult=#{item.evlresult},</if>
+                <if test="item.cstatus != null and item.cstatus != ''">cstatus=#{item.cstatus},</if>
+                <if test="item.feedbackresult != null and item.feedbackresult != ''">
+                    feedbackresult=#{item.feedbackresult},
+                </if>
+                <if test="item.rqstsource != null and item.rqstsource != ''">rqstsource=#{item.rqstsource},</if>
+                <if test="item.rowguid != null and item.rowguid != ''">rowguid=#{item.rowguid},</if>
+                <if test="item.cagouguid != null and item.cagouguid != ''">cagouguid=#{item.cagouguid},</if>
+                <if test="item.cagou != null and item.cagou != ''">cagou=#{item.cagou},</if>
+                <if test="item.rqsttime != null and item.rqsttime != ''">rqsttime=#{item.rqsttime},</if>
+                <if test="item.finishtime != null and item.finishtime != ''">finishtime=#{item.finishtime},</if>
+                <if test="item.rqstnumber != null and item.rqstnumber != ''">rqstnumber=#{item.rqstnumber},</if>
+                <if test="item.accordtypefive != null and item.accordtypefive != ''">
+                    accordtypefive=#{item.accordtypefive},
+                </if>
+                <if test="item.cagousub != null and item.cagousub != ''">cagousub=#{item.cagousub},</if>
+                <if test="item.evlresult1 != null and item.evlresult1 != ''">evlresult1=#{item.evlresult1},</if>
+                <if test="item.accordtypefour != null and item.accordtypefour != ''">
+                    accordtypefour=#{item.accordtypefour},
+                </if>
+                <if test="item.issecret != null and item.issecret != ''">issecret=#{item.issecret},</if>
+                <if test="item.enttime != null and item.enttime != ''">enttime=#{item.enttime},</if>
+                <if test="item.accordtypeone != null and item.accordtypeone != ''">
+                    accordtypeone=#{item.accordtypeone},
+                </if>
+                <if test="item.cagousubguid != null and item.cagousubguid != ''">cagousubguid=#{item.cagousubguid},</if>
+                <if test="item.accordtypethree != null and item.accordtypethree != ''">
+                    accordtypethree=#{item.accordtypethree},
+                </if>
+                <if test="item.rqstarea != null and item.rqstarea != ''">rqstarea=#{item.rqstarea},</if>
+                <if test="item.accordtypesix != null and item.accordtypesix != ''">
+                    accordtypesix=#{item.accordtypesix},
+                </if>
+                <if test="item.replaytype != null and item.replaytype != ''">replaytype=#{item.replaytype},</if>
+                <if test="item.isimpt != null and item.isimpt != ''">isimpt=#{item.isimpt},</if>
+                <if test="item.linknumber != null and item.linknumber != ''">linknumber=#{item.linknumber},</if>
+                <if test="item.rqstsex != null and item.rqstsex != ''">rqstsex=#{item.rqstsex},</if>
+                <if test="item.accordtypetwo != null and item.accordtypetwo != ''">
+                    accordtypetwo=#{item.accordtypetwo},
+                </if>
+                <if test="item.rqsttype != null and item.rqsttype != ''">rqsttype=#{item.rqsttype},</if>
+                <if test="item.rqstcontent != null and item.rqstcontent != ''">rqstcontent=#{item.rqstcontent},</if>
+                <if test="item.managetype != null and item.managetype != ''">managetype=#{item.managetype},</if>
+                <if test="item.rqsttitle != null and item.rqsttitle != ''">rqsttitle=#{item.rqsttitle},</if>
+                <if test="item.answercontent != null and item.answercontent != ''">
+                    answercontent=#{item.answercontent},
+                </if>
+                <if test="item.linknumber2 != null and item.linknumber2 != ''">linknumber2=#{item.linknumber2},</if>
+                <if test="item.rqstperson != null and item.rqstperson != ''">rqstperson=#{item.rqstperson},</if>
+                <if test="item.rqstaddress != null and item.rqstaddress != ''">rqstaddress=#{item.rqstaddress},</if>
+                <if test="item.rqstareatwo != null and item.rqstareatwo != ''">rqstareatwo=#{item.rqstareatwo},</if>
+                <if test="item.extendnumber != null and item.extendnumber != ''">extendnumber=#{item.extendnumber},</if>
+                <if test="item.extendnumber2 != null and item.extendnumber2 != ''">
+                    extendnumber2=#{item.extendnumber2},
+                </if>
+                <if test="item.accordtypeseven != null and item.accordtypeseven != ''">
+                    accordtypeseven=#{item.accordtypeseven},
+                </if>
+                <if test="item.oufinishtime != null and item.oufinishtime != ''">oufinishtime=#{item.oufinishtime},</if>
+                <if test="item.collect_time != null and item.collect_time != ''">collect_time=#{item.collect_time},</if>
+                <if test="item.evlway != null and item.evlway != ''">evlway=#{item.evlway},</if>
+                <if test="item.gpsx != null and item.gpsx != ''">gpsx=#{item.gpsx},</if>
+                <if test="item.gpsy != null and item.gpsy != ''">gpsy=#{item.gpsy},</if>
+                insert_time = now()
+            </set>
+            where `serialnum`=#{item.serialnum}
+        </foreach>
+    </update>
+
+    <select id="queryWorkOrderList" resultType="map">
+        select
+        `evlrelate`,
+        `evlresult`,
+        `serialnum` ,
+        `cstatus`,
+        `feedbackresult`,
+        `rqstsource`,
+        `rowguid`,
+        `cagouguid`,
+        `cagou`,
+        DATE_FORMAT(`rqsttime`, '%Y-%m-%d %H:%i:%S') as `rqsttime`,
+        DATE_FORMAT(`finishtime`, '%Y-%m-%d %H:%i:%S') as `finishtime`,
+        `rqstnumber`,
+        `accordtypefive`,
+        `cagousub`,
+        `evlresult1`,
+        `accordtypefour`,
+        `issecret`,
+        `enttime`,
+        `accordtypeone`,
+        `cagousubguid`,
+        `accordtypethree`,
+        `rqstarea`,
+        `accordtypesix`,
+        `replaytype`,
+        `isimpt`,
+        `linknumber`,
+        `rqstsex`,
+        `accordtypetwo`,
+        `rqsttype`,
+        `rqstcontent`,
+        `managetype`,
+        `rqsttitle`,
+        `answercontent`,
+        `linknumber2`,
+        `rqstperson`,
+        `rqstaddress`,
+        `rqstareatwo`,
+        `extendnumber`,
+        `extendnumber2`,
+        `accordtypeseven`,
+        DATE_FORMAT(`oufinishtime`, '%Y-%m-%d %H:%i:%S') as `oufinishtime`,
+        DATE_FORMAT(`collect_time`, '%Y-%m-%d %H:%i:%S') as `collect_time`,
+        `evlway`,
+        gpsx,
+        gpsy
+        from t_42_12345_work_order where 1=1
+        <if test="serialnum != null and serialnum != ''">and serialnum=#{serialnum}</if>
+        <if test="beginTime != null and beginTime != ''">and rqsttime >=#{beginTime}</if>
+        <if test="endTime != null and endTime != ''">and rqsttime &lt;= #{endTime}</if>
+        <if test="precinctName != null and precinctName != ''">and locate(#{precinctName}, cagousub)</if>
+        <if test="limit != null">limit = #{limit}</if>
+    </select>
+
+    <select id="queryWorkOrderCount" resultType="int">
+        select count(1) from t_42_12345_work_order where 1=1
+        <if test="serialnum != null and serialnum != ''">and serialnum=#{serialnum}</if>
+        <if test="beginTime != null and beginTime != ''">and rqsttime >=#{beginTime}</if>
+        <if test="endTime != null and endTime != ''">and rqsttime &lt;= #{endTime}</if>
+        <if test="precinctName != null and precinctName != ''">and locate(#{precinctName}, cagousub)</if>
+        <if test="limit != null">limit = #{limit}</if>
+    </select>
+
+    <delete id="deleteWorkOrderList">
+        delete from t_42_12345_work_order
+    </delete>
+</mapper>

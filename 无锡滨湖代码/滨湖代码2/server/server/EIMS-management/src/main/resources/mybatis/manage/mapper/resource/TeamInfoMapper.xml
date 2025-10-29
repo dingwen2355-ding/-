@@ -1,0 +1,881 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.resource.TeamInfoDao">
+
+    <insert id="insertTeamInfo" parameterType="com.znv.manage.common.bean.resource.RescueTeamInfo">
+        INSERT INTO resource_team_info
+            (
+                id,
+                TEAM_NAME,
+                CITY,
+                REGION,
+                HELP_TYPE,
+                BE_MANAGED_TYPE,
+                A_P_TYPE,
+                SPECIALITIES,
+                BELONG_UNIT,
+                ADDRESS,
+                LONGITUDE,
+                LATITUDE,
+                MANAGER,
+                MANAGER_PHONE,
+                member_number,
+                team_info,
+                STORAGE_LEVEL,
+                INDUSTRY,
+                service_area,
+                MAIN_PEOPLE,
+                DUTY_PHONE,
+                org_set,
+                aptitude_info,
+                is_use_able
+            )
+        VALUES
+            (
+                #{id},
+                #{teamName},
+                #{city},
+                #{region},
+                #{helpType},
+                #{beManagedType},
+                #{apType},
+                #{specialities},
+                #{belongUnit},
+                #{address},
+                #{longitude},
+                #{latitude},
+                #{manager},
+                #{managerPhone},
+                #{memberNumber},
+                #{teamInfo},
+                #{storageLevel},
+                #{industry},
+                #{serviceArea},
+                #{mainPeople},
+                #{dutyPhone},
+                #{orgSet},
+                #{aptitudeInfo},
+                #{isUseAble}
+            )
+
+    </insert>
+
+    <update id="updateTeamInfo" parameterType="com.znv.manage.common.bean.resource.RescueTeamInfo">
+        update resource_team_info set
+            TEAM_NAME = #{teamName},
+            CITY = #{city},
+            REGION = #{region},
+            HELP_TYPE =  #{helpType},
+            BE_MANAGED_TYPE =  #{beManagedType},
+            A_P_TYPE = #{apType},
+            SPECIALITIES =  #{specialities},
+            BELONG_UNIT = #{belongUnit},
+            ADDRESS = #{address},
+            LONGITUDE = #{longitude},
+            LATITUDE =  #{latitude},
+            MANAGER = #{manager},
+            MANAGER_PHONE = #{managerPhone},
+            member_number = #{memberNumber},
+            team_info = #{teamInfo},
+            STORAGE_LEVEL = #{storageLevel},
+            INDUSTRY = #{industry},
+            service_area = #{serviceArea},
+            MAIN_PEOPLE = #{mainPeople},
+            DUTY_PHONE = #{dutyPhone},
+            org_set = #{orgSet},
+            aptitude_info = #{aptitudeInfo},
+            is_use_able = #{isUseAble}
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteTeamInfo">
+        delete from resource_team_info where ID = #{id}
+    </delete>
+
+    <delete id="batchDeleteTeamInfo">
+        delete from resource_team_info where find_in_set(ID,#{ids})
+    </delete>
+
+    <select id="queryRescueTeamInfoByIdNew" resultType="map">
+        SELECT
+            a.ID,
+            a.TEAM_NAME,
+            a.BELONG_UNIT,
+            (select group_concat(DICT_CH_NAME)  from sys_business_dict where find_in_set(id, a.HELP_TYPE)) HELP_TYPE,
+            (SELECT IFNULL(precinct_name,'') FROM t_cfg_precinct WHERE a.region=precinct_id) REGION,
+            a.CITY,
+            a.BE_MANAGED_TYPE,
+            (select group_concat(DICT_CH_NAME)  from sys_business_dict where find_in_set(id, a.SPECIALITIES)) SPECIALITIES,
+            (select DICT_CH_NAME from sys_business_dict where id=a.A_P_TYPE) A_P_TYPE,
+            (select DICT_CH_NAME from sys_business_dict where id=a.STORAGE_LEVEL) STORAGE_LEVEL,
+            (select DICT_CH_NAME from sys_business_dict where id=a.INDUSTRY) INDUSTRY,
+            a.member_number,
+            a.ADDRESS,
+            a.MANAGER,
+            a.MANAGER_PHONE,
+            a.MAIN_PEOPLE,
+            a.DUTY_PHONE,
+            a.LONGITUDE longitude,
+            a.LATITUDE latitude,
+            a.team_info,
+            a.org_set,
+            a.aptitude_info,
+            a.service_area,
+            'team' as pointType,
+            a.is_use_able
+        FROM resource_team_info a
+        WHERE a.ID = #{id}
+    </select>
+
+    <select id="queryRescueTeamInfoById" resultType="com.znv.manage.common.bean.resource.RescueTeamInfo">
+        SELECT
+            a.ID,
+            a.TEAM_NAME,
+			a.BELONG_UNIT,
+            a.HELP_TYPE,
+			a.REGION,
+			a.CITY,
+			a.BE_MANAGED_TYPE,
+            a.SPECIALITIES,
+            a.A_P_TYPE,
+			a.STORAGE_LEVEL,
+            a.INDUSTRY,
+            a.member_number,
+            a.ADDRESS,
+            a.MANAGER,
+            a.MANAGER_PHONE,
+			a.MAIN_PEOPLE,
+			a.DUTY_PHONE,
+            a.LONGITUDE longitude,
+            a.LATITUDE latitude,
+            a.team_info,
+            a.org_set,
+            a.aptitude_info,
+            a.service_area,
+            'team' as pointType,
+			a.is_use_able,
+			(SELECT IFNULL(GROUP_CONCAT(DICT_CH_NAME),'') FROM sys_business_dict WHERE FIND_IN_SET(id, a.HELP_TYPE)) HELP_TYPE_NAME,
+            (SELECT IFNULL(precinct_name,'') FROM t_cfg_precinct WHERE a.region=precinct_id) REGION_NAME,
+            (SELECT IFNULL(GROUP_CONCAT(DICT_CH_NAME),'') FROM sys_business_dict WHERE FIND_IN_SET(id, a.SPECIALITIES)) SPECIALITIES_NAME,
+            (SELECT IFNULL(GROUP_CONCAT(DICT_CH_NAME),'') FROM sys_business_dict WHERE FIND_IN_SET(id, a.BE_MANAGED_TYPE)) BE_MANAGED_TYPE_NAME,
+            (SELECT IFNULL(GROUP_CONCAT(DICT_CH_NAME),'') FROM sys_business_dict WHERE FIND_IN_SET(id, a.STORAGE_LEVEL)) STORAGE_LEVEL_NAME
+        FROM resource_team_info a
+        WHERE a.ID = #{id}
+    </select>
+
+    <select id="queryRescueTeamInfo" resultType="map">
+        select * from(
+            SELECT
+                a.ID,
+                a.TEAM_NAME,
+                a.member_number,
+                a.ADDRESS,
+                a.MANAGER,
+                a.MANAGER_PHONE,
+                ifnull(a.LONGITUDE,'') LONGITUDE,
+                ifnull(a.LATITUDE,'') LATITUDE,
+                ifnull(GROUP_CONCAT(distinct t1.`name`),'') HELP_TYPE,
+                ifnull(b.precinct_name,'') REGION,
+                ifnull(b.precinct_name,'') REGION1,
+                ifnull(t2.DICT_CH_NAME,'') CITY,
+                ifnull(t4.DICT_CH_NAME,'') BE_MANAGED_TYPE,
+                (select GROUP_CONCAT(t5.DICT_CH_NAME) SPECIALITIES from sys_business_dict t5 where FIND_IN_SET(t5.ID,a.SPECIALITIES)) SPECIALITIES,
+                ifnull(t9.DICT_CH_NAME,'') A_P_TYPE,
+                ifnull(t10.DICT_CH_NAME,'') STORAGE_LEVEL,
+                (select GROUP_CONCAT(t6.DICT_CH_NAME) INDUSTRY from sys_business_dict t6 where FIND_IN_SET(t6.ID,a.INDUSTRY)) INDUSTRY,
+                'team' as pointType,
+                ifnull(t11.ORGA_NAME,'') BELONG_UNIT,
+        a.MAIN_PEOPLE,
+        a.DUTY_PHONE
+            FROM
+                resource_team_info a
+            left join (
+                SELECT
+                    ID,DICT_CH_NAME name
+                FROM
+                    sys_business_dict
+                WHERE
+                    PARENT_ID = '17'
+                    AND IS_USING = 'Y'
+            ) t1 on FIND_IN_SET(t1.ID,a.HELP_TYPE)
+            left join sys_business_dict t2 on a.CITY = t2.ID
+            left join sys_business_dict t4 on a.BE_MANAGED_TYPE = t4.ID
+            left join sys_business_dict t9 on a.A_P_TYPE = t9.ID
+            left join sys_business_dict t10 on a.STORAGE_LEVEL = t10.ID
+            left join basic_organization t11 on a.BELONG_UNIT = t11.ID
+            LEFT JOIN t_cfg_precinct b on a.REGION=b.precinct_id
+        <where>
+            <if test="helpTypeName != null and helpTypeName.size() > 0">
+                <foreach collection="helpTypeName" separator="OR" item="item" open="(" close=")">
+                    <trim prefixOverrides="OR" suffixOverrides="OR">
+                        OR FIND_IN_SET(#{item},a.HELP_TYPE)
+                    </trim>
+                </foreach>
+            </if>
+            <if test="pointName != null and pointName != ''">
+                AND a.TEAM_NAME like CONCAT('%',#{pointName},'%')
+            </if>
+            <if test="area != null and area != ''">
+                AND a.REGION = #{area}
+            </if>
+            <if test="teamName != null and teamName != ''">
+                AND a.TEAM_NAME like CONCAT('%',#{teamName},'%')
+            </if>
+            <if test="apType != null and apType != ''">
+                AND a.A_P_TYPE =#{apType}
+            </if>
+            <if test="storageLevel != null and storageLevel != ''">
+                AND a.STORAGE_LEVEL =#{storageLevel}
+            </if>
+            <if test="teamType != null and teamType != ''">
+                AND a.BE_MANAGED_TYPE =#{teamType}
+            </if>
+           <!-- <if test="helpTypeName!=null and helpTypeName != ''">
+                and a.HELP_TYPE like CONCAT('%',#{helpTypeName},'%')
+            </if>-->
+            <if test="industry!=null and industry != ''">
+                and a.INDUSTRY like CONCAT('%',#{industry},'%')
+            </if>
+            <if test="specialities != null and specialities != ''">
+                AND a.SPECIALITIES like CONCAT('%',#{specialities},'%')
+            </if>
+            <if test="userId!=null and userId != ''">
+                and a.region = (select region from t_cfg_user where user_id = #{userId})
+            </if>
+            <if test="eventId != null and eventId != ''">
+                and a.id in (select resource_id from t_cfg_plan_link where resource_type='2' and `type`='2' and link_id=(select id from t_cfg_plan_info_event where event_id=#{eventId} limit 1))
+            </if>
+        </where>
+            GROUP BY a.ID) a
+        where 1=1
+        <if test="planId!=null and planId!=''">
+            order by
+            CASE WHEN EXISTS (
+            SELECT 1
+            FROM t_cfg_plan_link
+            WHERE resource_id = a.id AND link_id = #{planId} and resource_type='2'
+            ) THEN 0 ELSE 1 END
+        </if>
+        <if test="start != null and pageLen != null ">limit ${start},${pageLen}</if>
+    </select>
+
+    <select id="queryBasicInfoCount" resultType="int">
+        SELECT
+            count(1)
+        FROM
+            resource_team_info a
+        <where>
+        <if test="helpTypeName != null and helpTypeName.size() > 0">
+            <foreach collection="helpTypeName" separator="OR" item="item" open="(" close=")">
+                <trim prefixOverrides="OR" suffixOverrides="OR">
+                    OR FIND_IN_SET(#{item},a.HELP_TYPE)
+                </trim>
+            </foreach>
+        </if>
+        <if test="area != null and area != ''">
+            AND a.REGION = #{area}
+        </if>
+        <if test="teamName != null and teamName != ''">
+            AND a.TEAM_NAME like CONCAT('%',#{teamName},'%')
+        </if>
+        <if test="teamType != null and teamType != ''">
+            AND a.BE_MANAGED_TYPE = #{teamType}
+        </if>
+        <if test="storageLevel != null and storageLevel != ''">
+            AND a.STORAGE_LEVEL = #{storageLevel}
+        </if>
+        <if test="apType != null and apType!='' and apType!='999'">
+            AND a.A_P_TYPE = #{apType}
+        </if>
+        <!--<if test="helpTypeName!=null and helpTypeName != ''">
+            and a.HELP_TYPE like CONCAT('%',#{helpTypeName},'%')
+        </if>-->
+        <if test="industry!=null and industry != ''">
+            and a.INDUSTRY like CONCAT('%',#{industry},'%')
+        </if>
+        <if test="specialities != null and specialities != ''">
+            and a.SPECIALITIES like CONCAT('%',#{specialities},'%')
+        </if>
+        </where>
+    </select>
+
+    <select id="queryTeamInfoList" resultType="map">
+       select * from( SELECT
+        a.ID,
+        a.TEAM_NAME,
+        a.member_number,
+        a.ADDRESS,
+        a.MANAGER,
+        a.MANAGER_PHONE,
+        a.LONGITUDE,
+        a.LATITUDE,
+        ifnull(GROUP_CONCAT(t1.`name`),'') HELP_TYPE,
+        ifnull(b.precinct_name,'') REGION,
+        ifnull(b.precinct_name,'') REGION1,
+        ifnull(t2.DICT_CH_NAME,'') CITY,
+        ifnull(t4.DICT_CH_NAME,'') BE_MANAGED_TYPE,
+        ifnull(t5.DICT_CH_NAME,'') SPECIALITIES,
+        ifnull(t9.DICT_CH_NAME,'') A_P_TYPE,
+        ifnull(t10.DICT_CH_NAME,'') STORAGE_LEVEL,
+        ifnull((select GROUP_CONCAT(t6.DICT_CH_NAME) INDUSTRY from sys_business_dict t6 where FIND_IN_SET(t6.ID,a.INDUSTRY)),'') INDUSTRY,
+        'team' as pointType
+        FROM
+        resource_team_info a
+        left join (
+            SELECT
+                ID,DICT_CH_NAME name
+            FROM
+                sys_business_dict
+            WHERE
+                PARENT_ID = '17'
+                AND IS_USING = 'Y'
+        ) t1 on FIND_IN_SET(t1.ID,a.HELP_TYPE)
+        left join sys_business_dict t2 on a.CITY = t2.ID
+        left join sys_business_dict t4 on a.BE_MANAGED_TYPE = t4.ID
+        left join sys_business_dict t5 on a.SPECIALITIES = t5.ID
+        left join sys_business_dict t9 on a.A_P_TYPE = t9.ID
+        left join sys_business_dict t10 on a.STORAGE_LEVEL = t10.ID
+        LEFT JOIN t_cfg_precinct b on a.REGION=b.precinct_id
+        where 1=1
+        <if test="pointName != null and pointName != ''">
+            AND a.TEAM_NAME like CONCAT('%',#{pointName},'%')
+        </if>
+        <if test="helpType != null and helpType!='' and helpType!='999'">
+            AND FIND_IN_SET(#{helpType},a.HELP_TYPE)
+        </if>
+        <if test="area != null and area != ''">
+            AND b.precinct_name =#{area}
+        </if>
+        <if test="teamName != null and teamName != ''">
+            AND (a.TEAM_NAME like CONCAT('%',#{teamName},'%')
+            or a.ADDRESS  like CONCAT('%',#{teamName},'%')
+            or a.MANAGER  like CONCAT('%',#{teamName},'%')
+            or a.MANAGER_PHONE  like CONCAT('%',#{teamName},'%'))
+        </if>
+        <if test="apType != null and apType != ''">
+            AND t9.DICT_CH_NAME =#{apType}
+        </if>
+        <if test="storageLevel != null and storageLevel != ''">
+            AND t10.DICT_CH_NAME =#{storageLevel}
+        </if>
+        <if test="specialities != null and specialities != ''">
+            AND t5.DICT_CH_NAME =#{specialities}
+        </if>
+        <if test="teamType != null and teamType != ''">
+            AND t4.DICT_CH_NAME =#{teamType}
+        </if>
+        <if test="eventId != null and eventId != ''">
+            AND a.id in (select resource_id from t_cfg_plan_link where resource_type='2' and `type`='2' and link_id=(select id from t_cfg_plan_info_event where event_id=#{eventId} limit 1))
+        </if>
+        GROUP BY a.ID) a
+        where 1=1
+        <if test="helpTypeName!=null and helpTypeName != ''">
+            and a.HELP_TYPE like CONCAT('%',#{helpTypeName},'%')
+        </if>
+        <if test="industry!=null and industry != ''">
+            and a.INDUSTRY like CONCAT('%',#{industry},'%')
+        </if>
+        order by a.member_number desc
+    </select>
+
+    <select id="emergencyPower" resultType="java.util.HashMap">
+        SELECT
+        '救援队伍' categories,a.id,a.TEAM_NAME teamName,d.DICT_CH_NAME area,c.DICT_CH_NAME manageType,a.ADDRESS address,GROUP_CONCAT(b.DICT_CH_NAME) helpType,a.MAIN_PEOPLE manage,a.MANAGER_PHONE managePhone,'' level,'' type,LONGITUDE gpsx,LATITUDE gpsy
+        FROM
+        resource_team_info a
+        INNER JOIN sys_business_dict b on FIND_IN_SET(b.id,a.HELP_TYPE)
+        LEFT JOIN  sys_business_dict c on a.BE_MANAGED_TYPE=c.ID
+        LEFT JOIN sys_business_dict d on a.REGION=d.ID
+        WHERE
+        b.PARENT_ID = '17'
+        AND b.IS_USING = 'Y'
+        <if test="type!=null">
+            and FIND_IN_SET(b.ID,#{type})
+        </if>
+        GROUP BY a.id
+        union all
+        SELECT
+        '物资储备' categories,a.id,a.STOCK_NAME name,d.DICT_CH_NAME area,c.DICT_CH_NAME manageType,a.ADDRESS address,GROUP_CONCAT(b.DICT_CH_NAME) helpType,a.MAIN_PEOPLE manage,a.MANAGER_PHONE managePhone,f.DICT_CH_NAME level,e.DICT_CH_NAME type,LONGITUDE gpsx,LATITUDE gpsy
+        FROM
+        resource_stock_info a
+        INNER JOIN sys_business_dict b on FIND_IN_SET(b.id,a.HELP_TYPE)
+        LEFT JOIN  sys_business_dict c on a.BE_MANAGED_TYPE=c.ID
+        LEFT JOIN sys_business_dict d on a.REGION=d.ID
+        LEFT JOIN sys_business_dict e on a.STORAGE_TYPE=e.ID
+        LEFT JOIN sys_business_dict f on a.STORAGE_LEVEL=f.ID
+        WHERE
+        b.PARENT_ID = '17'
+        AND b.IS_USING = 'Y'
+        <if test="type!=null">
+            and FIND_IN_SET(b.ID,#{type})
+        </if>
+        GROUP BY a.id
+        union ALL
+        SELECT
+        '社会力量' categories, a.id,a.SOCIETY_TEAM_NAME name,d.DICT_CH_NAME area,c.DICT_CH_NAME manageType,a.ADDRESS address,GROUP_CONCAT(b.DICT_CH_NAME) helpType,a.MAIN_PEOPLE manage,a.MANAGER_PHONE managePhone,'' level,'' type,LONGITUDE gpsx,LATITUDE gpsy
+        FROM
+        resource_society_info a
+        INNER JOIN sys_business_dict b on FIND_IN_SET(b.id,a.HELP_TYPE)
+        LEFT JOIN  sys_business_dict c on a.BE_MANAGED_TYPE=c.ID
+        LEFT JOIN sys_business_dict d on a.REGION=d.ID
+        WHERE
+        b.PARENT_ID = '17'
+        AND b.IS_USING = 'Y'
+        <if test="type!=null">
+            and FIND_IN_SET(b.ID,#{type})
+        </if>
+        GROUP BY a.id
+    </select>
+
+    <select id="companyInfo" resultType="java.util.HashMap">
+        SELECT
+            a.id,
+            a.COMPANY_NAME companyName,
+            a.LOCATION address,
+            a.LONGITUDE gpsx,
+            a.LATITUDE gpsy,
+            a.BOSS_MANAGER boss,
+            a.BOSS_PHONE bossPhone,
+            a.LICENSE license,
+            a.COMPANY_PEOPLENUM companyNum,
+            b.categories,
+            b.type
+        FROM
+            resource_company a
+        INNER JOIN (
+            SELECT
+                a.id,
+                b.DICT_CH_NAME categories,
+                a.DICT_CH_NAME type
+            FROM
+                sys_business_dict a
+            INNER JOIN (
+                SELECT
+                    id,
+                    DICT_CH_NAME,
+                    PARENT_ID,
+                    DICT_ORDER
+                FROM
+                    sys_business_dict
+                WHERE
+                    pARENT_ID = '410'
+                AND IS_USING = 'Y'
+            ) b ON a.PARENT_ID = b.id
+            WHERE
+                a.IS_USING = 'Y'
+        ) b ON a.COMPANY_TYPE = b.id
+    </select>
+
+    <select id="queryEmergencyPowerDictList" resultType="java.util.HashMap">
+        SELECT id,DICT_CH_NAME name from sys_business_dict where 	PARENT_ID = '17'
+AND IS_USING = 'Y'
+ORDER BY DICT_ORDER
+    </select>
+
+    <select id="queryCarTeamInfo" resultType="java.util.HashMap">
+		SELECT a.*,b.area_name from t_emergency_flood_car_info a left join t_dict_area b on a.area_code = b.area_code
+		where  type in('客','货')
+        <if test="areaName!=null">
+            AND b.area_name = #{areaName}
+        </if>
+        <if test="carType!=null">
+            AND a.type = #{carType}
+        </if>
+	</select>
+
+    <select id="queryCarTeamManager" resultType="java.util.HashMap">
+		SELECT
+            a.area_code,
+            a.area,
+            a.address,
+            a.unit,
+            GROUP_CONCAT(a.leader) leader,
+            GROUP_CONCAT(a.leader_phone) leader_phone,
+        GROUP_CONCAT(a.manager) manager,
+        GROUP_CONCAT(a.manager_phone) manager_phone,
+        a.gpsx,
+        a.gpsy
+        FROM
+            (
+                SELECT
+                    area_code,
+                    area,
+                    unit,
+                    address,
+                    CASE perosn_type
+                WHEN 1 THEN
+                    GROUP_CONCAT(leader)
+                END AS leader,
+                CASE perosn_type
+            WHEN 1 THEN
+                GROUP_CONCAT(leader_phone)
+            END AS leader_phone,
+            CASE perosn_type
+        WHEN 2 THEN
+            GROUP_CONCAT(leader)
+        END AS manager,
+         CASE perosn_type
+        WHEN 2 THEN
+            GROUP_CONCAT(leader_phone)
+        END AS manager_phone,
+         perosn_type,
+         gpsx,
+         gpsy
+        FROM
+            t_emergency_flood_dict
+        WHERE
+            type = #{type}
+        AND area_code != '3703'
+        GROUP BY
+            area_code,
+            perosn_type
+            ) a
+        GROUP BY
+            a.area_code
+	</select>
+
+    <select id="queryFloodStuffInfo" resultType="java.util.HashMap">
+        SELECT a.*,b.area_name FROM t_emergency_flood_stuff_info a left join t_dict_area b on a.area_code = b.area_code
+        where 1=1
+        <if test="areaName!=null">
+            AND b.area_name =#{areaName}
+        </if>
+        <if test="stuffName!=null">
+            AND a.stuffName like CONCAT('%',#{stuffName},'%')
+        </if>
+    </select>
+
+    <select id="queryFloodPerpareStuff" resultType="java.util.HashMap">
+        SELECT
+            b.STUFF_NAME stuffName,
+            c.STOCK_NAME stockName,
+            STUFF_NUMBER stuffNum,
+            cast(VALID_DATE AS CHAR) validDate,
+            a.BUY_DATE buyDate,
+            a.brand,
+            a.model,
+            a.life,
+            a.price,
+            GROUP_CONCAT(d. NAME) helpType,
+            c.MANAGER manager,
+            c.MANAGER_PHONE managerPHhone,
+            d.area_code areaCode,
+            d.area_name areaName,
+            b.STUFF_UNIT stuffUnit
+        FROM
+            resource_stock_stuff a
+        INNER JOIN resource_list b ON a.STUFF_ID = b.ID
+        INNER JOIN resource_stock_info c ON a.BELONG_STOCK_ID = c.ID
+        LEFT JOIN t_dict_area d on c.REGION=d.dict_id
+        INNER JOIN (
+            SELECT
+                id,
+                DICT_CH_NAME NAME
+            FROM
+                sys_business_dict
+            WHERE
+                PARENT_ID = '17'
+            AND IS_USING = 'Y'
+        ) d ON FIND_IN_SET(d.ID, b.HELP_TYPE)
+        WHERE
+            FIND_IN_SET('19', b.HELP_TYPE)
+        GROUP BY
+            a.STUFF_ID,
+            a.BELONG_STOCK_ID,
+            a.brand,
+            a.model,
+            a.BUY_DATE
+    </select>
+
+    <select id="shelterInfo" resultType="java.util.HashMap">
+        select a.ID,
+        ifnull(a.SHELTER_NAME,'') SHELTER_NAME,
+        ifnull(a.SHELTER_TYPE,'') SHELTER_TYPE,
+        ifnull(a.SHELTER_ADDRESS,'') SHELTER_ADDRESS,
+        ifnull(a.PROPERTY_UNIT,'') PROPERTY_UNIT,
+        ifnull(a.SHELTER_UNIT,'') SHELTER_UNIT,
+        ifnull(a.SHELTER_PERSON,'') SHELTER_PERSON,
+        ifnull(a.SHELTER_PHONE,'') SHELTER_PHONE,
+        ifnull(a.SHELTER_ORGA,'') SHELTER_ORGA,
+        ifnull(a.SHELTER_RESCUE_TYPE,'') SHELTER_RESCUE_TYPE,
+        ifnull(a.SHELTER_LONGITUDE,'') SHELTER_LONGITUDE,
+        ifnull(a.SHELTER_LATITUDE,'') SHELTER_LATITUDE,
+        ifnull(a.CREATE_TIME,'') CREATE_TIME,
+        ifnull(a.ACERAGE,'') ACERAGE,
+        ifnull(a.CAPACITY,'') CAPACITY,
+        ifnull(a.hazard_analysis,'') hazard_analysis,
+        ifnull(a.measures_analysis,'') measures_analysis,
+        ifnull(a.shelter_category,'') shelter_category,
+        b.area_name from basic_shelter a
+        INNER JOIN t_dict_area b on a.SHELTER_ORGA=b.area_name
+        where 1=1
+        <if test="area!=null">
+            AND b.area_name =#{area}
+        </if>
+        <if test="name!=null">
+            AND a.SHELTER_NAME like CONCAT('%',#{name},'%')
+        </if>
+        <if test="shelterCategory!=null">
+            AND a.shelter_category =#{shelterCategory}
+        </if>
+    </select>
+
+
+    <select id="queryTeamInfoCountXQ" resultType="map">
+        select b.DICT_CH_NAME as name,count(a.ID) as count
+        from resource_team_info a
+        left join sys_business_dict b
+        on a.REGION = b.ID group by REGION
+        order by field(b.DICT_CH_NAME,'市直管','张店区','淄川区','博山区','周村区','临淄区','桓台县','高青县','沂源县','高新区','经开区','文昌湖区')
+    </select>
+
+    <select id="queryTeamInfoCountGLLX" resultType="map">
+    select b.DICT_CH_NAME as name,count(a.ID) as count
+            from resource_team_info a
+            left join sys_business_dict b
+            on a.BE_MANAGED_TYPE = b.ID group by BE_MANAGED_TYPE
+    </select>
+
+    <select id="queryTeamInfoStuff" resultType="map">
+        select
+          a.STUFF_ID,
+          ifnull(b.STUFF_NAME,'') STUFF_NAME,
+          a.brand,
+          a.model,
+          sum(a.STUFF_NUMBER) STUFF_NUMBER,
+          ifnull(b.STUFF_UNIT,'') STUFF_UNIT,
+          ifnull(b.HELP_TYPE,'') HELP_TYPE,
+          ifnull((select DICT_CH_NAME from sys_business_dict where ID=b.STUFF_TYPE_CODE limit 1),"") stuffTypeName,
+        ifnull((SELECT GROUP_CONCAT(DICT_CH_NAME) FROM sys_business_dict WHERE FIND_IN_SET(ID,b.HELP_TYPE)),'')  heplTypeName
+        from
+          resource_stock_stuff a
+          left join resource_list b
+            on a.STUFF_ID = b.ID
+        left join resource_stock_info c on c.ID = a.BELONG_STOCK_ID
+        left join resource_company d on  d.ID = c.BELONG_UNIT
+        where 1=1
+        <if test="id !='' and id != null">
+           and a.BELONG_STOCK_ID = #{id}
+        </if>
+        <if test="model !='' and model != null">
+           and a.model like CONCAT('%',#{model},'%')
+        </if>
+        <if test="companyId !='' and companyId != null">
+            and d.ID = #{companyId}
+        </if>
+        <if test="brand !='' and brand != null">
+            and a.brand like CONCAT('%',#{brand},'%')
+        </if>
+        <if test="stuffName !='' and stuffName != null">
+            and b.STUFF_NAME like CONCAT('%',#{stuffName},'%')
+        </if>
+        <if test="stuffType!=null and stuffType != ''">
+            and (b.STUFF_TYPE_CODE=#{stuffType} or b.STUFF_TYPE_CODE in (select ID from sys_business_dict where PARENT_ID=#{stuffType}))
+        </if>
+        <if test="helpType !='' and helpType != null">
+            and find_in_set(#{helpType},b.HELP_TYPE)
+        </if>
+        GROUP BY a.stuff_id
+        order by (b.`ORDER`+0),b.STUFF_NAME
+    </select>
+
+    <select id="queryTeamInfoCountSSHY" resultType="map">
+        select b.DICT_CH_NAME as name,count(a.ID) as count from ( SELECT a.ID,
+        SUBSTRING_INDEX(SUBSTRING_INDEX(a.INDUSTRY, ',', b.help_topic_id + 1), ',', - 1 ) name
+        FROM resource_team_info a
+        JOIN mysql.help_topic b
+        ON b.help_topic_id &lt;(LENGTH(a.INDUSTRY) - LENGTH(REPLACE(a.INDUSTRY, ',', '')) + 1 )
+        where a.INDUSTRY is not null and a.INDUSTRY != ''
+        ORDER BY a.ID) a left join sys_business_dict b on a.name = b.ID  WHERE a.name != '' AND a.name IS NOT NULL  group by a.name
+    </select>
+
+    <select id="queryTeamInfoCountJYLX" resultType="map">
+    select b.DICT_CH_NAME as name,count(a.ID) as count from ( SELECT a.ID,
+        SUBSTRING_INDEX(SUBSTRING_INDEX(a.HELP_TYPE, ',', b.help_topic_id + 1), ',', - 1 ) name
+        FROM resource_team_info a
+        JOIN mysql.help_topic b
+        ON b.help_topic_id &lt;(LENGTH(a.HELP_TYPE) - LENGTH(REPLACE(a.HELP_TYPE, ',', '')) + 1 )
+        where a.HELP_TYPE is not null and a.HELP_TYPE != ''
+        ORDER BY a.ID) a left join sys_business_dict b on a.name = b.ID WHERE b.DICT_CH_NAME IS NOT NULL  group by a.name
+    </select>
+
+    <select id="shelterInfoCountXQ" resultType="map">
+        select b.area_name as name,count(a.ID) as count from basic_shelter a
+        INNER JOIN t_dict_area b on a.SHELTER_ORGA=B.area_code group by b.area_name
+    </select>
+
+    <select id="carTeamCountXQ" resultType="map">
+          SELECT count(a.plate) as count,b.area_name as name from t_emergency_flood_car_info a left join t_dict_area b on a.area_code = b.area_code
+		where  type in('客','货') group by b.area_name
+    </select>
+
+    <select id="carTeamCountLX" resultType="map">
+      SELECT count(plate) as `count`,`type` as `name` from t_emergency_flood_car_info
+		where `type` in('客','货') group by `type`
+    </select>
+
+    <select id="teamInfoMajorsDict" resultType="map">
+      select
+          DICT_CH_NAME AS name,
+          ID AS id
+        from
+          sys_business_dict
+        where PARENT_ID =
+          (SELECT
+            ID
+          from
+            sys_business_dict
+          WHERE DICT_KEY = 'MAJORS')
+    </select>
+
+    <select id="teamInfoFullPartTimeDict" resultType="map">
+        select
+          DICT_CH_NAME AS name,
+          ID AS id
+        from
+          sys_business_dict
+        where PARENT_ID =
+          (SELECT
+            ID
+          from
+            sys_business_dict
+          WHERE DICT_KEY = 'P_D_TYPE')
+    </select>
+
+    <select id="selectCommandTeamInfo" resultType="java.lang.String">
+        select bz_duiwu_id from t_command_main where event_id=#{commandId}
+    </select>
+
+    <update id="updateCommandTeamId">
+        update t_command_main
+        set bz_duiwu_id=#{teamIds}
+        where event_id=#{commandId}
+    </update>
+
+    <select id="getTeamInfoByCommandId" resultType="map">
+        select ID id,
+               TEAM_NAME teamName,
+               MANAGER manager,
+               MANAGER_PHONE managerPhone,
+               member_number memberNumber
+        from resource_team_info
+        where find_in_set(id,(select bz_duiwu_id from t_command_main where event_id=#{commandId}))
+    </select>
+
+    <select id="getTeamNameByIds" resultType="java.lang.String">
+        select  ifnull(group_concat(TEAM_NAME),'')
+        from resource_team_info
+        where find_in_set(id,#{ids})
+    </select>
+
+    <select id="getTag" resultType="int">
+        select  ID
+        from sys_business_dict
+        where DICT_CH_NAME =#{name} and PARENT_ID =#{id}  LIMIT 1
+    </select>
+
+    <select id="getPrecinct" resultType="java.lang.String">
+        select  precinct_id
+        from t_cfg_precinct
+        where precinct_name =#{name}  LIMIT 1
+    </select>
+
+    <select id="getBelongTag" resultType="int">
+        select  ID
+        from basic_organization
+        where ORGA_NAME =#{name} LIMIT 1
+    </select>
+
+    <select id="getTeamIdByName" resultType="java.lang.String">
+        select  ID
+        from resource_team_info
+        where TEAM_NAME =#{name} LIMIT 1
+    </select>
+
+    <select id="queryRescueTeamInfoExport" resultType="map">
+        select * from(
+        SELECT
+        a.ID,
+        a.TEAM_NAME,
+        a.member_number,
+        a.ADDRESS,
+        a.MANAGER,
+        a.MANAGER_PHONE,
+        a.LONGITUDE,
+        a.LATITUDE,
+        ifnull(GROUP_CONCAT(distinct t1.`name`),'') HELP_TYPE,
+        ifnull(t3.DICT_CH_NAME,'') REGION,
+        ifnull(b.area_name,'') REGION1,
+        ifnull(t2.DICT_CH_NAME,'') CITY,
+        ifnull(t4.DICT_CH_NAME,'') BE_MANAGED_TYPE,
+        (select GROUP_CONCAT(t5.DICT_CH_NAME) SPECIALITIES from sys_business_dict t5 where FIND_IN_SET(t5.ID,a.SPECIALITIES)) SPECIALITIES,
+        ifnull(t9.DICT_CH_NAME,'') A_P_TYPE,
+        ifnull(t10.DICT_CH_NAME,'') STORAGE_LEVEL,
+        (select GROUP_CONCAT(t6.DICT_CH_NAME) INDUSTRY from sys_business_dict t6 where FIND_IN_SET(t6.ID,a.INDUSTRY)) INDUSTRY,
+        'team' as pointType,
+        ifnull(t11.ORGA_NAME,'') BELONG_UNIT,
+        a.MAIN_PEOPLE,
+        a.DUTY_PHONE
+        FROM
+        resource_team_info a
+        left join (
+        SELECT
+        ID,DICT_CH_NAME name
+        FROM
+        sys_business_dict
+        WHERE
+        PARENT_ID = '17'
+        AND IS_USING = 'Y'
+        ) t1 on FIND_IN_SET(t1.ID,a.HELP_TYPE)
+        left join sys_business_dict t2 on a.CITY = t2.ID
+        left join(
+        select
+        ID,
+        if(DICT_CH_NAME='市直管','市辖区',DICT_CH_NAME) DICT_CH_NAME
+        FROM
+        sys_business_dict
+        WHERE
+        PARENT_ID = '1'
+        AND IS_USING = 'Y'
+        ) t3 on FIND_IN_SET(t3.ID,a.REGION)
+        left join sys_business_dict t4 on a.BE_MANAGED_TYPE = t4.ID
+        left join sys_business_dict t9 on a.A_P_TYPE = t9.ID
+        left join sys_business_dict t10 on a.STORAGE_LEVEL = t10.ID
+        left join basic_organization t11 on a.BELONG_UNIT = t11.ID
+        LEFT JOIN t_dict_area b on a.REGION=b.dict_id
+        where 1=1
+        <if test="pointName != null and pointName != ''">
+            AND a.TEAM_NAME like CONCAT('%',#{pointName},'%')
+        </if>
+        <if test="area != null and area != ''">
+            AND a.REGION = #{area}
+        </if>
+        <if test="teamName != null and teamName != ''">
+            AND a.TEAM_NAME like CONCAT('%',#{teamName},'%')
+        </if>
+        <if test="apType != null and apType != ''">
+            AND a.A_P_TYPE =#{apType}
+        </if>
+        <if test="storageLevel != null and storageLevel != ''">
+            AND a.STORAGE_LEVEL =#{storageLevel}
+        </if>
+        <if test="teamType != null and teamType != ''">
+            AND a.BE_MANAGED_TYPE =#{teamType}
+        </if>
+        <if test="helpTypeName!=null and helpTypeName != ''">
+            and a.HELP_TYPE like CONCAT('%',#{helpTypeName},'%')
+        </if>
+        <if test="industry!=null and industry != ''">
+            and a.INDUSTRY like CONCAT('%',#{industry},'%')
+        </if>
+        <if test="specialities != null and specialities != ''">
+            AND a.SPECIALITIES like CONCAT('%',#{specialities},'%')
+        </if>
+        GROUP BY a.ID) a
+        where 1=1
+        <if test="userId!=null and userId != ''">
+            and a.region = (select region from t_cfg_user where user_id = #{userId})
+        </if>
+        <if test="start != null and pageLen != null ">limit ${start},${pageLen}</if>
+    </select>
+</mapper>

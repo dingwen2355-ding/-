@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.event.EventNodeContactDao">
+
+    <resultMap type="com.znv.manage.common.bean.event.EventNodeContact" id="EventNodeContactMap">
+        <result property="id" column="ID" jdbcType="INTEGER"/>
+        <result property="eventId" column="EVENT_ID" jdbcType="INTEGER"/>
+        <result property="nodeId" column="NODE_ID" jdbcType="INTEGER"/>
+        <result property="isHidden" column="IS_HIDDEN" jdbcType="VARCHAR"/>
+        <result property="order" column="NODE_ORDER" jdbcType="INTEGER"/>
+        <result property="nodeName" column="NODE_NAME" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="EventNodeContactMap">
+        select ID,
+               EVENT_ID,
+               NODE_ID,
+               IS_HIDDEN,
+               NODE_ORDER
+        from T_CFG_EVENT_NODE_CONTACT
+        where ID = #{id}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from T_CFG_EVENT_NODE_CONTACT
+        <where>
+            <if test="id != null">
+                and ID = #{id}
+            </if>
+            <if test="eventId != null">
+                and EVENT_ID = #{eventId}
+            </if>
+            <if test="nodeId != null">
+                and NODE_ID = #{nodeId}
+            </if>
+            <if test="isHidden != null and isHidden != ''">
+                and IS_HIDDEN = #{isHidden}
+            </if>
+            <if test="order != null">
+                and NODE_ORDER = #{order}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_EVENT_NODE_CONTACT(EVENT_ID, NODE_ID, IS_HIDDEN, NODE_ORDER)
+        values (#{eventId}, #{nodeId}, #{isHidden}, #{order})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_EVENT_NODE_CONTACT(EVENT_ID, NODE_ID, IS_HIDDEN, NODE_ORDER)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.eventId}, #{entity.nodeId}, #{entity.isHidden}, #{entity.order})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_EVENT_NODE_CONTACT(EVENT_ID, NODE_ID, IS_HIDDEN, NODE_ORDER)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.eventId}, #{entity.nodeId}, #{entity.isHidden}, #{entity.order})
+        </foreach>
+        on duplicate key update
+        EVENT_ID = values(EVENT_ID),
+        NODE_ID = values(NODE_ID),
+        IS_HIDDEN = values(IS_HIDDEN),
+        NODE_ORDER = values(NODE_ORDER)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update T_CFG_EVENT_NODE_CONTACT
+        <set>
+            <if test="eventId != null">
+                EVENT_ID = #{eventId},
+            </if>
+            <if test="nodeId != null">
+                NODE_ID = #{nodeId},
+            </if>
+            <if test="isHidden != null and isHidden != ''">
+                IS_HIDDEN = #{isHidden},
+            </if>
+            <if test="order != null">
+                NODE_ORDER = #{order},
+            </if>
+        </set>
+        where ID = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from T_CFG_EVENT_NODE_CONTACT
+        where ID = #{id}
+    </delete>
+
+    <!--通过主键批量删除-->
+    <delete id="deleteBatch">
+        delete
+        from T_CFG_EVENT_NODE_CONTACT
+        where find_in_set(ID, #{ids})
+    </delete>
+
+    <!--条件查询-->
+    <select id="queryByCondition" resultMap="EventNodeContactMap">
+        select
+        a.ID, EVENT_ID, NODE_ID, IS_HIDDEN, NODE_ORDER,b.NODE_NAME
+        from T_CFG_EVENT_NODE_CONTACT a
+        left join T_CFG_EVENT_NODE b on a.node_id=b.id
+        <where>
+            <if test="id != null">
+                and a.ID = #{id}
+            </if>
+            <if test="eventId != null">
+                and EVENT_ID = #{eventId}
+            </if>
+            <if test="nodeId != null">
+                and NODE_ID = #{nodeId}
+            </if>
+            <if test="isHidden != null and isHidden != ''">
+                and IS_HIDDEN = #{isHidden}
+            </if>
+            <if test="order != null">
+                and NODE_ORDER = #{order}
+            </if>
+        </where>
+        order by NODE_ORDER
+    </select>
+</mapper>
+

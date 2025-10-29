@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.WgyxxDao">
+
+    <insert id="insertWgyxxList">
+        INSERT IGNORE INTO t_75_wgyxx
+        (
+        `id`,
+        `reseau` ,
+        `nation`,
+        `street` ,
+        `name`,
+        `tel` ,
+        `reseau_index` ,
+        `community` ,
+        `collect_time` ,
+        `storage_time`
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id},
+            #{item.reseau} ,
+            #{item.nation},
+            #{item.street} ,
+            #{item.name},
+            #{item.tel} ,
+            #{item.reseauindex} ,
+            #{item.community} ,
+            #{item.collecttime} ,
+            current_timestamp
+            )
+        </foreach>
+    </insert>
+</mapper>

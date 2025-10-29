@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.resource.ResourceOperationDao">
+
+    <resultMap type="com.znv.manage.common.bean.resource.ResourceOperation" id="ResourceOperationMap">
+        <result property="id" column="ID" jdbcType="INTEGER"/>
+        <result property="rsId" column="RS_ID" jdbcType="VARCHAR"/>
+        <result property="type" column="TYPE" jdbcType="VARCHAR"/>
+        <result property="num" column="NUM" jdbcType="NUMERIC"/>
+        <result property="info" column="INFO" jdbcType="VARCHAR"/>
+        <result property="note" column="NOTE" jdbcType="VARCHAR"/>
+        <result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>
+        <result property="typeName" column="type_name" jdbcType="VARCHAR"/>
+        <result property="stuffUnit" column="stuff_unit" jdbcType="VARCHAR"/>
+        <result property="phone" column="PHONE" jdbcType="VARCHAR"/>
+        <result property="idNumber" column="ID_NUMBER" jdbcType="VARCHAR"/>
+        <result property="outboundType" column="OUTBOUND_TYPE" jdbcType="VARCHAR"/>
+        <result property="stuffName" column="stuff_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ResourceOperationMap">
+        select ID,
+               RS_ID,
+               TYPE,
+               NUM,
+               INFO,
+               NOTE,
+               CREATE_TIME
+        from T_CFG_RESOURCE_OPERATION
+        where ID = #{id}
+    </select>
+
+    <!--查询多个-->
+    <select id="queryByIds" resultMap="ResourceOperationMap">
+        select a.ID,
+        a.RS_ID,
+        a.TYPE,
+        a.NUM,
+        a.INFO,
+        a.NOTE,
+        a.CREATE_TIME,
+        b.stuff_unit,
+        c.DICT_CH_NAME type_name,
+        a.OUTBOUND_TYPE,
+        a.PHONE,
+        a.ID_NUMBER,
+        b.stuff_name
+        from T_CFG_RESOURCE_OPERATION a
+        left join T_CFG_RESOURCE_STUFF b on a.rs_id=b.id
+        left join sys_business_dict c on b.stuff_type = c.id
+        where  b.id IS NOT null
+        <if test="ids!=null and ids!=''">
+            and FIND_IN_SET(a.ID,#{ids})
+        </if>
+        order by c.id
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from T_CFG_RESOURCE_OPERATION
+        <where>
+            <if test="id != null">
+                and ID = #{id}
+            </if>
+            <if test="rsId != null and rsId != ''">
+                and RS_ID = #{rsId}
+            </if>
+            <if test="type != null and type != ''">
+                and TYPE = #{type}
+            </if>
+            <if test="num != null">
+                and NUM = #{num}
+            </if>
+            <if test="info != null and info != ''">
+                and INFO = #{info}
+            </if>
+            <if test="note != null and note != ''">
+                and NOTE = #{note}
+            </if>
+            <if test="createTime != null">
+                and CREATE_TIME = #{createTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_RESOURCE_OPERATION(RS_ID, TYPE, NUM, INFO, NOTE, OUTBOUND_TYPE, PHONE, ID_NUMBER)
+        values (#{rsId}, #{type}, #{num}, #{info}, #{note}, #{outboundType}, #{phone}, #{idNumber})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_RESOURCE_OPERATION(RS_ID, TYPE, NUM, INFO, NOTE, OUTBOUND_TYPE, PHONE, ID_NUMBER)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.rsId}, #{entity.type}, #{entity.num}, #{entity.info}, #{entity.note},
+             #{entity.outboundType}, #{entity.phone}, #{entity.idNumber})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_RESOURCE_OPERATION(RS_ID, TYPE, NUM, INFO, NOTE, CREATE_TIME)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.rsId}, #{entity.type}, #{entity.num}, #{entity.info}, #{entity.note}, #{entity.createTime})
+        </foreach>
+        on duplicate key update
+        RS_ID = values(RS_ID),
+        TYPE = values(TYPE),
+        NUM = values(NUM),
+        INFO = values(INFO),
+        NOTE = values(NOTE),
+        CREATE_TIME = values(CREATE_TIME)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update T_CFG_RESOURCE_OPERATION
+        <set>
+            <if test="rsId != null and rsId != ''">
+                RS_ID = #{rsId},
+            </if>
+            <if test="type != null and type != ''">
+                TYPE = #{type},
+            </if>
+            <if test="num != null">
+                NUM = #{num},
+            </if>
+            <if test="info != null and info != ''">
+                INFO = #{info},
+            </if>
+            <if test="note != null and note != ''">
+                NOTE = #{note},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime},
+            </if>
+        </set>
+        where ID = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from T_CFG_RESOURCE_OPERATION
+        where ID = #{id}
+    </delete>
+
+    <!--通过主键批量删除-->
+    <delete id="deleteBatch">
+        delete
+        from T_CFG_RESOURCE_OPERATION
+        where find_in_set(ID, #{ids})
+    </delete>
+
+    <select id="query" resultMap="ResourceOperationMap">
+        select a.ID,
+        a.RS_ID,
+        a.TYPE,
+        a.NUM,
+        a.INFO,
+        a.NOTE,
+        a.CREATE_TIME,
+        b.stuff_unit,
+        b.stuff_type type_name,
+        a.OUTBOUND_TYPE,
+        a.PHONE,
+        a.ID_NUMBER,
+        b.stuff_name
+        from T_CFG_RESOURCE_OPERATION a
+        left join T_CFG_RESOURCE_STUFF b on a.rs_id=b.id
+        where  b.id IS NOT null
+            <if test="id != null and stuffName != ''">
+                and a.ID = #{id}
+            </if>
+            <if test="stuffName != null and stuffName != ''">
+                and stuff_name like concat('%',#{stuffName},'%')
+            </if>
+            <if test="type != null and type != ''">
+                and a.TYPE = #{type}
+            </if>
+            <if test="info != null and info != ''">
+                and a.info like concat('%',#{info},'%')
+            </if>
+        ORDER BY IFNULL(a.CREATE_TIME,'') DESC
+    </select>
+</mapper>
+

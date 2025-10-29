@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.SyncEventDao">
+
+	<insert id="insertEventSync">
+		insert into base_event_info(
+		`event_id`,
+		`event_type_name`,
+		`event_title`,
+		`happen_time`,
+		`address`,
+		`gpsx`,
+		`gpsy`,
+		`desc`,
+		`emergency`,
+		`area_code`,
+		`area`,
+		weightyincident,
+		deviceIds,
+		event_tags,
+		urgency,
+		flow_source
+		 )values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.flowNo},
+			#{item.$class_1$},
+			#{item.questionTitle},
+			#{item.reportDate},
+			#{item.addressNew},
+			#{item.lngNew},
+			#{item.latNew},
+			#{item.desc},
+			#{item.emergency},
+			#{item.precinctId},
+			#{item.city},
+			#{item.weightyincident},
+			#{item.deviceIds},
+			#{item.tags},
+			#{item.$urgency$},
+			#{item.flowSource}
+			)
+		</foreach>
+		on duplicate key update
+		happen_time = values(happen_time),
+		address = values(address),
+		gpsx = values(gpsx),
+		gpsy = values(gpsy),
+		flow_source = values(flow_source)
+	</insert>
+
+	<update id="updateEventTypeId">
+		UPDATE base_event_info a,
+			dict_event_type b
+		SET a.event_type = b.type_id
+		WHERE
+			a.event_type_name = b.event_type
+	</update>
+
+
+	<!--<insert id="insertEventDealSync">
+		insert into data_history_event_deal_content(
+		event_id,
+		record_time,
+		event_status,
+		deal_content,
+		flowStatus
+		)values
+			(
+			#{flowNo},
+			#{updateDate},
+			#{eventStatus},
+			#{remark},
+			#{flowStatus}
+			)
+	</insert>-->
+
+
+	<insert id="insertEventDealContentSync">
+		insert into data_history_event_deal_content(
+		event_id,
+		record_time,
+		deal_content,
+		flowStatus
+		)values
+			(
+			#{flowNo},
+			#{createDate},
+			#{operationContent},
+			#{orderNodeId}
+			)
+	</insert>
+
+	<!--<select id="queryDealExist" parameterType="com.znv.manage.common.bean.SyncEvent" resultType="java.lang.Integer">
+		select count(1) as num from data_history_event_deal_content
+		where 1=1
+		<if test="id != null and id != '' "> and event_id = #{flowNo}</if>
+		<if test="flowStatus != null and flowStatus != '' "> and flowStatus = #{flowStatus}</if>
+	</select>-->
+
+	<select id="queryEventExist" parameterType="com.znv.manage.common.bean.SyncEvent" resultType="java.lang.Integer">
+		select count(1) as num from base_event_info
+		where 1=1
+		<if test="flowNo != null and flowNo != '' "> and event_id = #{flowNo}</if>
+	</select>
+
+	<select id="queryEventContentExist" parameterType="com.znv.manage.common.bean.SyncEventContent" resultType="java.lang.Integer">
+		select count(1) as num from data_history_event_deal_content
+		where 1=1
+		<if test="flowNo != null and flowNo != '' "> and event_id = #{flowNo}</if>
+		<if test="createDate != null and createDate != '' "> and record_time = #{createDate}</if>
+	</select>
+
+	<select id="queryEventContentReExist" parameterType="com.znv.manage.common.bean.SyncEventContent" resultType="java.lang.Integer">
+		select count(1) as num from data_history_event_deal_content
+		where 1=1
+		<if test="createDate != null and createDate != '' "> and record_time = #{createDate}</if>
+	</select>
+
+	<select id="queryEventTypeConf" resultType="map">
+		SELECT
+			event_type_id eventTypeId,
+			event_type_name eventTypeName,
+			type,
+			unit_id unitId,
+			leader leader
+		FROM
+			relation_event_type_left_cfg
+		where event_type_id = #{typeId}
+	</select>
+
+	<insert id="insertEventLeffConf">
+		insert into deal_event_accpciated_communication(
+		`event_id`,
+		`type`,
+		`unit_id`,
+		`leader`
+		)values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{eventId},
+			#{item.eventTypeId},
+			#{item.unitId},
+			#{item.leader}
+			)
+		</foreach>
+	</insert>
+</mapper>

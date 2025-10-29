@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.QxyjxxDao">
+    <insert id="insertQxyjxxList">
+        INSERT INTO t_62_qxyjxx
+        (
+        MODELCONTENT,
+        DEFENSE,
+        DISASTERID,
+        IMG,
+        CREATE_TIME,
+        ALARMCODE,
+        DISASTERNAME,
+        TASKCODE,
+        ORGNAME,
+        ENTRYTIME,
+        ISEFFECT,
+        COLORLEVELNAME,
+        ISSUE,
+        PROCESS,
+        AREACODES,
+        SENDUESER,
+        AREANAMES
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.MODELCONTENT},
+            #{item.DEFENSE},
+            #{item.DISASTERID},
+            #{item.IMG},
+            #{item.CREATE_TIME},
+            #{item.ALARMCODE},
+            #{item.DISASTERNAME},
+            #{item.TASKCODE},
+            #{item.ORGNAME},
+            #{item.ENTRYTIME},
+            #{item.ISEFFECT},
+            #{item.COLORLEVELNAME},
+            #{item.ISSUE},
+            #{item.PROCESS},
+            #{item.AREACODES},
+            #{item.SENDUESER},
+            #{item.AREANAMES}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateQxyjxxList">
+        <foreach collection="list" separator=";" item="item" index="index">
+            update t_62_qxyjxx
+            <set>
+                <if test="item.MODELCONTENT != null and item.MODELCONTENT != ''">MODELCONTENT=#{item.MODELCONTENT},</if>
+                <if test="item.DEFENSE != null and item.DEFENSE != ''">DEFENSE=#{item.DEFENSE},</if>
+                <if test="item.DISASTERID != null and item.DISASTERID != ''">DISASTERID=#{item.DISASTERID},</if>
+                <if test="item.IMG != null and item.IMG != ''">IMG=#{item.IMG},</if>
+                <if test="item.CREATE_TIME != null and item.CREATE_TIME != ''">CREATE_TIME=#{item.CREATE_TIME},</if>
+                <if test="item.ALARMCODE != null and item.ALARMCODE != ''">ALARMCODE=#{item.ALARMCODE},</if>
+                <if test="item.DISASTERNAME != null and item.DISASTERNAME != ''">DISASTERNAME=#{item.DISASTERNAME},</if>
+                <if test="item.TASKCODE != null and item.TASKCODE != ''">TASKCODE=#{item.TASKCODE},</if>
+                <if test="item.ORGNAME != null and item.ORGNAME != ''">ORGNAME=#{item.ORGNAME},</if>
+                <if test="item.ENTRYTIME != null and item.ENTRYTIME != ''">ENTRYTIME=#{item.ENTRYTIME},</if>
+                <if test="item.ISEFFECT != null and item.ISEFFECT != ''">ISEFFECT=#{item.ISEFFECT},</if>
+                <if test="item.COLORLEVELNAME != null and item.COLORLEVELNAME != ''">
+                    COLORLEVELNAME=#{item.COLORLEVELNAME},
+                </if>
+                <if test="item.ISSUE != null and item.ISSUE != ''">ISSUE=#{item.ISSUE},</if>
+                <if test="item.PROCESS != null and item.PROCESS != ''">PROCESS=#{item.PROCESS},</if>
+                <if test="item.AREACODES != null and item.AREACODES != ''">AREACODES=#{item.AREACODES},</if>
+                <if test="item.SENDUESER != null and item.SENDUESER != ''">SENDUESER=#{item.SENDUESER},</if>
+                <if test="item.AREANAMES != null and item.AREANAMES != ''">AREANAMES=#{item.AREANAMES}</if>
+            </set>
+            where `SJWXHXPMC`=#{item.SJWXHXPMC}
+        </foreach>
+    </update>
+
+    <select id="queryQxyjxxList" resultType="map">
+        select
+        `MODELCONTENT` ,
+        `DEFENSE` ,
+        `DISASTERID` ,
+        `IMG` ,
+        DATE_FORMAT(`CREATE_TIME`, '%Y-%m-%d %H:%i:%S') as CREATETIME,
+        `ALARMCODE` ,
+        `DISASTERNAME` ,
+        `TASKCODE` ,
+        `ORGNAME` ,
+        DATE_FORMAT(`ENTRYTIME`, '%Y-%m-%d %H:%i:%S') as `ENTRYTIME` ,
+        `ISEFFECT` ,
+        `COLORLEVELNAME` ,
+        `ISSUE` ,
+        `PROCESS` ,
+        `AREACODES` ,
+        `SENDUESER` ,
+        `AREANAMES`
+        from t_62_qxyjxx where 1=1
+        <if test="beginTime != null and beginTime != ''">and ENTRYTIME >=#{beginTime}</if>
+        <if test="endTime != null and endTime != ''">and ENTRYTIME &lt;= #{endTime}</if>
+    </select>
+
+    <select id="queryQxyjxxCount" resultType="int">
+        select count(1) from t_62_qxyjxx where 1=1
+        <if test="beginTime != null and beginTime != ''">and ENTRYTIME >=#{beginTime}</if>
+        <if test="endTime != null and endTime != ''">and ENTRYTIME &lt;= #{endTime}</if>
+    </select>
+
+    <delete id="deleteQxyjxxList">
+        delete from t_62_qxyjxx
+    </delete>
+</mapper>

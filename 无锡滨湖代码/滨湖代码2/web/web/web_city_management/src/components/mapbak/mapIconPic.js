@@ -1,0 +1,20 @@
+export default {
+  固定视频: require('../../assets/mapIcon/固定视频_blue_hover.png'),
+  城管队员: require('../../assets/mapIcon/城管队员_blue_hover.png'),
+  水位监测: require('../../assets/mapIcon/水位监测_green_hover.png'),
+  雨量监测: require('../../assets/mapIcon/雨量监测_blue_hover.png'),
+  空气监测: require('../../assets/mapIcon/空气监测_green_hover.png'),
+  水质监测: require('../../assets/mapIcon/水位监测_red_hover.png'),
+  噪声监测: require('../../assets/mapIcon/避难场所_green_hover.png'),
+  积水风险: require('../../assets/mapIcon/积水风险_red_hover.png'),
+  社会治理大联动: require('../../assets/mapIcon/社会治理大联动_blue_hover.png'),
+  社会治理大联动红: require('../../assets/mapIcon/社会治理大联动_red_hover.png'),
+  社会治理大联动橙: require('../../assets/mapIcon/社会治理大联动_yellow.png'),
+  市民热线: require('../../assets/mapIcon/市民热线_blue_hover.png'),
+  公司企业: require('../../assets/mapIcon/point_公司企业@2x.png'),
+  交通设施: require('../../assets/mapIcon/point_交通设施@2x.png'),
+  旅游景点: require('../../assets/mapIcon/point_旅游景点@2x.png'),
+  生活服务: require('../../assets/mapIcon/point_生活服务@2x.png'),
+  休闲娱乐: require('../../assets/mapIcon/point_休闲娱乐@2x.png'),
+  医疗保健: require('../../assets/mapIcon/point_医疗保健@2x.png')
+}

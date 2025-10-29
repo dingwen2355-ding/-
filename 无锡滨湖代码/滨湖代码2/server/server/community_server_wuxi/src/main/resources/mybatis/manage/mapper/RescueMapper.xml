@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.RescueMapper">
+
+    <select id="getRescueTeam" resultType="map">
+        select
+        `id`   ,
+        `name` ,
+        `up_dept`  upDept,
+        `established_time` establishedTime,
+        `type` ,
+        `attribute` ,
+        `people_num` peopleNum ,
+        `level` ,
+        `charge_person` chargePerson ,
+        `charge_line_phone` chargeLinePhone ,
+        `charge_phone`  chargePhone,
+        `charge_email` chargeEmail,
+        `emergency_person` emergencyPerson,
+        `emergency_line_phone`  emergencyLinePhone,
+        `emergency_phone`  emergencyPhone,
+        `emergency_email`  emergencyEmail,
+        `duty_line_phone`  dutyLinePhone,
+        `fax`,
+        `address` ,
+        `gpsx`,
+        `gpsy`,
+        `area`,
+        `duty` ,
+        `accident_type`  accidentType,
+        `experience`,
+        `remark`
+        from
+        t_data_rescue_team where 1 =1
+    </select>
+
+    <select id="getRescueDevice" resultType="map">
+        select
+        a.`id` ,
+        a.`name` ,
+        a.`material_type` materialType,
+        a.`material_name` materialName,
+        a.`standards_model` standardsModel,
+        a.`count` count,
+        a.`unit` unit,
+        a.`manufacturer` ,
+        a.`purchase_time` purchaseTime,
+        a.`inspection_time` inspectionTime,
+        a.`is_intact` isIntact,
+        a.`purpose` purpose,
+        a.`storage_place` storagePlace,
+        a.`storage_person` storagePerson,
+        a.`storage_phone` storagePhone,
+        a.`unit_person` unitPerson,
+        a.`unit_phone` unitPhone,
+        b.gpsx,
+        b.gpsy
+        from
+        t_data_rescue_device a left join t_data_rescue_team b on a.id = b.id where 1 =1
+    </select>
+
+</mapper>

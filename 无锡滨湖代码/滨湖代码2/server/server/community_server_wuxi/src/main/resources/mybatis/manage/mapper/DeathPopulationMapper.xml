@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.SzxxbDao">
+    <select id="countDeathNumToday" resultType="java.lang.Integer">
+        SELECT  count(1) FROM t_31_szxxb
+        WHERE 1=1
+        <if test="beginTime != null">
+            AND  dead_date &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            AND dead_date &lt;= #{endTime}
+        </if>
+        <if test="beginTime == null and endTime == null ">
+            AND DATE(dead_date) = CURDATE()
+        </if>
+    </select>
+
+    <insert id="insertSzxxbList">
+        INSERT IGNORE INTO t_31_szxxb
+        (dead_name,
+        dead_date,
+        id_card_number,
+        create_time
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+        (#{item.deadName},
+        #{item.deadDate},
+        #{item.idCardNumber},
+        current_timestamp)
+        </foreach>
+    </insert>
+
+    <select id="querySzxxbAllIdCard" resultType="java.util.Map">
+        select id_card_number from t_31_szxxb
+    </select>
+</mapper>

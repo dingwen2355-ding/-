@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.SyncMaterialDao">
+    <insert id="insertMaterialData">
+        INSERT IGNORE INTO tb_material_reserve
+        (
+        `id`,
+        `material_code`,
+        `material_name`,
+        `material_type`,
+        `material_type_name` ,
+        `material_unit_code` ,
+        `material_unit_name`,
+        `inventory_date`,
+        `purchase_quantity`,
+        `consume_quantity`,
+        `current_stock_quantity`,
+        `report_date`,
+        `report_unit_name`,
+        `report_user_name`,
+        `report_user_id`,
+        `report_unit_business_no`,
+        `create_time`,
+        `create_user`,
+        `upload_time`,
+        `upload_status`,
+        `upload_user`
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id},
+            #{item.material_code},
+            #{item.material_name},
+            #{item.material_type},
+            #{item.material_type_name},
+            #{item.material_unit_code},
+            #{item.material_unit_name},
+            #{item.inventory_date},
+            #{item.purchase_quantity},
+            #{item.consume_quantity},
+            #{item.current_stock_quantity},
+            #{item.report_date},
+            #{item.report_unit_name},
+            #{item.report_user_name},
+            #{item.report_user_id},
+            #{item.report_unit_business_no},
+            #{item.create_time},
+            #{item.create_user},
+            #{item.upload_time},
+            #{item.upload_status},
+            #{item.upload_user})
+        </foreach>
+    </insert>
+
+    <select id="getDataCount" resultType="int">
+        select count(*) from tb_material_reserve
+    </select>
+
+    <select id="queryMaterialUnitList" resultType="map">
+        select * from tb_material_unit
+    </select>
+
+    <select id="queryMaterialList" resultType="map">
+        select
+        `id`,
+        `material_code`,
+        `material_name`,
+        `material_type`,
+        `material_type_name` ,
+        `material_unit_code` ,
+        `material_unit_name`,
+        DATE_FORMAT(`inventory_date`, '%Y-%m-%d') as inventory_date,
+        `purchase_quantity`,
+        `consume_quantity`,
+        `current_stock_quantity`,
+        DATE_FORMAT(`report_date`, '%Y-%m-%d') as report_date,
+        `report_unit_name`,
+        `report_user_name`,
+        `report_user_id`,
+        `report_unit_business_no`,
+        `create_user`,
+        `upload_time`,
+        `upload_status`,
+        `upload_user`,
+         DATE_FORMAT(`create_time`, '%Y-%m-%d %H:%i:%S') as create_time
+        from tb_material_reserve
+        where 1=1
+        <if test="unitId != null and unitId != ''">and report_unit_business_no = #{unitId}</if>
+        order by create_time desc
+    </select>
+
+    <select id="queryMaterialUnitGroup" resultType="map">
+        select report_unit_name,report_user_name,report_user_id,report_unit_business_no from tb_material_reserve
+        group by report_unit_business_no
+    </select>
+
+    <insert id="insertMaterialUnitGroup">
+        INSERT IGNORE INTO tb_material_unit
+        (
+        `report_unit_business_no`,
+        `report_unit_name`,
+        `report_user_name`,
+        `report_user_id`,
+        `gpsx`,
+        `gpsy`
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.report_unit_business_no},
+            #{item.report_unit_name},
+            #{item.report_user_name},
+            #{item.report_user_id},
+            #{item.gpsx},
+            #{item.gpsy})
+        </foreach>
+    </insert>
+</mapper>

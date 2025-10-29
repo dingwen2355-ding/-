@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.xycy.dao.VehicleDao">
+
+    <select id="queryVehicleGpsList" resultType="map">
+        SELECT
+            t.vehicle_no vehicleNo,
+            t.docking_platform_name dockingPlatformName,
+            t.lon gpsx,
+            t.lat gpsy
+        FROM
+            (
+                SELECT
+                    max(time_str) AS time_str,
+                    vehicle_no
+
+                FROM
+                    ods_wh_vehicle_gps_info_znv
+                where
+                    date_str = #{dateStr}
+                    <if test="vehicleNo != null and vehicleNo != ''">and vehicle_no = #{vehicleNo}</if>
+                GROUP BY
+                    vehicle_no
+            ) a
+                LEFT JOIN ods_wh_vehicle_gps_info_znv t ON
+                t.date_str = #{dateStr}
+                and t.vehicle_no = a.vehicle_no
+                AND t.time_str = a.time_str
+    </select>
+
+    <select id="queryVehicleGpsListByVehicleNo" resultType="map">
+        SELECT
+            vehicle_no vehicleNo,
+            docking_platform_name dockingPlatformName,
+            lon gpsx,
+            lat gpsy
+        FROM
+            ods_wh_vehicle_gps_info_znv
+        where vehicle_no = #{vehicleNo}
+          and date_str = #{dateStr}
+        ORDER BY time_str
+    </select>
+
+    <select id="queryBusList" resultType="map">
+        SELECT
+            source_address `number`,
+            lon gpsx,
+            lat gpsy,
+            height,
+            speed,
+            direction,
+            trains_type,
+            child_line_no
+        FROM
+            tr_gnss_data_bus
+        where 1=1
+        <if test="timeStamp != null">and gnss_time > #{timeStamp}</if>
+        <if test="number != null and number != ''">and source_address = #{number}</if>
+    </select>
+
+    <select id="queryTaxiList" resultType="map">
+        SELECT
+        plate_number `number`,
+        lng gpsx,
+        lat gpsy,
+        plate_color_code,
+        alarm,
+        state,
+        direction,
+        speed
+        FROM
+        tr_gnss_data_taxi
+        where 1=1
+        <if test="timeStamp != null">and position_time > #{timeStamp}</if>
+        <if test="number != null and number != ''">and plate_number = #{number}</if>
+    </select>
+
+    <select id="queryTruckList" resultType="map">
+        SELECT
+        vehicle_no vehicleNo,
+        driving_speed drivingSpeed,
+        lon gpsx,
+        lat gpsy
+        FROM
+        tr_gnss_data_scjgj
+        where 1=1
+        <if test="timeStamp != null">and gnss_time > #{timeStamp}</if>
+        <if test="number != null and number != ''">and vehicle_no = #{number}</if>
+    </select>
+</mapper>

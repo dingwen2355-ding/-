@@ -1,0 +1,27 @@
+const getters = {
+  ratio: state => state.app.ratio,
+  precinctName: state => state.app.precinctName,
+  precinctId: state => state.app.precinctId,
+  token: state => state.user.token,
+  resizeValue: state => state.view.resizeValue,
+  intervalRefresh: state => state.view.intervalRefresh,
+  pointInfoList: state => state.map.pointInfoList,
+  currentShowPoint: state => state.map.currentShowPoint,
+  windowInfoDetail: state => state.map.windowInfoDetail,
+  integration: state => state.view.integration,
+  right_btnVisible: state => state.view.right_btnVisible,
+  left_btnVisible: state => state.view.left_btnVisible,
+  mapClickGps: state => state.map.mapClickGps,
+  circleContainPoints: state => state.map.circleContainPoints,
+  eventCircleContainPoints: state => state.map.eventCircleContainPoints,
+  currentCircle: state => state.map.currentCircle,
+  eventId: state => state.app.eventId,
+  eventPlanId: state => state.view.eventPlanId,
+  eventInfo: state => state.view.eventInfo,
+  eventTags: state => state.view.eventTags,
+  eventMessage: state => state.view.eventMessage,
+  fusionVideo: state => state.view.fusionVideo,
+  filterIconList: state => state.map.filterIconList,
+  mutiPoints: state => state.map.mutiPoints
+}
+export default getters

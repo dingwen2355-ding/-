@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.znv.manage.dao.tip.InformationManageDao">
+
+    <insert id="add" parameterType="com.znv.manage.common.bean.tip.InformationBean" keyProperty="id" keyColumn="id"
+            useGeneratedKeys="true">
+        INSERT INTO t_emergency_information_manage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="publisher != null and publisher != ''">publisher,</if>
+            <if test="releaseTime != null and releaseTime != ''">release_time,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            <if test="status != null and status != ''">`status`,</if>
+            <if test="informationType != null and informationType != ''">
+                information_type,
+            </if>
+            <if test="annexUrl != null">annex_url,</if>
+            <if test="isTop != null">is_top,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="publisher != null and publisher != ''">
+                #{publisher},
+            </if>
+            <if test="releaseTime != null and releaseTime != ''">
+                #{releaseTime},
+            </if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="informationType != null and informationType != ''">
+                #{informationType},
+            </if>
+            <if test="annexUrl != null">#{annexUrl},</if>
+            <if test="isTop != null">#{isTop},</if>
+            <if test="isTurn != null">#{isTurn},</if>
+        </trim>
+    </insert>
+
+    <update id="edit" parameterType="com.znv.manage.common.bean.tip.InformationBean">
+        update t_emergency_information_manage
+        <set>
+            <if test="title != null and title != ''">title=#{title},
+            </if>
+            <if test="publisher != null and publisher != ''">
+                publisher=#{publisher},
+            </if>
+            <if test="releaseTime != null and releaseTime != ''">
+                release_time=#{releaseTime},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark=#{remark},
+            </if>
+            <if test="status != null and status != ''">
+                `status`=#{status},
+            </if>
+            <if test="informationType != null and informationType != ''">
+                information_type = #{informationType},
+            </if>
+            <if test="annexUrl != null">annex_url = #{annexUrl},</if>
+            <if test="isTop != null">is_top = #{isTop},</if>
+            <if test="isTurn != null">is_turn = #{isTurn},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="del" parameterType="java.lang.String">
+        DELETE FROM t_emergency_information_manage where
+        id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="query" parameterType="com.znv.manage.common.bean.tip.QueryInformationBean"
+            resultType="com.znv.manage.common.bean.tip.InformationBean">
+        select id, title, publisher, DATE_FORMAT(release_time, '%Y-%m-%d %H:%i:%S') AS releaseTime,
+        remark, status, information_type informationType, annex_url annexUrl, is_top isTop ,is_turn isTurn
+        from t_emergency_information_manage
+        <where>
+            <if test="queryInformationBean.text!=null and queryInformationBean.text!='' ">
+                AND (
+                title like concat('%',#{queryInformationBean.text},'%')
+                or publisher like concat('%',#{queryInformationBean.text},'%')
+                )
+            </if>
+            <if test="queryInformationBean.beginTime != null and queryInformationBean.beginTime != ''">
+                AND <![CDATA[release_time >= #{queryInformationBean.beginTime}]]>
+            </if>
+            <if test="queryInformationBean.endTime != null and queryInformationBean.endTime != ''">
+                AND <![CDATA[release_time <= #{queryInformationBean.endTime}]]>
+            </if>
+            <if test="queryInformationBean.status!=null and queryInformationBean.status!=''">
+                and status=#{queryInformationBean.status}
+            </if>
+        </where>
+        order by is_top desc
+    </select>
+
+    <update id="updateIsTop">
+        UPDATE t_emergency_information_manage
+        SET is_top = (id = #{id})
+    </update>
+
+    <select id="queryAnnexUrl" resultType="String">
+        select annex_url annexUrl
+        from t_emergency_information_manage
+        where id = #{id}
+    </select>
+</mapper>

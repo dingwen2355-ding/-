@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.ShelterDao">
+    <select id="shelterCoordinatesList" resultType="java.util.Map">
+        select
+            id,
+            name,
+            level,
+            district,
+            detailed_address detailedAddress,
+            longitude,
+            latitude,
+            contact,
+            contact_phone contactPhone,
+            keep_liable_person keepLiablePerson,
+            keep_liable_person_phone keepLiablePersonPhone
+        from base_shelter
+    </select>
+
+<!--    <select id="queryCoordinatesDetails" resultType="java.util.Map">-->
+<!--        select-->
+<!--            id,-->
+<!--            name,-->
+<!--            level,-->
+<!--            district,-->
+<!--            detailed_address detailedAddress,-->
+<!--            longitude,-->
+<!--            latitude,-->
+<!--            contact,-->
+<!--            contact_phone contactPhone,-->
+<!--            keep_liable_person keepLiablePerson,-->
+<!--            keep_liable_person_phone keepLiablePersonPhone-->
+<!--        from-->
+<!--            base_shelter-->
+<!--        WHERE 1=1-->
+<!--        <if test="id != null">-->
+<!--            AND id = #{id}-->
+<!--        </if>-->
+<!--    </select>-->
+</mapper>

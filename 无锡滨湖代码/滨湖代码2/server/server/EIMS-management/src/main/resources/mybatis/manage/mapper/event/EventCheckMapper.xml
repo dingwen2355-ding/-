@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.event.EventCheckDao">
+
+    <resultMap type="com.znv.manage.common.bean.event.EventCheck" id="EventCheckMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="eventId" column="event_id" jdbcType="INTEGER"/>
+        <result property="checkPersonName" column="check_person_name" jdbcType="VARCHAR"/>
+        <result property="checkUserId" column="check_user_id" jdbcType="INTEGER"/>
+        <result property="issueTime" column="issue_time" jdbcType="TIMESTAMP"/>
+        <result property="requirement" column="requirement" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="EventCheckMap">
+        select id,
+               event_id,
+               check_person_name,
+               check_user_id,
+               issue_time,
+               requirement
+        from t_cfg_event_check
+        where id = #{id}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_cfg_event_check
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="eventId != null">
+                and event_id = #{eventId}
+            </if>
+            <if test="checkPersonName != null and checkPersonName != ''">
+                and check_person_name = #{checkPersonName}
+            </if>
+            <if test="checkUserId != null">
+                and check_user_id = #{checkUserId}
+            </if>
+            <if test="issueTime != null">
+                and issue_time = #{issueTime}
+            </if>
+            <if test="requirement != null and requirement != ''">
+                and requirement = #{requirement}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_cfg_event_check(event_id, check_person_name, check_user_id, issue_time, requirement)
+        values (#{eventId}, #{checkPersonName}, #{checkUserId}, #{issueTime}, #{requirement})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_cfg_event_check(event_id, check_person_name, check_user_id, issue_time, requirement)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.eventId},#{entity.checkPersonName},#{entity.checkUserId},#{entity.issueTime},#{entity.requirement})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_cfg_event_check(event_id,check_person_name,check_user_id,issue_time,requirement)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.eventId}, #{entity.checkPersonName}, #{entity.checkUserId}, #{entity.issueTime},
+            #{entity.requirement})
+        </foreach>
+        on duplicate key update
+        event_id = values(event_id),
+        check_person_name = values(check_person_name),
+        check_user_id = values(check_user_id),
+        issue_time = values(issue_time),
+        requirement = values(requirement)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update t_cfg_event_check
+        <set>
+            <if test="eventId != null">
+                event_id = #{eventId},
+            </if>
+            <if test="checkPersonName != null and checkPersonName != ''">
+                check_person_name = #{checkPersonName},
+            </if>
+            <if test="checkUserId != null">
+                check_user_id = #{checkUserId},
+            </if>
+            <if test="issueTime != null">
+                issue_time = #{issueTime},
+            </if>
+            <if test="requirement != null and requirement != ''">
+                requirement = #{requirement},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from t_cfg_event_check
+        where id = #{id}
+    </delete>
+
+    <!--通过主键批量删除-->
+    <delete id="deleteBatch">
+        delete
+        from t_cfg_event_check
+        where find_in_set(id, #{ids})
+    </delete>
+
+    <!--条件查询-->
+    <select id="queryByCondition" resultMap="EventCheckMap">
+        select
+        id, event_id, check_person_name, check_user_id, issue_time, requirement
+        from t_cfg_event_check
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="eventId != null">
+                and event_id = #{eventId}
+            </if>
+            <if test="checkPersonName != null and checkPersonName != ''">
+                and check_person_name = #{checkPersonName}
+            </if>
+            <if test="checkUserId != null">
+                and check_user_id = #{checkUserId}
+            </if>
+            <if test="requirement != null and requirement != ''">
+                and requirement = #{requirement}
+            </if>
+        </where>
+    </select>
+</mapper>
+

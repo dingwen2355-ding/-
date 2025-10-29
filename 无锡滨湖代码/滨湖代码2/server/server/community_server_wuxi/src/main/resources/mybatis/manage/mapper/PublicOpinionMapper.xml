@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.PublicOpinionDao">
+
+    <select id="getReceivedPublicOpinionData" resultType="java.util.HashMap">
+        SELECT public_opinion_id publicOpinionId, update_time updateTime, pub_time pubTime, title, body,
+        source, url, pub_count pubCount, read_count readCount, negativity, rank,
+        ifnull(count_per_hour,'[0]') countPerHour,
+        read_trend readTrend, pub_trend pubTrend, total_trend totalTrend, event_id eventId,
+        cast(ifnull(china_web_count,'0') as SIGNED) chinaWebCount,
+        cast(ifnull(foreign_web_count,'0') as SIGNED) foreignWebCount,
+        cast(ifnull(self_media_count,'0') as SIGNED) selfMediaCount
+        from base_data_public_opinion_receive
+        where 1=1
+        <if test="eventId != null and eventId != ''">and find_in_set(#{eventId}, event_id)</if>
+        <if test="publicOpinionId != null and publicOpinionId != ''">and find_in_set(public_opinion_id,
+            #{publicOpinionId})
+        </if>
+    </select>
+
+    <select id="getReceivedPublicOpinionReport" resultType="java.util.HashMap">
+        SELECT id, a.public_opinion_id publicOpinionId,  a.report_time reportTime, a.report_title reportTitle,
+        a.report_abstract reportAbstract, a.report_url reportUrl, a.type, a.media_type mediaType, a.media_name mediaName
+        from base_data_public_opinion_report a
+        where public_opinion_id in (
+        select public_opinion_id from base_data_public_opinion_receive
+        <if test="eventId != null and eventId != ''">where find_in_set(#{eventId}, event_id)</if>
+        )
+    </select>
+
+    <select id="getSocialReportList" resultType="map">
+        select social_opinion_id socialOpinionId, content, event_id eventId, pic_url picUrl
+        from base_data_social_opinion
+        where 1=1
+        <if test="eventId != null and eventId != ''">and event_id = #{eventId}</if>
+        <if test="status != null and status != ''">and status = #{status}</if>
+    </select>
+
+    <update id="updatePublicOpinionRelation">
+		update base_data_public_opinion_receive set event_id=#{eventId} where public_opinion_id=#{opinionId}
+	</update>
+
+    <select id="getPublicOpinionDataByKeyWord" resultType="map">
+        select public_opinion_id publicOpinionId, pub_time pubTime, update_time updateTime, title, body, pub_count
+        pubCount, read_count readCount, negativity, rank, count_per_hour countPerHour,
+        read_trend readTrend, pub_trend pubTrend, total_trend totalTrend, event_id eventId, data_type dataType,
+        china_web_count chinaWebCount, foreign_web_count foreignWebCount, self_media_count
+        selfMediaCount, type
+        from base_data_public_opinion_receive
+        where 1=1
+        <if test="keyWords!= null and keyWords != ''">and (title like concat('%', #{keyWords}, '%') or body like
+            concat('%', #{keyWords}, '%'))
+        </if>
+    </select>
+
+    <select id="getPublicOpinionInfo" resultType="java.util.HashMap">
+        SELECT public_opinion_id publicOpinionId, update_time updateTime, pub_time pubTime, title, body, source, url, pub_count pubCount, read_count readCount, negativity, rank, count_per_hour countPerHour, read_trend readTrend, pub_trend pubTrend, total_trend totalTrend
+        from base_data_public_opinion_receive
+        where public_opinion_id = #{publicOpinionId}
+    </select>
+    <select id="getPublicOpinionReportInfo" resultType="java.util.Map">
+        select public_opinion_id publicOpinionId, media_name mediaName, report_time, report_title, report_abstract
+        reportAbstract, report_url reportUrl, type, media_type, id
+        from base_data_public_opinion_report
+        <where>
+            <if test="publicOpinionId != null and publicOpinionId !='' ">public_opinion_id = #{publicOpinionId}</if>
+            <if test="mediaName != null and mediaName !='' ">and media_name = #{mediaName}</if>
+            <if test="reportTime != null and reportTime !='' ">and report_time = #{reportTime}</if>
+            <if test="reportTitle != null and reportTitle !='' ">and report_title = #{reportTitle}</if>
+            <if test="reportAbstract != null and reportAbstract !='' ">and report_abstract = #{reportAbstract}</if>
+            <if test="reportUrl != null and reportUrl !='' ">and report_url = #{reportUrl}</if>
+            <if test="type != null and type !='' ">and type = #{type}</if>
+            <if test="mediaType != null and mediaType !='' ">and media_type = #{mediaType}</if>
+            <if test="id != null and id !='' ">and id = #{id}</if>
+        </where>
+    </select>
+
+    <insert id="insertPublicOpinionInfo" parameterType="map">
+        replace into base_data_public_opinion_receive (public_opinion_id, update_time, pub_time, title,  body, source, url, pub_count, read_count, negativity, rank, count_per_hour, read_trend, pub_trend)
+        values (#{id}, #{update_time}, #{pub_time}, #{title}, #{body}, #{source}, #{url}, #{pub_count}, #{read_count}, #{negativity}, #{rank}, #{count_per_hour}, #{read_trend}, #{pub_trend})
+    </insert>
+
+    <insert id="insertPublicOpinionReportInfo" parameterType="map">
+        insert into base_data_public_opinion_report (public_opinion_id, media_name, report_time, report_title, report_url, type, media_type)
+        values (#{publicOpinionId}, #{source_name}, #{pub_time}, #{title}, #{url}, #{type}, #{mediaType})
+    </insert>
+
+    <select id="queryPublicOpinionInfo" resultType="java.util.HashMap">
+        SELECT a.public_opinion_id opinionId,CAST(count(b.id) as char) total,cast(max(b.report_time) as char) pubTime,
+               cast(ifnull(foreign_web_count,'0') as char) foreignWebCount,
+               cast(ifnull(china_web_count,'0') as char) chinaWebCount,
+               cast(ifnull(self_media_count,'0') as char) selfMediaCount
+        from base_data_public_opinion_receive a
+                 LEFT JOIN base_data_public_opinion_report b on a.public_opinion_id=b.public_opinion_id
+        where TO_DAYS(NOW())=TO_DAYS(a.pub_time)
+        GROUP BY a.public_opinion_id
+    </select>
+
+    <select id="queryPublicOpinionInfoAll" resultType="java.util.HashMap">
+        SELECT a.public_opinion_id opinionId,CAST(count(b.id) as char) total,cast(max(b.report_time) as char) pubTime,
+               cast(ifnull(foreign_web_count,'0') as char) foreignWebCount,
+               cast(ifnull(china_web_count,'0') as char) chinaWebCount,
+               cast(ifnull(self_media_count,'0') as char) selfMediaCount
+        from base_data_public_opinion_receive a
+                 LEFT JOIN base_data_public_opinion_report b on a.public_opinion_id=b.public_opinion_id
+        GROUP BY a.public_opinion_id
+    </select>
+    <select id="getEventListWithoutOpinionLevel" resultType="java.util.Map">
+        select event_id eventId, DATE_FORMAT(happen_time, '%Y-%m-%d') happenTime
+        from base_event_info
+        where opinion_level is null or opinion_level = ''
+    </select>
+
+    <insert id="insertPublicOpinionInfos">
+        INSERT INTO base_data_public_opinion_receive (
+        public_opinion_id,
+        update_time,
+        pub_time,
+        title,
+        body,
+        source,
+        url,
+        pub_count,
+        read_count,
+        negativity,
+        rank,
+        count_per_hour,
+        read_trend,
+        pub_trend,
+        total_trend,
+        foreign_web_count,
+        china_web_count,
+        self_media_count
+        )
+        VALUES
+        <foreach collection="maps" item="map" separator=",">
+            (#{map.id},#{map.update_time},#{map.pub_time},
+            #{map.title},#{map.body},#{map.source},
+            #{map.url},#{map.pub_count},#{map.read_count},
+            #{map.negativity},#{map.rank},#{map.count_per_hour},
+            '1','1','1',
+            #{map.foreignWebCount},#{map.chinaWebCount},#{map.selfMediaCount}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE public_opinion_id=values(public_opinion_id),update_time=values(update_time),
+        pub_time=values(pub_time),title=values(title),body=values(body),
+        source=values(source),url=values(url),
+        pub_count=values(pub_count),read_count=values(read_count),negativity=values(negativity),
+        rank=values(rank),count_per_hour=values(count_per_hour),read_trend=values(read_trend),
+        pub_trend=values(pub_trend),total_trend=values(total_trend),
+        event_id=values(event_id),data_type=values(data_type),china_web_count=values(china_web_count),
+        foreign_web_count=values(foreign_web_count),self_media_count=values(self_media_count),type=values(type)
+    </insert>
+
+    <insert id="insertPublicOpinionReportInfos">
+        replace into base_data_public_opinion_report (public_opinion_id, media_name, report_time, report_title,
+        report_url) values
+        <foreach collection="maps" item="map" separator=",">
+            (#{map.publicOpinionId},#{map.source_name},#{map.pub_time},#{map.title},#{map.url})
+        </foreach>
+    </insert>
+
+    <insert id="insertPublicOpinionReportDomainInfo" parameterType="list">
+        insert into dict_domain_name(domain_url, domain_name)
+        values
+        <foreach collection="list" item="map" separator=",">
+            (#{map.url}, #{map.domainName})
+        </foreach>
+    </insert>
+
+
+    <select id="queryTopNOpinions" resultType="map">
+        select public_opinion_id publicOpinionId, event_id eventId, DATE_FORMAT(pub_time, '%Y-%m-%d') pubTime, title
+        from base_data_public_opinion_receive
+        where
+        1=1
+        <if test="eventId != null">and find_in_set(event_id, #{eventId})</if>
+        <if test="beginTime != null">and pub_time &gt;= #{beginTime}</if>
+        <if test="endTime != null">and pub_time &lt;= #{endTime}</if>
+        order by rank+0 desc
+        <if test="topN != null">limit ${topN}</if>
+    </select>
+
+    <select id="queryUrlWithoutName" resultType="java.lang.String">
+        SELECT url from (
+                            SELECT id, SUBSTRING_INDEX(report_url, '/', 3) as url from base_data_public_opinion_report where media_name= 'webpage'
+                        ) a where a.url not in (select domain_url from dict_domain_name) and a.url is not null and a.url != '' limit 10
+    </select>
+    <select id="queryPublicOpinionWithOutDomainUrl" resultType="java.util.Map">
+        select id, report_url reportUrl
+        from base_data_public_opinion_report
+        where (domain_url ='' or domain_url is null) and report_url is not null and media_name = 'webpage'
+    </select>
+    <select id="queryPublicOpinionReportWithoutName" resultType="java.util.Map">
+        SELECT id,  a.report_url reportUrl,  b.domain_name mediaName, SUBSTRING_INDEX(SUBSTRING_INDEX(a.report_url,if(INSTR(a.report_url,'www.'),'www.','//'),-1),'/',1) as domainUrl
+        from base_data_public_opinion_report a
+                 LEFT JOIN dict_domain_name b
+                           on
+                                   SUBSTRING_INDEX(SUBSTRING_INDEX(a.report_url,if(INSTR(a.report_url,'www.'),'www.','//'),-1),'/',1) = b.domain_url
+        where FIND_IN_SET(media_name,'webpage,weibo.com,wechat')
+    </select>
+
+    <select id="queryPublicOpinionWithOtherUrl" resultType="java.util.Map">
+        SELECT id,  a.report_url reportUrl,  b.domain_name mediaName, substr(SUBSTRING_INDEX(SUBSTRING_INDEX(a.report_url,if(INSTR(a.report_url,'www.'),'www.','//'),-1),'/',1), LOCATE('.',SUBSTRING_INDEX(SUBSTRING_INDEX(a.report_url,if(INSTR(a.report_url,'www.'),'www.','//'),-1),'/',1))+1) as domainUrl
+        from base_data_public_opinion_report a
+                 LEFT JOIN dict_domain_name b
+                           on
+                                   substr(SUBSTRING_INDEX(SUBSTRING_INDEX(a.report_url,if(INSTR(a.report_url,'www.'),'www.','//'),-1),'/',1), LOCATE('.',SUBSTRING_INDEX(SUBSTRING_INDEX(a.report_url,if(INSTR(a.report_url,'www.'),'www.','//'),-1),'/',1))+1) = b.domain_url
+        where FIND_IN_SET(id, #{noNameReportIds})
+    </select>
+
+
+    <update id="updateReportDomainName" parameterType="java.util.List">
+        update base_data_public_opinion_report
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="media_name = case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    when id=#{item.id} then #{item.mediaName}
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <select id="getPublicOpinionList" resultType="map">
+        SELECT
+            public_opinion_id publicOpinionId,
+            update_time updateTime,
+            pub_time pubTime,
+            title opinionTitle
+        FROM
+            base_data_public_opinion_receive
+        where ifnull(event_id,'') = ''and DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(pub_time)
+    </select>
+
+    <select id="getEventInfoTitle" resultType="java.util.HashMap">
+        SELECT
+            event_id,
+            event_title,
+            cast(happen_time AS CHAR) happen_time
+        FROM
+            base_event_info
+        where DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(happen_time)
+    </select>
+
+    <update id="updatePublicOpinionEventId" parameterType="java.util.List">
+        update base_data_public_opinion_receive
+        <trim prefix="set" suffixOverrides=",">
+            event_id =
+            <foreach collection="list" item="item" open="case " close=" end,">
+                when public_opinion_id = #{item.publicOpinionId}then #{item.eventId}
+            </foreach>
+        </trim>
+        <where>
+            <foreach collection="list" item="item" open="( " separator=") or (" close=" )">
+                public_opinion_id = #{item.publicOpinionId}
+            </foreach>
+        </where>
+    </update>
+
+</mapper>

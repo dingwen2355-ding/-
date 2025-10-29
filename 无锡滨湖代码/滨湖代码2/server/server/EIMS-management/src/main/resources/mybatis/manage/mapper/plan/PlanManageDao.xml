@@ -1,0 +1,826 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.znv.manage.dao.plan.PlanManageDao">
+
+    <insert id="addPlanInfo" parameterType="com.znv.manage.common.bean.plan.PlanInfoBean" useGeneratedKeys="true" keyProperty="planInfoBean.id">
+        INSERT INTO t_cfg_plan_info
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="planInfoBean.name != null" >name,</if>
+            <if test="planInfoBean.levelId != null" >level_id,</if>
+            <if test="planInfoBean.levelName != null" >level_name,</if>
+            <if test="planInfoBean.eventTypeId != null" >event_type_id,</if>
+            <if test="planInfoBean.eventTypeName != null" >event_type_name,</if>
+            <if test="planInfoBean.emergencyTypeId != null" >emergency_type_id,</if>
+            <if test="planInfoBean.emergencyTypeName != null" >emergency_type_name,</if>
+            <if test="planInfoBean.status != null" >status,</if>
+            <if test="planInfoBean.shared != null" >shared,</if>
+            <if test="planInfoBean.auditOpinion != null" >audit_opinion,</if>
+            <if test="planInfoBean.createId != null" >create_id,</if>
+            <if test="planInfoBean.createName != null" >create_name,</if>
+            <if test="planInfoBean.unitTypeId != null" >unit_type_id,</if>
+            <if test="planInfoBean.unitName != null" >unit_name,</if>
+            <if test="planInfoBean.regionId != null" >region_id,</if>
+            <if test="planInfoBean.unitId != null" >unit_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planInfoBean.name != null" >#{planInfoBean.name},</if>
+            <if test="planInfoBean.levelId != null" >#{planInfoBean.levelId},</if>
+            <if test="planInfoBean.levelName != null" >#{planInfoBean.levelName},</if>
+            <if test="planInfoBean.eventTypeId != null" >#{planInfoBean.eventTypeId},</if>
+            <if test="planInfoBean.eventTypeName != null" >#{planInfoBean.eventTypeName},</if>
+            <if test="planInfoBean.emergencyTypeId != null" >#{planInfoBean.emergencyTypeId},</if>
+            <if test="planInfoBean.emergencyTypeName != null" >#{planInfoBean.emergencyTypeName},</if>
+            <if test="planInfoBean.status != null" >#{planInfoBean.status},</if>
+            <if test="planInfoBean.shared != null" >#{planInfoBean.shared},</if>
+            <if test="planInfoBean.auditOpinion != null" >#{planInfoBean.auditOpinion},</if>
+            <if test="planInfoBean.createId != null" >#{planInfoBean.createId},</if>
+            <if test="planInfoBean.createName != null" >#{planInfoBean.createName},</if>
+            <if test="planInfoBean.unitTypeId != null" >#{planInfoBean.unitTypeId},</if>
+            <if test="planInfoBean.unitName != null" >#{planInfoBean.unitName},</if>
+            <if test="planInfoBean.regionId != null" >#{planInfoBean.regionId},</if>
+            <if test="planInfoBean.unitId != null" >#{planInfoBean.unitId},</if>
+        </trim>
+    </insert>
+
+    <insert id="addPlanInfoEvent" parameterType="com.znv.manage.common.bean.plan.PlanInfoBean" useGeneratedKeys="true" keyProperty="planInfoBean.id">
+        INSERT INTO t_cfg_plan_info_event
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="planInfoBean.name != null" >name,</if>
+            <if test="planInfoBean.levelId != null" >level_id,</if>
+            <if test="planInfoBean.levelName != null" >level_name,</if>
+            <if test="planInfoBean.eventTypeId != null" >event_type_id,</if>
+            <if test="planInfoBean.eventTypeName != null" >event_type_name,</if>
+            <if test="planInfoBean.emergencyTypeId != null" >emergency_type_id,</if>
+            <if test="planInfoBean.emergencyTypeName != null" >emergency_type_name,</if>
+            <if test="planInfoBean.status != null" >status,</if>
+            <if test="planInfoBean.shared != null" >shared,</if>
+            <if test="planInfoBean.eventId != null" >event_id,</if>
+            <if test="planInfoBean.auditOpinion != null" >audit_opinion,</if>
+            <if test="planInfoBean.createId != null" >create_id,</if>
+            <if test="planInfoBean.createName != null" >create_name,</if>
+            <if test="planInfoBean.unitTypeId != null" >unit_type_id,</if>
+            <if test="planInfoBean.unitName != null" >unit_name,</if>
+            <if test="planInfoBean.regionId != null" >region_id,</if>
+            <if test="planInfoBean.unitId != null" >unit_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planInfoBean.name != null" >#{planInfoBean.name},</if>
+            <if test="planInfoBean.levelId != null" >#{planInfoBean.levelId},</if>
+            <if test="planInfoBean.levelName != null" >#{planInfoBean.levelName},</if>
+            <if test="planInfoBean.eventTypeId != null" >#{planInfoBean.eventTypeId},</if>
+            <if test="planInfoBean.eventTypeName != null" >#{planInfoBean.eventTypeName},</if>
+            <if test="planInfoBean.emergencyTypeId != null" >#{planInfoBean.emergencyTypeId},</if>
+            <if test="planInfoBean.emergencyTypeName != null" >#{planInfoBean.emergencyTypeName},</if>
+            <if test="planInfoBean.status != null" >#{planInfoBean.status},</if>
+            <if test="planInfoBean.shared != null" >#{planInfoBean.shared},</if>
+            <if test="planInfoBean.eventId != null" >#{planInfoBean.eventId},</if>
+            <if test="planInfoBean.auditOpinion != null" >#{planInfoBean.auditOpinion},</if>
+            <if test="planInfoBean.createId != null" >#{planInfoBean.createId},</if>
+            <if test="planInfoBean.createName != null" >#{planInfoBean.createName},</if>
+            <if test="planInfoBean.unitTypeId != null" >#{planInfoBean.unitTypeId},</if>
+            <if test="planInfoBean.unitName != null" >#{planInfoBean.unitName},</if>
+            <if test="planInfoBean.regionId != null" >#{planInfoBean.regionId},</if>
+            <if test="planInfoBean.unitId != null" >#{planInfoBean.unitId},</if>
+        </trim>
+    </insert>
+
+    <insert id="addPlanGroup" parameterType="com.znv.manage.common.bean.plan.PlanGroupBean" >
+    INSERT INTO t_cfg_plan_group
+    (plan_id,group_type,group_name,remark,extend_remark,level_id)
+    VALUES
+    <foreach collection="planGroupBeans" item="item" separator=",">
+        (
+        #{item.planId},
+        #{item.groupType},
+        #{item.groupName},
+        #{item.remark},
+        #{item.extend_remark},
+        #{level_id}
+        )
+    </foreach>
+    </insert>
+
+    <insert id="addPlanGroupEvent" parameterType="com.znv.manage.common.bean.plan.PlanGroupBean" >
+        INSERT INTO t_cfg_plan_group_event
+        (plan_id,group_type,group_name,remark,extend_remark,level_id)
+        VALUES
+        <foreach collection="planGroupBeans" item="item" separator=",">
+            (
+            #{item.planId},
+            #{item.groupType},
+            #{item.groupName},
+            #{item.remark},
+            #{item.extendRemark},
+            #{item.levelId}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="addPlanData" parameterType="com.znv.manage.common.bean.plan.PlanDataBean" >
+        INSERT INTO t_cfg_plan_data
+        (plan_id,file_name,file_url,remark,create_time)
+        VALUES
+        <foreach collection="planDataBeans" item="item" separator=",">
+            (
+            #{item.planId},
+            #{item.fileName},
+            #{item.fileUrl},
+            #{item.remark},
+            #{item.createTime}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="addPlanDataEvent" parameterType="com.znv.manage.common.bean.plan.PlanDataBean" >
+        INSERT INTO t_cfg_plan_data_event
+        (plan_id,file_name,file_url,remark,create_time)
+        VALUES
+        <foreach collection="planDataBeans" item="item" separator=",">
+            (
+            #{item.planId},
+            #{item.fileName},
+            #{item.fileUrl},
+            #{item.remark},
+            #{item.createTime}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updatePlanInfo" parameterType="com.znv.manage.common.bean.plan.PlanInfoBean" >
+        update t_cfg_plan_info
+        <set>
+            <if test="planInfoBean.name != null" >name = #{planInfoBean.name},</if>
+            <if test="planInfoBean.levelId != null" >level_id = #{planInfoBean.levelId},</if>
+            <if test="planInfoBean.levelName != null" >level_name = #{planInfoBean.levelName},</if>
+            <if test="planInfoBean.eventTypeId != null" >event_type_id = #{planInfoBean.eventTypeId},</if>
+            <if test="planInfoBean.eventTypeName != null" >event_type_name = #{planInfoBean.eventTypeName},</if>
+            <if test="planInfoBean.emergencyTypeId != null" >emergency_type_id = #{planInfoBean.emergencyTypeId},</if>
+            <if test="planInfoBean.emergencyTypeName != null" >emergency_type_name = #{planInfoBean.emergencyTypeName},</if>
+            <if test="planInfoBean.status != null" >status = #{planInfoBean.status},</if>
+            <if test="planInfoBean.shared != null" >shared = #{planInfoBean.shared},</if>
+            <if test="planInfoBean.auditOpinion != null" >audit_opinion = #{planInfoBean.auditOpinion},</if>
+            <if test="planInfoBean.createId != null" >create_id = #{planInfoBean.createId},</if>
+            <if test="planInfoBean.createName != null" >create_name = #{planInfoBean.createName},</if>
+            <if test="planInfoBean.unitTypeId != null" >unit_type_id= #{planInfoBean.unitTypeId},</if>
+            <if test="planInfoBean.unitName != null" >unit_name= #{planInfoBean.unitName},</if>
+            <if test="planInfoBean.regionId != null" >region_id = #{planInfoBean.regionId},</if>
+            <if test="planInfoBean.unitId != null" >unit_id = #{planInfoBean.unitId},</if>
+        </set>
+        where id = #{planInfoBean.id}
+    </update>
+
+    <update id="updatePlanInfoEvent" parameterType="com.znv.manage.common.bean.plan.PlanInfoBean" >
+        update t_cfg_plan_info
+        <set>
+            <if test="planInfoBean.name != null" >name = #{planInfoBean.name},</if>
+            <if test="planInfoBean.levelId != null" >level_id = #{planInfoBean.levelId},</if>
+            <if test="planInfoBean.levelName != null" >level_name = #{planInfoBean.levelName},</if>
+            <if test="planInfoBean.eventTypeId != null" >event_type_id = #{planInfoBean.eventTypeId},</if>
+            <if test="planInfoBean.eventTypeName != null" >event_type_name = #{planInfoBean.eventTypeName},</if>
+            <if test="planInfoBean.emergencyTypeId != null" >emergency_type_id = #{planInfoBean.emergencyTypeId},</if>
+            <if test="planInfoBean.emergencyTypeName != null" >emergency_type_name = #{planInfoBean.emergencyTypeName},</if>
+            <if test="planInfoBean.status != null" >status = #{planInfoBean.status},</if>
+            <if test="planInfoBean.shared != null" >shared = #{planInfoBean.shared},</if>
+            <if test="planInfoBean.event_id != null" >event_id = #{planInfoBean.eventId},</if>
+            <if test="planInfoBean.auditOpinion != null" >audit_opinion = #{planInfoBean.auditOpinion},</if>
+            <if test="planInfoBean.createId != null" >create_id = #{planInfoBean.createId},</if>
+            <if test="planInfoBean.createName != null" >create_name = #{planInfoBean.createName},</if>
+            <if test="planInfoBean.unitTypeId != null" >unit_type_id= #{planInfoBean.unitTypeId},</if>
+            <if test="planInfoBean.unitName != null" >unit_name= #{planInfoBean.unitName},</if>
+            <if test="planInfoBean.regionId != null" >region_id = #{planInfoBean.regionId},</if>
+            <if test="planInfoBean.unitId != null" >unit_id = #{planInfoBean.unitId},</if>
+        </set>
+        where id = #{planInfoBean.id}
+    </update>
+
+    <update id="updateRewardDuty" parameterType="com.znv.manage.common.bean.plan.RewardDutyBean" >
+        update t_cfg_plan_info
+        <set>
+            <if test="rewardDutyBean.rewardDuty != null" >reward_duty = #{rewardDutyBean.rewardDuty},</if>
+        </set>
+        where id = #{rewardDutyBean.id}
+    </update>
+
+    <update id="updatePlanGroup" parameterType="com.znv.manage.common.bean.plan.PlanGroupBean">
+        update t_cfg_plan_group
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="group_name=case" suffix="end,">
+                <foreach collection="planGroupBeans" item="item" index="index">
+                    <if test="item.groupName!=null and item.groupName!=''">
+                        when id=#{item.id} then #{item.groupName}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="remark=case" suffix="end,">
+                <foreach collection="planGroupBeans" item="item" index="index">
+                    <if test="item.remark!=null and item.remark!=''">
+                        when id=#{item.id} then #{item.remark}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="extend_remark=case" suffix="end,">
+                <foreach collection="planGroupBeans" item="item" index="index">
+                    <if test="item.extendRemark!=null and item.extendRemark!=''">
+                        when id=#{item.id} then #{item.extend_remark}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="level_id=case" suffix="end,">
+                <foreach collection="planGroupBeans" item="item" index="index">
+                    <if test="item.levelId!=null and item.levelId!=''">
+                        when id=#{item.id} then #{item.level_id}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="planGroupBeans" item="item" index="index" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <update id="updatePlanGroupEvent" parameterType="com.znv.manage.common.bean.plan.PlanGroupBean">
+        update t_cfg_plan_group_event
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="group_name=case" suffix="end,">
+                <foreach collection="planGroupBeans" item="item" index="index">
+                    <if test="item.groupName!=null and item.groupName!=''">
+                        when id=#{item.id} then #{item.groupName}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="remark=case" suffix="end,">
+                <foreach collection="planGroupBeans" item="item" index="index">
+                    <if test="item.remark!=null and item.remark!=''">
+                        when id=#{item.id} then #{item.remark}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="extend_remark=case" suffix="end,">
+                <foreach collection="planGroupBeans" item="item" index="index">
+                    <if test="item.extendRemark!=null and item.extendRemark!=''">
+                        when id=#{item.id} then #{item.extend_remark}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="level_id=case" suffix="end,">
+                <foreach collection="planGroupBeans" item="item" index="index">
+                    <if test="item.levelId!=null and item.levelId!=''">
+                        when id=#{item.id} then #{item.level_id}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="planGroupBeans" item="item" index="index" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <update id="insertPlanGroupEvent" parameterType="com.znv.manage.common.bean.plan.PlanGroupBean">
+        insert into t_cfg_plan_group_event(plan_id,group_name,remark,group_type,level_id,extend_remark)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.planId}, #{entity.groupName}, #{entity.remark}, #{entity.groupType},#{entity.levelId},#{entity.extendRemark})
+        </foreach>
+    </update>
+
+    <update id="insertPlanGroup" parameterType="com.znv.manage.common.bean.plan.PlanGroupBean">
+        insert into t_cfg_plan_group(plan_id,group_name,remark,group_type,level_id,extend_remark)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.planId}, #{entity.groupName}, #{entity.remark}, #{entity.groupType},#{entity.levelId},#{entity.extendRemark})
+        </foreach>
+    </update>
+
+    <update id="updatePlanData" parameterType="com.znv.manage.common.bean.plan.PlanDataBean">
+            update t_cfg_plan_data
+            <trim prefix="set" suffixOverrides=",">
+             <trim prefix="file_url=case" suffix="end,">
+                 <foreach collection="planDataBeans" item="item" index="index">
+                     <if test="item.fileUrl!=null and item.fileUrl!=''">
+                         when id=#{item.id} then #{item.fileUrl}
+                     </if>
+                 </foreach>
+             </trim>
+                <trim prefix="file_name=case" suffix="end,">
+                    <foreach collection="planDataBeans" item="item" index="index">
+                        <if test="item.fileName!=null and item.fileName!=''">
+                            when id=#{item.id} then #{item.fileName}
+                        </if>
+                    </foreach>
+                </trim>
+                <trim prefix="remark=case" suffix="end,">
+                    <foreach collection="planDataBeans" item="item" index="index">
+                        <if test="item.remark!=null and item.remark!=''">
+                            when id=#{item.id} then #{item.remark}
+                        </if>
+                    </foreach>
+                </trim>
+            </trim>
+            where id in
+             <foreach collection="planDataBeans" item="item" index="index" open="(" separator="," close=")">
+            #{item.id}
+            </foreach>
+    </update>
+
+    <update id="insertPlanData" parameterType="com.znv.manage.common.bean.plan.PlanDataBean">
+        insert into t_cfg_plan_data(plan_id,file_name,file_url,remark)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.planId}, #{entity.fileName}, #{entity.fileUrl}, #{entity.remark})
+        </foreach>
+    </update>
+
+    <update id="insertPlanDataEvent" parameterType="com.znv.manage.common.bean.plan.PlanDataBean">
+        insert into t_cfg_plan_data_event(plan_id,file_name,file_url,remark)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.planId}, #{entity.fileName}, #{entity.fileUrl}, #{entity.remark})
+        </foreach>
+    </update>
+
+    <update id="updatePlanDataEvent" parameterType="com.znv.manage.common.bean.plan.PlanDataBean">
+        update t_cfg_plan_data_event
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="file_url=case" suffix="end,">
+                <foreach collection="planDataBeans" item="item" index="index">
+                    <if test="item.fileUrl!=null and item.fileUrl!=''">
+                        when id=#{item.id} then #{item.fileUrl}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="file_name=case" suffix="end,">
+                <foreach collection="planDataBeans" item="item" index="index">
+                    <if test="item.fileName!=null and item.fileName!=''">
+                        when id=#{item.id} then #{item.fileName}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="remark=case" suffix="end,">
+                <foreach collection="planDataBeans" item="item" index="index">
+                    <if test="item.remark!=null and item.remark!=''">
+                        when id=#{item.id} then #{item.remark}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="planDataBeans" item="item" index="index" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <delete id="delPlanGroupById" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_group where
+        id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanGroupEventById" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_group_event where
+        id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanInfo" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_info where
+        id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanInfoEvent" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_info_event where
+        id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanDataById" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_data where
+        id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanDataEventById" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_data_event where
+        id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanGroup" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_group where  plan_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanGroupEvent" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_group_event where  plan_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanData" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_data where  plan_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanDataEvent" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_data_event where  plan_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="releasePlanInfo" parameterType="com.znv.manage.common.bean.plan.ReleasePlanInfoBean">
+        UPDATE t_cfg_plan_info
+        <set>
+            status= "2",
+            <if test="releasePlanInfoBean.releaseTime != null">release_time= #{releasePlanInfoBean.releaseTime}</if>
+        </set>
+        WHERE id = #{releasePlanInfoBean.id}
+    </update>
+
+    <update id="auditPlanInfo" parameterType="com.znv.manage.common.bean.plan.AuditPlanInfoBean">
+        UPDATE t_cfg_plan_info
+        <set>
+            <if test="auditPlanInfoBean.audit != null">status= #{auditPlanInfoBean.audit},</if>
+            <if test="auditPlanInfoBean.remark != null">audit_opinion= #{auditPlanInfoBean.remark},</if>
+            <if test="auditPlanInfoBean.auditorId != null">auditor_id= #{auditPlanInfoBean.auditorId},</if>
+            <if test="auditPlanInfoBean.auditorName != null">auditor_name= #{auditPlanInfoBean.auditorName},</if>
+            <if test="auditPlanInfoBean.shared != null">shared= #{auditPlanInfoBean.shared},</if>
+        </set>
+        WHERE id = #{auditPlanInfoBean.id};
+    </update>
+
+    <update id="sharePlanInfo" parameterType="com.znv.manage.common.bean.plan.SharePlanInfoBean">
+        UPDATE t_cfg_plan_info
+        <set>
+            <if test="sharePlanInfoBean.shared != null">shared= #{sharePlanInfoBean.shared},</if>
+            <if test="sharePlanInfoBean.sharedTime != null">shared_time= #{sharePlanInfoBean.sharedTime},</if>
+            <if test="sharePlanInfoBean.sharerId != null">sharer_id= #{sharePlanInfoBean.sharerId},</if>
+            <if test="sharePlanInfoBean.sharerName != null">sharer_name= #{sharePlanInfoBean.sharerName},</if>
+        </set>
+        WHERE id = #{sharePlanInfoBean.id};
+    </update>
+
+    <select id="queryPlanInfo" parameterType="com.znv.manage.common.bean.plan.QueryPlanBean" resultType="com.znv.manage.common.bean.plan.PlanInfoBean">
+        select id, name, level_id AS levelId, level_name AS levelName, event_type_id AS eventTypeId,
+        event_type_name AS eventTypeName, emergency_type_id AS emergencyTypeId, emergency_type_name AS emergencyTypeName,
+        CASE status WHEN '0' THEN '未发布' WHEN '1' THEN '待审核' WHEN '2' THEN '通过'  WHEN '3' THEN '退回' ELSE '未发布' END AS status,
+        release_time AS releaseTime, shared, shared_time AS sharedTime, sharer_id AS sharerId, sharer_name AS sharerName,
+        auditor_id AS auditorId, auditor_name AS auditorName,
+        audit_opinion AS auditOpinion, create_id AS createId, create_name AS createName,
+        DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') AS createTime, DATE_FORMAT(modify_time, '%Y-%m-%d %H:%i:%S') AS modifyTime,
+        unit_type_id as unitTypeId,unit_name as unitName,unit_id as unitId,
+        (
+        SELECT
+        c.DICT_CH_NAME
+        FROM
+        sys_business_dict c
+        WHERE
+        c.id = unit_type_id
+        ) AS unitTypeName,
+        (
+        SELECT
+        b.precinct_name
+        FROM
+        t_cfg_precinct b
+        WHERE
+        b.precinct_id = a.region_id
+        ) AS regionName,region_id as regionId
+        FROM t_cfg_plan_info a
+        <where>
+            <if test="queryPlanBean.planId != null  and queryPlanBean.planId != '' "> and a.id=#{queryPlanBean.planId} </if>
+            <if test="queryPlanBean.name != null  and queryPlanBean.name != '' "> and name LIKE CONCAT("%", #{queryPlanBean.name},'%')</if>
+            <if test="queryPlanBean.levelId != null  and queryPlanBean.levelId != '' "> and level_id=#{queryPlanBean.levelId} </if>
+            <if test="queryPlanBean.createId != null  and queryPlanBean.createId != '' "> and create_id=#{queryPlanBean.createId} </if>
+            <if test="queryPlanBean.eventTypeId != null  and queryPlanBean.eventTypeId != '' "> and event_type_id=#{queryPlanBean.eventTypeId} </if>
+            <if test="queryPlanBean.emergencyTypeId != null and queryPlanBean.emergencyTypeId != ''">
+                AND (
+                <foreach collection="queryPlanBean.emergencyTypeId.split(',')" item="id" separator=" OR ">
+                    FIND_IN_SET(#{id}, emergency_type_id)
+                </foreach>
+                )
+            </if>
+            <if test="queryPlanBean.shared != null  and queryPlanBean.shared != '' "> and shared=#{queryPlanBean.shared} </if>
+            <if test="queryPlanBean.createName != null  and queryPlanBean.createName != '' "> and create_name LIKE CONCAT("%", #{queryPlanBean.createName},'%') </if>
+            <if test="queryPlanBean.status !=null and queryPlanBean.status.size()>0">
+                AND status IN
+                <foreach item="item" index="index" collection="queryPlanBean.status" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="queryPlanBean.unitTypeId != null  and queryPlanBean.unitTypeId != '' "> and unit_type_id=#{queryPlanBean.unitTypeId} </if>
+            <if test="queryPlanBean.unitName != null  and queryPlanBean.unitName != '' "> and unit_name LIKE CONCAT("%", #{queryPlanBean.unitName},'%')</if>
+            <if test="queryPlanBean.regionId != '' and queryPlanBean.regionId != null">
+                and FIND_IN_SET(region_id,CONCAT(#{queryPlanBean.regionId},',',
+                (SELECT IFNULL(GROUP_CONCAT(s.id),'t') FROM sys_business_dict s WHERE s.parent_id = #{queryPlanBean.regionId})))
+            </if>
+            <if test="queryPlanBean.beginTime != null and queryPlanBean.beginTime != ''">
+                and <![CDATA[DATE_FORMAT(release_time, '%Y-%m-%d') >= #{queryPlanBean.beginTime}]]>
+            </if>
+            <if test="queryPlanBean.endTime != null and queryPlanBean.endTime != ''">
+                and <![CDATA[DATE_FORMAT(release_time, '%Y-%m-%d') <= #{queryPlanBean.endTime}]]>
+            </if>
+        </where>
+
+    </select>
+
+    <select id="queryPlanInfoById" parameterType="java.lang.String" resultType="com.znv.manage.common.bean.plan.PlanInfoBean">
+        select id, name, level_id AS levelId, level_name AS levelName, event_type_id AS eventTypeId,
+        event_type_name AS eventTypeName, emergency_type_id AS emergencyTypeId, emergency_type_name AS emergencyTypeName,
+        CASE status WHEN '0' THEN '未发布' WHEN '1' THEN '待审核' WHEN '2' THEN '通过'  WHEN '3' THEN '退回' ELSE '未发布' END AS status,
+        release_time AS releaseTime, shared, shared_time AS sharedTime, sharer_id AS sharerId, sharer_name AS sharerName,
+        auditor_id AS auditorId, auditor_name AS auditorName,
+        audit_opinion AS auditOpinion, create_id AS createId, create_name AS createName,
+        DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') AS createTime, DATE_FORMAT(modify_time, '%Y-%m-%d %H:%i:%S') AS modifyTime,
+        unit_type_id as unitTypeId,unit_name as unitName,unit_id as unitId,
+        (
+        SELECT
+        c.DICT_CH_NAME
+        FROM
+        sys_business_dict c
+        WHERE
+        c.id = unit_type_id
+        ) AS unitTypeName,
+        (
+        SELECT
+        b.precinct_name
+        FROM
+        t_cfg_precinct b
+        WHERE
+        b.precinct_id = a.region_id
+        ) AS regionName,region_id as regionId
+        FROM t_cfg_plan_info a
+        where a.id=#{planId}
+    </select>
+
+    <select id="queryPlanInfoEvent" parameterType="com.znv.manage.common.bean.plan.QueryPlanBean" resultType="com.znv.manage.common.bean.plan.PlanInfoBean">
+        select id, name, level_id AS levelId, level_name AS levelName, event_type_id AS eventTypeId,
+        event_type_name AS eventTypeName, emergency_type_id AS emergencyTypeId, emergency_type_name AS emergencyTypeName,
+        CASE status WHEN '0' THEN '未发布' WHEN '1' THEN '待审核' WHEN '2' THEN '通过'  WHEN '3' THEN '退回' ELSE '未发布' END AS status,
+        release_time AS releaseTime, shared, shared_time AS sharedTime, sharer_id AS sharerId, sharer_name AS sharerName,
+        auditor_id AS auditorId, auditor_name AS auditorName,
+        audit_opinion AS auditOpinion, create_id AS createId, create_name AS createName,
+        DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') AS createTime, DATE_FORMAT(modify_time, '%Y-%m-%d %H:%i:%S') AS modifyTime,
+        unit_type_id as unitTypeId,unit_name as unitName,unit_id as unitId,
+        (
+        SELECT
+        c.DICT_CH_NAME
+        FROM
+        sys_business_dict c
+        WHERE
+        c.id = unit_type_id
+        ) AS unitTypeName,
+        (
+        SELECT
+        b.precinct_name
+        FROM
+        t_cfg_precinct b
+        WHERE
+        b.precinct_id = a.region_id
+        ) AS regionName,region_id as regionId
+        FROM t_cfg_plan_info_event a
+        <where>
+            <if test="queryPlanBean.planId != null  and queryPlanBean.planId != '' "> and a.id=#{queryPlanBean.planId} </if>
+            <if test="queryPlanBean.name != null  and queryPlanBean.name != '' "> and name LIKE CONCAT("%", #{queryPlanBean.name},'%')</if>
+            <if test="queryPlanBean.levelId != null  and queryPlanBean.levelId != '' "> and level_id=#{queryPlanBean.levelId} </if>
+            <if test="queryPlanBean.createId != null  and queryPlanBean.createId != '' "> and create_id=#{queryPlanBean.createId} </if>
+            <if test="queryPlanBean.eventTypeId != null  and queryPlanBean.eventTypeId != '' "> and event_type_id=#{queryPlanBean.eventTypeId} </if>
+            <if test="queryPlanBean.emergencyTypeId != null  and queryPlanBean.emergencyTypeId != '' "> and emergency_type_id=#{queryPlanBean.emergencyTypeId} </if>
+            <if test="queryPlanBean.shared != null  and queryPlanBean.shared != '' "> and shared=#{queryPlanBean.shared} </if>
+            <if test="queryPlanBean.eventId != null  and queryPlanBean.eventId != '' "> and event_id=#{queryPlanBean.eventId} </if>
+            <if test="queryPlanBean.createName != null  and queryPlanBean.createName != '' "> and create_name LIKE CONCAT("%", #{queryPlanBean.createName},'%') </if>
+            <if test="queryPlanBean.status !=null and queryPlanBean.status.size()>0">
+                AND status IN
+                <foreach item="item" index="index" collection="queryPlanBean.status" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+
+    </select>
+
+    <select id="getUserName" parameterType="java.lang.String" resultType="java.lang.String">
+        select user_name from t_cfg_user where user_id=#{id}
+    </select>
+
+    <select id="queryGroup"  parameterType="java.lang.String" resultType="com.znv.manage.common.bean.plan.PlanGroupBean">
+        select id, plan_id AS planId, group_type as groupType, group_name AS groupName,
+               remark AS remark,extend_remark as extendRemark,
+               (SELECT b.DICT_CH_NAME FROM sys_business_dict b WHERE b.ID = a.level_id)
+                   AS levelName,level_id as levelId
+        FROM t_cfg_plan_group a WHERE plan_id = #{id}
+        <if test="levelId!=null and levelId!=''">and level_id=#{levelId}</if>
+    </select>
+
+    <select id="queryGroupEvent"  parameterType="java.lang.String" resultType="com.znv.manage.common.bean.plan.PlanGroupBean">
+        select id, plan_id AS planId, group_type as groupType, group_name AS groupName,
+               remark AS remark,extend_remark as extendRemark,
+               (SELECT b.DICT_CH_NAME FROM sys_business_dict b WHERE b.ID = a.level_id)
+                           AS levelName,level_id as levelId
+        FROM t_cfg_plan_group_event a WHERE plan_id = #{id}
+    </select>
+
+    <select id="queryData"  parameterType="java.lang.String" resultType="com.znv.manage.common.bean.plan.PlanDataBean">
+        select id, plan_id AS planId, file_name AS fileName, file_url AS fileUrl,
+         create_time AS createTime, remark AS remark
+        FROM t_cfg_plan_data WHERE plan_id = #{id}
+    </select>
+
+    <select id="queryDataEvent"  parameterType="java.lang.String" resultType="com.znv.manage.common.bean.plan.PlanDataBean">
+        select id, plan_id AS planId, file_name AS fileName, file_url AS fileUrl,
+               create_time AS createTime, remark AS remark
+        FROM t_cfg_plan_data_event WHERE plan_id = #{id}
+    </select>
+
+    <select id="queryRewardDuty"  parameterType="java.lang.String" resultType="java.lang.String">
+        select reward_duty
+        FROM t_cfg_plan_info WHERE id = #{id}
+    </select>
+
+    <select id="queryRewardDutyEvent"  parameterType="java.lang.String" resultType="java.lang.String">
+        select reward_duty
+        FROM t_cfg_plan_info_event WHERE id = #{id}
+    </select>
+
+    <select id="queryEventType1" resultType="com.znv.manage.common.bean.plan.LabelBean">
+        SELECT
+        b.ID AS value,
+        b.DICT_CH_NAME AS label
+    FROM
+        helptype_mapping a
+    LEFT JOIN sys_business_dict b ON a.emergency_id = b.ID
+    GROUP BY a.emergency_id
+    </select>
+
+    <select id="queryEventType2" resultType="com.znv.manage.common.bean.plan.LabelBean">
+        SELECT
+        c.ID AS value,
+        c.DICT_CH_NAME AS label
+        FROM
+        helptype_mapping a
+        LEFT JOIN sys_business_dict b ON a.emergency_id = b.ID
+        LEFT JOIN sys_business_dict c ON a.help_type = c.ID
+        WHERE
+        1 = 1
+        <if test="id!=null">
+            AND b.ID = #{id}
+        </if>
+    </select>
+
+    <select id="getEventType" resultType="com.znv.manage.common.bean.plan.LabelBean">
+        SELECT ID AS value, DICT_CH_NAME AS label FROM sys_business_dict WHERE PARENT_ID=#{parentId} and IS_USING='Y'
+    </select>
+
+    <select id="getPlanId" resultType="java.lang.String">
+         SELECT id FROM t_cfg_plan_info WHERE name=#{planName}
+    </select>
+
+    <select id="getFileUrl" resultType="java.lang.String">
+         SELECT file_url  FROM t_cfg_plan_data WHERE plan_id=#{planId}
+    </select>
+
+    <select id="getFileUrlEvent" resultType="java.lang.String">
+        SELECT file_url  FROM t_cfg_plan_data_event WHERE plan_id=#{planId}
+    </select>
+
+    <select id="getNameByType" resultType="java.lang.String">
+         SELECT DICT_CH_NAME FROM sys_business_dict WHERE ID=#{type}
+    </select>
+
+    <insert id="addPlanComment" parameterType="com.znv.manage.common.bean.plan.PlanCommentBean" >
+        INSERT INTO t_cfg_comments
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="planCommentBean.planNumId != null" >plan_num_id,</if>
+            <if test="planCommentBean.content != null" >content,</if>
+            <if test="planCommentBean.operatorId != null" >operator_id,</if>
+            <if test="planCommentBean.operatorName != null" >operator_name,</if>
+            <if test="planCommentBean.createTime != null" >create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planCommentBean.planNumId != null" >#{planCommentBean.planNumId},</if>
+            <if test="planCommentBean.content != null" >#{planCommentBean.content},</if>
+            <if test="planCommentBean.operatorId != null" >#{planCommentBean.operatorId},</if>
+            <if test="planCommentBean.operatorName != null" >#{planCommentBean.operatorName},</if>
+            <if test="planCommentBean.createTime != null" >#{planCommentBean.createTime},</if>
+        </trim>
+    </insert>
+
+    <insert id="addPlanCommentResp" parameterType="com.znv.manage.common.bean.plan.PlanCommentRespBean" >
+        INSERT INTO t_cfg_comments_response
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="planCommentRespBean.respContent != null" >resp_content,</if>
+            <if test="planCommentRespBean.operatorId != null" >operator_id,</if>
+            <if test="planCommentRespBean.operatorName != null" >operator_name,</if>
+            <if test="planCommentRespBean.recipientId != null" >recipient_id,</if>
+            <if test="planCommentRespBean.recipientName != null" >recipient_name,</if>
+            <if test="planCommentRespBean.commentsId != null" >comments_id,</if>
+            <if test="planCommentRespBean.respType != null" >resp_type,</if>
+            <if test="planCommentRespBean.planNumId != null" >plan_num_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planCommentRespBean.respContent != null" >#{planCommentRespBean.respContent},</if>
+            <if test="planCommentRespBean.operatorId != null" >#{planCommentRespBean.operatorId},</if>
+            <if test="planCommentRespBean.operatorName != null" >#{planCommentRespBean.operatorName},</if>
+            <if test="planCommentRespBean.recipientId != null" >#{planCommentRespBean.recipientId},</if>
+            <if test="planCommentRespBean.recipientName != null" >#{planCommentRespBean.recipientName},</if>
+            <if test="planCommentRespBean.commentsId != null" >#{planCommentRespBean.commentsId},</if>
+            <if test="planCommentRespBean.respType != null" >#{planCommentRespBean.respType},</if>
+            <if test="planCommentRespBean.planNumId != null" >#{planCommentRespBean.planNumId},</if>
+        </trim>
+    </insert>
+
+    <select id="getPlanComment" resultType="com.znv.manage.common.bean.plan.PlanCommentBean">
+        select id, plan_num_id as planNumId, content as content, operator_id as operatorId,
+        operator_name as operatorName, DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') AS createTime
+        from t_cfg_comments where plan_num_id = #{queryPlanCommentBean.id}
+    </select>
+
+    <select id="getPlanCommentResp" resultType="com.znv.manage.common.bean.plan.PlanCommentRespBean">
+        select id, resp_content as respContent, operator_id as operatorId, operator_name as operatorName,
+        recipient_id as recipientId, recipient_name as recipientName, comments_id as commentsId,
+        plan_num_id as planNumId,  resp_type as respType, DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') AS createTime
+        from t_cfg_comments_response where comments_id = #{id} and resp_type = #{respType}
+    </select>
+
+    <select id="queryPlanName" resultType="java.lang.String">
+         SELECT plan_name planName FROM t_relation_river_plan WHERE river_name = #{riverName}
+    </select>
+
+    <select id="getFileData" resultType="java.util.Map">
+         SELECT file_url as fileUrl, file_name as fileName  FROM t_cfg_plan_data WHERE plan_id=#{planId}
+    </select>
+
+    <select id="getFileDataEvent" resultType="java.util.Map">
+        SELECT file_url as fileUrl, file_name as fileName  FROM t_cfg_plan_data_event WHERE plan_id=#{planId}
+    </select>
+
+    <select id="getPlanIdByName" resultType="java.lang.String">
+         SELECT id FROM t_cfg_plan_info WHERE name = #{name} limit 1
+    </select>
+
+    <select id="getEventPlanIdByName" resultType="java.lang.String">
+        SELECT id FROM t_cfg_plan_info_event WHERE name = #{name} limit 1
+    </select>
+
+    <select id="getUnitType" resultType="com.znv.manage.common.bean.plan.LabelBean">
+        SELECT ID AS value, DICT_CH_NAME AS label FROM sys_business_dict WHERE PARENT_ID='979'  and IS_USING='Y'
+    </select>
+
+    <select id="getLevelType" resultType="com.znv.manage.common.bean.plan.LabelBean">
+        SELECT ID AS value, DICT_CH_NAME AS label FROM sys_business_dict WHERE PARENT_ID='991'  and IS_USING='Y'
+    </select>
+
+    <select id="getUnit" resultType="map">
+        select id,name,sort  from t_cfg_plan_unit
+    </select>
+
+    <insert id="addUnit">
+        insert INTO t_cfg_plan_unit  (name) values (#{name})
+    </insert>
+
+    <delete id="delUnit" >
+        delete from t_cfg_plan_unit
+        where id = #{id}
+    </delete>
+
+    <resultMap id="RegionMap" type="com.znv.manage.common.bean.plan.LabelBean">
+        <id column="ID" property="value" jdbcType="VARCHAR"/>
+        <result column="DICT_CH_NAME" property="label" jdbcType="VARCHAR"/>
+        <collection property="children" select="getRegion"
+                    column="{parentId=ID}">
+        </collection>
+    </resultMap>
+    <select id="getRegion" resultMap="RegionMap">
+        select a.ID,  IF(a.DICT_CH_NAME = '市直管','市辖区',a.DICT_CH_NAME) DICT_CH_NAME
+        from sys_business_dict a left join t_dict_area b on a.DICT_CH_NAME = b.area_name
+        where a.PARENT_ID=#{parentId} and a.IS_USING='Y'
+        <if test="streetId != null and streetId != ''" >
+            and b.area_code = #{streetId}
+        </if>
+        order by a.DICT_ORDER
+    </select>
+
+    <insert id="copyCommand" parameterType="java.lang.String">
+        insert into community_wuxi_rhzh.t_cfg_command_system_precinct(precinct_id,plan_id,`type`,unit_id,leader,duty_level,sort,link_type)
+        select precinct_id,#{eventPlanId},`type`,unit_id,leader,duty_level,sort,'2' from community_wuxi_rhzh.t_cfg_command_system_precinct where plan_id =#{planId} and link_type ='1'
+    </insert>
+</mapper>

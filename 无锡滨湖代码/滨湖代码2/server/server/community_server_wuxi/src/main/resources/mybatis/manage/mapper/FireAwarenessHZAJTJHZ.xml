@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.FireAwarenessHZAJTJHZDao">
+
+	<insert id="insertHZAJTJHZData">
+		insert into t_27_hzajtjhz(
+		KZSJ,
+		XMSJ,
+		JJCDXH,
+		DCSJ,
+		SHZT,
+		GXSJ,
+		SJLB,
+		CZXS,
+		XZQYBM,
+		SJDD,
+		JJSJ,
+		RKSJ,
+		NF,
+		create_time
+		 )values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.KZSJ},
+			#{item.XMSJ},
+			#{item.JJCDXH},
+			#{item.DCSJ},
+			#{item.SHZT},
+			#{item.GXSJ},
+			#{item.SJLB},
+			#{item.CZXS},
+			#{item.XZQYBM},
+			#{item.SJDD},
+			#{item.JJSJ},
+			#{item.RKSJ},
+			#{item.NF},
+			current_timestamp
+			)
+		</foreach>
+	</insert>
+
+
+	<select id="queryExist" parameterType="com.znv.manage.common.bean.FireAwarenessSyncSBXX" resultType="java.lang.Integer">
+		select count(1) as num from t_27_hzajtjhz
+		where 1=1
+		<if test="KZSJ != null and KZSJ != '' "> and KZSJ = #{KZSJ}</if>
+		<if test="XMSJ != null and XMSJ != '' "> and XMSJ = #{XMSJ}</if>
+		<if test="JJCDXH != null and JJCDXH != '' "> and JJCDXH = #{JJCDXH}</if>
+		<if test="DCSJ != null and DCSJ != '' "> and DCSJ = #{DCSJ}</if>
+		<if test="SHZT != null and SHZT != '' "> and SHZT = #{SHZT}</if>
+		<if test="GXSJ != null and GXSJ != '' "> and GXSJ = #{GXSJ}</if>
+		<if test="SJLB != null and SJLB != '' "> and SJLB = #{SJLB}</if>
+		<if test="CZXS != null and CZXS != '' "> and CZXS = #{CZXS}</if>
+		<if test="XZQYBM != null and XZQYBM != '' "> and XZQYBM = #{XZQYBM}</if>
+		<if test="SJDD != null and SJDD != '' "> and SJDD = #{SJDD}</if>
+		<if test="JJSJ != null and JJSJ != '' "> and JJSJ = #{JJSJ}</if>
+		<if test="RKSJ != null and RKSJ != '' "> and RKSJ = #{RKSJ}</if>
+		<if test="NF != null and NF != '' "> and NF = #{NF}</if>
+		and DATE(create_time) = CURDATE()
+	</select>
+
+	<delete id="deleteHZAJTJHZData">
+        delete from t_27_hzajtjhz where  DATE(create_time) = CURDATE()
+    </delete>
+</mapper>

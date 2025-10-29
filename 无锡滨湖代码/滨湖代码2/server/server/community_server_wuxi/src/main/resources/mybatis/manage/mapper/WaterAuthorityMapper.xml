@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.WaterAuthorityDao">
+    
+    <select id="countYjzbToday" resultType="java.lang.Integer">
+    SELECT  count(1) FROM t_01_yjzb
+    WHERE 1=1
+        <if test="beginTime != null">
+            AND  report_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            AND report_time &lt;= #{endTime}
+        </if>
+        <if test="beginTime == null and endTime == null ">
+            AND DATE(report_time) = CURDATE()
+        </if>
+    </select>
+
+    <select id="YjzbTodayList" resultType="java.util.Map">
+        SELECT
+            id,
+            DATE_FORMAT(begin_time,'%Y-%m-%d %h:%i:%s') as begin_time,
+            DATE_FORMAT(end_time,'%Y-%m-%d %h:%i:%s') as end_time,
+            DATE_FORMAT(publish_time,'%Y-%m-%d %h:%i:%s') as publish_time,
+            DATE_FORMAT(report_time,'%Y-%m-%d %h:%i:%s') as report_time,
+            DATE_FORMAT(response_start_time,'%Y-%m-%d %h:%i:%s') as response_start_time,
+            DATE_FORMAT(datum_value,'%Y-%m-%d %h:%i:%s') as datum_value,
+            DATE_FORMAT(create_time,'%Y-%m-%d %h:%i:%s') as create_time,
+            lttd,
+            lgtd,
+            state,
+            pre_start_resp_user,
+            pfmid,
+            remark,
+            ender,
+            source,
+            title,
+            reponse_level,
+            forecast_level,
+            response_department,
+            street,
+            scope,
+            place,
+            response_charger,
+            reponse_measure,
+            summary,
+            summaryer,
+            send_users,
+            img_list_str,
+            author,
+            send_type,
+            stcd,
+            publisher,
+            reponser
+        FROM
+            t_01_yjzb
+        WHERE 1=1
+        <if test="beginTime != null">
+            AND  report_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            AND report_time &lt;= #{endTime}
+        </if>
+        <if test="beginTime == null and endTime == null ">
+            AND DATE(report_time) = CURDATE()
+        </if>
+        ORDER BY report_time DESC
+    </select>
+
+    <insert id="insertYjzbList">
+    INSERT IGNORE INTO t_01_yjzb
+       (id,
+        begin_time,
+        end_time,
+        publish_time,
+        report_time,
+        response_start_time,
+        datum_value,
+        lttd,
+        lgtd,
+        state,
+        pre_start_resp_user,
+        pfmid,
+        remark,
+        ender,
+        source,
+        title,
+        reponse_level,
+        forecast_level,
+        response_department,
+        street,
+        scope,
+        place,
+        response_charger,
+        reponse_measure,
+        summary,
+        summaryer,
+        send_users,
+        img_list_str,
+        author,
+        send_type,
+        stcd,
+        publisher,
+        reponser,
+        create_time)
+    VALUES
+    <foreach collection="list" item="item" index="index" separator=",">
+    (#{item.id},
+     #{item.beginTime},
+     #{item.endTime},
+     #{item.publishTime},
+     #{item.reportTime},
+     #{item.responseStartTime},
+     #{item.datumValue},
+     #{item.lttd},
+     #{item.lgtd},
+     #{item.state},
+     #{item.preStartRespUser},
+     #{item.pfmid},
+     #{item.remark},
+     #{item.ender},
+     #{item.source},
+     #{item.title},
+     #{item.reponseLevel},
+     #{item.forecastLevel},
+     #{item.responseDepartment},
+     #{item.street},
+     #{item.scope},
+     #{item.place},
+     #{item.responseCharger},
+     #{item.reponseMeasure},
+     #{item.summary},
+     #{item.summaryer},
+     #{item.sendUsers},
+     #{item.imgListStr},
+     #{item.author},
+     #{item.sendtype},
+     #{item.stcd},
+     #{item.publisher},
+     #{item.reponser},
+    current_timestamp)
+    </foreach>
+    </insert>
+
+    <select id="queryYjzbAllId" resultType="java.util.Map">
+        select id from t_01_yjzb
+    </select>
+
+    <insert id="insertYjfkbList">
+    INSERT IGNORE INTO t_02_yjfkb
+        (id,
+        persons,
+        back_time,
+        img_list_str,
+        report_id,
+        author,
+        goods,
+        remark,
+        create_time)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+       (#{item.id},
+        #{item.persons},
+        #{item.backTime},
+        #{item.imgListStr},
+        #{item.reportId},
+        #{item.author},
+        #{item.goods},
+        #{item.remark},
+        current_timestamp)
+    </foreach>
+    </insert>
+
+    <select id="queryYjfkbAllId" resultType="java.util.Map">
+        select id from t_02_yjfkb
+    </select>
+
+    <insert id="insertSzjcsjList">
+        INSERT INTO t_09_szjcsj
+        (gather_time,
+        collect_time,
+        spad,
+        site_name,
+        ammonia_nitrogen,
+        total_nitrogen,
+        comn,
+        dissolved_oxygen,
+        conductivity,
+        cyanobacteria,
+        ph,
+        turbidity,
+        total_phosphorus,
+        create_time)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+           (#{item.gatherTime},
+            #{item.collectTime},
+            #{item.SPAD},
+            #{item.siteName},
+            #{item.AMMONIA_NITROGEN},
+            #{item.TOTAL_NITROGEN},
+            #{item.COMN},
+            #{item.DISSOLVED_OXYGEN},
+            #{item.CONDUCTIVITY},
+            #{item.CYANOBACTERIA},
+            #{item.PH},
+            #{item.TURBIDITY},
+            #{item.TOTAL_PHOSPHORUS},
+            current_timestamp)
+        </foreach>
+    </insert>
+
+    <select id="getSzjcsjAllCollectTime" resultType="java.util.Map">
+        select collect_time from t_09_szjcsj
+    </select>
+
+    <select id="selectWaterQualityReal" resultType="map">
+        SELECT
+        DATE_FORMAT(gather_time, '%Y-%m-%d %H:%i:%s') AS gathertime,
+        MAX(DATE_FORMAT(collect_time, '%Y-%m-%d %H:%i:%s'))AS collecttime,
+        spad,
+        site_name as sitename,
+        ammonia_nitrogen as ammonianitrogen,
+        total_nitrogen as totalnitrogen,
+        comn,
+        dissolved_oxygen as dissolvedoxygen,
+        conductivity,
+        cyanobacteria,
+        ph,
+        turbidity,
+        total_phosphorus as totalphosphorus,
+        DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') AS create_time
+        FROM
+        t_09_szjcsj
+        where
+        1=1
+        <if test="stationname != null">and site_name= #{stationname}</if>
+    </select>
+
+
+    <select id="selectWaterQualityHistory" resultType="map">
+        SELECT
+        DATE_FORMAT(gather_time, '%Y-%m-%d %H:%i:%s') AS gather_time,
+        DATE_FORMAT(collect_time, '%Y-%m-%d %H:%i:%s') AS collect_time,
+        spad,
+        site_name as sitename,
+        ammonia_nitrogen as ammonianitrogen,
+        total_nitrogen as totalnitrogen,
+        comn,
+        dissolved_oxygen as dissolvedoxygen,
+        conductivity,
+        cyanobacteria,
+        ph,
+        turbidity,
+        total_phosphorus as totalphosphorus,
+        DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') AS create_time
+        FROM
+        t_09_szjcsj
+        where
+        1=1
+        <if test="stationname != null">and site_name= #{stationname}</if>
+        <if test="beginTime != null">and collect_time&gt;= #{beginTime}</if>
+        <if test="endTime != null">and collect_time &lt;= #{endTime}</if>
+        ORDER BY collect_time DESC
+        <if test="limit != null">limit #{limit}</if>
+    </select>
+</mapper>

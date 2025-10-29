@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.RoleServiceMapper">
+    <!--通过<resultMap>映射实体类属性名和表的字段名对应关系 -->
+    <resultMap type="com.znv.manage.bean.user.Role" id="roleMap">
+        <result property="roleId" column="role_id" />
+        <result property="roleName" column="role_name" />
+        <result property="upRoleId" column="up_role_id" />
+        <result property="description" column="description" />
+        <collection property="modules" ofType="com.znv.manage.common.bean.Module"
+                    column="role_id" select="getModules">
+        </collection>
+    </resultMap>
+
+    <resultMap type="com.znv.manage.bean.user.Module" id="moduleMap">
+        <result property="id" column="id" />
+        <result property="moduleName" column="module_name" />
+        <result property="moduleUrl" column="module_url" />
+        <result property="description" column="description" />
+        <result property="upModuleId" column="up_module_id" />
+    </resultMap>
+
+    <select id="getModules" parameterType="long"
+            resultType="com.znv.manage.bean.user.Module" resultMap="moduleMap">
+        SELECT
+        m.id as id,
+        m.module_name as module_name,
+        m.module_url as module_url,
+        m.description as description,
+        m.description as up_module_id
+        FROM t_link_role_module rm,t_cfg_module m
+        WHERE m.id=rm.module_id and rm.role_id = #{role_id};
+    </select>
+
+    <select id="queryRoles" resultType="com.znv.manage.bean.user.Role" resultMap="roleMap">
+        SELECT * FROM t_cfg_role
+        WHERE 1=1
+        <if test="roleIds != null">AND role_id in (${roleIds})  </if>
+        <if test="roleName != null">AND role_name = #{roleName}  </if>
+        <if test="upRoleId != null">AND up_role_id = #{upRoleId}  </if>
+        <if test="description != null"> AND description = #{description}  </if>
+        <if test="dataPermission != null">AND data_permission = #{dataPermission}  </if>
+        <if test="level != null">AND level = #{level}  </if>
+
+    </select>
+
+    <insert id="insertRole" parameterType="com.znv.manage.bean.user.Role" useGeneratedKeys="true"
+            keyColumn="role_id" keyProperty="roleId">
+
+        INSERT INTO t_cfg_role (role_name, up_role_id, description,data_permission,level)
+        VALUES (
+        #{roleName, jdbcType=VARCHAR},
+        #{upRoleId, jdbcType=BIGINT},
+        #{description, jdbcType=VARCHAR},
+        #{dataPermission},
+        #{level}
+        );
+    </insert>
+
+    <update id="updateRole" parameterType="map" useGeneratedKeys="false">
+        UPDATE t_cfg_role
+        <trim prefix="set" suffixOverrides="," suffix="WHERE role_id = #{roleId}">
+            <if test="roleName!=null">role_name = #{roleName, jdbcType=VARCHAR},</if>
+            <if test="upRoleId!=null">up_role_id = #{upRoleId, jdbcType=BIGINT},</if>
+            <if test="description!=null">description = #{description, jdbcType=VARCHAR},</if>
+            <if test="dataPermission!=null">data_permission = #{dataPermission},</if>
+            <if test="level!=null">level = #{level},</if>
+        </trim>
+
+    </update>
+
+    <delete id="deleteRoles" parameterType="map">
+        DELETE FROM t_cfg_role
+        <trim prefix="where" suffixOverrides="AND">
+            role_id in (${roleIds}) AND
+            <if test="roleName != null">role_name = #{roleName} AND </if>
+            <if test="upRoleId != null">up_role_id = #{upRoleId} AND </if>
+            <if test="description != null">description = #{description} AND </if>
+            <if test="dataPermission != null">data_permission = #{dataPermission} AND </if>
+        </trim>
+
+    </delete>
+
+    <select id="getLevelByUserId" resultType="String">
+        SELECT a.level+''
+        from t_cfg_role a,
+            (
+                SELECT role_id FROM `t_cfg_user`
+                WHERE user_id=#{userId}
+            )b
+        WHERE a.role_id=b.role_id
+    </select>
+</mapper>

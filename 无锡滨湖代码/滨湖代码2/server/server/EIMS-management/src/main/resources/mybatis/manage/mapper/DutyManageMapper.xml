@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.DutyManageDao">
+
+    <select id="queryDutyPerson" resultType="java.util.Map">
+        select
+        id,
+        name,
+        ifnull(a.phone,'') phone,
+        ifnull(a.dept,'')dept,
+        ifnull(b.precinct_name,'')precinctName,
+        ifnull(a.occupation,'')occupation,
+        ifnull(a.picture,'')picture
+        from t_cfg_duty_person a left join t_cfg_precinct b on a.dept = b.precinct_id
+        where 1=1
+        <if test="name != null and name != ''">and name like concat(#{name},'%')</if>
+        <if test="iname != null and iname != ''">and name = #{iname}</if>
+        <if test="phone != null and phone != ''">and phone = #{phone}</if>
+        <if test="precinctId != null and precinctId != ''">and precinct_id = #{precinctId}</if>
+    </select>
+
+    <insert id="insertDutyPerson">
+        insert into t_cfg_duty_person(name, phone, dept, occupation, precinct_id, picture)
+        values (#{dutyPerson.name},
+                #{dutyPerson.phone},
+                #{dutyPerson.dept},
+                #{dutyPerson.occupation},
+                #{dutyPerson.precinctId},
+                #{dutyPerson.picture})
+    </insert>
+    <delete id="deleteDutyPerson">
+        delete
+        from t_cfg_duty_person
+        where find_in_set(id, #{ids})
+    </delete>
+    <update id="updateDutyPerson">
+        update t_cfg_duty_person
+        set name        = #{dutyPerson.name},
+            phone       = #{dutyPerson.phone},
+            dept        = #{dutyPerson.dept},
+            occupation  = #{dutyPerson.occupation},
+            precinct_id = #{dutyPerson.precinctId},
+            picture     = #{dutyPerson.picture}
+        where id = #{dutyPerson.id}
+    </update>
+    <select id="queryDutyPersonFroMap" resultType="java.util.Map">
+        select * from t_cfg_duty_person where 1=1
+        <if test="precinctId != null">and precinct_id = #{precinctId}</if>
+    </select>
+    <insert id="insertDutyPersonByExcel">
+        insert into t_cfg_duty_person(name, phone, dept, occupation,precinct_id)
+        values
+        <foreach collection="list" index="index" separator="," item="item">
+            (
+            #{item.name},
+            #{item.phone},
+            #{item.dept},
+            #{item.occupation},
+            #{item.precinctId}
+            )
+        </foreach>
+    </insert>
+
+
+    <select id="queryDutyModule" resultType="java.util.Map">
+        select
+        module_id moduleId,
+        duty_type dutyType,
+        module_name moduleName,
+        date_format(start_time,'%H:%i:%s') startTime,
+        date_format(end_time,'%H:%i:%s') endTime,
+        is_end_today isEndToday
+        from t_cfg_duty_module
+        where 1=1
+        <if test="dutyType != null">and duty_type = #{dutyType}</if>
+        <if test="moduleName != null">and module_name = #{moduleName}</if>
+        <if test="precinctId != null">and precinct_id = #{precinctId}</if>
+    </select>
+    <insert id="insertDutyModule">
+        insert into t_cfg_duty_module
+        (duty_type, module_name, start_time, end_time, is_end_today, precinct_id)
+        values (#{dutyModule.dutyType},
+                #{dutyModule.moduleName},
+                #{dutyModule.startTime},
+                #{dutyModule.endTime},
+                #{dutyModule.isEndToday},
+                #{dutyModule.precinctId})
+    </insert>
+    <delete id="deleteDutyModule">
+        delete
+        from t_cfg_duty_module
+        where find_in_set(module_id, #{ids})
+    </delete>
+    <update id="updateDutyModule">
+        update t_cfg_duty_module
+        set start_time   = #{dutyModule.startTime},
+            end_time     = #{dutyModule.endTime},
+            is_end_today = #{dutyModule.isEndToday},
+            precinct_id  = #{dutyModule.precinctId}
+        where module_id = #{dutyModule.moduleId}
+    </update>
+    <select id="queryDutyRole" resultType="java.util.Map">
+        select role_id roleId,
+        role_name roleName
+        from t_cfg_duty_role
+        where 1=1
+        <if test="name != null">and role_name = #{name}</if>
+        <if test="precinctId != null">and precinct_id = #{precinctId}</if>
+    </select>
+    <insert id="insertDutyRole">
+        insert into t_cfg_duty_role(role_name, precinct_id)
+        values (#{roleName}, #{precinctId})
+    </insert>
+    <delete id="deleteDutyRole">
+        delete
+        from t_cfg_duty_role
+        where find_in_set(role_id, #{ids})
+    </delete>
+    <update id="updateDutyRole">
+        update t_cfg_duty_role
+        set role_name = #{roleName}
+        where role_id = #{id}
+    </update>
+    <select id="queryDutyInfo" resultType="java.util.Map">
+        select distinct
+        DATE_FORMAT(t.duty_date, '%Y-%m-%d')dutyDate,
+        t.duty_type dutyType,
+        m.module_id moduleId,
+        p.id personId,
+        m.module_name moduleName,
+        ifnull(date_format(m.start_time,'%H:%i'),'') startTime,
+        ifnull(date_format(m.end_time,'%H:%i'),'') endTime,
+        ifnull(p.name,'') personName,
+        ifnull(p.phone,'') phone,
+        ifnull(p.dept,'') dept,
+        ifnull(p.picture,'') picture,
+        ifnull(p.dept,'') dept,
+        ifnull(k.precinct_name,'') precinctName,
+        ifnull(p.occupation,'') occupation,
+        ifnull(r.role_name,'') roleName,
+        ifnull(r.role_id,'') roleId
+        from t_cfg_duty_table t
+        left join t_cfg_duty_role r
+        on t.duty_role = r.role_id
+        left join t_cfg_duty_person p
+        on t.duty_person = p.id
+        left join t_cfg_duty_module m
+        on t.duty_module = m.module_id
+        left join t_cfg_precinct k
+        on p.dept = k.precinct_id
+        where 1=1
+        <if test="name != null">and p.name = #{name}</if>
+        <if test="startDate != null">and t.duty_date &gt;= #{startDate}</if>
+        <if test="endDate != null">and t.duty_date &lt;= #{endDate}</if>
+        <if test="dutyType != null">and t.duty_type = #{dutyType}</if>
+        <if test="moduleId != null">and t.duty_module = #{moduleId}</if>
+        <if test="precinctId != null">and t.precinct_id = #{precinctId}</if>
+        order by t.duty_date desc ,r.role_id
+    </select>
+    <delete id="deleteDutyInfo">
+        delete
+        from t_cfg_duty_table
+        where duty_type = #{dutyType}
+          and duty_date = #{dutyDate}
+          and duty_module = #{moduleId}
+          and precinct_id = #{precinctId}
+    </delete>
+    <insert id="insertDutyInfo">
+        insert into
+        t_cfg_duty_table
+        (
+        duty_date,
+        duty_type,
+        duty_module,
+        duty_person,
+        duty_role,
+        precinct_id
+        ) values
+        <foreach collection="list" item="item" separator="," index="index">
+            (
+            #{item.dutyDate},
+            #{item.dutyType},
+            #{item.dutyModule},
+            #{item.dutyPerson},
+            #{item.dutyRole},
+            #{item.precinctId}
+            )
+        </foreach>
+
+    </insert>
+    <select id="queryPersonFroMap" resultType="java.util.Map">
+        select name,id from t_cfg_duty_person
+        where 1=1
+        <if test="precinctId != null and precinctId != ''">
+            and precinct_id = #{precinctId}
+        </if>
+    </select>
+
+    <select id="queryModuleFroMap" resultType="java.util.Map">
+        select module_name moduleName, module_id id
+        from t_cfg_duty_module
+        where 1= 1
+        <if test="dutyType != null and dutyType != ''">
+            and duty_type = #{dutyType}
+        </if>
+        <if test="precinctId != null and precinctId != ''">
+            and and precinct_id = #{precinctId}
+        </if>
+    </select>
+    <select id="queryRoleFroMap" resultType="java.util.Map">
+        select role_id id, role_name roleName
+        from t_cfg_duty_role
+        where 1=1
+        <if test="precinctId != null and precinctId != ''">
+            and precinct_id = #{precinctId}
+        </if>
+    </select>
+    <select id="queryDutyPersonByDate" resultType="java.util.Map">
+        select
+        DATE_FORMAT(t.duty_date, '%Y-%m-%d') dutyDate,
+        t.duty_type dutyType,
+        m.module_id moduleId,
+        p.id personId,
+        ifnull(p.name,'') personName,
+        ifnull(p.phone,'') phone,
+        ifnull(p.dept,'') dept,
+        ifnull(p.occupation,'') occupation,
+        ifnull(r.role_name,'') roleName,
+        ifnull(r.role_id,'') roleId
+        from t_cfg_duty_table t
+        left join t_cfg_duty_role r
+        on t.duty_role = r.role_id
+        left join t_cfg_duty_person p
+        on t.duty_person = p.id
+        left join t_cfg_duty_module m
+        on t.duty_module = m.module_id
+        where 1=1
+        <if test="dutyDate != null">and t.duty_date = #{dutyDate}</if>
+        <if test="dutyType != null">and t.duty_type = #{dutyType}</if>
+        <if test="moduleId != null">and t.duty_module = #{moduleId}</if>
+        <if test="precinctId != null">and t.precinct_id = #{precinctId}</if>
+    </select>
+    <select id="queryDutyModuleByTime" resultType="java.util.Map">
+        select *
+        from t_cfg_duty_module
+        where precinct_id = #{precinctId}
+          and duty_type = #{dutyType}
+          and module_id &lt;&gt; #{id}
+          and find_in_set(module_name, #{moduleTypes})
+          and (#{startTime} &gt; start_time and #{startTime} &lt; end_time
+            OR
+               #{endTime} &gt; start_time and #{endTime} &lt; end_time
+            OR
+               start_time &gt; #{startTime} and start_time &lt; #{endTime}
+            OR
+               end_time &gt; #{startTime} and end_time &lt; #{endTime}
+            OR
+               start_time = #{startTime} and end_time = #{endTime}
+            )
+    </select>
+    <select id="queryData" resultType="java.util.Map">
+        select t.id          id,
+               t.duty_type   dutyType,
+               m.module_id   moduleId,
+               m.module_name moduleName,
+               p.name        personName
+        from t_cfg_duty_table t
+                 left join t_cfg_duty_person p
+                           on p.id = t.duty_person
+                 left join t_cfg_duty_module m
+                           on t.duty_module = m.module_id
+        where duty_date = #{dutyDate}
+          and duty_person = #{personId}
+          and t.precinct_id = #{precinctId}
+    </select>
+    <select id="queryModulName" resultType="java.lang.String">
+        select module_name
+        from t_cfg_duty_module
+        where module_id = #{dutyModule}
+    </select>
+    <select id="queryDutyInfoById" resultType="java.util.Map">
+        select *
+        from t_cfg_duty_table
+        where precinct_id = #{precinctId}
+          and duty_date = #{dutyDate}
+          and duty_module = #{dutyModule}
+          and duty_person = #{dutyPerson}
+    </select>
+
+
+</mapper>

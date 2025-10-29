@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.CityManageMapper">
+
+    <select id="getCityManageCategory" resultType="map">
+
+       SELECT distinct large_type as largeType ,large_type_icon as largeTypeIcon FROM `t_city_manage_category`
+
+    </select>
+
+    <select id="getCityManageDetail" resultType="map">
+        select
+        `id`,
+        `WMS_address` as WMSAddress,
+        `map_catalogue` as mapCatalogue,
+        `coordinate_system` as coordinateSystem,
+        `map_name` as mapName,
+         DATE_FORMAT(`collect_time`, '%Y-%m-%d %H:%i:%S') as collectTime,
+        `department` ,
+        `category` ,
+        `REST_address` as RESTAddress,
+        large_type as largeType,
+        large_type_icon as largeTypeIcon ,
+        small_type_icon as smallTypeIcon
+        from t_city_manage_category
+        where large_type = #{largeType}
+    </select>
+
+</mapper>

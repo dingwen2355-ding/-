@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.HospitalDao">
+
+    <select id="queryDdHospitalList" resultType="map">
+        SELECT
+            id,
+            address,
+            `name`,
+            gpsx,
+            gpsy,
+            precinct_name precinctName,
+            ifnull(contact,'') contact
+        FROM
+            t_data_dd_hospital
+    </select>
+
+    <select id="query2HospitalList" resultType="map">
+        SELECT
+            id,
+            address,
+            `name`,
+            gpsx,
+            gpsy,
+            precinct_name precinctName,
+            ifnull(contact,'') contact
+        FROM
+            t_data_2_hospital
+    </select>
+
+    <select id="queryIsolationList" resultType="map">
+        SELECT
+            *
+        FROM
+            t_data_isolation_point
+    </select>
+</mapper>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.IAlarmInstallMapper">
+    <select id="selAlarmInstall" resultType="java.util.LinkedHashMap">
+        SELECT IFNULL(`id`, '')              id,
+               IFNULL(`name`, '')              name,
+               IFNULL(`event_source`, '')      eventSource,
+               IFNULL(`remind_template`, '')   remindTemplate,
+               IFNULL(`trigger_frequency`, '') triggerFrequency,
+               IFNULL(`threshold`, '')         threshold,
+               IFNULL(`rules_state`, '')       rulesState,
+               IFNULL(`creator`, '')           creator,
+               IFNULL(`create_time`, '')       createTime,
+               IFNULL(`update_person`, '')     updatePerson,
+               IFNULL(`update_time`, '')       updateTime
+        FROM t_alarm_install
+        where 1=1
+        <if test="id != null">and `id` = #{id}</if>
+        <if test="name != null">and `name` = #{name}</if>
+    </select>
+
+    <update id="updateAlarmInstall">
+        update t_alarm_install
+        <set>
+            <if test="threshold != null">
+                threshold = #{threshold},
+            </if>
+            <if test="rulesState != null">
+                rules_state = #{rulesState},
+            </if>
+            <if test="user != null">
+                update_person = #{user},
+            </if>
+            update_time = current_timestamp
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selCommunity" resultType="java.util.LinkedHashMap">
+        select precinct_name precinctName from  t_cfg_precinct where precinct_id = #{community}
+    </select>
+
+    <select id="queryPrecinctList" resultType="map">
+        select precinct_id AS precinctId,
+               precinct_name AS precinctName
+        from t_cfg_precinct
+    </select>
+
+    <insert id="insertAlarmInstall">
+        INSERT INTO t_alarm_inform(
+        alarm_id,
+        event_id,
+        announcement_title,
+        announcement_type,
+        announcement_content,
+        push_department_number,
+        push_person_number,
+        create_time,
+        creator,
+        is_accept,
+        remark
+        )
+        VALUES
+        <foreach collection="lists" item="map" separator=",">
+            (
+            #{map.alarmId},
+            #{map.eventId},
+            #{map.announcementTitle},
+            #{map.announcementType},
+            #{map.announcementContent},
+            #{map.pushDepartmentNumber},
+            #{map.pushPersonNumber},
+            current_timestamp,
+            #{map.creator},
+            #{map.isAccept},
+            #{map.remark}
+            )
+        </foreach>
+    </insert>
+
+    <select id="selEventManageByEventId" resultType="com.znv.manage.common.bean.EventInfo">
+        SELECT
+                event_id ,
+                task_id ,
+                record_id,
+                address,
+                happen_time,
+                files,
+                end_time,
+                event_type,
+                event_name,
+                `desc`,
+                channel,
+                deadline_time,
+                `level`,
+                grid_id,
+                event_state,
+                report_source,
+                info_source,
+                damage_degree,
+                topic_name,
+                gpsx,
+                gpsy,
+                sync_time,
+                event_tag,
+                overdue_state,
+                report_person,
+                report_phone,
+                update_time,
+                deal_dept_id,
+                deal_person_id,
+                is_alarm
+        FROM t_data_event_info
+        where FIND_IN_SET(event_id,#{eventIds})
+    </select>
+</mapper>

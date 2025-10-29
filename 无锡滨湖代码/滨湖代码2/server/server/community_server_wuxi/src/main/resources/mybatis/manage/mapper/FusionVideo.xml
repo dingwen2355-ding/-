@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.FusionVideoDao">
+
+	<select id="getData" resultType="com.znv.manage.common.bean.EventInfo">
+		select ID event_id,LON gpsx,LAT gpsy,DEVICE_IDS deviceIds from community_wuxi_eims.t_cfg_event
+		where 1=1
+		<if test="id!= null  and id != ''">
+			and ID = #{id}
+		</if>
+	</select>
+
+	<select id="getData2" resultType="com.znv.manage.common.bean.EventInfo">
+		select event_id, gpsx, gpsy,deviceIds from base_event_info
+		where ifnull(deviceIds,'') = ''and ifnull(gpsx,'') != ''and ifnull(gpsy,'') != ''
+	</select>
+
+	<select id="getList" resultType="com.znv.manage.common.bean.DeviceInfo">
+		select device_id,gpsx,gpsy from t_cfg_device WHERE device_kind = 6 and ifnull(gpsx,'') != '' and ifnull(gpsy,'') != ''
+	</select>
+
+	<select id="getList2" resultType="com.znv.manage.common.bean.DeviceInfo">
+		SELECT
+			device_id,
+			device_name,
+			device_kind,
+			gpsx,
+			gpsy,
+			ROUND(6378.138 * 2 * ASIN(
+							SQRT(POW(SIN((#{gpsy} * PI() / 180 - gpsy * PI() / 180) / 2),2)
+								+ COS(#{gpsy} * PI() / 180) * COS(gpsy * PI() / 180)
+									 * POW(SIN((#{gpsx} * PI() / 180 - gpsx * PI() / 180) / 2),2))) * 1000
+				) AS Mdistance
+		FROM
+			t_cfg_device
+		WHERE
+			device_kind = 666
+		  AND ifnull(gpsx, '') != ''
+		  AND ifnull(gpsx, '') != '0.0'
+		ORDER BY
+			Mdistance ASC
+		LIMIT 3
+	</select>
+
+	<update id="updateEventInfo" parameterType="com.znv.manage.common.bean.EventInfo">
+		update base_event_info
+		<set>
+			<if test="deviceIds !=null and deviceIds != '' ">deviceIds= #{deviceIds},</if>
+		</set>
+		where event_id = #{eventId}
+	</update>
+
+	<update id="updateEventDeviceId" parameterType="list">
+		update base_event_info
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="deviceIds = case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when event_id=#{item.eventId} then #{item.deviceIds}
+				</foreach>
+			</trim>
+		</trim>
+		where event_id in
+		<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+			#{item.eventId}
+		</foreach>
+	</update>
+
+	<select id="getDeviceById" resultType="com.znv.manage.common.bean.DeviceInfo">
+		select device_id,
+		device_name,
+		gpsx,
+		gpsy,
+		install_addr,
+		device_kind,
+		ifnull(url,'') url
+		from t_cfg_device
+		where 1=1
+		<if test="id!= null  and id != ''">
+			and device_id = #{id}
+		</if>
+		<if test="precinctId != null and precinctId != ''">
+			and precinct_id = #{precinctId}
+		</if>
+	</select>
+
+	<select id="query33DeviceList" resultType="com.znv.manage.common.bean.DeviceInfo">
+		select device_id,
+		device_name,
+		gpsx,
+		gpsy,
+		install_addr,
+		device_kind,
+		ifnull(url,'') url
+		from t_cfg_device
+		where device_kind = '33'
+		<if test="precinctId != null and precinctId != ''">and precinct_id = #{precinctId}</if>
+	</select>
+
+	<select id="query35DeviceList" resultType="com.znv.manage.common.bean.DeviceInfo">
+		select device_id,
+		device_name,
+		gpsx,
+		gpsy,
+		install_addr,
+		device_kind,
+		ifnull(url,'') url
+		from t_cfg_device
+		where device_kind = #{deviceKind}
+		<if test="precinctId != null and precinctId != ''">and precinct_id = #{precinctId}</if>
+	</select>
+
+	<update id="updateFusionMax">
+		replace into deal_event_associated_video_max VALUES (#{eventId},#{type},#{deviceIds})
+	</update>
+
+	<select id="queryCameraInfoByType" resultType="java.util.HashMap">
+		SELECT
+			a.device_id deviceId,
+			a.device_name deviceName,
+			a.device_kind deviceKind,
+			ifnull(b.name,'') kindName,
+			ifnull(c.precinct_name,'') precinctName,
+			<if test="gpsx != '' and gpsy != ''">
+				ROUND(6378.138 * 2 * ASIN(
+				SQRT(POW(SIN((#{gpsy} * PI() / 180 - a.gpsy * PI() / 180) / 2),2)
+				+ COS(#{gpsy} * PI() / 180) * COS(a.gpsy * PI() / 180)
+				* POW(SIN((#{gpsx} * PI() / 180 - a.gpsx * PI() / 180) / 2),2))) * 1000
+				) AS Mdistance,
+			</if>
+			ifnull(a.url,'') url
+		from t_cfg_device a left join t_dict_devicekind b on a.device_kind = b.device_kind
+		left join t_cfg_precinct c on a.precinct_id = c.precinct_id
+		where 1=1
+		<if test="deviceKind !=null ">
+			and find_in_set(a.device_kind,#{deviceKind})
+		</if>
+		<if test="name != null and name != ''">
+			and (a.device_name like concat('%',#{name},'%') or a.device_id like concat('%',#{name},'%'))
+		</if>
+		<if test="deviceId != null">
+			and find_in_set(a.device_id,#{deviceId})
+		</if>
+		<if test="precinctId != null and precinctId !=''">
+			and a.precinct_id = #{precinctId}
+		</if>
+		<if test="devtype != null and devtype !=''">
+			and a.devtype = #{devtype}
+		</if>
+		<if test="gpsx != ''and gpsy != ''">
+			ORDER BY
+			Mdistance ASC
+		</if>
+		<if test="pageStart != null and pageLen != null">limit ${pageStart},${pageLen}</if>
+	</select>
+
+	<select id="queryCameraInfoByTypeCount" resultType="int">
+		SELECT
+			count(a.device_id) `count`
+		from t_cfg_device a
+		where 1=1
+		<if test="deviceKind !=null ">
+			and find_in_set(a.device_kind,#{deviceKind})
+		</if>
+		<if test="name != null and name != ''">
+			and (a.device_name like concat('%',#{name},'%') or a.device_id like concat('%',#{name},'%'))
+		</if>
+		<if test="deviceId != null">
+			and find_in_set(a.device_id,#{deviceId})
+		</if>
+		<if test="precinctId != null and precinctId !=''">
+			and a.precinct_id = #{precinctId}
+		</if>
+		<if test="devtype != null and devtype !=''">
+			and a.devtype = #{devtype}
+		</if>
+	</select>
+
+	<select id="fusionMax" resultType="java.util.HashMap">
+		SELECT
+		a.device_id deviceId,
+		a.device_name deviceName,
+		a.device_kind deviceKind,
+		ifnull(a.url,'') url
+		FROM
+		t_cfg_device a INNER JOIN (SELECT
+		substring_index( substring_index( a.device_ids, ',', b.help_topic_id + 1 ), ',',- 1 ) deviceId,
+		a.event_id,
+		a.type,
+		device_ids
+		FROM
+		deal_event_associated_video_max a
+		JOIN mysql.help_topic b ON b.help_topic_id &lt;( length( a.device_ids ) - length( REPLACE ( a.device_ids, ',', '' ) ) + 1 )
+		WHERE
+		a.event_id = #{eventId}) b on a.device_id = b.deviceId
+		ORDER BY find_in_set(a.device_id,b.device_ids)
+	</select>
+
+	<select id="fusionMaxCfg" resultType="map">
+		SELECT ifnull(device_ids,'') deviceIds,ifnull(type,'') type FROM deal_event_associated_video_max WHERE event_id = #{eventId}
+	</select>
+
+	<select id="queryDeviceKindList" resultType="map">
+		SELECT
+			a.device_kind deviceKind,
+			b.name
+		FROM
+				( SELECT device_kind FROM t_cfg_device GROUP BY device_kind ) a left JOIN t_dict_devicekind b on a.device_kind = b.device_kind
+	</select>
+
+	<select id="queryFixedCameraList" resultType="map">
+		select device_id deviceId,device_name deviceName
+		from t_cfg_device
+		where device_kind = '6'
+		<if test="precinctName != null and precinctName != ''">and street = #{precinctName}</if>
+	</select>
+
+	<update id="updateEventDeviceIds">
+		update community_wuxi_eims.t_cfg_event set DEVICE_IDS = #{deviceIds} where ID = #{eventId}
+	</update>
+
+
+</mapper>

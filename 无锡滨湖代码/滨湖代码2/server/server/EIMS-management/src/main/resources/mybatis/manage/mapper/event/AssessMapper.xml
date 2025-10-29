@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.event.AssessDao">
+
+    <resultMap type="com.znv.manage.common.bean.event.Assess" id="AssessMap">
+        <result property="id" column="ID" jdbcType="INTEGER"/>
+        <result property="name" column="NAME" jdbcType="VARCHAR"/>
+        <result property="eventId" column="EVENT_ID" jdbcType="INTEGER"/>
+        <result property="assessTime" column="ASSESS_TIME" jdbcType="TIMESTAMP"/>
+        <result property="prepareScore" column="PREPARE_SCORE" jdbcType="INTEGER"/>
+        <result property="warningScore" column="WARNING_SCORE" jdbcType="INTEGER"/>
+        <result property="criminalScore" column="CRIMINAL_SCORE" jdbcType="INTEGER"/>
+        <result property="responseScore" column="RESPONSE_SCORE" jdbcType="INTEGER"/>
+        <result property="afterScore" column="AFTER_SCORE" jdbcType="INTEGER"/>
+        <result property="commandScore" column="COMMAND_SCORE" jdbcType="INTEGER"/>
+        <result property="totalScore" column="total_score" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="AssessMap">
+        select ID,
+               NAME,
+               EVENT_ID,
+               ASSESS_TIME,
+               PREPARE_SCORE,
+               WARNING_SCORE,
+               CRIMINAL_SCORE,
+               RESPONSE_SCORE,
+               AFTER_SCORE,
+               COMMAND_SCORE
+        from T_CFG_ASSESS
+        where ID = #{id}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from T_CFG_ASSESS
+        <where>
+            <if test="id != null">
+                and ID = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and NAME = #{name}
+            </if>
+            <if test="eventId != null">
+                and EVENT_ID = #{eventId}
+            </if>
+            <if test="assessTime != null">
+                and ASSESS_TIME = #{assessTime}
+            </if>
+            <if test="prepareScore != null">
+                and PREPARE_SCORE = #{prepareScore}
+            </if>
+            <if test="warningScore != null">
+                and WARNING_SCORE = #{warningScore}
+            </if>
+            <if test="criminalScore != null">
+                and CRIMINAL_SCORE = #{criminalScore}
+            </if>
+            <if test="responseScore != null">
+                and RESPONSE_SCORE = #{responseScore}
+            </if>
+            <if test="afterScore != null">
+                and AFTER_SCORE = #{afterScore}
+            </if>
+            <if test="commandScore != null">
+                and COMMAND_SCORE = #{commandScore}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_ASSESS(NAME, EVENT_ID, ASSESS_TIME, PREPARE_SCORE, WARNING_SCORE, CRIMINAL_SCORE,
+                                         RESPONSE_SCORE, AFTER_SCORE, COMMAND_SCORE)
+        values (#{name}, #{eventId}, #{assessTime}, #{prepareScore}, #{warningScore}, #{criminalScore},
+                #{responseScore}, #{afterScore}, #{commandScore})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_ASSESS(NAME, EVENT_ID, ASSESS_TIME, PREPARE_SCORE, WARNING_SCORE, CRIMINAL_SCORE,
+        RESPONSE_SCORE, AFTER_SCORE, COMMAND_SCORE)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.eventId}, #{entity.assessTime}, #{entity.prepareScore}, #{entity.warningScore},
+            #{entity.criminalScore}, #{entity.responseScore}, #{entity.afterScore}, #{entity.commandScore})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_ASSESS(NAME, EVENT_ID, ASSESS_TIME, PREPARE_SCORE, WARNING_SCORE, CRIMINAL_SCORE,
+        RESPONSE_SCORE, AFTER_SCORE, COMMAND_SCORE)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.eventId}, #{entity.assessTime}, #{entity.prepareScore}, #{entity.warningScore},
+            #{entity.criminalScore}, #{entity.responseScore}, #{entity.afterScore}, #{entity.commandScore})
+        </foreach>
+        on duplicate key update
+        NAME = values(NAME),
+        EVENT_ID = values(EVENT_ID),
+        ASSESS_TIME = values(ASSESS_TIME),
+        PREPARE_SCORE = values(PREPARE_SCORE),
+        WARNING_SCORE = values(WARNING_SCORE),
+        CRIMINAL_SCORE = values(CRIMINAL_SCORE),
+        RESPONSE_SCORE = values(RESPONSE_SCORE),
+        AFTER_SCORE = values(AFTER_SCORE)
+        COMMAND_SCORE = values(COMMAND_SCORE)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update T_CFG_ASSESS
+        <set>
+            <if test="name != null and name != ''">
+                NAME = #{name},
+            </if>
+            <if test="eventId != null">
+                EVENT_ID = #{eventId},
+            </if>
+            <if test="assessTime != null">
+                ASSESS_TIME = #{assessTime},
+            </if>
+            <if test="prepareScore != null">
+                PREPARE_SCORE = #{prepareScore},
+            </if>
+            <if test="warningScore != null">
+                WARNING_SCORE = #{warningScore},
+            </if>
+            <if test="criminalScore != null">
+                CRIMINAL_SCORE = #{criminalScore},
+            </if>
+            <if test="responseScore != null">
+                RESPONSE_SCORE = #{responseScore},
+            </if>
+            <if test="afterScore != null">
+                AFTER_SCORE = #{afterScore},
+            </if>
+            <if test="commandScore != null">
+                COMMAND_SCORE = #{commandScore},
+            </if>
+        </set>
+        where ID = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from T_CFG_ASSESS
+        where ID = #{id}
+    </delete>
+
+    <!--通过主键批量删除-->
+    <delete id="deleteBatch">
+        delete
+        from T_CFG_ASSESS
+        where find_in_set(ID, #{ids})
+    </delete>
+
+    <!--条件查询-->
+    <select id="queryByCondition" resultMap="AssessMap">
+        select
+        a.ID, NAME, EVENT_ID, ASSESS_TIME, PREPARE_SCORE, WARNING_SCORE, CRIMINAL_SCORE, RESPONSE_SCORE, AFTER_SCORE,
+        PREPARE_SCORE+WARNING_SCORE+CRIMINAL_SCORE+RESPONSE_SCORE+AFTER_SCORE+COMMAND_SCORE total_score,b.EVENT_TITLE,COMMAND_SCORE
+        from T_CFG_ASSESS a
+        left join T_CFG_EVENT b on a.EVENT_ID=b.ID
+        <where>
+            <if test="id != null">
+                and a.ID = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and NAME = #{name}
+            </if>
+            <if test="eventId != null">
+                and EVENT_ID = #{eventId}
+            </if>
+            <if test="eventTitle != null and eventTitle!=''">
+                and b.EVENT_TITLE like concat('%',#{eventTitle},'%')
+            </if>
+        </where>
+    </select>
+</mapper>
+

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.ResourcePointDao">
+
+    <select id="selectSchool" resultType="java.util.Map">
+        select * from dzs_jyj_cjzx
+    </select>
+    <select id="selectExpert" resultType="java.util.Map">
+        select @rownum := @rownum+1 AS ID,t.* from (SELECT @rownum:=0) r, dzs_sthjj_yjzjxx t
+    </select>
+
+    <select id="selectShelter" resultType="java.util.Map">
+        select * from dzs_yjglj_yjbncs
+    </select>
+
+    <select id="selectStock" resultType="java.util.Map">
+        select * from dzs_yjglj_yjwzxx
+    </select>
+</mapper>

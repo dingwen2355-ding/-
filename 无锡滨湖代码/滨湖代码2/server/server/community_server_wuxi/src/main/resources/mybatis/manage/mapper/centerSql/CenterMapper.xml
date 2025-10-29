@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.center.dao.CenterDao">
+
+    <select id="select" resultType="map">
+        SELECT *
+        from dzs_jyj_bxxxzx
+    </select>
+
+    <select id="queryCoalMine" resultType="map">
+        select id,
+               name,
+               area,
+               longitude as "gpsX",
+               latitude  as "gpsY",
+               sea_level as "seaLevel"
+        from ztk_yjbk.yjzh.tab_dz_coal_mine
+        where is_deleted = '0'
+    </select>
+
+    <select id="queryEnterprise" resultType="map">
+        select id,
+               enterprise_name   as "enterpriseName",
+               industry_category as "industryCategory",
+               nature,
+               level,
+               area_code         as "areaCode",
+               longitude         as "gpsX",
+               latitude          as "gpsY",
+               address,
+               phone
+        from ztk_yjbk.yjzh.tab_dz_enterprise
+        where is_deleted = '0'
+    </select>
+
+    <select id="queryObservationStation" resultType="map">
+        select id,
+               station_code       as "stationCode",
+               station_name       as "stationName",
+               drainage,
+               river_name         as "riverName",
+               station_type       as "stationType",
+               longitude          as "gpsX",
+               latitude           as "gpsY",
+               address,
+               distance,
+               collect_water_area as "collectWaterArea",
+               height_systems     as "heightSystems"
+        from ztk_yjbk.yjzh.tab_dz_observation_station
+
+    </select>
+
+    <select id="queryProneDisaster" resultType="map">
+        select id,
+               area,
+               township,
+               village,
+               name,
+               hidden_type                  as "hiddenType",
+               danger_level                 as "dangerLevel",
+               scale,
+               longitude                    as "gpsX",
+               latitude                     as "gpsY",
+               monitor_username             as "monitorUsername",
+               monitor_phone                as "monitorPhone",
+               prevent_username             as "preventUsername",
+               prevent_phone                as "preventPhone",
+               monitor_responsible_username as "monitorResponsibleUsername",
+               monitor_responsible_phone    as "monitorResponsiblePhone"
+        from ztk_yjbk.yjzh.tab_dz_prone_disaster
+        where is_deleted = '0'
+    </select>
+
+    <select id="queryWaterlogging" resultType="map">
+        select id,
+               name,
+               longitude        as "gpsX",
+               latitude         as "gpsY",
+               govern_situation as "governStuation",
+               area,
+               unit_name        as "unitName"
+        from ztk_yjbk.yjzh.tab_dz_waterlogging
+        where is_deleted = '0'
+    </select>
+    <select id="queryReservoir" resultType="map">
+        select id,
+               reservoir_type      as "reservoirType",
+               area,
+               reservoir_name      as "resrevoirName",
+               total_capacity      as "totalCapacity",
+               water_supply        as "waterSupply",
+               flood_capacity      as "floodCapacity",
+               irrigation_capacity as "irrigationCapacity",
+               unit,
+               longitude           as "gpsX",
+               latitude            as "gpsY"
+        from ztk_yjbk.yjzh.tab_dz_reservoir
+        where is_deleted = '0'
+    </select>
+    <select id="queryTransport" resultType="map">
+        select id,
+               unit_name as "unitName",
+               address,
+               contact,
+               phone,
+               longitude as "gpsX",
+               latitude  as "gpsY"
+        from ztk_yjbk.yjzh.tab_dz_transport
+        where is_deleted = '0'
+    </select>
+    <select id="queryWeatherStation" resultType="map">
+        select id,
+               sid,
+               sid_h        as "sidH",
+               element_tag  as "elementTag",
+               station_name as "stationName",
+               station_type as "stationType",
+               longitude    as "gpsX",
+               latitude     as "gpsY",
+               county,
+               township
+        from ztk_yjbk.yjzh.tab_dz_weather_station
+        where is_display = '1'
+    </select>
+    <select id="queryRescue" resultType="map">
+        select id,
+               name,
+               major,
+               total_number    as "totalNumber",
+               domain,
+               unit,
+               contacts,
+               contacts_mobile as "contactsMobile",
+               telephone,
+               mapx            as "gpsX",
+               mapy            as "gpsY"
+        from ztk_yjbk.yjzh.tab_dz_rescue
+        where stat = 1
+    </select>
+    <select id="queryHazard" resultType="map">
+        select id,
+               unit_name           as "unitName",
+               longitude           as "gpsX",
+               latitude            as "gpsY",
+               address,
+               contact,
+               phone,
+               risk_level          as "riskLevel",
+               enterprise_category as "enterpriseCategory",
+               industry_category   as "industryCategory"
+        from ztk_yjbk.yjzh.tab_dz_hazard
+        where is_deleted = '0'
+    </select>
+    <select id="queryMedicalInstitution" resultType="map">
+        select id,
+               institution_name  as "institutionName",
+               address,
+               legal_person_name as "legalPersonName",
+               longitude         as "gpsX",
+               latitude          as "gpsY",
+               unit_level        as "unitLevel",
+               bed_num           as "bedNum",
+               doctor_num        as "doctorNum",
+               nurse_num         as "nurseNum",
+               phone
+        from ztk_yjbk.yjzh.tab_dz_medical_institution
+        where is_deleted = '0'
+    </select>
+
+    <select id="queryCount" resultType="Long">
+        select sum(cnt)
+        from
+        (
+        <foreach collection="list" item="item" index="index" separator="union all">
+            select count(1) cnt from ztk_yjbk.yjzh.yyq_${item} w where w.status =1
+        </foreach>
+        ) T
+    </select>
+
+    <select id="queryMonthCount" resultType="String">
+        select count(1) from ztk_yjbk.yjzh.yyq_article_${yearMonth} w
+        where w.status =1
+    </select>
+
+    <select id="queryDayCount" resultType="String">
+        select count(1)
+        from ztk_yjbk.yjzh.yyq_article_${yearMonth} w
+        where w.status = 1
+          and "pubTimeString" >= CURRENT_DATE
+    </select>
+
+    <select id="queryWeibo" resultType="map">
+        select "Id", aid, title, content, url, area
+        from (
+                 select "Id", aid, title, content, url, area, "pubTimeString"
+                 from ztk_yjbk.yjzh.yyq_article_${nowMonth} where typecode = '微博' and status = 1 and title not in ('无标题','转发微博','转发')
+                 union
+                 select "Id", aid, title, content, url, area, "pubTimeString"
+                 from ztk_yjbk.yjzh.yyq_article_${lastMonth} where typecode = '微博' and status = 1 and title not in ('无标题','转发微博','转发')
+             ) T
+        order by T."pubTimeString" DESC
+        limit 100;
+    </select>
+
+    <select id="queryOthers" resultType="map">
+        select "Id", aid, title, content, url, area
+        from (
+                 select "Id", aid, title, content, url, area, "pubTimeString"
+                 from ztk_yjbk.yjzh.yyq_article_${nowMonth} where typecode != '微博' and status = 1 and title not in ('无标题','转发微博','转发')
+                 union
+                 select "Id", aid, title, content, url, area, "pubTimeString"
+                 from ztk_yjbk.yjzh.yyq_article_${lastMonth} where typecode != '微博' and status = 1 and title not in ('无标题','转发微博','转发')
+             ) T
+        order by T."pubTimeString" DESC
+        limit 100;
+    </select>
+
+    <select id="query48Hours" resultType="map">
+        select *
+        from (
+                 SELECT to_char("pubTimeString", 'yyyy-MM-dd HH24:00') time, count(1)
+                 FROM (SELECT "pubTimeString"
+                       from ztk_yjbk.yjzh.yyq_article_${nowMonth}
+                       WHERE "pubTimeString" &lt;= (CURRENT_TIMESTAMP)
+                         and "pubTimeString" >= (CURRENT_TIMESTAMP - INTERVAL '48 HOUR')
+                         and status = 1
+                       UNION ALL
+                       SELECT "pubTimeString"
+                       from ztk_yjbk.yjzh.yyq_article_${lastMonth}
+                       WHERE "pubTimeString" >= (CURRENT_TIMESTAMP - INTERVAL '48 HOUR')
+                         and "pubTimeString" &lt; (select date_trunc('month', now()))
+                         and status = 1
+                      ) T
+                 group by to_char(T."pubTimeString", 'yyyy-MM-dd HH24:00')
+                 ORDER BY time desc
+                 limit 24) a
+        order by a.time asc;
+    </select>
+    <select id="queryLastWeather" resultType="java.util.Map">
+        select lastupdate,
+               humidity,
+               precipitation,
+               pressure,
+               temperature,
+               winddirection,
+               winddirectiondegree,
+               windscale,
+               windspeed,
+               situation,
+               situationimg from ztk_yjbk.yjzh.dzsstqxxb WHERE to_date(lastupdate::TEXT,'YYYY-MM-DD')=to_date(now()::TEXT,'YYYY-MM-DD')
+        order by lastupdate desc limit 1
+    </select>
+
+    <select id="queryTableName" resultType="String">
+        select "table" as name
+        from ztk_yjbk.yjzh.yyq_article_common
+        where 1 = 1
+          and "start" &lt;= CURRENT_TIMESTAMP
+          and "end" >= CURRENT_TIMESTAMP
+        order by "end" desc
+        limit 1;
+    </select>
+
+    <select id="queryTableNameList" resultType="String">
+        select "table" as name from ztk_yjbk.yjzh.yyq_article_common where 1=1
+        <if test="nowTime != null">
+            and "start" >= #{nowTime}
+        </if>
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,137 @@
+.el-collapse-item__header {
+  height: 30px;
+  background: #efefef;
+  border-bottom: 1px solid #E4EAF0;
+  border-top: 1px solid #E4EAF0;
+}
+
+.el-dialog {
+  margin-top: 9vh !important;
+}
+
+// 弹框间隔
+.el-dialog__body {
+  padding: 5px 20px;
+}
+
+// 表单：hover效果 和点击背景
+.el-table tbody tr:hover>td {
+  background-color: #F2F3FF !important;
+}
+
+.el-table tbody tr.hover-row>td {
+  background-color: #F2F3FF !important;
+}
+
+.el-table__body tr.current-row>td {
+  background-color: #F2F3FF !important;
+}
+
+.el-table thead {
+  color: #999999;
+  font-weight: 500;
+}
+
+.el-table td .cell {
+  color: #191919;
+}
+
+/*分页组件局右*/
+.el-pagination {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.x-hd div span {
+  color: #f56c6c !important;
+  border: 1px solid #f56c6c;
+  border-radius: 50%;
+}
+
+// 导航栏样式
+.el-menu-item,
+.el-submenu__title {
+  border-bottom: 1px solid #efefef !important;
+}
+
+
+.el-checkbox__inner {
+  border-color: #409EFF;
+}
+
+// 重置默认按钮样式
+.el-button--mini,
+.el-button--small {
+  font-size: 14px;
+}
+
+.el-button--primary {
+  color: #FFF;
+  background-color: #0052D9;
+  border-color: #0052D9;
+}
+
+.el-button--danger {
+  color: #FFF;
+  background-color: #D84949;
+  border-color: #D84949;
+}
+
+.el-button--primary.is-plain {
+  color: #0052D9;
+  background: #F2F3FF;
+  border-color: #0052D9;
+}
+
+.el-button--primary.is-plain:hover {
+  color: #FFF;
+  background: #0052D9;
+  border-color: #0052D9;
+}
+
+.el-button--success.is-plain {
+  color: #2CA471;
+  background: #E3F9E9;
+  border-color: #2CA471;
+}
+
+.el-button--success.is-plain:hover {
+  color: #FFF;
+  background: #2CA471;
+  border-color: #2CA471;
+}
+
+.el-pagination.is-background .el-pager li:not(.disabled).active {
+  background-color: #0052D9;
+  color: #FFF;
+}
+
+.el-input__inner {
+  height: 32px;
+  line-height: 32px;
+}
+
+.el-dialog__header {
+  display: flex;
+  align-items: center;
+  background-color: #f3f3f3;
+  height: 64px;
+  line-height: 64px;
+  box-sizing: border-box;
+  padding: 15px;
+}
+
+.el-form-item__content {
+  // height: 32px;
+  // line-height: 32px;
+
+  .el-input__icon {
+    height: 32px;
+    line-height: 32px;
+  }
+
+  .el-range-separator {
+    height: 32px;
+    line-height: 32px;
+  }
+}

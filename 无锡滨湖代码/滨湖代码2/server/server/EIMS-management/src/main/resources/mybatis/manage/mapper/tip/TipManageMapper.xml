@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.tip.TipManageDao">
+    <select id="getRoleModule" resultType="java.lang.String">
+        SELECT c.module_name FROM
+        t_cfg_user a
+        LEFT JOIN t_link_role_module b ON b.role_id = a.role_id
+        LEFT JOIN t_cfg_module c ON c.id = b.module_id
+        WHERE a.user_id=#{userId}
+        GROUP BY c.id
+    </select>
+
+    <select id="getAuditPlan" resultType="com.znv.manage.common.bean.tip.ToDoTipBean">
+        SELECT name as title, '应急预案' as type,  'emergencyPlan' as router,
+        DATE_FORMAT(modify_time, '%Y-%m-%d %H:%i:%S') as createTime
+        FROM
+        t_cfg_plan_info
+        WHERE status='1'
+    </select>
+
+    <select id="getAuditMes" resultType="com.znv.manage.common.bean.tip.ToDoTipBean">
+        SELECT mes_name as title, '信息审核' as type,  'AuditInformation' as router,
+        DATE_FORMAT(modify_time, '%Y-%m-%d %H:%i:%S') as createTime
+        FROM
+        t_cfg_mes_info
+        WHERE status='1'
+    </select>
+
+    <select id="getMesInfoByPersonId" resultType="com.znv.manage.common.bean.tip.MesInfoTipBean">
+        SELECT b.id as relStatusId, b.status as relStatus, a.id as id, mes_name as mesName,
+        type_id as typeId, type_name as typeName,
+        rel_id as relId, rel_name as relName, rel_object_id as relObjectId, rel_object_name as relObjectName,
+        DATE_FORMAT(rel_time, '%Y-%m-%d %H:%i:%S') as relTime, rel_person as relPerson, create_id as createId,
+        create_name as createName,
+        a.status as status, audit_opinion as auditOpinion, auditor_id as auditorId, auditor_name as auditorName,
+        DATE_FORMAT(process_time, '%Y-%m-%d %H:%i:%S') as processTime, remark as remark,
+        b.person_id as personId,
+        (SELECT GROUP_CONCAT(d.user_name)
+        FROM t_cfg_mes_rel_status c
+        LEFT JOIN t_cfg_user d ON d.user_id=c.person_id
+        WHERE c.mes_id=a.id) AS personNames
+        FROM t_cfg_mes_rel_status b
+        left join t_cfg_mes_info a ON b.mes_id=a.id
+        WHERE b.rel_type='2' AND b.person_id=#{userId} and b.status!='2'
+        <if test="text!=null and text!=''">
+            and (a.mes_name like CONCAT('%',#{text},'%')
+            or a.remark like CONCAT('%',#{text},'%'))
+        </if>
+        GROUP BY a.id
+        ORDER BY CONVERT( b.`status` USING gbk ) COLLATE gbk_chinese_ci DESC
+    </select>
+
+    <update id="updateMesStatus">
+        update t_cfg_mes_rel_status set status='0' where id=#{id}
+    </update>
+
+    <select id="getStatus" resultType="int">
+        SELECT count(1)
+        FROM t_cfg_mes_rel_status b
+        left join t_cfg_mes_info a ON b.mes_id=a.id
+        WHERE b.rel_type='2' AND b.person_id=#{userId} and b.status='3'
+        GROUP BY a.id
+    </select>
+</mapper>

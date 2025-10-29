@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.resource.SiteManageDao">
+    <resultMap id="ResourceListMap" type="com.znv.manage.common.bean.resource.SiteManageBean">
+        <result property="id" column="ID" jdbcType="INTEGER"/>
+        <result property="name" column="NAME" jdbcType="VARCHAR"/>
+        <result property="category" column="CATEGORY" jdbcType="VARCHAR"/>
+        <result property="roomCount" column="ROOMCOUNT" jdbcType="INTEGER"/>
+        <result property="responsibility" column="RESPONSIBILITY" jdbcType="VARCHAR"/>
+        <result property="person" column="PERSON" jdbcType="VARCHAR"/>
+        <result property="phone" column="PHONE" jdbcType="VARCHAR"/>
+        <result property="community" column="COMMUNITY" jdbcType="VARCHAR"/>
+        <result property="address" column="ADDRESS" jdbcType="VARCHAR"/>
+        <result property="acreage" column="ACREAGE" jdbcType="VARCHAR"/>
+        <result property="state" column="STATE" jdbcType="VARCHAR"/>
+        <result property="maxGalleryful" column="MAXGALLERYFUL" jdbcType="VARCHAR"/>
+        <result property="streetName" column="streetName" jdbcType="VARCHAR"/>
+        <result property="photo" column="photo" jdbcType="VARCHAR"/>
+        <result property="gpsx" column="GPSX" jdbcType="VARCHAR"/>
+        <result property="gpsy" column="GPSY" jdbcType="VARCHAR"/>
+        <result property="telephone" column="TELEPHONE" jdbcType="VARCHAR"/>
+        <result property="alreadyGalleryful" column="ALREADY_GALLERYFUL" jdbcType="VARCHAR"/>
+        <result property="precinctTreeId" column="PRECINCT_TREE_ID" jdbcType="VARCHAR"/>
+        <result property="deviceId" column="DEVICE_ID" jdbcType="VARCHAR"/>
+        <result property="deviceStatus" column="DEVICE_STATUS" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="queryForList" resultMap="ResourceListMap">
+        SELECT a.ID,
+        a.NAME,
+        a.TYPE,
+        a.CATEGORY,
+        a.ROOM_COUNT as ROOMCOUNT,
+        a.RESPONSIBILITY,
+        a.PERSON,
+        a.PHONE,
+        a.COMMUNITY,
+        a.ADDRESS,
+        a.ACREAGE,
+        a.DEVICE_ID,
+        a.DEVICE_STATUS,
+        ifnull(a.STATE,'') as STATE,
+        a.MAX_GALLERYFUL as MAXGALLERYFUL,
+        ifnull(b.STREET_NAME,'') as streetName,
+        ifnull(a.GPSX,'') as GPSX,
+        ifnull(a.GPSY,'') as GPSY,
+        ifnull(a.TELEPHONE,'') as TELEPHONE,
+        ifnull(COUNT(f.ID_NUMBER),'') as ALREADY_GALLERYFUL,
+        ifnull(a.PHOTO,'') as PHOTO,
+        ifnull(a.PRECINCT_TREE_ID,'') as PRECINCT_TREE_ID
+        from T_CFG_SITE_MANAGE a
+        left join T_CFG_PRECINCT b on a.COMMUNITY = b.PRECINCT_NAME
+        left join (SELECT
+        MAX(D.TIME) as TIME, D.ID_NUMBER AS ID_NUMBER,D.SITE_ID
+        FROM
+        T_CFG_INFORMATION_ACQUISITION D,T_CFG_SITE_MANAGE a
+        group by
+        D.ID_NUMBER) c on c.SITE_ID = a.ID
+        LEFT JOIN T_CFG_INFORMATION_ACQUISITION f on f.TIME = c.TIME and f.ID_NUMBER = c.ID_NUMBER and f.IN_OR_OUT = '1'
+        where 1=1
+        <if test="name != null">
+            and a.NAME like concat('%',#{name},'%')
+        </if>
+        <if test="category != null">
+            and a.category like concat('%',#{category},'%')
+        </if>
+        <if test="address != null">
+            and a.ADDRESS like concat('%',#{address},'%')
+        </if>
+        <if test="acreage != null">
+            and a.ACREAGE = #{acreage}
+        </if>
+        <if test="MAXGALLERYFUL != null">
+            and a.MAX_GALLERYFUL = #{MAXGALLERYFUL}
+        </if>
+        <if test="streetName != null">
+            and b.STREET_NAME = #{streetName}
+        </if>
+        <if test="community != null">
+            and a.COMMUNITY = #{community}
+        </if>
+        <if test="type != null">
+            and a.type = #{type}
+        </if>
+        <if test="precinctTreeId != null and precinctTreeId != ''">AND
+            find_in_set(a.PRECINCT_TREE_ID,#{precinctTreeId})
+        </if>
+        <if test="precinctId != null">
+            and b.PRECINCT_ID LIKE CONCAT(#{precinctId}, '%')
+        </if>
+        <if test="ids != null and ids != ''">AND
+            find_in_set(a.ID,#{ids})
+        </if>
+        group by a.ID
+    </select>
+
+    <insert id="insert" parameterType="com.znv.manage.common.bean.resource.SiteManageBean">
+        insert into T_CFG_SITE_MANAGE (
+        <if test="name != null">
+            NAME,
+        </if>
+        <if test="type != null">
+            TYPE,
+        </if>
+        <if test="category != null">
+            CATEGORY,
+        </if>
+        <if test="roomCount != null">
+            ROOM_COUNT,
+        </if>
+        <if test="responsibility != null">
+            RESPONSIBILITY,
+        </if>
+        <if test="person != null">
+            PERSON,
+        </if>
+        <if test="phone != null">
+            PHONE,
+        </if>
+        <if test="community != null">
+            COMMUNITY,
+        </if>
+        <if test="address != null">
+            ADDRESS,
+        </if>
+        <if test="acreage != null">
+            ACREAGE,
+        </if>
+        <if test="state != null">
+            STATE,
+        </if>
+        <if test="maxGalleryful != null">
+            MAX_GALLERYFUL,
+        </if>
+        <if test="photo != null">
+            PHOTO,
+        </if>
+        <if test="precinctTreeId != null and precinctTreeId != ''">
+            PRECINCT_TREE_ID,
+        </if>
+        <if test="alreadyGalleryful != null">
+            ALREADY_GALLERYFUL,
+        </if>
+        <if test="gpsx != null">
+            GPSX,
+        </if>
+        <if test="gpsy != null">
+            GPSY,
+        </if>
+        <if test="deviceId != null">
+            DEVICE_ID,
+        </if>
+        CREATE_TIME)
+        values (
+        <if test="name != null">
+            #{name},
+        </if>
+        <if test="type != null">
+            #{type},
+        </if>
+        <if test="category != null">
+            #{category},
+        </if>
+        <if test="roomCount != null">
+            #{roomCount},
+        </if>
+        <if test="responsibility != null">
+            #{responsibility},
+        </if>
+        <if test="person != null">
+            #{person},
+        </if>
+        <if test="phone != null">
+            #{phone},
+        </if>
+        <if test="community != null">
+            #{community},
+        </if>
+        <if test="address != null">
+            #{address},
+        </if>
+        <if test="acreage != null">
+            #{acreage},
+        </if>
+        <if test="state != null">
+            #{state},
+        </if>
+        <if test="maxGalleryful != null">
+            #{maxGalleryful},
+        </if>
+        <if test="photo != null">
+            #{photo},
+        </if>
+        <if test="precinctTreeId != null and precinctTreeId != ''">
+            #{precinctTreeId},
+        </if>
+        <if test="alreadyGalleryful != null">
+            #{alreadyGalleryful},
+        </if>
+        <if test="gpsx != null">
+            #{gpsx},
+        </if>
+        <if test="gpsy != null">
+            #{gpsy},
+        </if>
+        <if test="deviceId != null">
+            #{deviceId},
+        </if>
+        NOW())
+    </insert>
+
+    <update id="update" parameterType="com.znv.manage.common.bean.resource.SiteManageBean">
+        update T_CFG_SITE_MANAGE
+        set NAME              =#{name},
+
+
+            TYPE=#{type},
+
+            CATEGORY=#{category},
+
+            ROOM_COUNT=#{roomCount},
+
+            RESPONSIBILITY=#{responsibility},
+
+            PERSON=#{person},
+
+            PHONE=#{phone},
+
+            COMMUNITY=#{community},
+
+            ADDRESS=#{address},
+
+            ACREAGE=#{acreage},
+
+            STATE=#{state},
+
+            MAX_GALLERYFUL=#{maxGalleryful},
+
+            PHOTO=#{photo},
+
+            PRECINCT_TREE_ID=#{precinctTreeId},
+
+            ALREADY_GALLERYFUL=#{alreadyGalleryful},
+
+            GPSX=#{gpsx},
+
+            GPSY=#{gpsy},
+
+            DEVICE_ID=#{deviceId},
+
+            UPDATE_TIME=now()
+
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+        delete from T_CFG_SITE_MANAGE where ID in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getSiteId" resultType="string">
+        select ID
+        FROM T_CFG_SITE_MANAGE
+    </select>
+
+    <select id="getCurrentPerson" resultType="Integer">
+        SELECT COUNT(1)
+        FROM T_CFG_INFORMATION_ACQUISITION C
+        WHERE C.IN_OR_OUT = '1'
+          AND (C.TIME, C.ID_NUMBER) IN (
+            SELECT MAX(D.TIME)
+            as TIME
+            , D.ID_NUMBER AS ID_NUMBER
+        FROM
+            T_CFG_INFORMATION_ACQUISITION D
+        where
+            D.SITE_ID=#{sitId}
+        group by
+            D.ID_NUMBER
+            )
+    </select>
+
+    <update id="updateCurrentPerson">
+        update T_CFG_SITE_MANAGE
+        set ALREADY_GALLERYFUL=#{count}
+        where ID = #{sitId}
+    </update>
+
+    <select id="queryForResource" resultType="map">
+        select ID id,
+        `NAME` shelterName,
+        `TYPE` shelterType,
+        ADDRESS shelterAddress,
+        PERSON shelterPerson,
+        PHONE shelterPhone,
+        DISTRICTS shelterOrga
+        from t_cfg_site_manage a
+        <where>
+            <if test="shelterName != null  and shelterName != '' ">and `NAME` LIKE concat('%', #{shelterName},'%')</if>
+            <if test="shelterOrga != null  and shelterOrga != '' ">and DISTRICTS = #{shelterOrga}</if>
+            <if test="shelterCategory != null  and shelterCategory != '' ">and `TYPE` = #{shelterCategory}
+            </if>
+        </where>
+        <if test="planId!=null and planId!=''">
+            order by
+            CASE WHEN EXISTS (
+            SELECT 1
+            FROM t_cfg_plan_link
+            WHERE resource_id = a.id AND link_id = #{planId} and resource_type='4'
+            ) THEN 0 ELSE 1 END
+        </if>
+        <if test="pageStart != null and pageLen != null">limit ${pageStart},${pageLen}</if>
+    </select>
+
+    <select id="selectBasicShelterEntityList" resultType="java.util.Map">
+        select ID id,
+        `NAME` shelterName,
+        `TYPE` shelterType,
+        ADDRESS shelterAddress,
+        PERSON shelterPerson,
+        PHONE shelterPhone,
+        DISTRICTS shelterOrga,
+        GPSX shelterLongitude,
+        GPSY shelterLatitude
+        from t_cfg_site_manage a
+        <where>
+            <if test="shelterName != null  and shelterName != '' ">and `NAME` LIKE concat('%', #{shelterName},'%')</if>
+            <if test="shelterOrga != null  and shelterOrga != '' ">and DISTRICTS = #{shelterOrga}</if>
+            <if test="shelterCategory != null  and shelterCategory != '' ">and `TYPE` = #{shelterCategory}</if>
+            <if test="eventId != null and eventId != ''">
+                and a.id in (select resource_id from t_cfg_plan_link where resource_type='4' and `type`='2' and link_id=(select id from t_cfg_plan_info_event where event_id=#{eventId} limit 1))
+            </if>
+        </where>
+        <if test="pageStart != null and pageLen != null">limit ${pageStart},${pageLen}</if>
+    </select>
+</mapper>

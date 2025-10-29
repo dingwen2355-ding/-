@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.resource.BasicExpertDao">
+
+	<select id="getBasicExpertList" resultType="java.util.HashMap">
+		select
+		CAST(a.id AS CHAR) AS id,
+		ifnull(a.birthday ,'') as birthday,
+		ifnull(a.company ,'') as company,
+		ifnull(a.name ,'') as name,
+		ifnull(a.phone ,'') as phone,
+		ifnull(a.sex ,'') as sex,
+		ifnull(a.expert_type ,'') as expertType,
+		ifnull(b.DICT_CH_NAME,'其他') as expertTypeName,
+		ifnull(a.title ,'') as title,
+		ifnull(a.experience ,'') as experience,
+		ifnull(a.experience_type ,'') as experienceType,
+		ifnull(a.id_number ,'') as idNumber,
+		ifnull(a.address ,'') as address,
+		ifnull(a.expert_category,'') as expertCategory,
+		ifnull(a.address,'') as address,
+		ifnull(a.gpsx,'') as gpsx,
+		ifnull(a.gpsy,'') as gpsy
+		from
+		basic_expert_phonebook a
+		left join sys_business_dict b on a.expert_type = b.DICT_ORDER and b.PARENT_ID =522
+		where 1=1
+		<if test="id != null  and id != ''">
+			and a.id = #{id}
+		</if>
+		<if test="name!= null  and name != ''">
+			and a.name LIKE concat('%', #{name}, '%')
+		</if>
+		<if test="sex!= null">
+			and a.sex = #{sex}
+		</if>
+		<if test="type!= null  and type != ''">
+			and a.expert_type = #{type}
+		</if>
+		<if test="title!= null  and title != ''">
+			and a.title = #{title}
+		</if>
+		<if test="company!= null  and company != ''">
+			and a.company LIKE concat('%', #{company}, '%')
+		</if>
+		<if test="expertCategory != null and expertCategory != ''">
+			and a.expert_category=#{expertCategory}
+		</if>
+		<if test="address!= null and address != ''">
+			and a.address LIKE concat('%', #{address}, '%')
+		</if>
+		<if test="eventId != null and eventId != ''">
+			and a.id in (select resource_id from t_cfg_plan_link where resource_type='1' and `type`='2' and link_id=(select id from t_cfg_plan_info_event where event_id=#{eventId} limit 1))
+		</if>
+		<if test="planId!=null and planId!=''">
+		order by
+			CASE WHEN EXISTS (
+			SELECT 1
+			FROM t_cfg_plan_link
+			WHERE resource_id = a.id AND link_id = #{planId} and resource_type='1'
+			) THEN 0 ELSE 1 END
+		</if>
+		<if test="pageStart != null and pageLen != null">limit ${pageStart},${pageLen}</if>
+	</select>
+
+	<select id="getBasicExpertListById" resultType="java.util.HashMap">
+		select
+		CAST(a.id AS CHAR) AS id,
+		ifnull(a.birthday ,'') as birthday,
+		ifnull(a.company ,'') as company,
+		ifnull(a.name ,'') as name,
+		ifnull(a.phone ,'') as phone,
+		ifnull(a.sex ,'') as sex,
+		ifnull(a.expert_type ,'') as expertType,
+		ifnull(b.DICT_CH_NAME,'其他') as expertTypeName,
+		ifnull(a.title ,'') as title,
+		ifnull(a.experience ,'') as experience,
+		ifnull(a.experience_type ,'') as experienceType,
+		ifnull(a.id_number ,'') as idNumber,
+		ifnull(a.address ,'') as address,
+		ifnull(a.expert_category,'') as expertCategory,
+		ifnull(a.address,'') as address,
+		ifnull(a.gpsx,'') as gpsx,
+		ifnull(a.gpsy,'') as gpsy
+		from
+		basic_expert_phonebook a
+		left join sys_business_dict b on a.expert_type = b.DICT_ORDER and b.PARENT_ID =522
+		where 1=1
+			and a.id = #{id}
+
+	</select>
+
+	<select id="getBasicExpertListCount" resultType="Integer">
+		select
+		count(*)
+		from
+		basic_expert_phonebook a
+		left join sys_business_dict b on a.expert_type = b.ID
+		where 1=1
+		<if test="id != null  and id != ''">
+			and a.id = #{id}
+		</if>
+		<if test="name!= null  and name != ''">
+			and a.name LIKE concat('%', #{name}, '%')
+		</if>
+		<if test="sex!= null">
+			and a.sex = #{sex}
+		</if>
+		<if test="type!= null  and type != ''">
+			and a.expert_type = #{type}
+		</if>
+		<if test="title!= null  and title != ''">
+			and a.title LIKE concat('%', #{title}, '%')
+		</if>
+		<if test="company!= null  and company != ''">
+			and a.company LIKE concat('%', #{company}, '%')
+		</if>
+		<if test="expertCategory != null and expertCategory != ''">
+			and a.expert_category=#{expertCategory}
+		</if>
+		<if test="address!= null and address != ''">
+			and a.address LIKE concat('%', #{address}, '%')
+		</if>
+	</select>
+
+	<insert id="insertBasicExpertInfo" parameterType="com.znv.manage.common.bean.resource.BasicExpertInfo">
+		insert into basic_expert_phonebook (
+					name,
+					sex,
+					birthday,
+					expert_type,
+					title,
+					company,experience,experience_type,phone,id_number,address,expert_category)
+		values (#{name},#{sex},#{birthday},#{type},#{title},#{company}
+		,#{experience},#{experienceType},#{phone},#{idNumber},#{address},#{expertCategory})
+  	</insert>
+
+	<insert id="insertBasicExpertInfoList">
+		insert into basic_expert_phonebook(
+		name,
+		sex,
+		birthday,
+		expert_type,
+		title,
+		company,experience,experience_type,phone,id_number,address,expert_category
+		)values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.name},
+			#{item.sex},
+			#{item.birthday},
+			#{item.type},
+			#{item.title},
+			#{item.company},
+			#{item.experience},
+			#{item.experienceType},
+			#{item.phone},
+			#{item.idNumber},
+			#{item.address},
+			#{item.expertCategory}
+			)
+		</foreach>
+	</insert>
+
+
+	<update id="updateBasicExpertInfo" parameterType="com.znv.manage.common.bean.resource.BasicExpertInfo">
+		update basic_expert_phonebook
+		<set>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="sex != null">
+				sex = #{sex},
+			</if>
+			<if test="birthday != null">
+				birthday = #{birthday},
+			</if>
+			<if test="type != null">
+				expert_type = #{type},
+			</if>
+			<if test="title != null">
+				title = #{title},
+			</if>
+			<if test="company != null">
+				company = #{company},
+			</if>
+			<if test="experience != null">
+				experience = #{experience},
+			</if>
+			<if test="experienceType != null">
+				experience_type = #{experienceType},
+			</if>
+			<if test="phone != null">
+				phone = #{phone},
+			</if>
+			<if test="idNumber != null">
+				id_number = #{idNumber},
+			</if>
+			<if test="address != null">
+				address = #{address},
+			</if>
+			<if test="expertCategory != null">
+				expert_category = #{expertCategory},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteBasicExpertInfo">
+		delete from basic_expert_phonebook where
+		find_in_set(id,#{ids})
+	</delete>
+
+	<select id="getBasicExpertType" resultType="com.znv.manage.common.bean.resource.BasicExpertInfo">
+		select
+		CAST(id AS CHAR) AS id,
+		ifnull(`DICT_CH_NAME` ,'') as name,
+		DICT_ORDER as dictOrder
+		from
+		sys_business_dict
+		where 1=1 and PARENT_ID = (select ID from sys_business_dict where DICT_KEY = 'EXPERT_TYPE' )
+		<if test="name!= null  and name != ''">
+			and DICT_CH_NAME = #{name}
+		</if>
+		and DICT_ORDER &lt;= 10
+		GROUP BY DICT_ORDER asc
+	</select>
+
+	<select id="getBasicExpertTitle" resultType="java.util.HashMap">
+		select (@i:=@i+1) id,a.title as name from
+		(select REPLACE(title, '\n', '')title from basic_expert_phonebook
+		where ifnull(title,'') not in ('/','\\','')
+		 group by title order by title desc) a,(SELECT @i:=0) vars
+	</select>
+
+	<select id="queryExist" parameterType="com.znv.manage.common.bean.resource.BasicExpertInfo" resultType="java.lang.Integer">
+		select count(1) as num from basic_expert_phonebook
+		where 1=1
+		<if test="name != null and name != '' "> and name = #{name}</if>
+		<if test="company != null and company != '' "> and company = #{company}</if>
+		<if test="id != null and id != '' "> and id != #{id}</if>
+	</select>
+
+</mapper>

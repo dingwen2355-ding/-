@@ -1,0 +1,10 @@
+# /build/
+/config/
+/dist/
+/*.js
+/test/unit/coverage/
+/src/libs/
+node_modules
+/static/video
+/src/assets/font
+/src/components/znvVideo

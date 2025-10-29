@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.znv.manage.dao.information.WarningReleaseMapper" >
+  <resultMap id="BaseResultMap" type="com.znv.manage.common.bean.information.WarningRelease" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="warning_title" property="warningTitle" jdbcType="VARCHAR" />
+    <result column="warning_type1" property="warningType1" jdbcType="VARCHAR" />
+    <result column="warning_level" property="warningLevel" jdbcType="VARCHAR" />
+    <result column="release_time" property="releaseTime" jdbcType="TIMESTAMP" />
+    <result column="warning_content" property="warningContent" jdbcType="VARCHAR" />
+    <result column="warning_influence" property="warningInfluence" jdbcType="VARCHAR" />
+    <result column="warning_type2" property="warningType2" jdbcType="VARCHAR" />
+    <result column="defense_advice" property="defenseAdvice" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_command_warning_release
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true"  keyProperty="id" parameterType="com.znv.manage.common.bean.information.WarningRelease" >
+    insert into t_command_warning_release (id, warning_title, warning_type1, 
+      warning_level, release_time, warning_content, 
+      warning_influence, warning_type2, defense_advice)
+    values (#{id,jdbcType=BIGINT}, #{warningTitle,jdbcType=VARCHAR}, #{warningType1,jdbcType=VARCHAR}, 
+      #{warningLevel,jdbcType=VARCHAR}, #{releaseTime,jdbcType=TIMESTAMP}, #{warningContent,jdbcType=VARCHAR}, 
+      #{warningInfluence,jdbcType=VARCHAR}, #{warningType2,jdbcType=VARCHAR}, #{defenseAdvice,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.znv.manage.common.bean.information.WarningRelease" >
+    update t_command_warning_release
+    set warning_title = #{warningTitle,jdbcType=VARCHAR},
+      warning_type1 = #{warningType1,jdbcType=VARCHAR},
+      warning_level = #{warningLevel,jdbcType=VARCHAR},
+      release_time = #{releaseTime,jdbcType=TIMESTAMP},
+      warning_content = #{warningContent,jdbcType=VARCHAR},
+      warning_influence = #{warningInfluence,jdbcType=VARCHAR},
+      warning_type2 = #{warningType2,jdbcType=VARCHAR},
+      defense_advice = #{defenseAdvice,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="getWarning" resultType="com.znv.manage.common.bean.information.WarningRelease">
+    select id,
+    ifnull(warning_title,'') warningTitle,
+    ifnull(warning_type1,'') warningType1,
+    ifnull(warning_type2,'') warningType2,
+    ifnull(warning_level,'') warningLevel,
+    ifnull(DATE_FORMAT(release_time, '%Y-%m-%d %H:%i:%s'),'') releaseTime,
+    ifnull(warning_content,'') WarningContent,
+    ifnull(warning_influence,'') warningInfluence,
+    ifnull(defense_advice,'') defenseAdvice,
+    ifnull(deal,2) deal,
+    ifnull(GRZ,'') GRZ ,
+    ifnull(CRZ,'') CRZ,
+    ifnull(WRZ,'') WRZ,
+    ifnull(deal_content,'') as deal_content,
+    ifnull(area,'市直管') area,flag
+    from t_command_warning_release
+    where 1=1 and warning_type1!= '其他'
+    <if test="id!=null and id!=''">
+      and id=#{id}
+    </if>
+    <if test="title!=null and title!=''">
+      and warning_title like concat('%',#{title},'%')
+    </if>
+    <if test="deal!=null and deal!=''">
+      and deal = #{deal}
+    </if>
+    <if test="type1!=null and type1!=''">
+      and warning_type1 = #{type1}
+    </if>
+    <if test="type2!=null and type2!=''">
+    and warning_type2 in
+    <foreach item="item" index="index" collection="type2.split(',')"  open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    </if>
+    <if test="level!=null and level!=''">
+      and warning_level = #{level}
+    </if>
+    <if test="startDate!=null and startDate!=''">
+      and create_time &gt;= #{startDate}
+    </if>
+    <if test="endDate!=null and endDate!=''">
+      and create_time &lt;= #{endDate}
+    </if>
+    <if test="area!=null and area!=''">
+      and area = #{area}
+    </if>
+    <if test="flag!=null and flag!=''">
+      and flag = #{flag}
+    </if>
+    order by release_time desc
+  </select>
+
+  <select id="getWarningScreen" resultType="com.znv.manage.common.bean.information.WarningRelease">
+    select id,
+    ifnull(warning_title,'') warningTitle,
+    ifnull(warning_type1,'') warningType1,
+    ifnull(warning_type2,'') warningType2,
+    ifnull(warning_level,'') warningLevel,
+    ifnull(DATE_FORMAT(release_time, '%Y-%m-%d %H:%i:%s'),'') releaseTime,
+    ifnull(warning_content,'') WarningContent,
+    ifnull(warning_influence,'') warningInfluence,
+    ifnull(defense_advice,'') defenseAdvice,
+    ifnull(deal,2) deal,
+    ifnull(GRZ,'') GRZ ,
+    ifnull(CRZ,'') CRZ,
+    ifnull(WRZ,'') WRZ,
+    ifnull(deal_content,'') as deal_content,
+    ifnull(area,'市直管') area
+    from t_command_warning_release
+    where 1=1 and warning_type1!= '其他'
+    <if test="id!=null and id!=''">
+      and id=#{id}
+    </if>
+    <if test="title!=null and title!=''">
+      and warning_title like concat('%',#{title},'%')
+    </if>
+    <if test="deal!=null and deal!=''">
+      and deal = #{deal}
+    </if>
+    <if test="type1!=null and type1!=''">
+      and warning_type1 = #{type1}
+    </if>
+    <if test="type2!=null and type2!=''">
+      and warning_type2 in
+      <foreach item="item" index="index" collection="type2.split(',')"  open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="level!=null and level!=''">
+      and warning_level = #{level}
+    </if>
+    <if test="startDate!=null and startDate!=''">
+      and create_time &gt;= #{startDate}
+    </if>
+    <if test="endDate!=null and endDate!=''">
+      and create_time &lt;= #{endDate}
+    </if>
+    <if test="area!=null and area!=''">
+      and area = #{area}
+    </if>
+    group by release_time,warning_level
+    order by release_time desc
+  </select>
+
+  <select id="getWarnings" resultType="com.znv.manage.common.bean.information.WarningRelease">
+    select id,
+           ifnull(warning_title,'') warningTitle,
+           ifnull(warning_type1,'') warningType1,
+           ifnull(warning_type2,'') warningType2,
+           ifnull(warning_level,'') warningLevel,
+           ifnull(DATE_FORMAT(release_time, '%Y-%m-%d %H:%i:%s'),'') releaseTime,
+           ifnull(warning_content,'') WarningContent,
+           ifnull(warning_influence,'') warningInfluence,
+           ifnull(defense_advice,'') defenseAdvice
+    from t_command_warning_release
+    where id IN
+    <foreach collection="list" separator="," item="item" open="(" close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <insert id="insertFireData">
+    insert INTO t_command_warning_release (
+    `warning_title`,
+    `warning_type1`,
+    `warning_type2`,
+    `release_time`,
+    `warning_content`,
+    `keyid`
+    )
+    VALUES
+    <foreach collection="datas" item="data" separator=",">
+      ('火灾预警',
+      '自然灾害',
+      '森林防火',
+      #{data.ObservationDateTime},
+      CONCAT(#{data.FormattedAddress}, '发生火灾预警'),
+      #{data.Id}
+      )
+    </foreach>
+  </insert>
+
+  <select id="queryExist" resultType="Integer">
+      select count(*) from t_command_warning_release where keyid = #{id}
+  </select>
+
+  <select id="queryRiverExist" resultType="Integer">
+      select count(*) from t_command_warning_release where keyid = #{id} and to_days(release_time) = to_days(now());
+  </select>
+
+  <insert id="insertRiverData">
+    insert INTO t_command_warning_release (
+    `warning_title`,
+    `warning_type1`,
+    `warning_type2`,
+    `warning_level`,
+    `release_time`,
+    `warning_content`,
+    `CRZ`,
+    `GRZ`,
+    `WRZ`,
+    `keyid`,
+    `deal`,
+    `area`
+    )
+    VALUES
+    <foreach collection="datas" item="data" separator=",">
+      (#{data.warning_title},
+      '自然灾害',
+      '防汛抗旱',
+      #{data.warning_level},
+      NOW(),
+      #{data.warning_content},
+      #{data.num},
+      #{data.GRZ},
+      #{data.WRZ},
+      #{data.STCD},
+      2,
+      #{data.ADDVNM}
+      )
+    </foreach>
+  </insert>
+  <select id="selectTodaySevereWeather" resultType="java.util.Map">
+    select keyid, id, release_time as releaseTime
+    from t_command_warning_release
+    where warning_type1 = '气象预警' and TO_DAYS(create_time) = TO_DAYS(NOW()) and keyid is not null
+  </select>
+  <insert id="batchInsertSevereWeatherWarning">
+    insert into t_command_warning_release(warning_title, warning_type1, warning_type2, warning_level, release_time, warning_content, defense_advice, keyid, area, ext) values
+    <foreach collection="list" item="item" separator=",">
+        (#{item.yjTitle}, '气象预警', '气象预警', #{item.warningLevel}, #{item.yjIssuedate}, #{item.yjContent}, #{item.yjContentnotic}, #{item.stationName}, #{item.area}, #{item.ext})
+    </foreach>
+  </insert>
+  <update id="updateSevereWeatherWarningById">
+    update t_command_warning_release set
+    warning_title = #{item.yjTitle},
+    warning_level = #{item.warningLevel},
+    release_time = #{item.yjIssuedate},
+    warning_content = #{item.yjContent},
+    defense_advice = #{item.yjContentnotic}
+    where id = #{item.id}
+  </update>
+
+  <update id="updateRiverData" parameterType="map">
+     update t_command_warning_release
+      set release_time = NOW(),warning_title = #{map.warning_title},
+      warning_level = #{map.warning_level},
+      warning_content = #{map.warning_content},
+      CRZ = #{map.num},GRZ = #{map.GRZ},WRZ = #{map.WRZ},area = #{map.ADDVNM}
+      where keyid = #{map.STCD} and to_days(release_time) = to_days(now())
+  </update>
+
+  <update id="dealWarning">
+    update t_command_warning_release
+    <set>
+    <if test="content != null">
+      deal_content = #{content,jdbcType=VARCHAR},
+    </if>
+      deal = #{deal,jdbcType=VARCHAR}
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="warningCount" resultType="map">
+    SELECT
+    IFNULL(SUM(warning_level = '橙色预警'),0) AS countA,
+    IFNULL(SUM(warning_level = '红色预警'),0) AS countB,
+    IFNULL(SUM(warning_level = '黄色预警'),0) AS countC,
+    IFNULL(SUM(warning_level = '蓝色预警'),0) AS countD
+    FROM
+    ( SELECT * FROM  t_command_warning_release  where 1=1
+      <if test="startDate!=null and startDate!=''">
+          and create_time >= #{startDate}
+      </if>
+      <if test="endDate!=null and endDate!=''">
+         and create_time &lt;= #{endDate}
+      </if>
+    and warning_type2 in
+    <foreach item="item" index="index" collection="type.split(',')"  open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    <if test="area!=null and area!=''">
+      and area = #{area}
+    </if>
+    GROUP BY release_time,warning_level) a
+  </select>
+  <select id="selectTodaySevereWeatherReleaseTimeByKeyId" resultType="date">
+    select release_time
+    from t_command_warning_release
+    where warning_type1 = '气象预警' and TO_DAYS(create_time) = TO_DAYS(NOW()) and keyid = #{keyId}
+  </select>
+    <select id="selectTodaySevereWeatherTitleByKeyId" resultType="java.lang.String">
+      select warning_title
+      from t_command_warning_release
+      where warning_type1 = '气象预警' and TO_DAYS(create_time) = TO_DAYS(NOW()) and keyid = #{keyId}
+    </select>
+</mapper>

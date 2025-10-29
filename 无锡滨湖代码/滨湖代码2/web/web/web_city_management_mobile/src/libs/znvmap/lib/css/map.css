@@ -1,0 +1,234 @@
+html,body,#map-container{
+  padding: 0;
+  margin: 0;
+  height:100%;
+  width:100%;
+}
+/*
+地图切换
+*/
+.card-container{
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px 0 rgba(114, 124, 245, .5);
+  font-size: 12px;
+}
+/*
+  西北角
+ */
+.west-north {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px 0 rgba(114, 124, 245, .5);
+  font-size: 12px;
+}
+
+/*button {
+  min-width: 60px;
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid #25A5F7;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  background-color: transparent;
+  background-image: none;
+  color: #25A5F7;
+  padding: .25rem .5rem;
+  line-height: 1.5;
+  border-radius: 1rem;
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+
+button:hover{
+  background-color: #25A5F7;
+  color: #fff;
+}
+button:focus {
+  outline: 0;
+  box-shadow: none;
+}*/
+.contextmenu {
+  border: 1px solid grey;
+  background: white;
+}
+.menuitem {
+  padding: 5px;
+  list-style-type: none
+}
+.menuul {
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+}
+.measure-container {
+  position:absolute;
+  right:20px;
+  top:100px;
+  z-Index:999;
+  background: white;
+  border: 1px solid gray;
+}
+/*聚合样式*/
+
+
+@keyframes pulse{0%{transform:scaleX(1)}
+  50%{transform:scale3d(1.05,1.05,1.05)}
+  to{transform:scaleX(1)}
+}
+.znv-map-cluster{
+  font-family: Arial;
+  font-size:14px;
+  font-weight:700;
+  color:#fff;
+  position:relative;
+  width:50px;height:50px;
+  z-index: 10000;
+  line-height:50px;
+  text-align:center;
+  display:inline-block;
+}
+.znv-map-excircle{
+  /*
+    animation-duration:1s;animation-fill-mode:both;
+    animation-iteration-count:infinite;
+    animation-name:pulse;
+    */
+  display:block;width:100%;height:100%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  position: absolute;
+  left:0;
+  top:0;
+  box-shadow: inset 0 0 10px #f3c41a;
+}
+.znv-map-incircle{width:36px;height:36px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  text-align:center;
+  line-height:36px;
+  background-color:#f6f917;
+  color:#041d29;
+  display:inline-block;
+}
+
+.znv-map-cluster0{
+  width:40px;
+  height:40px;
+  line-height:40px;
+}
+.znv-map-cluster0 .znv-map-incircle{
+  width:24px;height:24px;
+  line-height:24px;
+}
+.znv-map-cluster1{
+  width:46px;
+  height:46px;
+  line-height:46px;
+}
+.znv-map-cluster1 .znv-map-incircle{
+  width:30px;height:30px;
+  line-height:30px;
+}
+.znv-map-cluster3{
+  width:58px;
+  height:58px;
+  line-height:58px;
+
+}
+.znv-map-cluster3 .znv-map-incircle{
+  width:42px;height:42px;
+  line-height:42px;
+}
+.znv-map-cluster4{
+  width:74px;
+  height:74px;
+  line-height:74px;
+}
+.znv-map-cluster4 .znv-map-incircle{
+  width:58px;height:58px;
+  line-height:58px;
+}
+.znv-map-cluster5{
+  width:84px;
+  height:84px;
+  line-height:84px;
+}
+.znv-map-cluster5 .znv-map-incircle{
+  width:64px;height:64px;
+  line-height:64px;
+}
+.znv-map-cluster6{
+  width:96px;
+  height:96px;
+  line-height:96px;
+}
+.znv-map-cluster6 .znv-map-incircle{
+  width:80px;height:80px;
+  line-height:80px;
+}
+.znv-map-cluster7{
+  width:102px;
+  height:102px;
+  line-height:102px;
+}
+.znv-map-cluster7 .znv-map-incircle{
+  width:86px;height:86px;
+  line-height:86px;
+}
+.znv-map-cluster8{
+  width:108px;
+  height:108px;
+  line-height:108px;
+}
+.znv-map-cluster8 .znv-map-incircle{
+  width:92px;height:92px;
+  line-height:92px;
+}
+
+.znv-map-alarm{
+  display:inline-block;
+  height:24px;
+  background-color:rgba(92,233,244,.7);
+  line-height:24px;
+  border-radius:12px;
+  padding:0 15px;
+  color:#fff;
+  position:relative;
+  margin-top:12px;
+  margin-bottom:-36px;
+}
+.znv-map-triangle-t{
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-width:  0 10px 10px;
+  border-style: solid;
+  border-color: transparent transparent rgba(92,233,244,.7);
+  cursor: pointer;
+  position:absolute;
+  left:50%;
+  top:-10px;
+  margin-left:-10px;
+}
+.BMap_Marker .BMapLabel,
+.amap-marker .amap-marker-label{
+  background: transparent !important;
+  border: 0 !important;
+}

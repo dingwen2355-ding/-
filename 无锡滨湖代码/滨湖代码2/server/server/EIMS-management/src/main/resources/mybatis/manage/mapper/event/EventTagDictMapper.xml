@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.event.EventTagDictDao">
+
+    <insert id="addEventTag" parameterType="com.znv.manage.common.bean.event.EventTagDictEntity">
+        INSERT INTO t_dict_event_tag
+            (tag_id, tag_name, p_tag_id, tag_level, sort)
+        VALUES
+            (#{tagId}, #{tagName}, #{pTagId}, #{tagLevel}, #{sort})
+    </insert>
+
+    <select id="queryEventTagDict" resultType="com.znv.manage.common.bean.event.EventTagDictEntity">
+        SELECT tag_id AS tagId, tag_name AS tagName, p_tag_id AS pTagId, tag_level AS tagLevel, sort
+        FROM t_dict_event_tag
+        <where>
+            1 = 1
+            <if test="null != tagId and '' != tagId">
+                AND tag_id = #{tagId}
+            </if>
+            <if test="null != tagName and '' != tagName">
+                AND tag_name = #{tagName}
+            </if>
+            <if test="null != pTagId and '' != pTagId">
+                AND p_tag_id = #{pTagId}
+            </if>
+            <if test="null != tagLevel">
+                AND tag_level = #{tagLevel}
+            </if>
+        </where>
+    </select>
+
+</mapper>

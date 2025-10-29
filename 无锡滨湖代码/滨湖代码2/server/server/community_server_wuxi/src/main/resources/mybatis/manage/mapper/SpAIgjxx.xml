@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.SpAIgjxxDao">
+    <select id="countSpAIgjxxToday" resultType="java.lang.Integer">
+        SELECT  count(1) FROM t_14_spaigjxx
+        WHERE 1=1
+        <if test="beginTime != null">
+            AND  time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            AND time &lt;= #{endTime}
+        </if>
+        <if test="beginTime == null and endTime == null ">
+            AND DATE(time) = CURDATE()
+        </if>
+    </select>
+
+    <!-- 统计当日视频AI预警TOP5（数量和百分比）-->
+    <select id="SpAIgjxxTop5Today" resultType="com.znv.manage.common.bean.AlarmStatisticsResultBean">
+        SELECT count(1) count,
+        event_type eventType,
+        (count(1)/(SELECT count(1) FROM t_14_spaigjxx WHERE DATE(time) = CURDATE()))*100 rate
+        FROM `t_14_spaigjxx`
+        WHERE 1=1
+        <if test="beginTime != null">
+            AND  time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            AND time &lt;= #{endTime}
+        </if>
+        <if test="beginTime == null and endTime == null ">
+            AND DATE(time) = CURDATE()
+        </if>
+        GROUP BY event_type ORDER BY count desc
+        LIMIT 5;
+    </select>
+    
+    <select id="SpAIyjTodayList" resultType="java.util.Map">
+        SELECT
+        alarm_id as alarmId,
+        DATE_FORMAT(time,'%Y-%m-%d %h:%i:%s') as alarmTime,
+        (SELECT event_name FROM t_camera_eventtype WHERE event_type = s.event_type ) as eventType,
+        camera_name as alarmPlace,
+        REPLACE(url,'http://10.214.110.15:13000','aiImage') as url
+        FROM
+        t_14_spaigjxx s
+        WHERE 1=1
+        <if test="beginTime != null">
+            and time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and time &lt;= #{endTime}
+        </if>
+        <if test="beginTime == null and endTime == null ">
+            and DATE(time) = CURDATE()
+        </if>
+        order by time desc
+    </select>
+
+    <select id="SpAIgjxxTodayList" resultType="java.util.Map">
+    SELECT
+        alarm_id as alarmId,
+        DATE_FORMAT(time,'%Y-%m-%d %h:%i:%s') as alarmTime,
+        event_type as eventType,
+        camera_name as alarmPlace
+    FROM
+        t_14_spaigjxx
+    WHERE 1=1
+        <if test="beginTime != null">
+            and time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and time &lt;= #{endTime}
+        </if>
+        <if test="beginTime == null and endTime == null ">
+            and DATE(time) = CURDATE()
+        </if>
+        order by time desc
+    </select>
+
+    <insert id="insertSpAIgjxxList">
+        INSERT IGNORE INTO t_14_spaigjxx
+        (process_status,
+        judge_status,
+        event_type,
+        duration,
+        event_level,
+        continuing,
+        camera_district,
+        camera_type,
+        camera_device_code,
+        url,
+        quality,
+        camera_longitude,
+        camera_latitude,
+        app_id,
+        alarm_id,
+        time,
+        collect_time,
+        camera,
+        camera_serial,
+        camera_name,
+        extra_info,
+        section_locations,
+        create_time)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.processStatus},
+            #{item.judgeStatus},
+            #{item.eventType},
+            #{item.duration},
+            #{item.eventLevel},
+            #{item.continuing},
+            #{item.cameraDistrict},
+            #{item.cameraType},
+            #{item.cameraDeviceCode},
+            #{item.url},
+            #{item.quality},
+            #{item.cameraLongitude},
+            #{item.cameraLatitude},
+            #{item.appId},
+            #{item.alarmId},
+            #{item.time},
+            #{item.collectTime},
+            #{item.camera},
+            #{item.cameraSerial},
+            #{item.cameraName},
+            #{item.extraInfo},
+            #{item.sectionLocations},
+            current_timestamp)
+        </foreach>
+    </insert>
+
+    <insert id="insertAIsxtList">
+        INSERT IGNORE INTO t_15_aisxt
+        (camera_id,
+        type_code,
+        superior_code,
+        input_style,
+        region,
+        pixel,
+        camera_name,
+        create_time)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">21
+            (#{item.cameraID},
+            #{item.typeCode},
+            #{item.superiorCode},
+            #{item.inputStyle},
+            #{item.region},
+            #{item.pixel},
+            #{item.cameraName},
+            current_timestamp)
+        </foreach>
+    </insert>
+
+    <select id="querySpAIgjxxAlarmIdList" resultType="java.util.Map">
+        select alarm_id as alarmId from t_14_spaigjxx
+    </select>
+
+    <select id="queryAIsxtIdList" resultType="java.util.Map">
+        select id from t_15_aisxt
+    </select>
+</mapper>

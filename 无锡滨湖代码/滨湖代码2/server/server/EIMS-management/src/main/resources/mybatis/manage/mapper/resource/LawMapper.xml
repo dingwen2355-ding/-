@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.resource.LawDao">
+    <resultMap id="BaseResultMap" type="com.znv.manage.common.bean.resource.Law">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="law_name" jdbcType="VARCHAR" property="lawName"/>
+        <result column="law_class" jdbcType="VARCHAR" property="lawClass"/>
+        <result column="illegal_description" jdbcType="VARCHAR" property="illegalDescription"/>
+        <result column="legal_provisions" jdbcType="VARCHAR" property="legalProvisions"/>
+        <result column="prescribed_terms" jdbcType="VARCHAR" property="prescribedTerms"/>
+        <result column="penalty_basis_clause" jdbcType="VARCHAR" property="penaltyBasisClause"/>
+        <result column="penalty_basis_name" jdbcType="VARCHAR" property="penaltyBasisName"/>
+        <result column="penalty_basis" jdbcType="VARCHAR" property="penaltyBasis"/>
+        <result column="standards" jdbcType="VARCHAR" property="standards"/>
+        <result column="accident_type" jdbcType="VARCHAR" property="accidentType"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, law_name, law_class, illegal_description, legal_provisions, prescribed_terms,
+    penalty_basis_clause, penalty_basis_name, penalty_basis, standards, accident_type
+    </sql>
+    <select id="queryLawList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_data_law
+        where 1=1
+        <if test="lawName != null and lawName != ''">
+            AND law_name like concat('%',#{lawName},'%')
+        </if>
+        <if test="accidentType != null and accidentType != ''">
+            AND accident_type like concat('%',#{accidentType},'%')
+        </if>
+    </select>
+    <delete id="deleteLaw">
+        delete
+        from t_data_law
+        where find_in_set(id, #{ids})
+    </delete>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.znv.manage.common.bean.resource.Law"
+            useGeneratedKeys="true">
+        insert into t_data_law
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="lawName != null">
+                law_name,
+            </if>
+            <if test="lawClass != null">
+                law_class,
+            </if>
+            <if test="illegalDescription != null">
+                illegal_description,
+            </if>
+            <if test="legalProvisions != null">
+                legal_provisions,
+            </if>
+            <if test="prescribedTerms != null">
+                prescribed_terms,
+            </if>
+            <if test="penaltyBasisClause != null">
+                penalty_basis_clause,
+            </if>
+            <if test="penaltyBasisName != null">
+                penalty_basis_name,
+            </if>
+            <if test="penaltyBasis != null">
+                penalty_basis,
+            </if>
+            <if test="standards != null">
+                standards,
+            </if>
+            <if test="accidentType != null">
+                accident_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="lawName != null">
+                #{lawName,jdbcType=VARCHAR},
+            </if>
+            <if test="lawClass != null">
+                #{lawClass,jdbcType=VARCHAR},
+            </if>
+            <if test="illegalDescription != null">
+                #{illegalDescription,jdbcType=VARCHAR},
+            </if>
+            <if test="legalProvisions != null">
+                #{legalProvisions,jdbcType=VARCHAR},
+            </if>
+            <if test="prescribedTerms != null">
+                #{prescribedTerms,jdbcType=VARCHAR},
+            </if>
+            <if test="penaltyBasisClause != null">
+                #{penaltyBasisClause,jdbcType=VARCHAR},
+            </if>
+            <if test="penaltyBasisName != null">
+                #{penaltyBasisName,jdbcType=VARCHAR},
+            </if>
+            <if test="penaltyBasis != null">
+                #{penaltyBasis,jdbcType=VARCHAR},
+            </if>
+            <if test="standards != null">
+                #{standards,jdbcType=VARCHAR},
+            </if>
+            <if test="accidentType != null">
+                #{accidentType,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.znv.manage.common.bean.resource.Law">
+        update t_data_law
+        <set>
+            <if test="lawName != null">
+                law_name = #{lawName,jdbcType=VARCHAR},
+            </if>
+            <if test="lawClass != null">
+                law_class = #{lawClass,jdbcType=VARCHAR},
+            </if>
+            <if test="illegalDescription != null">
+                illegal_description = #{illegalDescription,jdbcType=VARCHAR},
+            </if>
+            <if test="legalProvisions != null">
+                legal_provisions = #{legalProvisions,jdbcType=VARCHAR},
+            </if>
+            <if test="prescribedTerms != null">
+                prescribed_terms = #{prescribedTerms,jdbcType=VARCHAR},
+            </if>
+            <if test="penaltyBasisClause != null">
+                penalty_basis_clause = #{penaltyBasisClause,jdbcType=VARCHAR},
+            </if>
+            <if test="penaltyBasisName != null">
+                penalty_basis_name = #{penaltyBasisName,jdbcType=VARCHAR},
+            </if>
+            <if test="penaltyBasis != null">
+                penalty_basis = #{penaltyBasis,jdbcType=VARCHAR},
+            </if>
+            <if test="standards != null">
+                standards = #{standards,jdbcType=VARCHAR},
+            </if>
+            <if test="accidentType != null">
+                accident_type = #{accidentType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

@@ -1,0 +1,43 @@
+.amap-info-contentContainer{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-25%, -50%);
+  width: 400px;
+  border: 1px solid;
+  border-image: linear-gradient( 0deg, rgba(24, 116, 190, 1), rgba(132, 213, 255, 1) ) 1 1;
+  background: linear-gradient(45deg, rgba(15, 39, 57, 1), rgba(17, 72, 95, 1));
+  box-shadow: 0px 0px 7px 0px rgba(3, 21, 127, 0.73);
+  font-size: 18px;
+  padding: 20px;
+  .info-item{
+    color: #B5E4F1;
+    margin-bottom: 15px;
+    .info-label {
+      margin-right: 10px;
+      width: 100px;
+      text-align: right;
+    }
+    .detail-info-item{
+      max-width: 300px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+  .el-icon-close{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    &:hover{
+      color: #ccc;
+    }
+  }
+}
+// .amap-overlay-text-container{
+//   border: 0;
+//   background-color: transparent !important;
+//   box-shadow: none !important;
+// }

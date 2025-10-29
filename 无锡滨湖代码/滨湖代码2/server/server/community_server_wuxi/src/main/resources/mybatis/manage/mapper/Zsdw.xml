@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.ZsdwDao">
+
+    <insert id="insertZsdwList">
+        INSERT IGNORE INTO t_64_zsdwb
+        (
+        `id`,
+        `index_id` ,
+        `district_id`,
+        `data_minutes` ,
+        `site_attr_id`,
+        `function_type` ,
+        `site_name`,
+        `user_id`,
+        `order_by`,
+        `lat`,
+        `lng`,
+        `del_flag`,
+        `open_data` ,
+        `create_time` ,
+        `update_time` ,
+        `storage_time`
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id},
+            #{item.indexid} ,
+            #{item.districtid},
+            #{item.dataminutes} ,
+            #{item.siteattrid},
+            #{item.functiontype} ,
+            #{item.sitename},
+            #{item.userid},
+            #{item.orderby},
+            #{item.lat},
+            #{item.lng},
+            #{item.delflag},
+            #{item.opendata} ,
+            #{item.createtime} ,
+            #{item.updatetime} ,
+            current_timestamp
+            )
+        </foreach>
+    </insert>
+
+</mapper>

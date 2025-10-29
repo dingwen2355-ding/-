@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.CommandDepartmentDao">
+    <select id="queryCommand" resultType="map">
+        select directorate_name commandName,
+               data_source dataSource
+        from ads_cdemerg_yjzhb group by directorate_name,data_source
+    </select>
+
+    <select id="queryOrg" resultType="map">
+        select ifnull(working_team_name,'') label,
+               ifnull(lead_unit,'') leadUnit,
+               ifnull(member_unit,'') memberUnit,
+               ifnull(responsibility,'') content,
+               ifnull(data_source,'') dataSource
+        from ads_cdemerg_yjzhb
+        where 1=1
+          and directorate_name = #{commandName}
+        order by CAST(ph AS DECIMAL)
+    </select>
+</mapper>
+

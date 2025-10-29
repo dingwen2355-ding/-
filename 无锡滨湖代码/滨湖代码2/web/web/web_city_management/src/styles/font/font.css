@@ -1,0 +1,20 @@
+@font-face {
+  font-family: 'UnidreamLED';
+  src: url('./DS-DIGI.TTF');
+}
+@font-face {
+  font-family: 'DIN';
+  src: url('./DIN-Regular.ttf');
+}
+@font-face {
+  font-family: 'bblk';
+  src: url('./black.ttf');
+}
+@font-face {
+  font-family: 'SourceHanSansCN';
+  src: url('./SourceHanSansCN.otf');
+}
+@font-face {
+  font-family: 'YouShe';
+  src: url('./YouShe.ttf');
+}

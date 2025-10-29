@@ -1,0 +1,107 @@
+{
+  "id": "4073999",
+  "name": "无锡滨湖智慧城市",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "35586602",
+      "name": "上传视频",
+      "font_class": "shangchuanshipin",
+      "unicode": "ea5b",
+      "unicode_decimal": 59995
+    },
+    {
+      "icon_id": "33987016",
+      "name": "上传图片",
+      "font_class": "shangchuantupian",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "35586603",
+      "name": "语音文件",
+      "font_class": "yuyinwenjian",
+      "unicode": "ea5c",
+      "unicode_decimal": 59996
+    },
+    {
+      "icon_id": "35586604",
+      "name": "button_删除",
+      "font_class": "button_shanchu",
+      "unicode": "ea5d",
+      "unicode_decimal": 59997
+    },
+    {
+      "icon_id": "35586605",
+      "name": "button_节点管理",
+      "font_class": "button_jiedianguanli",
+      "unicode": "ea5e",
+      "unicode_decimal": 59998
+    },
+    {
+      "icon_id": "35586606",
+      "name": "button_新建",
+      "font_class": "button_xinjian",
+      "unicode": "ea5f",
+      "unicode_decimal": 59999
+    },
+    {
+      "icon_id": "35586607",
+      "name": "close",
+      "font_class": "close",
+      "unicode": "ea60",
+      "unicode_decimal": 60000
+    },
+    {
+      "icon_id": "35586608",
+      "name": "arrow_down",
+      "font_class": "arrow_down",
+      "unicode": "ea61",
+      "unicode_decimal": 60001
+    },
+    {
+      "icon_id": "35586609",
+      "name": "top_信息",
+      "font_class": "top_xinxi",
+      "unicode": "ea62",
+      "unicode_decimal": 60002
+    },
+    {
+      "icon_id": "35586610",
+      "name": "saber_文件夹",
+      "font_class": "saber_wenjianjia",
+      "unicode": "ea63",
+      "unicode_decimal": 60003
+    },
+    {
+      "icon_id": "35586611",
+      "name": "saber_down",
+      "font_class": "saber_down",
+      "unicode": "ea64",
+      "unicode_decimal": 60004
+    },
+    {
+      "icon_id": "35586612",
+      "name": "top_个人",
+      "font_class": "top_geren",
+      "unicode": "ea65",
+      "unicode_decimal": 60005
+    },
+    {
+      "icon_id": "35586613",
+      "name": "top_更多",
+      "font_class": "top_gengduo",
+      "unicode": "ea66",
+      "unicode_decimal": 60006
+    },
+    {
+      "icon_id": "35586614",
+      "name": "top_搜索",
+      "font_class": "top_sousuo",
+      "unicode": "ea67",
+      "unicode_decimal": 60007
+    }
+  ]
+}

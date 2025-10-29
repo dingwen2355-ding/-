@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.event.EventDao">
+
+    <resultMap type="com.znv.manage.common.bean.event.Event" id="EventMap">
+        <result property="id" column="ID" jdbcType="INTEGER"/>
+        <result property="eventTitle" column="EVENT_TITLE" jdbcType="VARCHAR"/>
+        <result property="typeId" column="TYPE_ID" jdbcType="INTEGER"/>
+        <result property="streetId" column="STREET_ID" jdbcType="INTEGER"/>
+        <result property="streetName" column="STREET_NAME" jdbcType="VARCHAR"/>
+        <result property="communityId" column="COMMUNITY_ID" jdbcType="INTEGER"/>
+        <result property="communityName" column="COMMUNITY_NAME" jdbcType="VARCHAR"/>
+        <result property="levelName" column="LEVEL_NAME" jdbcType="INTEGER"/>
+        <result property="eventTime" column="EVENT_TIME" jdbcType="TIMESTAMP"/>
+        <result property="spanStartTime" column="span_start_time" jdbcType="TIMESTAMP"/>
+        <result property="spanEndTime" column="span_end_time" jdbcType="TIMESTAMP"/>
+        <result property="smallTypeId" column="SMALL_TYPE_ID" jdbcType="INTEGER"/>
+        <result property="impactLevel" column="IMPACT_LEVEL" jdbcType="VARCHAR"/>
+        <result property="monitorUnit" column="MONITOR_UNIT" jdbcType="VARCHAR"/>
+        <result property="occurAddress" column="OCCUR_ADDRESS" jdbcType="VARCHAR"/>
+        <result property="minorNum" column="MINOR_NUM" jdbcType="INTEGER"/>
+        <result property="seriousNum" column="SERIOUS_NUM" jdbcType="INTEGER"/>
+        <result property="deathNum" column="DEATH_NUM" jdbcType="INTEGER"/>
+        <result property="device_ids" column="DEVICE_IDS" jdbcType="VARCHAR"/>
+        <result property="economicLoss" column="ECONOMIC_LOSS" jdbcType="VARCHAR"/>
+        <result property="isConclusion" column="IS_CONCLUSION" jdbcType="VARCHAR"/>
+        <result property="summary" column="SUMMARY" jdbcType="VARCHAR"/>
+        <result property="sourceId" column="SOURCE_ID" jdbcType="INTEGER"/>
+        <result property="isCommand" column="IS_COMMAND" jdbcType="VARCHAR"/>
+        <result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>
+        <result property="typeName" column="TYPE_NAME" jdbcType="VARCHAR"/>
+        <result property="smallTypeName" column="SMALL_TYPE_NAME" jdbcType="VARCHAR"/>
+        <result property="fileVideo" column="FILE_VIDEO" jdbcType="VARCHAR"/>
+        <result property="filePicture" column="FILE_PICTURE" jdbcType="VARCHAR"/>
+        <result property="fileVoice" column="FILE_VOICE" jdbcType="VARCHAR"/>
+        <result property="lon" column="LON" jdbcType="VARCHAR"/>
+        <result property="lat" column="LAT" jdbcType="VARCHAR"/>
+        <result property="conclusion" column="CONCLUSION" jdbcType="VARCHAR"/>
+        <result property="status" column="STATUS" jdbcType="INTEGER"/>
+        <result property="statusName" column="STATUS_NAME" jdbcType="VARCHAR"/>
+        <result property="eventPlanId" column="EVENT_PLAN_ID" jdbcType="INTEGER"/>
+    </resultMap>
+
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_EVENT(EVENT_TITLE, TYPE_ID, STREET_ID, COMMUNITY_ID, LEVEL_NAME, EVENT_TIME,
+                                SMALL_TYPE_ID, IMPACT_LEVEL, MONITOR_UNIT, OCCUR_ADDRESS, MINOR_NUM,
+                                SERIOUS_NUM, DEATH_NUM, ECONOMIC_LOSS, IS_CONCLUSION, SUMMARY, SOURCE_ID,
+                                IS_COMMAND, CREATE_TIME, FILE_VIDEO, FILE_PICTURE, FILE_VOICE, LON, LAT,
+                                CONCLUSION,LEVEL,STATUS)
+        values (#{eventTitle}, #{typeId}, #{streetId}, #{communityId}, #{levelName}, #{eventTime}, #{smallTypeId},
+                #{impactLevel}, #{monitorUnit}, #{occurAddress}, #{minorNum}, #{seriousNum}, #{deathNum},
+                #{economicLoss}, #{isConclusion}, #{summary}, #{sourceId}, #{isCommand}, #{createTime}, #{fileVideo},
+                #{filePicture}, #{fileVoice}, #{lon}, #{lat}, #{conclusion},#{level},#{status})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_EVENT(EVENT_TITLE, TYPE_ID, STREET_ID, COMMUNITY_ID, LEVEL_NAME, EVENT_TIME,
+        SMALL_TYPE_ID, IMPACT_LEVEL, MONITOR_UNIT, OCCUR_ADDRESS, MINOR_NUM, SERIOUS_NUM, DEATH_NUM, ECONOMIC_LOSS,
+        IS_CONCLUSION, SUMMARY, SOURCE_ID, IS_COMMAND, CREATE_TIME, FILE_VIDEO, FILE_PICTURE, FILE_VOICE, LON, LAT, CONCLUSION, STATUS)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.eventTitle}, #{entity.typeId}, #{entity.streetId}, #{entity.communityId}, #{entity.levelName},
+            #{entity.eventTime}, #{entity.smallTypeId}, #{entity.impactLevel}, #{entity.monitorUnit},
+            #{entity.occurAddress}, #{entity.minorNum}, #{entity.seriousNum}, #{entity.deathNum}, #{entity.economicLoss},
+            #{entity.isConclusion}, #{entity.summary}, #{entity.sourceId}, #{entity.isCommand},
+            #{entity.createTime}, #{entity.fileVideo}, #{entity.filePicture}, #{entity.fileVoice}, #{entity.lon},
+            #{entity.lat},  #{entity.conclusion}, #{entity.status})
+        </foreach>
+    </insert>
+
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update T_CFG_EVENT
+        <set>
+            <if test="eventTitle != null and eventTitle != ''">
+                EVENT_TITLE = #{eventTitle},
+            </if>
+            <if test="typeId != null">
+                TYPE_ID = #{typeId},
+            </if>
+            <if test="streetId != null and streetId != ''">
+                STREET_ID = #{streetId},
+            </if>
+            <if test="communityId != null and communityId != ''">
+                COMMUNITY_ID = #{communityId},
+            </if>
+            <if test="levelName != null">
+                LEVEL_NAME = #{levelName},
+            </if>
+            <if test="eventTime != null">
+                EVENT_TIME = #{eventTime},
+            </if>
+            <if test="smallTypeId != null and smallTypeId != ''">
+                SMALL_TYPE_ID = #{smallTypeId},
+            </if>
+            <if test="impactLevel != null and impactLevel != ''">
+                IMPACT_LEVEL = #{impactLevel},
+            </if>
+            <if test="monitorUnit != null and monitorUnit != ''">
+                MONITOR_UNIT = #{monitorUnit},
+            </if>
+            <if test="occurAddress != null and occurAddress != ''">
+                OCCUR_ADDRESS = #{occurAddress},
+            </if>
+            <if test="minorNum != null">
+                MINOR_NUM = #{minorNum},
+            </if>
+            <if test="seriousNum != null">
+                SERIOUS_NUM = #{seriousNum},
+            </if>
+            <if test="deathNum != null">
+                DEATH_NUM = #{deathNum},
+            </if>
+            <if test="economicLoss != null and economicLoss != ''">
+                ECONOMIC_LOSS = #{economicLoss},
+            </if>
+            <if test="isConclusion != null and isConclusion != ''">
+                IS_CONCLUSION = #{isConclusion},
+            </if>
+            <if test="summary != null and summary != ''">
+                SUMMARY = #{summary},
+            </if>
+            <if test="sourceId != null and sourceId != ''">
+                SOURCE_ID = #{sourceId},
+            </if>
+            <if test="isCommand != null and isCommand != ''">
+                IS_COMMAND = #{isCommand},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime},
+            </if>
+            <if test="fileVideo != null and file != ''">
+                FILE_VIDEO = #{fileVideo},
+            </if>
+            <if test="fileVoice != null and file != ''">
+                FILE_VOICE = #{fileVoice},
+            </if>
+            <if test="filePicture != null and file != ''">
+                FILE_PICTURE = #{filePicture},
+            </if>
+            <if test="lon != null and lon != ''">
+                LON = #{lon},
+            </if>
+            <if test="lat != null and lat != ''">
+                LAT = #{lat},
+            </if>
+            <if test="conclusion != null and conclusion != ''">
+                conclusion = #{conclusion},
+            </if>
+            <if test="status != null">
+                STATUS = #{status},
+            </if>
+        </set>
+        where ID = #{id}
+    </update>
+
+    <update id="updateDevice">
+        update T_CFG_EVENT set DEVICE_IDS = #{deviceIds} where ID=#{eventId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from T_CFG_EVENT
+        where ID = #{id}
+    </delete>
+
+    <!--通过主键批量删除-->
+    <delete id="deleteBatch">
+        delete
+        from T_CFG_EVENT
+        where find_in_set(ID, #{ids})
+    </delete>
+
+    <!--条件查询-->
+    <select id="queryByCondition" resultMap="EventMap">
+        select
+        a.ID, EVENT_TITLE, TYPE_ID, STREET_ID, COMMUNITY_ID, a.LEVEL_NAME, EVENT_TIME, SMALL_TYPE_ID, IMPACT_LEVEL, a.DEVICE_IDS,
+        MONITOR_UNIT, OCCUR_ADDRESS, MINOR_NUM, SERIOUS_NUM, DEATH_NUM, ECONOMIC_LOSS, IS_CONCLUSION, SUMMARY, SOURCE_ID,
+        IS_COMMAND, a.CREATE_TIME,b.dict_name TYPE_NAME,c.dict_name SMALL_TYPE_NAME,FILE_VIDEO,FIlE_PICTURE,FILE_VOICE,LON,LAT,d.PRECINCT_NAME STREET_NAME,
+        e.PRECINCT_NAME COMMUNITY_NAME,f.dict_name SOURCE_NAME,a.CONCLUSION,a.STATUS,g.DICT_NAME STATUS_NAME,h.id EVENT_PLAN_ID,
+        (select min(issue_time) from T_CFG_EVENT_TASK where contact_id in (select id from t_cfg_event_node_contact where event_id=a.id)) as span_start_time,
+        (select max(issue_time) from T_CFG_EVENT_TASK where contact_id in (select id from t_cfg_event_node_contact where event_id=a.id)) as span_end_time
+        from T_CFG_EVENT a
+        left join t_cfg_dict b on a.type_id=b.id
+        left join t_cfg_dict c on a.small_type_id=c.id
+        left join t_cfg_dict f on a.SOURCE_ID=f.id
+        left join t_cfg_dict g on a.STATUS=g.id
+        left join t_cfg_precinct d on a.street_id=d.precinct_id
+        left join t_cfg_precinct e on a.community_id=e.precinct_id
+        left join t_cfg_plan_info_event h on a.id=h.event_id
+        <where>
+            <if test="id != null">
+                and a.ID = #{id}
+            </if>
+            <if test="eventTitle != null and eventTitle != ''">
+                and a.EVENT_TITLE like concat('%',#{eventTitle},'%')
+            </if>
+            <if test="typeId != null">
+                and a.TYPE_ID = #{typeId}
+            </if>
+            <if test="streetId != null and streetId != ''">
+                and a.STREET_ID = #{streetId}
+            </if>
+            <if test="communityId != null and communityId != ''">
+                and a.COMMUNITY_ID = #{communityId}
+            </if>
+            <if test="sourceId != null and sourceId != ''">
+                and find_in_set(a.SOURCE_ID, #{sourceId})
+            </if>
+            <if test="streetName != null and streetName != ''">
+                and d.precinct_name like concat('%',#{streetName},'%')
+            </if>
+            <if test="communityName != null and communityName != ''">
+                and e.precinct_name like concat('%',#{communityName},'%')
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and DATE_FORMAT(EVENT_TIME, '%Y-%m-%d') &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and DATE_FORMAT(EVENT_TIME, '%Y-%m-%d') &lt;= #{endTime}
+            </if>
+            <if test="typeName != null and typeName != ''">
+                and b.dict_name = #{typeName}
+            </if>
+            <if test="sourceName != null and sourceName != ''">
+                and f.dict_name = #{sourceName}
+            </if>
+            <if test="statusIds!=null and statusIds!=''">
+                and find_in_set(g.id,#{statusIds})
+            </if>
+            <if test="status != null and status != ''">
+                and a.status IN
+                <foreach collection="status.split(',')" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="userId!=null and userId!=''">
+                and a.id in (select distinct event_id from t_cfg_event_check where check_user_id=#{userId} union
+                select distinct EVENT_ID from t_cfg_event_node_contact where id in (select distinct CONTACT_ID from t_cfg_event_task where person_id=#{userId}))
+            </if>
+        </where>
+        order by EVENT_TIME desc
+    </select>
+
+    <select id="queryByIds" resultMap="EventMap">
+        select
+            a.ID, EVENT_TITLE, TYPE_ID, STREET_ID, COMMUNITY_ID, LEVEL_NAME, EVENT_TIME, SMALL_TYPE_ID, IMPACT_LEVEL,
+            MONITOR_UNIT, OCCUR_ADDRESS, MINOR_NUM, SERIOUS_NUM, DEATH_NUM, ECONOMIC_LOSS, IS_CONCLUSION, SUMMARY, SOURCE_ID,
+            IS_COMMAND, a.CREATE_TIME,b.dict_name TYPE_NAME,c.dict_name SMALL_TYPE_NAME,FILE_VIDEO,FILE_VOICE,FILE_PICTURE,
+            LON,LAT,d.PRECINCT_NAME STREET_NAME,e.PRECINCT_NAME COMMUNITY_NAME,f.dict_name SOURCE_NAME,a.CONCLUSION,
+            (select min(issue_time) from T_CFG_EVENT_TASK where contact_id in (select id from t_cfg_event_node_contact where event_id=a.id)) as span_start_time,
+            (select max(issue_time) from T_CFG_EVENT_TASK where contact_id in (select id from t_cfg_event_node_contact where event_id=a.id)) as span_end_time
+        from T_CFG_EVENT a
+                 left join t_cfg_dict b on a.type_id=b.id
+                 left join t_cfg_dict c on a.small_type_id=c.id
+                 left join t_cfg_dict f on a.SOURCE_ID=f.id
+                 left join t_cfg_precinct d on a.street_id=d.precinct_id
+                 left join t_cfg_precinct e on a.community_id=e.precinct_id
+        where 1=1
+        <if test="ids!=null and ids!=''">
+            and FIND_IN_SET(a.ID,#{ids})
+        </if>
+        order by EVENT_TIME desc
+    </select>
+
+    <select id="queryGps" resultType="java.util.Map">
+        select ifnull(LON,'') lon,ifnull(LAT,'') lat from t_cfg_event where ID=#{eventId}
+    </select>
+
+    <select id="getContactByEventId" resultType="java.util.Map">
+        select a.NODE_ID nodeId,
+               b.NODE_NAME nodeName,
+               a.ID contactId
+        from t_cfg_event_node_contact a
+        left join t_cfg_event_node b on a.NODE_ID=b.ID
+        where a.EVENT_ID=#{eventId}
+    </select>
+
+    <select id="countSyncEventByType" resultType="java.util.Map">
+        select * from(
+        select '总计' typeName,count(*) num from t_cfg_event_sync where ifnull(class_2,'') !=''
+               <if test="startTime!=null and startTime != ''">
+                   and report_time &gt;= #{startTime}
+               </if>
+               <if test="endTime!=null and endTime != ''">
+                   and report_time &lt;= #{endTime}
+               </if>
+        union all
+        (select class_2 typeName,
+                COUNT(*) num
+         from t_cfg_event_sync
+         where ifnull(class_2,'') !=''
+               <if test="startTime!=null and startTime != ''">
+                   and report_time &gt;= #{startTime}
+               </if>
+               <if test="endTime!=null and endTime != ''">
+                   and report_time &lt;= #{endTime}
+               </if>
+                          group by class_2 )) a order by a.num desc
+    </select>
+
+    <select id="countSyncEventBySource" resultType="java.util.Map">
+        select `source`,count(*) total,SUM(IF(`is_del` = '1', 1, 0)) isDelNum from t_cfg_event_sync
+        where ifnull(`source`,'') != ''
+        <if test="startTime!=null and startTime !=''">and report_time &gt;= #{startTime}</if>
+        <if test="endTime!=null and endTime !=''">and report_time &lt;= #{endTime}</if>
+        group by `source`
+        union all
+        select '全部',count(*) total,SUM(IF(`is_del` = '1', 1, 0)) isDelNum from t_cfg_event_sync
+        where ifnull(`source`,'') != ''
+        <if test="startTime!=null and startTime !=''">and report_time &gt;= #{startTime}</if>
+        <if test="endTime!=null and endTime !=''">and report_time &lt;= #{endTime}</if>
+        order by total desc
+    </select>
+
+    <select id="querySyncEventList" resultType="java.util.Map">
+        select flow_no flowNo,
+               class_1 class1,
+               class_2 class2,
+               class_3 class3,
+               urgency,
+               DATE_FORMAT(report_time, '%Y-%m-%d %H:%i:%s') reportTime,
+               `source`,
+               if(is_del='1','已处置','未处置') isDel,
+               appeal_address appealAddress
+        from t_cfg_event_sync
+        <where>
+            <if test="startTime!=null and startTime !=''">and report_time &gt;= #{startTime}</if>
+            <if test="endTime!=null and endTime !=''">and report_time &lt;= #{endTime}</if>
+        </where>
+        order by report_time desc
+    </select>
+</mapper>
+

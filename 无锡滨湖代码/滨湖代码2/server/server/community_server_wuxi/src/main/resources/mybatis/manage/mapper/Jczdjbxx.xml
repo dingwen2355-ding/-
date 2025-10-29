@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.JczdjbxxDao">
+
+    <insert id="insertJczdjbxxList">
+        INSERT IGNORE INTO t_66_jczdjbxx
+        (
+        `stcd`,
+        `stnm` ,
+        `lgtd`,
+        `lttd` ,
+        `sttp`,
+        `category` ,
+        `storage_time`
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.stcd},
+            #{item.stnm} ,
+            #{item.lgtd},
+            #{item.lttd} ,
+            #{item.sttp},
+            #{item.category} ,
+            current_timestamp
+            )
+        </foreach>
+    </insert>
+
+    <select id="selectWater" resultType="map">
+        SELECT
+        b.precinct_name,
+        stcd,
+        stnm,
+        lgtd,
+        lttd,
+        street,
+        (CASE WHEN (sttp = 'MM' ) THEN 'MM：气象雨量' WHEN (sttp = 'RR' ) THEN 'RR：水位和雨量' WHEN (sttp = 'TT' ) THEN 'TT：水位' WHEN (sttp = 'ZQ' ) THEN 'ZQ：水位' ELSE sttp END) AS sttp,
+        (CASE WHEN (category = '1') THEN '重要河道' WHEN (category = '2') THEN '水库' WHEN (category = '3') THEN '泵站' WHEN (category = '4') THEN '闸站' ELSE category END) AS category
+        FROM
+        t_66_jczdjbxx a left join t_cfg_precinct b on a.street = b.precinct_id
+        WHERE
+        1=1
+        and
+        sttp IN ('RR','TT', 'ZQ')
+        <if test="precinctId != null and precinctId != null ">
+            and street = #{precinctId}
+        </if>
+        <if test="precinctName != null and precinctName != null ">
+            and b.precinct_name = #{precinctName}
+        </if>
+    </select>
+
+    <select id="selectRainFall" resultType="map">
+        SELECT
+        b.precinct_name,
+        stcd,
+        stnm,
+        lgtd,
+        lttd,
+        street,
+        (CASE WHEN (sttp = 'MM' ) THEN 'MM：气象雨量' WHEN (sttp = 'RR' ) THEN 'RR：水位和雨量' WHEN (sttp = 'TT' ) THEN 'TT：水位' WHEN (sttp = 'ZQ' ) THEN 'ZQ：水位' ELSE sttp END) AS sttp,
+      (CASE WHEN (category = '1') THEN '重要河道' WHEN (category = '2') THEN '水库' WHEN (category = '3') THEN '泵站' WHEN (category = '4') THEN '闸站' ELSE category END) AS category
+        FROM
+        t_66_jczdjbxx a left join t_cfg_precinct b on a.street = b.precinct_id
+        WHERE
+        1=1
+        and
+        sttp IN ('MM','RR')
+        <if test="precinctId != null and precinctId != null ">
+            and street = #{precinctId}
+        </if>
+        <if test="precinctName != null and precinctName != null ">
+            and b.precinct_name = #{precinctName}
+        </if>
+    </select>
+
+
+</mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.LeaderFileDao">
+    
+    <select id="queryLeaderFileList" resultType="map">
+        select
+          id,
+          ifnull(title,'') title,
+          ifnull(url,'') url,
+          ifnull(`time`,'') time,
+          ifnull(type,'') type
+        from t_data_leader_file
+        where 1=1
+        <if test="title!= null and title != ''">and title like CONCAT('%',#{title},'%')</if>
+        <if test="type!= null and type != ''">and type like CONCAT('%',#{type},'%')</if>
+        <if test="pageStart != null and pageLen != null">limit ${pageStart},${pageLen}</if>
+    </select>
+    
+
+</mapper>

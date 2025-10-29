@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.ZdwxyDao">
+    <insert id="insertZdwxyList">
+        INSERT INTO t_48_zdwxy
+        (
+        ZDWXYDJSL,
+        SJWXHXPMC,
+        GXRQ,
+        AQSCJDZRBM,
+        RKSJ,
+        QYMC,
+        FXDJ
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.ZDWXYDJSL},
+            #{item.SJWXHXPMC},
+            #{item.GXRQ},
+            #{item.AQSCJDZRBM},
+            #{item.RKSJ},
+            #{item.QYMC},
+            #{item.FXDJ}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateZdwxyList">
+        <foreach collection="list" separator=";" item="item" index="index">
+            update t_48_zdwxy
+            <set>
+                <if test="item.ZDWXYDJSL != null and item.ZDWXYDJSL != ''">ZDWXYDJSL=#{item.ZDWXYDJSL},</if>
+                <if test="item.SJWXHXPMC != null and item.SJWXHXPMC != ''">SJWXHXPMC=#{item.SJWXHXPMC},</if>
+                <if test="item.GXRQ != null and item.GXRQ != ''">GXRQ=#{item.GXRQ},</if>
+                <if test="item.AQSCJDZRBM != null and item.AQSCJDZRBM != ''">AQSCJDZRBM=#{item.AQSCJDZRBM},</if>
+                <if test="item.RKSJ != null and item.RKSJ != ''">RKSJ=#{item.RKSJ},</if>
+                <if test="item.QYMC != null and item.QYMC != ''">QYMC=#{item.QYMC},</if>
+                <if test="item.FXDJ != null and item.FXDJ != ''">FXDJ=#{item.FXDJ}</if>
+            </set>
+            where `SJWXHXPMC`=#{item.SJWXHXPMC}
+        </foreach>
+    </update>
+
+    <select id="queryZdwxyList" resultType="int">
+        select count(1) from t_48_zdwxy where SJWXHXPMC=#{SJWXHXPMC} and RKSJ = #{RKSJ}
+    </select>
+
+    <delete id="deleteZdwxyList">
+        delete from t_48_zdwxy
+    </delete>
+</mapper>

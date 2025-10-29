@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.IndividualDao">
+
+	<!--<insert id="saveIndividual">-->
+		<!--replace INTO base_iindividual (-->
+			<!--id,-->
+			<!--uid,-->
+			<!--account,-->
+			<!--name,-->
+			<!--password,-->
+			<!--funcs,-->
+			<!--gpsInterval,-->
+			<!--create_by,-->
+			<!--default_gid,-->
+			<!--usr_valid,-->
+			<!--create_date,-->
+			<!--start_date,-->
+			<!--valid_date,-->
+			<!--remarks,-->
+			<!--billid,-->
+			<!--is_onLine,-->
+			<!--type,-->
+			<!--group_num,-->
+			<!--icon-->
+		<!--)-->
+		<!--VALUES-->
+		<!--<foreach collection="lists" separator="," item="individual">-->
+			<!--(-->
+			<!--#{individual.id},-->
+			<!--#{individual.uid},-->
+			<!--#{individual.account},-->
+			<!--#{individual.name},-->
+			<!--#{individual.password},-->
+			<!--#{individual.funcs},-->
+			<!--#{individual.gpsInterval},-->
+			<!--#{individual.createBy},-->
+			<!--#{individual.defaultGid},-->
+			<!--#{individual.usrValid},-->
+			<!--#{individual.createDate},-->
+			<!--#{individual.startDate},-->
+			<!--#{individual.validDate},-->
+			<!--#{individual.remarks},-->
+			<!--#{individual.billid},-->
+			<!--#{individual.isOnLine},-->
+			<!--#{individual.type},-->
+			<!--#{individual.groupNum},-->
+			<!--#{individual.icon}-->
+			<!--)-->
+		<!--</foreach>-->
+	<!--</insert>-->
+
+	<insert id="saveIndividual">
+		replace INTO base_device_info (
+		device_id,
+		device_kind,
+		individual_type,
+		device_name,
+		account,
+		password
+		)
+		VALUES
+		<foreach collection="lists" separator="," item="individual">
+			(
+			#{individual.uid},
+			'单兵',
+			#{individual.individualType},
+			#{individual.name},
+			#{individual.account},
+			#{individual.password}
+			)
+		</foreach>
+	</insert>
+
+
+	<insert id="saveIndividualGps">
+		replace INTO base_device_gps (
+		device_id,
+		submit_time,
+		gpsx,
+		gpsy,
+		survey_gpsx,
+		survey_gpsy
+		)
+		VALUES
+		<foreach collection="lists" separator="," item="map">
+			(
+			#{map.id},
+			#{map.submitTime},
+			#{map.gpsx},
+			#{map.gpsy},
+			#{map.survey_gpsx},
+			#{map.survey_gpsy}
+			)
+		</foreach>
+	</insert>
+	
+	<select id="queryIndividualUid" resultType="java.lang.String">
+		SELECT device_id from base_device_info where device_kind='单兵'
+		<if test="type!=null">
+			and individual_type=#{type}
+		</if>
+	</select>
+
+	<select id="queryIndividualIds" resultType="map">
+		select echart mdn,'1' systemId from t_cfg_device where device_kind = '31'
+	</select>
+
+	<update id="updateIndividualGps" parameterType="list">
+		update t_cfg_device
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="gpsx = case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when echart=#{item.mdn} then #{item.gpsx}
+				</foreach>
+			</trim>
+			<trim prefix="gpsy = case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when echart=#{item.mdn} then #{item.gpsy}
+				</foreach>
+			</trim>
+		</trim>
+		where echart in
+		<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+			#{item.mdn}
+		</foreach>
+	</update>
+
+</mapper>

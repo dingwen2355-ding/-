@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.WgygjxxDao">
+
+    <insert id="insertWgygjxxList">
+        INSERT  INTO t_76_wgygjxx
+        (
+        `u_id`,
+        `u_name` ,
+        `pos_y` ,
+        `pos_x` ,
+        `ori_pos_y` ,
+        `ori_pos_x` ,
+        `occur_time` ,
+        `storage_time`
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.uid},
+            #{item.uname} ,
+            #{item.posy} ,
+            #{item.posx} ,
+            #{item.oriposy} ,
+            #{item.oriposx} ,
+            #{item.occurtime} ,
+            current_timestamp
+            )
+        </foreach>
+    </insert>
+
+    <delete id="delAll">
+       DELETE FROM t_76_wgygjxx where DATE(storage_time) = CURDATE()
+    </delete>
+</mapper>

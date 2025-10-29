@@ -1,0 +1,642 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.EventCommandDao">
+	<select id="communication" resultType="java.util.HashMap">
+        SELECT
+            a.type,
+            a.unit_id unitId,
+						case a.type when '1'
+						then if(a.unit_id='999997','市指挥长',if(a.unit_id='999998','区指挥长','街镇指挥长'))
+						when '2'
+						then c.`name`
+						WHEN '3'
+						then d.precinct_name
+						when '4'
+						then c.`name`
+						end as unit,
+						c.`name`,
+            b.`name`leader,
+            b.phone,
+            b.telephone,
+            b.fox,
+            b.duty,
+            b.wx account
+        FROM
+            deal_event_accpciated_communication a
+        INNER JOIN base_communication b ON a.leader = b.id
+				LEFT JOIN base_unit c on b.unit_id=c.id
+        LEFT JOIN t_cfg_precinct d on a.unit_id=d.precinct_id
+        WHERE
+         event_id = #{eventId}
+         and b.status='0'
+        ORDER BY a.type
+	</select>
+
+    <select id="communicationNewByPrecinctId" resultType="java.util.HashMap">
+        SELECT * from (
+        select * from ( SELECT a.type,a.unit_id commanderId,if(a.unit_id='999997','市指挥长',if(a.unit_id='999998','区指挥长',if(a.unit_id='999996','现场指挥长','街镇指挥长'))) commander,
+        b.unit_id unitId,b.unit,'' isDefault,
+        b.id personId,b.name leader,b.phone,b.telephone,b.fox,b.duty,b.wx account,b.unionid,a.sort,'' usort,'' ds,'0' dutyLevel,'0' zbType,b.sort psort
+        from  t_cfg_command_system_precinct a
+        LEFT JOIN base_communication b ON FIND_IN_SET(b.id,a.leader)
+        where a.type='1' and a.plan_id = #{planId} and a.unit_id!='999999'
+        <if test="isMax==null">
+            and a.unit_id!='999996'
+        </if>
+        <if test="linkType!=null">
+            and link_type=#{linkType}
+        </if>
+        <if test="precinctId!=null and precinctId != ''">
+            and a.precinct_id=#{precinctId}
+        </if>
+        ORDER BY FIND_IN_SET(b.id, a.leader))a
+        union ALL
+        SELECT
+        a.type,
+        '' commanderId,
+        '' commander,
+        a.unit_id unitId,
+        c.precinct_name unit,
+        a.leader isDefault,
+        b.id personId,
+        b.`name`leader,
+        b.phone,
+        b.telephone,
+        b.fox,
+        b.duty,
+        b.wx account,
+        b.unionid,
+        a.sort,
+        '' usort,
+        '' ds,
+        ifnull(a.duty_level,'1') dutyLevel,
+        b.type zbType,
+        b.sort psort
+        FROM t_cfg_command_system_precinct a
+        INNER JOIN t_cfg_precinct c on a.unit_id=c.precinct_id
+        left JOIN base_communication b ON find_in_set(c.precinct_id,b.unit_id)
+        WHERE
+        a.precinct_id = #{precinctId} and a.plan_id = #{planId} and a.type = '3'
+        <if test="linkType!=null">
+            and link_type=#{linkType}
+        </if>
+        union ALL
+        SELECT
+        a.type,
+        '' commanderId,
+        '' commander,
+        a.unit_id unitId,
+        c.`name` unit,
+        a.leader isDefault,
+        b.id personId,
+        b.`name`leader,
+        b.phone,
+        b.telephone,
+        b.fox,
+        b.duty,
+        b.wx account,
+        b.unionid,
+        a.sort,
+        c.sort usort,
+        if(b.id=a.leader,'1','99999') ds,
+        ifnull(a.duty_level,'1') dutyLevel,
+        b.type zbType,
+        b.sort psort
+        FROM t_cfg_command_system_precinct a
+        INNER JOIN base_unit c on a.unit_id=c.id
+        left JOIN base_communication b ON find_in_set(c.id,b.unit_id)
+        WHERE a.plan_id = #{planId} and a.type in('2','4')
+        <if test="linkType!=null">
+            and link_type=#{linkType}
+        </if>
+        <if test="precinctId!=null and precinctId != ''">
+            and a.precinct_id=#{precinctId}
+        </if>
+        ) a ORDER BY a.type,cast(a.dutyLevel as decimal),cast(if(a.isDefault=a.personId,'0','1') as decimal),	cast(a.sort AS DECIMAL),cast(a.usort as DECIMAL),cast(a.zbType as decimal),a.ds,cast(a.psort as decimal)
+    </select>
+
+    <select id="communicationNewByEventType" resultType="java.util.HashMap">
+        SELECT * from (SELECT a.type,a.unit_id commanderId,if(a.unit_id='999997','市指挥长',if(a.unit_id='999998','区指挥长',if(a.unit_id='999996','现场指挥长','街镇指挥长'))) commander,
+        b.unit_id unitId,b.unit,'' isDefault,
+        b.id personId,b.name leader,b.phone,b.telephone,b.fox,b.duty,b.wx account,b.unionid,a.sort,'' usort,'' ds,'0' dutyLevel,'0' zbType,b.sort psort
+        from  t_cfg_command_system_event_type a
+        LEFT JOIN base_communication b ON FIND_IN_SET(b.id,a.leader)
+        where a.type='1' and a.event_type=#{eventType} and a.unit_id!='999999'
+        <if test="isMax==null">
+            and a.unit_id!='999996'
+        </if>
+        union ALL
+        SELECT
+        a.type,
+        '' commanderId,
+        '' commander,
+        a.unit_id unitId,
+        c.precinct_name unit,
+        a.leader isDefault,
+        b.id personId,
+        b.`name`leader,
+        b.phone,
+        b.telephone,
+        b.fox,
+        b.duty,
+        b.wx account,
+        b.unionid,
+        a.sort,
+        '' usort,
+        '' ds,
+        ifnull(a.duty_level,'1') dutyLevel,
+        b.type zbType,
+        b.sort psort
+        FROM t_cfg_command_system_event_type a
+        INNER JOIN t_cfg_precinct c on a.unit_id=c.precinct_id
+        left JOIN base_communication b ON find_in_set(c.precinct_id,b.unit_id)
+        WHERE
+        event_type = #{eventType} and a.type = '3'
+        union ALL
+        SELECT
+        a.type,
+        '' commanderId,
+        '' commander,
+        a.unit_id unitId,
+        c.`name` unit,
+        a.leader isDefault,
+        b.id personId,
+        b.`name`leader,
+        b.phone,
+        b.telephone,
+        b.fox,
+        b.duty,
+        b.wx account,
+        b.unionid,
+        a.sort,
+        c.sort usort,
+        if(b.id=a.leader,'1','99999') ds,
+        ifnull(a.duty_level,'1') dutyLevel,
+        b.type zbType,
+        b.sort psort
+        FROM t_cfg_command_system_event_type a
+        INNER JOIN base_unit c on a.unit_id=c.id
+        left JOIN base_communication b ON find_in_set(c.id,b.unit_id)
+        WHERE
+        event_type = #{eventType} and a.type in('2','4')
+        ) a ORDER BY a.type,cast(a.dutyLevel as decimal),cast(if(a.isDefault=a.personId,'0','1') as decimal),	cast(a.sort AS DECIMAL),cast(a.usort as DECIMAL),cast(a.zbType as decimal),a.ds,cast(a.psort as decimal)
+    </select>
+
+    <select id="communicationNew" resultType="java.util.HashMap">
+        SELECT * from (SELECT a.type,a.unit_id commanderId,if(a.unit_id='999997','市指挥长',if(a.unit_id='999998','区指挥长',if(a.unit_id='999996','现场指挥长','街镇指挥长'))) commander,
+        b.unit_id unitId,b.unit,'' isDefault,
+        b.id personId,b.name leader,b.phone,b.telephone,b.fox,b.duty,b.wx account,b.unionid,a.sort,'' usort,'' ds,'0' dutyLevel,'0' zbType,b.sort psort
+        from  deal_event_accpciated_communication a
+        LEFT JOIN base_communication b ON FIND_IN_SET(b.id,a.leader)
+        where a.type='1' and event_id=#{eventId} and a.unit_id!='999999'
+        <if test="isMax==null">
+            and a.unit_id!='999996'
+        </if>
+        union ALL
+        SELECT
+        a.type,
+        '' commanderId,
+        '' commander,
+        a.unit_id unitId,
+        c.precinct_name unit,
+        a.leader isDefault,
+        b.id personId,
+        b.`name`leader,
+        b.phone,
+        b.telephone,
+        b.fox,
+        b.duty,
+        b.wx account,
+        b.unionid,
+        a.sort,
+        '' usort,
+        '' ds,
+        ifnull(a.duty_level,'1') dutyLevel,
+        b.type zbType,
+        b.sort psort
+        FROM deal_event_accpciated_communication a
+        INNER JOIN t_cfg_precinct c on a.unit_id=c.precinct_id
+        left JOIN base_communication b ON find_in_set(c.precinct_id,b.unit_id)
+        WHERE
+        event_id = #{eventId} and a.type = '3'
+        union ALL
+        SELECT
+        a.type,
+        '' commanderId,
+        '' commander,
+        a.unit_id unitId,
+        c.`name` unit,
+        a.leader isDefault,
+        b.id personId,
+        b.`name`leader,
+        b.phone,
+        b.telephone,
+        b.fox,
+        b.duty,
+        b.wx account,
+        b.unionid,
+        a.sort,
+        c.sort usort,
+        if(b.id=a.leader,'1','99999') ds,
+        ifnull(a.duty_level,'1') dutyLevel,
+        b.type zbType,
+        b.sort psort
+        FROM deal_event_accpciated_communication a
+        INNER JOIN base_unit c on a.unit_id=c.id
+        left JOIN base_communication b ON find_in_set(c.id,b.unit_id)
+        WHERE
+        event_id = #{eventId} and a.type in('2','4')
+        ) a ORDER BY a.type,cast(a.dutyLevel as decimal),cast(if(a.isDefault=a.personId,'0','1') as decimal),	cast(a.sort AS DECIMAL),cast(a.usort as DECIMAL),cast(a.zbType as decimal),a.ds,cast(a.psort as decimal)
+    </select>
+
+    <select id="queryEventType" resultType="String">
+        select TYPE_ID
+        from community_wuxi_eims.t_cfg_event
+        where ID = #{eventId}
+    </select>
+
+    <select id="unitMember" resultType="java.util.HashMap">
+        SELECT
+            a.id,
+            a.name,
+            a.age,
+            a.sex,
+            a.unit,
+            a.id_card,
+            a.duty,
+            a.phone,
+            a.telephone,
+            a.fox
+        FROM
+            base_communication a
+        WHERE
+            find_in_set(#{unitId},a.unit_id)
+        order by cast(a.sort as decimal)
+    </select>
+
+    <select id="areaMember" resultType="java.util.HashMap">
+        SELECT
+            a.id,
+            a.name,
+            a.age,
+            a.sex,
+            a.unit,
+            a.id_card,
+            a.duty,
+            c.account,
+            a.phone,
+            a.telephone,
+            a.fox
+        FROM
+            base_communication a
+        INNER JOIN base_unit b ON a.unit_id = b.id
+        LEFT JOIN base_wx_communication c ON a.unit_id = c.account
+        WHERE
+            b.area_id = #{areaCode}
+    </select>
+
+    <!--<update id="defaultLeader">-->
+        <!--update dict_default_responsible set person_id=#{personId} where unit_id=#{unitId}-->
+    <!--</update>-->
+
+    <insert id="eventLeader">
+      replace into deal_event_accpciated_communication
+      values
+      <foreach collection="maps" item="map" separator=",">
+          (#{map.eventId},#{map.type},#{map.unit},#{map.leader})
+      </foreach>
+    </insert>
+
+    <select id="queryEventCommunicationConfig" resultType="java.util.HashMap">
+        SELECT * from (
+        SELECT
+            a.type,
+            a.unit_id unitId,
+            CASE a.type
+        WHEN 1 THEN
+            b.`name`
+        ELSE
+            c.`name`
+        END AS unit
+        FROM
+            deal_event_accpciated_communication a
+        LEFT JOIN base_communication b ON a.leader = b.id
+        LEFT JOIN base_unit c ON a.unit_id = c.id
+        WHERE
+            a.event_id = #{eventId}
+        ORDER BY
+            type ) a where (ifnull(a.unit,'')!='' and a.type !='1') or a.type='1'
+    </select>
+
+    <update id="deleteEventCommunication">
+        delete from deal_event_accpciated_communication where event_id=#{eventId}
+    </update>
+    <update id="deleteEventCommunicationByPrecinctId">
+        delete from t_cfg_command_system_precinct where precinct_id=#{precinctId} and plan_id = #{planId}
+    </update>
+    <update id="deleteEventCommunicationByEventType">
+        delete from t_cfg_command_system_event_type where event_type=#{eventType}
+    </update>
+
+    <insert id="saveEventCommunication">
+        replace INTO deal_event_accpciated_communication (
+            event_id,
+            type,
+            unit_id,
+            leader,
+            sort,
+            duty_level
+        )
+        VALUES
+        <foreach collection="maps" item="map" separator=",">
+            (
+            #{map.eventId},
+            #{map.type},
+            #{map.unit_id},
+            #{map.leader},
+            #{map.sort},
+            #{map.dutyLevel}
+            )
+        </foreach>
+    </insert>
+    <insert id="saveEventCommunicationByPrecinctId">
+        replace INTO t_cfg_command_system_precinct (
+        precinct_id,
+        plan_id,
+        type,
+        unit_id,
+        leader,
+        sort,
+        duty_level,
+        link_type
+        )
+        VALUES
+        <foreach collection="maps" item="map" separator=",">
+            (
+            #{map.precinctId},
+            #{map.planId},
+            #{map.type},
+            #{map.unit_id},
+            #{map.leader},
+            #{map.sort},
+            #{map.dutyLevel},
+            #{map.linkType}
+            )
+        </foreach>
+    </insert>
+    <insert id="saveEventCommunicationByEventType">
+        replace INTO t_cfg_command_system_event_type (
+        event_type,
+        type,
+        unit_id,
+        leader,
+        sort,
+        duty_level
+        )
+        VALUES
+        <foreach collection="maps" item="map" separator=",">
+            (
+            #{map.eventType},
+            #{map.type},
+            #{map.unit_id},
+            #{map.leader},
+            #{map.sort},
+            #{map.dutyLevel}
+            )
+        </foreach>
+    </insert>
+
+    <resultMap id="UnitSystemMap" type="map">
+        <result property="eventId" column="eventId"/>
+        <result property="unitId" column="unitId"/>
+        <result property="systemType" column="systemType"/>
+        <association property="systemList" column="{unitId=unitId,systemType = systemType}" select="querySystemList">
+        </association>
+    </resultMap>
+
+    <select id="queryUnitSystemByEventId" resultMap="UnitSystemMap">
+        SELECT
+            eac.event_id eventId,
+            eac.unit_id unitId,
+            ifnull(#{systemType},'全部') systemType,
+            ifnull(bu.name,'') name
+        FROM
+            deal_event_accpciated_communication eac
+        LEFT JOIN base_unit bu ON eac.unit_id = bu.id
+        WHERE
+            eac.type = 2
+        <if test="eventId != null and eventId != ''">and eac.event_id = #{eventId}</if>
+    </select>
+
+    <select id="querySystemList" resultType="map">
+        SELECT
+        system_url systemUrl,
+        operate_device_id operateDeviceId,
+        consultation_device_id consultationDeviceId,
+        fixed_device_id fixedDeviceId,
+        ifnull(system_name, '') systemName,
+        ifnull(system_type, '') systemType
+        FROM
+        relation_unit_system
+        where unit_id = #{unitId}
+        <if test="systemType != null and SystemType != '' and systemType != '全部'">and system_type = #{systemType}</if>
+    </select>
+
+    <select id="queryEventCommunicationOn" resultType="java.util.HashMap">
+        SELECT b.`name` from deal_event_accpciated_communication a
+        INNER JOIN base_communication b on a.leader=b.id
+        where a.event_id=#{eventId} and a.unit_id='999996'
+    </select>
+
+    <select id="queryUnitSystem" resultType="java.util.HashMap">
+        SELECT * from relation_unit_system
+            where 1=1
+        <choose>
+            <when test="unit!=null">
+                and unit_id=#{unit}
+            </when>
+            <!--<otherwise>-->
+                <!--and unit_id='019251d1-0fe0-4fad-ad56-edc73edaa840'-->
+            <!--</otherwise>-->
+        </choose>
+            <if test="systemType!=null">
+                and system_type=#{systemType}
+            </if>
+            <if test="systemName!=null">
+                and system_name like concat('%',#{systemName},'%')
+            </if>
+
+    </select>
+
+    <update id="updateLeader">
+        update deal_event_accpciated_communication set leader=#{leader}  where event_id=#{eventId} and unit_id=#{type}
+    </update>
+
+    <select id="queryUnitSystemList" resultType="map">
+        SELECT
+            system_name systemName,
+            system_url systemUrl
+        FROM
+            relation_unit_system
+    </select>
+
+    <select id="queryOperatorDeviceList" resultType="map">
+        select device_id,device_name from base_device_info where is_operator = '1';
+    </select>
+
+    <select id="queryTopicInfoList" resultType="map">
+        SELECT * FROM relation_topic_video
+        where 1=1
+        <if test="topicId != null and topicId != ''">and topic_id = #{topicId}</if>
+        <if test="topicName != null and topicName != ''">and topic_name = #{topicName}</if>
+    </select>
+
+    <select id="getEventData" resultType="java.util.HashMap">
+        select a.ID eventId,
+        EVENT_TITLE event_title,
+        TYPE_ID event_type,
+        b.DICT_NAME event_type_name,
+        DATE_FORMAT(EVENT_TIME, '%Y-%m-%d %H:%i:%s') happen_time,
+        OCCUR_ADDRESS address,
+        SUMMARY `desc`,
+        STREET_ID area_code,
+        c.precinct_name area,
+        LEVEL_NAME level,
+        d.DICT_NAME flowSource,
+        LON gpsx,
+        LAT gpsy
+        from community_wuxi_eims.t_cfg_event a
+        left join community_wuxi_eims.t_cfg_dict b on a.TYPE_ID=b.ID
+        left join community_wuxi_eims.t_cfg_precinct c on a.STREET_ID=c.precinct_id
+        left join community_wuxi_eims.t_cfg_dict d on a.source_id=b.ID
+        where 1=1 and a.status in (41,42,43) and a.id in (select distinct event_id from community_wuxi_eims.t_cfg_plan_info_event)
+        <if test="beginTime != null and beginTime != ''">and EVENT_TIME &gt; #{beginTime} </if>
+            <if test="endTime != null and endTime != ''"> and EVENT_TIME &lt; #{endTime} </if>
+            <if test="precinctId != null and precinctId != ''">and STREET_ID = #{precinctId}</if>
+            <if test="title != null and title != ''">and event_title like CONCAT('%',#{title},'%')</if>
+            <if test="eventType != null and eventType != ''">and TYPE_ID = #{eventType}</if>
+        order by EVENT_TIME desc
+        <if test="pageStart != null and pageLen != null">limit ${pageStart},${pageLen}</if>
+    </select>
+
+    <select id="getEventDataByType" resultType="java.util.HashMap">
+        select a.ID event_id,
+        EVENT_TITLE event_title,
+        TYPE_ID event_type,
+        b.DICT_NAME event_type_name,
+        DATE_FORMAT(EVENT_TIME, '%Y-%m-%d %H:%i:%s') happen_time,
+        OCCUR_ADDRESS address,
+        SUMMARY `desc`,
+        STREET_ID area_code,
+        c.precinct_name area,
+        LEVEL_NAME urgency,
+        DEVICE_IDS deviceIds,
+        d.DICT_NAME flow_source
+        <if test="gpsx != null and gpsx != ''">
+            ,
+            ROUND(6378.138 * 2 * ASIN(
+            SQRT(POW(SIN((#{gpsy} * PI() / 180 - LAT * PI() / 180) / 2),2)
+            + COS(#{gpsy} * PI() / 180) * COS(LAT * PI() / 180)
+            * POW(SIN((#{gpsx} * PI() / 180 - LON * PI() / 180) / 2),2)))
+            ) AS Mdistance
+        </if>
+        from community_wuxi_eims.t_cfg_event a
+        left join community_wuxi_eims.t_cfg_dict b on a.TYPE_ID=b.ID
+        left join community_wuxi_eims.t_cfg_precinct c on a.STREET_ID=c.precinct_id
+        left join community_wuxi_eims.t_cfg_dict d on a.source_id=d.id
+        where
+        a.TYPE_ID != #{eventId} and a.status = 43
+        <if test="title != null and title != ''">and EVENT_TITLE like CONCAT('%',#{title},'%')</if>
+        <if test="beginTime != null and beginTime != ''">and EVENT_TIME &gt; #{beginTime} </if>
+        <if test="endTime != null and endTime != ''"> and EVENT_TIME &lt; #{endTime} </if>
+        <if test="precinctId != null and precinctId != ''">and STREET_ID = #{precinctId}</if>
+        <if test="eventType != null and eventType != ''">and TYPE_ID = #{eventType}</if>
+        <if test="gpsx != null and gpsx != ''">and ROUND(6378.138 * 2 * ASIN(
+            SQRT(POW(SIN((#{gpsy} * PI() / 180 - LAT * PI() / 180) / 2),2)
+            + COS(#{gpsy} * PI() / 180) * COS(LAT * PI() / 180)
+            * POW(SIN((#{gpsx} * PI() / 180 - LON * PI() / 180) / 2),2)))
+            )  &lt;= 0.3</if>
+        order by EVENT_TIME desc
+        <if test="pageStart != null and pageLen != null">limit ${pageStart},${pageLen}</if>
+    </select>
+
+    <insert id="addVisitLog">
+        insert into t_data_visit_log(time) values (now())
+    </insert>
+
+    <select id="queryVistitCount" resultType="String">
+        SELECT
+            count(1) count
+        FROM
+            t_data_visit_log
+        where 1=1
+        <if test="beginTime != null">and `time` &gt; #{beginTime} </if>
+        <if test="endTime != null"> and `time` &lt; #{endTime} </if>
+    </select>
+
+    <select id="queryGpsByEventId" resultType="map">
+        select LON gpsx, LAT gpsy from community_wuxi_eims.t_cfg_event where ID = #{eventId}
+    </select>
+
+    <select id="queryNearbyEvent" resultType="java.util.Map">
+        select a.ID event_id,
+               EVENT_TITLE event_title,
+               TYPE_ID event_type,
+               b.DICT_NAME event_type_name,
+               DATE_FORMAT(EVENT_TIME, '%Y-%m-%d %H:%i:%s') happen_time,
+               OCCUR_ADDRESS address,
+               SUMMARY `desc`,
+               STREET_ID area_code,
+               c.precinct_name area,
+               LEVEL_NAME urgency,
+               DEVICE_IDS deviceIds,
+               d.DICT_NAME flow_source
+               from community_wuxi_eims.t_cfg_event a
+        left join community_wuxi_eims.t_cfg_dict b on a.TYPE_ID=b.ID
+        left join community_wuxi_eims.t_cfg_precinct c on a.STREET_ID=c.precinct_id
+        left join community_wuxi_eims.t_cfg_dict d on a.source_id=d.id
+        where ABS(LON-#{gpsx}) &lt; 0.1 and ABS(LAT-#{gpsy}) &lt; 0.1
+        order by
+        ABS(LON-#{gpsx}),ABS(LAT-#{gpsy}) limit 21
+    </select>
+
+    <select id="queryEventPlanId" resultType="java.lang.String">
+        select id from community_wuxi_eims.t_cfg_plan_info_event where event_id=#{eventId} limit 1
+    </select>
+
+    <select id="queryStuffs" resultType="java.util.Map">
+        select STUFF_NAME name,
+               ADDRESS address,
+               GPSX gpsx,
+               GPSY gpsy
+        from community_wuxi_eims.t_cfg_resource_stuff
+        where id in (select resource_id from community_wuxi_eims.t_cfg_plan_link where resource_type='3' and `type`='2' and link_id=#{planId})
+    </select>
+
+    <select id="queryExperts" resultType="java.util.Map">
+        select name,
+                address,
+               GPSX gpsx,
+               GPSY gpsy
+        from community_wuxi_eims.basic_expert_phonebook
+        where id in (select resource_id from community_wuxi_eims.t_cfg_plan_link where resource_type='1' and `type`='2' and link_id=#{planId})
+    </select>
+
+    <select id="queryShelters" resultType="java.util.Map">
+        select NAME name,
+               ADDRESS address,
+               GPSX gpsx,
+               GPSY gpsy
+        from community_wuxi_eims.t_cfg_site_manage
+        where id in (select resource_id from community_wuxi_eims.t_cfg_plan_link where resource_type='4' and `type`='2' and link_id=#{planId})
+    </select>
+
+    <select id="queryTeams" resultType="java.util.Map">
+        select TEAM_NAME name,
+                address,
+               LONGITUDE gpsx,
+               LATITUDE gpsy
+        from community_wuxi_eims.resource_team_info
+        where id in (select resource_id from community_wuxi_eims.t_cfg_plan_link where resource_type='2' and `type`='2' and link_id=#{planId})
+    </select>
+</mapper>

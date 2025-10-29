@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.InstructionMapper">
+
+	<!--<select id="getLeaderInstructionInplemention" resultType="java.util.HashMap">-->
+		<!--SELECT id, instruction_id, report_content reportContent, unit_id unitId, unit_name unitName,-->
+		 <!--reporter_name reporterName, reporter_duty reporterDuty, DATE_FORMAT(record_time, '%Y-%m-%d %H:%i:%S') recordtime-->
+		<!--from base_data_instruction_implement-->
+		<!--<if test="instructionId != null and instructionId != ''"> where instruction_id = #{instructionId}</if>-->
+		<!--order by record_time asc-->
+	<!--</select>-->
+
+	<select id="getLeaderInstructionInplemention" resultType="java.util.HashMap">
+		SELECT b.id, b.report_content reportContent, DATE_FORMAT(b.record_time, '%Y-%m-%d %H:%i:%S') implementTime,
+		 b.instruction_id instructionId, b.event_id eventId, status, unit_name unitName
+		from base_data_instruction_implement b
+		where event_id = #{eventId} <if test="status != null and status != ''">and find_in_set(status, #{status})</if>
+		order by b.record_time desc
+	</select>
+
+	<!--<select id="getLeaderInstruction" resultType="java.util.HashMap">-->
+		<!--SELECT a.leader_name leaderName, a.event_id eventId, a.leader_duty leaderDuty, a.instruction_content instructionContent, DATE_FORMAT(a.record_time, '%Y-%m-%d %H:%i:%S') recordtime, b.unit_id unitId, b.id, b.report_content reportContent, b.reporter_name reporterName, b.reporter_duty reporterDuty, b.unit_name unitName, DATE_FORMAT(b.record_time, '%Y-%m-%d %H:%i:%S') implementTime-->
+		<!--from base_data_leader_instruction a-->
+		<!--left join base_data_instruction_implement b on a.instruction_id = b.instruction_id-->
+		<!--<if test="eventId!= null and eventId != ''">-->
+			<!--where a.event_id = #{eventId}-->
+		<!--</if>-->
+		<!--order by b.record_time asc-->
+	<!--</select>-->
+
+	<select id="getLeaderInstruction" resultType="java.util.HashMap">
+		SELECT a.leader_name leaderName, a.instruction_id instructionId, a.event_id eventId, a.instruction_content instructionContent,
+		 DATE_FORMAT(a.record_time, '%Y-%m-%d %H:%i:%S') recordtime, status
+		from base_data_leader_instruction a
+		LEFT JOIN base_leader_name b on a.leader_name=b.`name`
+		where a.event_id = #{eventId} <if test="status != null and status != ''">and find_in_set(status, #{status})</if>
+		order by b.sort,a.record_time desc
+	</select>
+
+	<select id="getLeaderInstructionInplemention2" resultType="java.util.HashMap">
+		SELECT id, instruction_id, report_content reportContent, unit_id unitId,  DATE_FORMAT(record_time, '%Y-%m-%d %H:%i:%S') recordtime
+		from base_data_instruction_implement_copy1
+		<if test="instructionId != null and instructionId != ''"> where instruction_id = #{instructionId}</if>
+		order by record_time asc
+	</select>
+
+	<delete id="deleteLeaderInstructionByEventId">
+		delete from base_data_leader_instruction
+		where event_id = #{eventId}
+  	</delete>
+
+	<delete id="deleteLeaderInstructionImplementByEventId">
+		delete from base_data_instruction_implement
+		where event_id=#{eventId}
+  	</delete>
+
+	<insert id="insertLeaderInstruction" parameterType="com.znv.manage.common.bean.LeaderInstruction">
+		insert into base_data_leader_instruction
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="eventId != null">
+				event_id,
+			</if>
+			<if test="instructionId != null">
+				instruction_id,
+			</if>
+			<if test="leaderName != null">
+				leader_name,
+			</if>
+			<if test="leaderDuty != null">
+				leader_duty,
+			</if>
+			<if test="instructionContent != null">
+				instruction_content,
+			</if>
+			<if test="recordtime != null">
+				record_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="eventId != null">
+				#{eventId,jdbcType=VARCHAR},
+			</if>
+			<if test="instructionId != null">
+				#{instructionId,jdbcType=VARCHAR},
+			</if>
+			<if test="leaderName != null">
+				#{leaderName,jdbcType=VARCHAR},
+			</if>
+			<if test="leaderDuty != null">
+				#{leaderDuty,jdbcType=VARCHAR},
+			</if>
+			<if test="instructionContent != null">
+				#{instructionContent,jdbcType=VARCHAR},
+			</if>
+			<if test="recordtime != null">
+				#{recordtime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateLeaderInstruction" parameterType="com.znv.manage.common.bean.LeaderInstruction">
+		update base_data_leader_instruction
+		<set>
+			<if test="eventId != null">
+				event_id = #{eventId,jdbcType=VARCHAR},
+			</if>
+			<if test="instructionId != null">
+				instruction_id = #{instructionId,jdbcType=VARCHAR},
+			</if>
+			<if test="leaderName != null">
+				leader_name = #{leaderName,jdbcType=VARCHAR},
+			</if>
+			<if test="leaderDuty != null">
+				leader_duty = #{leaderDuty,jdbcType=VARCHAR},
+			</if>
+			<if test="instructionContent != null">
+				instruction_content = #{instructionContent,jdbcType=VARCHAR},
+			</if>
+			<if test="recordtime != null">
+				record_time = #{recordtime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+
+	<insert id="insertInstructionImplementionsNew" parameterType="com.znv.manage.common.bean.InstructionImplement">
+		INSERT INTO base_data_instruction_implement (
+			report_content,
+			record_time,
+			unit_name,
+			event_id,
+			status
+		)
+		VALUES
+		<foreach collection="lists" item="list" separator=",">
+			(
+			#{list.reportContent},
+			#{list.recordtime},
+			#{list.unitName},
+			#{list.eventId},
+			#{list.status}
+			)
+		</foreach>
+	</insert>
+
+	<insert id="insertLeaderInstructionNew" parameterType="com.znv.manage.common.bean.LeaderInstruction">
+		INSERT INTO base_data_leader_instruction (
+			event_id,
+			leader_name,
+			instruction_content,
+			record_time,
+			status
+		)
+		VALUES
+		<foreach collection="lists" item="list" separator=",">
+		(
+			#{list.eventId},
+			#{list.leaderName},
+			#{list.instructionContent},
+			#{list.recordtime},
+			#{list.status}
+		)
+		</foreach>
+	</insert>
+
+	<insert id="insertInstructionImplemention" parameterType="com.znv.manage.common.bean.InstructionImplement">
+		insert into base_data_instruction_implement
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="eventId != null">
+				event_id,
+			</if>
+			<if test="instructionId != null">
+				instruction_id,
+			</if>
+			<if test="unitId != null">
+				unit_id,
+			</if>
+			<if test="reportContent != null">
+				report_content,
+			</if>
+			<if test="implementTime != null">
+				record_time,
+			</if>
+			<if test="reporterDuty != null">
+				reporter_duty,
+			</if>
+			<if test="reporterName != null">
+				reporter_name,
+			</if>
+			<if test="unitName != null">
+				unit_name,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="eventId != null">
+				#{eventId,jdbcType=VARCHAR},
+			</if>
+			<if test="instructionId != null">
+				#{instructionId,jdbcType=VARCHAR},
+			</if>
+			<if test="unitId != null">
+				#{unitId,jdbcType=VARCHAR},
+			</if>
+			<if test="reportContent != null">
+				#{reportContent,jdbcType=VARCHAR},
+			</if>
+			<if test="implementTime != null">
+				#{implementTime,jdbcType=VARCHAR},
+			</if>
+			<if test="reporterDuty != null">
+				#{reporterDuty,jdbcType=VARCHAR},
+			</if>
+			<if test="reporterName != null">
+				#{reporterName,jdbcType=VARCHAR},
+			</if>
+			<if test="unitName != null">
+				#{unitName,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateInstructionImplemention">
+		update base_data_instruction_implement
+		<set>
+			<if test="instructionId != null">
+				instruction_id = #{instructionId,jdbcType=VARCHAR},
+			</if>
+			<if test="unitId != null">
+				unit_id = #{unitId,jdbcType=VARCHAR},
+			</if>
+			<if test="reportContent != null">
+				report_content = #{reportContent,jdbcType=VARCHAR},
+			</if>
+			<if test="implementTime != null">
+				record_time = #{implementTime,jdbcType=VARCHAR},
+			</if>
+			<if test="reporterDuty != null">
+				reporter_duty = #{reporterDuty,jdbcType=VARCHAR},
+			</if>
+			<if test="reporterName != null">
+				reporter_name = #{reporterName,jdbcType=VARCHAR},
+			</if>
+			<if test="unitName != null">
+				unit_name = #{unitName,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteInstructionImplement">
+		delete from base_data_instruction_implement where id=#{id}
+	</delete>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.WaterPointsDao">
+
+    <select id="getWaterPoints" resultType="map">
+        select
+        `id`,
+        `camera_id` cameraId,
+        `camera_address` cameraAddress,
+        `lon`,
+        `lat`,
+        `source`,
+        `remark`,
+        `street`,
+        DATE_FORMAT(`collect_time`, '%Y-%m-%d %H:%i:%S') as collectTime
+        from t_water_points a left join t_cfg_precinct b on a.street = b.precinct_id  where 1=1
+        <if test="beginTime != null and beginTime != ''">and collect_time >=#{beginTime}</if>
+        <if test="endTime != null and endTime != ''">and collect_time &lt;= #{endTime}</if>
+        <if test="precinctId != null and precinctId != '' ">
+            and street =  #{precinctId}
+        </if>
+        <if test="precinctName != null and precinctName != '' ">
+            and b.precinct_name = #{precinctName}
+        </if>
+    </select>
+
+    <update id="updateWaterPointsStreet">
+        update t_water_points
+        <set>
+            <if test="street !=null and street != '' ">street=#{street},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

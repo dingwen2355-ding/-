@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.SsoLoginDao">
+
+    <select id="querySsoUserInfo" resultType="java.util.Map">
+        select
+               login_id,
+               precinct_id,
+               user_name,
+               user_id,
+               phone,
+               id_card
+        from
+             t_sso_user_precinct
+        WHERE 1=1
+        <if test="loginId != null and loginId != '' ">
+            AND  login_id &gt;= #{loginId}
+        </if>
+    </select>
+
+    <select id="querySsoAuthkey" resultType="java.util.Map">
+        select
+            precinct_id,
+            authkey
+        from
+        t_sso_precinct_authkey
+        WHERE 1=1
+        <if test="precinctId != null and precinctId != '' ">
+            AND  precinct_id = #{precinctId}
+        </if>
+        limit 1
+    </select>
+</mapper>

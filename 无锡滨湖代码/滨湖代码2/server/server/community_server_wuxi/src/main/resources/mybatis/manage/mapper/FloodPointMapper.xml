@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.FloodPointDao">
+    <select id="queryPoint" resultType="java.util.Map">
+        select name,
+               gpsx,
+               gpsy,
+               DATE_FORMAT(acquire_time, '%Y-%m-%d %H:%i:%s') acquireTime,
+               acquire_person acquirePerson,
+               flood_type floodType
+        from t_data_flood_point
+        where 1=1
+        <if test="floodType!=null and floodType!=''">
+            and flood_type=#{floodType}
+        </if>
+    </select>
+
+    <select id="queryDeviceByGpsAndDistance" resultType="java.util.Map">
+        select
+            device_id deviceId,
+            device_name deviceName,
+            gpsx,
+            gpsy
+        from t_cfg_device
+        where
+            6371 * 2 * ASIN(
+            SQRT(
+            SIN(RADIANS(#{lat} - gpsy) / 2) * SIN(RADIANS(#{lat} - gpsy) / 2) +
+            COS(RADIANS(gpsy)) * COS(RADIANS(#{lat})) *
+            SIN(RADIANS(#{lon} - gpsx) / 2) * SIN(RADIANS(#{lon} - gpsx) / 2)
+            )
+            ) &lt;= #{distance}
+    </select>
+</mapper>

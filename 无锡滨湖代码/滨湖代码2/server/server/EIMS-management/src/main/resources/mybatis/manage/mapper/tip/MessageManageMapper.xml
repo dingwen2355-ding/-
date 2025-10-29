@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.tip.MessageManageDao">
+    <resultMap type="com.znv.manage.common.bean.tip.MessageManage" id="MessageMap">
+        <id property="messageId" column="message_id"/>
+        <result property="messageContent" column="message_content"/>
+        <result property="messageTitle" column="message_title"/>
+        <result property="imgUrl" column="img_url"/>
+        <result property="sendPrecinctName" column="send_precinct_name"/>
+        <result property="sendPhone" column="send_phone"/>
+        <result property="sendTime" column="send_time"/>
+        <result property="messageLevel" column="message_level" />
+        <result property="messageCategory" column="message_category" />
+        <collection property="messagePrecinctBeans" ofType="messagePrecinctBeanMap" column="message_id"
+                    select="getMessagePrecinctBeans"/>
+    </resultMap>
+
+
+    <resultMap type="com.znv.manage.common.bean.tip.MessageManage" id="MessageManageMap">
+        <id property="messageId" column="message_id"/>
+        <result property="messageContent" column="message_content"/>
+        <result property="messageTitle" column="message_title"/>
+        <result property="imgUrl" column="img_url"/>
+        <result property="sendPrecinctName" column="send_precinct_name"/>
+        <result property="sendPhone" column="send_phone"/>
+        <result property="sendTime" column="send_time"/>
+        <result property="messageLevel" column="message_level" />
+        <result property="messageCategory" column="message_category" />
+        <collection property="messagePrecinctBeans" ofType="com.znv.manage.common.bean.tip.MessagePrecinctBean">
+            <id property="id" column="id"/>
+            <result property="pMessageId" column="p_message_id"/>
+            <result property="messageType" column="message_type"/>
+            <result property="receiveTime" column="receive_time"/>
+            <result property="receivePhone" column="receive_phone"/>
+            <result property="receivePerson" column="receive_person"/>
+            <result property="receivePrecinctName" column="receive_precinct_name"/>
+        </collection>
+    </resultMap>
+
+
+    <resultMap type="com.znv.manage.common.bean.tip.MessagePrecinctBean" id="messagePrecinctBeanMap">
+        <result property="receiveTime" column="receive_time"/>
+        <result property="receivePhone" column="receive_phone"/>
+        <result property="receivePerson" column="receive_person"/>
+        <result property="receivePrecinctName" column="receive_precinct_name"/>
+    </resultMap>
+
+    <select id="getMessagePrecinctBeans" resultMap="messagePrecinctBeanMap" parameterType="String">
+        SELECT *
+        FROM t_data_message_precinct
+        where p_message_id = #{message_id}
+    </select>
+
+    <select id="queryMessage1" resultMap="MessageMap">
+        select
+        message_id ,message_content ,message_title ,send_precinct_name ,send_phone ,IFNULL(img_url,''),send_time,message_level,message_category
+        from t_data_message m
+        where 1=1
+        <if test="messageId != null">and m.message_id = #{messageId}</if>
+    </select>
+
+
+    <select id="queryMessage" resultType="java.util.Map">
+        select
+        p.id id,
+        m.message_id messageId,
+        m.message_content messageContent,
+        m.message_title messageTitle,
+        p.message_type messageType,
+        m.send_precinct_name sendPrecinctName,
+        IF(m.send_phone= 'null' ,'',m.send_phone) sendPhone,
+        date_format(m.send_time,'%Y-%m-%d %H:%i:%s') sendTime,
+        IF(p.receive_time='0000-00-00 00:00:00','null',p.receive_time) receiveTime,
+        p.receive_phone receivePhone,
+        p.receive_person receivePerson,
+        p.receive_precinct_name receivePrecinctName,
+        IFNULL(m.img_url,'') imgUrl,
+        m.message_level messageLevel,
+        m.message_category messageCategory
+        from t_data_message m
+        left join t_data_message_precinct p on m.message_id = p.p_message_id
+        where 1=1
+        <if test="messageId != null">and m.message_id = #{messageId}</if>
+        <if test="messageContent != null">and m.message_content like concat('%',#{messageContent},'%')</if>
+        <if test="messageTitle != null">and m.message_title like concat('%',#{messageTitle},'%')</if>
+        <if test="messageType != null">and p.message_type = #{messageType}</if>
+        <if test="sendPrecinctName != null">and m.send_precinct_name like concat('%',#{sendPrecinctName},'%')</if>
+        <if test="receivePerson != null">and p.receive_person like concat('%',#{receivePerson},'%')</if>
+        <if test="receivePrecinctName != null">and p.receive_precinct_name like concat('%',#{receivePrecinctName},'%')
+        </if>
+        order by m.send_time desc
+    </select>
+
+
+    <update id="updateMessageType">
+        update t_data_message_precinct
+        set
+        <if test="messageType != null">message_type = #{messageType,jdbcType=VARCHAR}</if>
+        where id = #{Id}
+    </update>
+
+   <!-- <select id="queryPrecinct" resultType="Map">
+        select p.precinct_name precinctName ,u.user_name userName, u.phone phone
+        from t_cfg_user u
+        left join t_cfg_precinct p on u.department_id = p.precinct_id
+        where 1=1
+        <if test="roleId != null">and u.role_id =#{roleId}</if>
+        and precinct_kind =130
+    </select>-->
+
+    <select id="queryPrecinct" resultType="Map">
+        select p.precinct_name precinctName, u.user_name userName, u.phone phone
+        from t_cfg_user u
+                 left  join t_cfg_precinct p on u.department_id = p.precinct_id
+        where 1 = 1
+        order by p.precinct_id asc
+    </select>
+
+    <insert id="saveMessageInfo" parameterType="com.znv.manage.common.bean.tip.MessageManage" keyProperty="messageId"
+            keyColumn="message_id" useGeneratedKeys="true">
+        insert into t_data_message(message_content,
+                                   message_title,
+                                   send_person,
+                                   send_precinct_name,
+                                   send_phone,
+                                   img_url,
+                                   message_level,
+                                   message_category)
+        values (#{messageContent,jdbcType=VARCHAR},
+                #{messageTitle,jdbcType=VARCHAR},
+                #{sendPerson,jdbcType=VARCHAR},
+                #{sendPrecinctName,jdbcType=VARCHAR},
+                #{sendPhone,jdbcType=VARCHAR},
+                #{imgUrl,jdbcType=VARCHAR},
+                #{messageLevel,jdbcType=VARCHAR},
+                #{messageCategory,jdbcType=VARCHAR})
+    </insert>
+
+
+    <update id="saveImgUrl" parameterType="String">
+        update t_data_message
+        set
+        <if test="imgUrl != null">img_url = #{imgUrl,jdbcType=VARCHAR}</if>
+        where message_id = #{messageId}
+    </update>
+
+    <select id="queryMessageInfo" resultType="java.util.Map">
+        select
+        message_id messageId,
+        message_content messageContent,
+        message_title messageTitle,
+        send_precinct_name sendPrecinctName,
+        send_phone sendPhone,
+        IFNULL(img_url,'') imgUrl,
+        date_format(send_time,'%Y-%m-%d %H:%i:%s') sendTime,
+        message_level messageLevel,
+        message_category messageCategory
+        from t_data_message
+        where 1=1
+        <if test="sendPrecinctName != null">and send_precinct_name = #{sendPrecinctName}</if>
+        <if test="sendPhone != null">and send_phone like concat('%', #{sendPhone},'%')</if>
+        order by send_time desc
+    </select>
+
+    <select id="queryMessagePrecinct" resultType="java.util.Map">
+        select id ,receive_time ,receive_phone,receive_person,receive_precinct_name
+        from t_data_message_precinct
+        where 1=1
+        <if test="messageId != null">and p_message_id = #{pMessageId}</if>
+    </select>
+
+    <delete id="deleteMessage">
+        delete m,p
+        from t_data_message m
+                 inner join t_data_message_precinct p on m.message_id = p.p_message_id
+        where m.message_id = #{messageId}
+    </delete>
+
+
+    <resultMap id="departmentMap" type="com.znv.manage.bean.user.MessagePrecinct">
+        <id property="precinctId" column="precinct_id"/>
+        <result property="precinctName" column="precinct_name"/>
+        <result property="precinctKind" column="precinct_kind"/>
+        <result property="upPrecinctId" column="up_precinct_id"/>
+        <collection property="users" ofType="com.znv.manage.bean.user.MessageUser"
+                    column="{departmentId = precinct_id}" select="getUsers">
+        </collection>
+    </resultMap>
+
+    <resultMap type="com.znv.manage.bean.user.MessageUser" id="UserMap">
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="trueName" column="true_name"/>
+        <result property="phone" column="phone"/>
+        <result property="departmentId" column="department_id"/>
+        <result property="roleId" column="role_id"/>
+    </resultMap>
+    <select id="getUsers" resultMap="UserMap">
+        select *
+        from t_cfg_user
+        where department_id = #{departmentId}
+    </select>
+    <select id="queryMessageUser" resultMap="departmentMap">
+        select *
+        from t_cfg_precinct p
+        where 1=1
+        <if test="precinctName != null and precinctName != ''">
+            and precinct_name = #{precinctName}
+        </if>
+        <choose>
+            <when test="roleId == '30'.toString()">
+                and precinct_kind = '130'
+            </when>
+            <when test="roleId == '20'.toString()">
+                and precinct_kind in('110','120')
+            </when>
+            <when test="roleId == '40'.toString()">
+                and precinct_kind = '120'
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+
+</mapper>

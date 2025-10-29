@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.resource.ResourceStuffDao">
+
+    <resultMap type="com.znv.manage.common.bean.resource.ResourceStuff" id="ResourceStuffMap">
+        <result property="id" column="ID" jdbcType="INTEGER"/>
+        <result property="stuffName" column="STUFF_NAME" jdbcType="VARCHAR"/>
+        <result property="address" column="ADDRESS" jdbcType="VARCHAR"/>
+        <result property="stuffNum" column="STUFF_NUM" jdbcType="NUMERIC"/>
+        <result property="stuffType" column="STUFF_TYPE" jdbcType="VARCHAR"/>
+        <result property="dutyPerson" column="DUTY_PERSON" jdbcType="VARCHAR"/>
+        <result property="dutyPhone" column="DUTY_PHONE" jdbcType="VARCHAR"/>
+        <result property="region" column="REGION" jdbcType="VARCHAR"/>
+        <result property="regionName" column="REGION_NAME" jdbcType="VARCHAR"/>
+        <result property="gpsx" column="GPSX" jdbcType="VARCHAR"/>
+        <result property="gpsy" column="GPSY" jdbcType="VARCHAR"/>
+        <result property="helpTypeName" column="help_type_name" jdbcType="VARCHAR"/>
+        <result property="stuffType" column="stuff_type" jdbcType="VARCHAR"/>
+        <result property="stuffUnit" column="STUFF_UNIT" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ResourceStuffMap">
+        select ID,
+               STUFF_NAME,
+               ADDRESS,
+               STUFF_NUM,
+               STUFF_TYPE,
+               DUTY_PERSON,
+               DUTY_PHONE,
+               REGION,
+               GPSX,
+               GPSY,
+               STUFF_UNIT
+        from t_cfg_resource_stuff
+        where ID = #{id}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_cfg_resource_stuff
+        <where>
+            <if test="id != null">
+                and ID = #{id}
+            </if>
+            <if test="stuffName != null and stuffName != ''">
+                and STUFF_NAME = #{stuffName}
+            </if>
+            <if test="address != null and address != ''">
+                and ADDRESS = #{address}
+            </if>
+            <if test="stuffNum != null">
+                and STUFF_NUM = #{stuffNum}
+            </if>
+            <if test="stuffType != null and stuffType != ''">
+                and STUFF_TYPE = #{stuffType}
+            </if>
+            <if test="dutyPerson != null and dutyPerson != ''">
+                and DUTY_PERSON = #{dutyPerson}
+            </if>
+            <if test="dutyPhone != null and dutyPhone != ''">
+                and DUTY_PHONE = #{dutyPhone}
+            </if>
+            <if test="region != null and region != ''">
+                and REGION = #{region}
+            </if>
+            <if test="gpsx != null and gpsx != ''">
+                and GPSX = #{gpsx}
+            </if>
+            <if test="gpsy != null and gpsy != ''">
+                and GPSY = #{gpsy}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_cfg_resource_stuff(STUFF_NAME, ADDRESS, STUFF_NUM, STUFF_TYPE, DUTY_PERSON, DUTY_PHONE,
+                                         REGION, GPSX, GPSY, STUFF_UNIT, help_type)
+        values (#{stuffName}, #{address}, #{stuffNum}, #{stuffType}, #{dutyPerson}, #{dutyPhone}, #{region},
+                #{gpsx}, #{gpsy}, #{stuffUnit}, #{helpType})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_cfg_resource_stuff(STUFF_NAME, ADDRESS, STUFF_NUM, STUFF_TYPE, DUTY_PERSON, DUTY_PHONE,
+        REGION, GPSX, GPSY, STUFF_UNIT)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.stuffName},#{entity.address},#{entity.stuffNum},#{entity.stuffType},#{entity.dutyPerson},#{entity.dutyPhone},#{entity.region},#{entity.gpsx},#{entity.gpsy},#{entity.stuffUnit})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into
+        t_cfg_resource_stuff(STUFF_NAME,ADDRESS,STUFF_NUM,STUFF_TYPE,DUTY_PERSON,DUTY_PHONE,REGION,GPSX,GPSY,STUFF_UNIT)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.stuffName}, #{entity.address}, #{entity.stuffNum}, #{entity.stuffType}, #{entity.dutyPerson},
+            #{entity.dutyPhone}, #{entity.region}, #{entity.gpsx}, #{entity.gpsy}, #{entity.stuffUnit})
+        </foreach>
+        on duplicate key update
+        STUFF_NAME = values(STUFF_NAME),
+        ADDRESS = values(ADDRESS),
+        STUFF_NUM = values(STUFF_NUM),
+        STUFF_TYPE = values(STUFF_TYPE),
+        DUTY_PERSON = values(DUTY_PERSON),
+        DUTY_PHONE = values(DUTY_PHONE),
+        REGION = values(REGION),
+        GPSX = values(GPSX),
+        GPSY = values(GPSY)
+        STUFF_UNIT = values(STUFF_UNIT)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update t_cfg_resource_stuff
+        <set>
+            <if test="stuffName != null and stuffName != ''">
+                STUFF_NAME = #{stuffName},
+            </if>
+            <if test="address != null and address != ''">
+                ADDRESS = #{address},
+            </if>
+            <if test="stuffNum != null">
+                STUFF_NUM = #{stuffNum},
+            </if>
+            <if test="stuffType != null and stuffType != ''">
+                STUFF_TYPE = #{stuffType},
+            </if>
+            <if test="dutyPerson != null and dutyPerson != ''">
+                DUTY_PERSON = #{dutyPerson},
+            </if>
+            <if test="dutyPhone != null and dutyPhone != ''">
+                DUTY_PHONE = #{dutyPhone},
+            </if>
+            <if test="region != null and region != ''">
+                REGION = #{region},
+            </if>
+            <if test="gpsx != null and gpsx != ''">
+                GPSX = #{gpsx},
+            </if>
+            <if test="gpsy != null and gpsy != ''">
+                GPSY = #{gpsy},
+            </if>
+            <if test="stuffUnit != null and stuffUnit != ''">
+                STUFF_UNIT = #{stuffUnit},
+            </if>
+            <if test="helpType != null and helpType != ''">
+                help_type = #{helpType},
+            </if>
+        </set>
+        where ID = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from t_cfg_resource_stuff
+        where ID = #{id}
+    </delete>
+
+    <!--通过主键批量删除-->
+    <delete id="deleteBatch">
+        delete
+        from t_cfg_resource_stuff
+        where find_in_set(ID, #{ids})
+    </delete>
+
+    <!--条件查询-->
+    <select id="queryByCondition" resultMap="ResourceStuffMap">
+        select
+        a.ID, STUFF_NAME, ADDRESS, STUFF_NUM, STUFF_TYPE, DUTY_PERSON, DUTY_PHONE, REGION, GPSX, GPSY, help_type,
+        (select precinct_name from t_cfg_precinct b where b.precinct_id=a.REGION) REGION_NAME,
+        b.DICT_CH_NAME help_type_name,STUFF_UNIT
+        from t_cfg_resource_stuff a
+        left join sys_business_dict b on a.help_type=b.id
+        <where>
+            <if test="id != null">
+                and ID = #{id}
+            </if>
+            <if test="stuffName != null and stuffName != ''">
+                and STUFF_NAME = #{stuffName}
+            </if>
+            <if test="stuffType != null and stuffType != ''">
+                and STUFF_TYPE = #{stuffType}
+            </if>
+            <if test="helpType != null and helpType != ''">
+                and help_type = #{helpType}
+            </if>
+            <if test="helpTypeName != null and helpTypeName != ''">
+                and DICT_CH_NAME = #{helpTypeName}
+            </if>
+            <if test="dutyPerson != null and dutyPerson != ''">
+                and DUTY_PERSON = #{dutyPerson}
+            </if>
+            <if test="dutyPhone != null and dutyPhone != ''">
+                and DUTY_PHONE = #{dujtyPhone}
+            </if>
+            <if test="region != null and region != ''">
+                and REGION = #{region}
+            </if>
+            <if test="eventId != null and eventId != ''">
+                and a.id in (select resource_id from t_cfg_plan_link where resource_type='3' and `type`='2' and link_id=(select id from t_cfg_plan_info_event where event_id=#{eventId} limit 1))
+            </if>
+        </where>
+        <if test="planId!=null and planId!=''">
+            order by
+            CASE WHEN EXISTS (
+            SELECT 1
+            FROM t_cfg_plan_link
+            WHERE resource_id = a.id AND link_id = #{planId} and resource_type='3'
+            ) THEN 0 ELSE 1 END
+        </if>
+
+    </select>
+    <select id="queryGroupByAddress" resultType="com.znv.manage.common.bean.resource.ResourceStuff">
+        select
+        a.ID, STUFF_NAME, ADDRESS, STUFF_NUM, STUFF_TYPE, DUTY_PERSON, DUTY_PHONE, REGION, GPSX, GPSY, help_type,
+        (select precinct_name from t_cfg_precinct b where b.precinct_id=a.REGION) REGION_NAME,
+        b.DICT_CH_NAME help_type_name,STUFF_UNIT
+        from t_cfg_resource_stuff a
+        left join sys_business_dict b on a.help_type=b.id
+        <where>
+            <if test="address != null and address != ''">
+                and ADDRESS = #{address}
+            </if>
+            <if test="eventId != null and eventId != ''">
+                and a.id in (select resource_id from t_cfg_plan_link where resource_type='3' and `type`='2' and link_id=(select id from t_cfg_plan_info_event where event_id=#{eventId} limit 1))
+            </if>
+        </where>
+        <if test="planId!=null and planId!=''">
+            order by
+            CASE WHEN EXISTS (
+            SELECT 1
+            FROM t_cfg_plan_link
+            WHERE resource_id = a.id AND link_id = #{planId} and resource_type='3'
+            ) THEN 0 ELSE 1 END
+        </if>
+        group by a.address
+    </select>
+</mapper>
+

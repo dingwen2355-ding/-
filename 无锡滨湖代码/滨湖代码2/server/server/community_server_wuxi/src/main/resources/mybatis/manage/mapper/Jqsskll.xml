@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.JqsskllDao">
+
+    <insert id="insertJqsskllList">
+        INSERT INTO t_19_jqsskll
+        (
+        `area_name`,
+        `city`,
+        `in_city` ,
+        `out_city` ,
+        `area_id`,
+        `cumulative_out_city`,
+        `in_province`,
+        `cumulative_in_city`,
+        `total`,
+        `cumulative_out_province`,
+        `time`,
+        `collect_time`,
+        `out_province`,
+        `cumulative_total`,
+        `storage_time`
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.areaname},
+            #{item.city},
+            #{item.incity} ,
+            #{item.outcity} ,
+            #{item.areaid} ,
+            #{item.cumulativeoutcity} ,
+            #{item.inprovince} ,
+            #{item.cumulativeincity} ,
+            #{item.total} ,
+            #{item.cumulativeoutprovince} ,
+            #{item.time} ,
+            #{item.collecttime} ,
+            #{item.outprovince} ,
+            #{item.cumulativetotal} ,
+            current_timestamp
+            )
+        </foreach>
+    </insert>
+
+    <delete id="delAll">
+       DELETE FROM t_19_jqsskll where DATE(storage_time) = CURDATE()
+    </delete>
+</mapper>

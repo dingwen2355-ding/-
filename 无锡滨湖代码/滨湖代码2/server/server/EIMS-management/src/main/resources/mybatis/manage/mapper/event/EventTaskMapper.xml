@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.event.EventTaskDao">
+
+    <resultMap type="com.znv.manage.common.bean.event.EventTask" id="EventTaskMap">
+        <result property="id" column="ID" jdbcType="INTEGER"/>
+        <result property="taskTitle" column="TASK_TITLE" jdbcType="VARCHAR"/>
+        <result property="contactId" column="CONTACT_ID" jdbcType="INTEGER"/>
+        <result property="issueTime" column="ISSUE_TIME" jdbcType="TIMESTAMP"/>
+        <result property="person" column="PERSON" jdbcType="VARCHAR"/>
+        <result property="personId" column="PERSON_ID" jdbcType="VARCHAR"/>
+        <result property="status" column="STATUS" jdbcType="VARCHAR"/>
+        <result property="feedback" column="FEEDBACK" jdbcType="VARCHAR"/>
+        <result property="fileVideo" column="FILE_VIDEO" jdbcType="VARCHAR"/>
+        <result property="filePicture" column="FILE_PICTURE" jdbcType="VARCHAR"/>
+        <result property="fileVoice" column="FILE_VOICE" jdbcType="VARCHAR"/>
+        <result property="department" column="DEPARTMENT" jdbcType="VARCHAR"/>
+        <result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>
+        <result property="dealTime" column="DEAL_TIME" jdbcType="TIMESTAMP"/>
+        <result property="eventTitle" column="EVENT_TITLE" jdbcType="VARCHAR"/>
+        <result property="nodeName" column="NODE_NAME" jdbcType="VARCHAR"/>
+        <result property="taskContent" column="TASK_CONTENT" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="EventTaskMap">
+        select ID,
+               TASK_TITLE,
+               CONTACT_ID,
+               ISSUE_TIME,
+               PERSON,
+               PERSON_ID,
+               STATUS,
+               FEEDBACK,
+               FILE_VIDEO,
+               FILE_PICTURE,
+               FILE_VOICE,
+               DEPARTMENT,
+               CREATE_TIME,
+               DEAL_TIME,
+               TASK_CONTENT
+        from T_CFG_EVENT_TASK
+        where ID = #{id}
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_EVENT_TASK(TASK_TITLE, CONTACT_ID, ISSUE_TIME, PERSON, PERSON_ID, STATUS, FEEDBACK, FILE_VIDEO,
+                                     FILE_PICTURE, FILE_VOICE, CREATE_TIME, DEPARTMENT, DEAL_TIME, TASK_CONTENT)
+        values (#{taskTitle}, #{contactId}, #{issueTime}, #{person}, #{personId}, #{status}, #{feedback}, #{fileVideo},
+                #{filePicture}, #{fileVoice}, #{createTime}, #{department}, #{dealTime}, #{taskContent})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_EVENT_TASK(TASK_TITLE, CONTACT_ID, ISSUE_TIME, PERSON, PERSON_ID, STATUS, FEEDBACK, FILE_VIDEO, FILE_PICTURE,
+                                     FILE_VOICE, CREATE_TIME,DEPARTMENT,DEAL_TIME, TASK_CONTENT)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.taskTitle}, #{entity.contactId}, #{entity.issueTime}, #{entity.person}, #{entity.personId}, #{entity.status},
+            #{entity.feedback}, #{entity.fileVideo}, #{entity.filePicture}, #{entity.fileVoice}, #{entity.createTime}, #{entity.department}, #{entity.dealTime}, #{entity.taskContent})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_EVENT_TASK(TASK_TITLE, CONTACT_ID, ISSUE_TIME, PERSON, PERSON_ID, STATUS, FEEDBACK, FILE_VIDEO, FILE_PICTURE,
+        FILE_VOICE, CREATE_TIME,DEPARTMENT,DEAL_TIME, TASK_CONTENT)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.taskTitle}, #{entity.contactId}, #{entity.issueTime}, #{entity.person}, #{entity.personId}, #{entity.status},
+            #{entity.feedback}, #{entity.fileVideo}, #{entity.filePicture}, #{entity.fileVoice}, #{entity.createTime}, #{entity.department}, #{entity.dealTime}, #{entity.taskContent})
+        </foreach>
+        on duplicate key update
+        TASK_TITLE = values(TASK_TITLE),
+        CONTACT_ID = values(CONTACT_ID),
+        ISSUE_TIME = values(ISSUE_TIME),
+        PERSON = values(PERSON),
+        PERSON_ID = values(PERSON_ID),
+        STATUS = values(STATUS),
+        FEEDBACK = values(FEEDBACK),
+        FILE_VIDEO = values(FILE_VIDEO),
+        FILE_PICTURE = values(FILE_PICTURE),
+        FILE_VOICE = values(FILE_VOICE),
+        CREATE_TIME = values(CREATE_TIME)
+        DEPARTMENT = values(DEPARTMENT)
+        DEAL_TIME = values(DEAL_TIME)
+        TASK_CONTENT = values(TASK_CONTENT)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update T_CFG_EVENT_TASK
+            set
+                TASK_TITLE = #{taskTitle},
+                CONTACT_ID = #{contactId},
+                ISSUE_TIME = #{issueTime},
+                PERSON = #{person},
+                PERSON_ID = #{personId},
+                STATUS = #{status},
+                FEEDBACK = #{feedback},
+                FILE_VIDEO = #{fileVideo},
+                FILE_VOICE = #{fileVoice},
+                FILE_PICTURE = #{filePicture},
+                DEPARTMENT = #{department},
+                CREATE_TIME = #{createTime},
+                DEAL_TIME = #{dealTime},
+                TASK_CONTENT = #{taskContent}
+        where ID = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from T_CFG_EVENT_TASK
+        where ID = #{id}
+    </delete>
+
+    <!--通过主键批量删除-->
+    <delete id="deleteBatch">
+        delete
+        from T_CFG_EVENT_TASK
+        where find_in_set(ID, #{ids})
+    </delete>
+
+    <!--条件查询-->
+    <select id="queryByCondition" resultMap="EventTaskMap">
+        select
+        a.ID,
+        a.TASK_TITLE,
+        a.CONTACT_ID,
+        a.ISSUE_TIME,
+        a.PERSON,
+        a.PERSON_ID,
+        a.status,
+        a.FEEDBACK,
+        a.FILE_VOICE,
+        a.FILE_VIDEO,
+        a.FILE_PICTURE,
+        a.CREATE_TIME,
+        a.DEPARTMENT,
+        a.DEAL_TIME,
+        a.TASK_CONTENT,
+        c.EVENT_TITLE,
+        (select NODE_NAME from t_cfg_event_node where ID=b.NODE_ID) NODE_NAME
+        from T_CFG_EVENT_TASK a
+        left join t_cfg_event_node_contact b on a.CONTACT_ID =b.ID
+        left join t_cfg_event c on b.EVENT_ID=c.ID
+        <where>
+            <if test="id != null">
+                and a.ID = #{id}
+            </if>
+            <if test="taskTitle != null and taskTitle != ''">
+                and a.TASK_TITLE like CONCAT('%',#{taskTitle},'%')
+            </if>
+            <if test="eventTitle != null and eventTitle != ''">
+                and c.EVENT_TITLE like CONCAT('%',#{eventTitle},'%')
+            </if>
+            <if test="contactId != null">
+                and a.CONTACT_ID = #{contactId}
+            </if>
+            <if test="person != null and person != ''">
+                and a.PERSON = #{person}
+            </if>
+            <if test="personId != null and personId != ''">
+                and a.PERSON_ID=#{personId}
+            </if>
+            <if test="status != null and status != ''">
+                and a.STATUS = #{status}
+            </if>
+            <if test="eventId != null and eventId != ''">
+                and c.ID = #{eventId}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and a.ISSUE_TIME = #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and a.ISSUE_TIME = #{endTime}
+            </if>
+        </where>
+        order by ISSUE_TIME desc
+    </select>
+
+    <select id="selectPhoneByUserId" resultType="java.lang.String">
+        select mobile_phone from t_cfg_user where user_id=#{userId}
+    </select>
+</mapper>
+

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.DictDao">
+
+    <resultMap type="com.znv.manage.common.bean.Dict" id="DictMap">
+        <result property="id" column="ID" jdbcType="INTEGER"/>
+        <result property="dictName" column="DICT_NAME" jdbcType="VARCHAR"/>
+        <result property="dictOrder" column="DICT_ORDER" jdbcType="INTEGER"/>
+        <result property="dictType" column="DICT_TYPE" jdbcType="VARCHAR"/>
+        <result property="parentId" column="PARENT_ID" jdbcType="INTEGER"/>
+        <result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="DictMap">
+        select ID,
+               DICT_NAME,
+               DICT_ORDER,
+               DICT_TYPE,
+               PARENT_ID,
+               CREATE_TIME
+        from T_CFG_DICT
+        where ID = #{id}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from T_CFG_DICT
+        <where>
+            <if test="id != null">
+                and ID = #{id}
+            </if>
+            <if test="dictName != null and dictName != ''">
+                and DICT_NAME = #{dictName}
+            </if>
+            <if test="dictOrder != null">
+                and DICT_ORDER = #{dictOrder}
+            </if>
+            <if test="dictType != null and dictType != ''">
+                and DICT_TYPE = #{dictType}
+            </if>
+            <if test="parentId != null">
+                and PARENT_ID = #{parentId}
+            </if>
+            <if test="createTime != null">
+                and CREATE_TIME = #{createTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_DICT(DICT_NAME, DICT_ORDER, DICT_TYPE, PARENT_ID, CREATE_TIME)
+        values (#{dictName}, #{dictOrder}, #{dictType}, #{parentId}, #{createTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_DICT(DICT_NAME, DICT_ORDER, DICT_TYPE, PARENT_ID, CREATE_TIME)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.dictName}, #{entity.dictOrder}, #{entity.dictType}, #{entity.parentId}, #{entity.createTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_DICT(DICT_NAME, DICT_ORDER, DICT_TYPE, PARENT_ID, CREATE_TIME)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.dictName}, #{entity.dictOrder}, #{entity.dictType}, #{entity.parentId}, #{entity.createTime})
+        </foreach>
+        on duplicate key update
+        DICT_NAME = values(DICT_NAME),
+        DICT_ORDER = values(DICT_ORDER),
+        DICT_TYPE = values(DICT_TYPE),
+        PARENT_ID = values(PARENT_ID),
+        CREATE_TIME = values(CREATE_TIME)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update T_CFG_DICT
+        <set>
+            <if test="dictName != null and dictName != ''">
+                DICT_NAME = #{dictName},
+            </if>
+            <if test="dictOrder != null">
+                DICT_ORDER = #{dictOrder},
+            </if>
+            <if test="dictType != null and dictType != ''">
+                DICT_TYPE = #{dictType},
+            </if>
+            <if test="parentId != null">
+                PARENT_ID = #{parentId},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME = #{createTime},
+            </if>
+        </set>
+        where ID = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from T_CFG_DICT
+        where ID = #{id}
+    </delete>
+
+    <!--通过主键批量删除-->
+    <delete id="deleteBatch">
+        delete
+        from T_CFG_DICT
+        where find_in_set(ID, #{ids})
+    </delete>
+
+    <!--条件查询-->
+    <select id="queryByCondition" resultMap="DictMap">
+        select
+        ID, DICT_NAME, DICT_ORDER, DICT_TYPE, PARENT_ID, CREATE_TIME
+        from T_CFG_DICT
+        <where>
+            <if test="id != null">
+                and ID = #{id}
+            </if>
+            <if test="dictName != null and dictName != ''">
+                and DICT_NAME = #{dictName}
+            </if>
+            <if test="dictOrder != null">
+                and DICT_ORDER = #{dictOrder}
+            </if>
+            <if test="dictType != null and dictType != ''">
+                and DICT_TYPE = #{dictType}
+            </if>
+            <if test="parentId != null and parentId != 4">
+                and PARENT_ID = #{parentId}
+            </if>
+            <if test="parentId == 4">
+                and PARENT_ID in (select ID from T_CFG_DICT where PARENT_ID = 1
+            <if test="typeId  != null and typeId != ''">
+                and ID = #{typeId}
+            </if>
+                )
+            </if>
+        </where>
+        order by DICT_ORDER ASC
+    </select>
+
+</mapper>
+

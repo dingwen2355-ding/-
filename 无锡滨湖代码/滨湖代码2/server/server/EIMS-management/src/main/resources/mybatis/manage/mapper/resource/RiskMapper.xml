@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.resource.RiskDao">
+    <resultMap id="BaseResultMap" type="com.znv.manage.common.bean.resource.Risk">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="industry" jdbcType="VARCHAR" property="industry"/>
+        <result column="enterprise_name" jdbcType="VARCHAR" property="enterpriseName"/>
+        <result column="discovery_date" jdbcType="TIMESTAMP" property="discoveryDate"/>
+        <result column="dangers_type" jdbcType="VARCHAR" property="dangersType"/>
+        <result column="dangers_sources" jdbcType="VARCHAR" property="dangersSources"/>
+        <result column="dangers_details" jdbcType="VARCHAR" property="dangersDetails"/>
+        <result column="rectification_measures" jdbcType="VARCHAR" property="rectificationMeasures"/>
+        <result column="rectification_date" jdbcType="TIMESTAMP" property="rectificationDate"/>
+        <result column="regulatory_department" jdbcType="VARCHAR" property="regulatoryDepartment"/>
+        <result column="responsible_person" jdbcType="VARCHAR" property="responsiblePerson"/>
+        <result column="responsible_person_phone" jdbcType="VARCHAR" property="responsiblePersonPhone"/>
+        <result column="rectification_progress" jdbcType="VARCHAR" property="rectificationProgress"/>
+        <result column="is_case" jdbcType="VARCHAR" property="isCase"/>
+        <result column="is_appointment" jdbcType="VARCHAR" property="isAppointment"/>
+        <result column="is_fine" jdbcType="VARCHAR" property="isFine"/>
+        <result column="is_exposure" jdbcType="VARCHAR" property="isExposure"/>
+        <result column="is_rectification" jdbcType="VARCHAR" property="isRectification"/>
+        <result column="is_close" jdbcType="VARCHAR" property="isClose"/>
+        <result column="is_transfer" jdbcType="VARCHAR" property="isTransfer"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, industry, enterprise_name, discovery_date, dangers_type, dangers_sources, dangers_details,
+    rectification_measures, rectification_date, regulatory_department, responsible_person,
+    responsible_person_phone, rectification_progress, is_case, is_appointment, is_fine,
+    is_exposure, is_rectification, is_close, is_transfer
+    </sql>
+    <select id="queryRiskList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_data_risk
+        where 1=1
+        <if test="industry != null and industry != ''">
+            AND industry like concat('%',#{industry},'%')
+        </if>
+        <if test="enterpriseName != null and enterpriseName != ''">
+            AND enterprise_name like concat('%',#{enterpriseName},'%')
+        </if>
+        <if test="rectificationProgress != null and rectificationProgress != ''">
+            AND rectification_progress like concat('%',#{rectificationProgress},'%')
+        </if>
+        <if test="startTime != null ">
+            AND discovery_date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND discovery_date &lt;= #{endTime}
+        </if>
+    </select>
+    <delete id="deleteByPrimaryKey">
+        delete
+        from t_data_risk
+        where find_in_set(id, #{ids})
+    </delete>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.znv.manage.common.bean.resource.Risk" useGeneratedKeys="true">
+        insert into t_data_risk
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="industry != null">
+                industry,
+            </if>
+            <if test="enterpriseName != null">
+                enterprise_name,
+            </if>
+            <if test="discoveryDate != null">
+                discovery_date,
+            </if>
+            <if test="dangersType != null">
+                dangers_type,
+            </if>
+            <if test="dangersSources != null">
+                dangers_sources,
+            </if>
+            <if test="dangersDetails != null">
+                dangers_details,
+            </if>
+            <if test="rectificationMeasures != null">
+                rectification_measures,
+            </if>
+            <if test="rectificationDate != null">
+                rectification_date,
+            </if>
+            <if test="regulatoryDepartment != null">
+                regulatory_department,
+            </if>
+            <if test="responsiblePerson != null">
+                responsible_person,
+            </if>
+            <if test="responsiblePersonPhone != null">
+                responsible_person_phone,
+            </if>
+            <if test="rectificationProgress != null">
+                rectification_progress,
+            </if>
+            <if test="isCase != null">
+                is_case,
+            </if>
+            <if test="isAppointment != null">
+                is_appointment,
+            </if>
+            <if test="isFine != null">
+                is_fine,
+            </if>
+            <if test="isExposure != null">
+                is_exposure,
+            </if>
+            <if test="isRectification != null">
+                is_rectification,
+            </if>
+            <if test="isClose != null">
+                is_close,
+            </if>
+            <if test="isTransfer != null">
+                is_transfer,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="industry != null">
+                #{industry,jdbcType=VARCHAR},
+            </if>
+            <if test="enterpriseName != null">
+                #{enterpriseName,jdbcType=VARCHAR},
+            </if>
+            <if test="discoveryDate != null">
+                #{discoveryDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dangersType != null">
+                #{dangersType,jdbcType=VARCHAR},
+            </if>
+            <if test="dangersSources != null">
+                #{dangersSources,jdbcType=VARCHAR},
+            </if>
+            <if test="dangersDetails != null">
+                #{dangersDetails,jdbcType=VARCHAR},
+            </if>
+            <if test="rectificationMeasures != null">
+                #{rectificationMeasures,jdbcType=VARCHAR},
+            </if>
+            <if test="rectificationDate != null">
+                #{rectificationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="regulatoryDepartment != null">
+                #{regulatoryDepartment,jdbcType=VARCHAR},
+            </if>
+            <if test="responsiblePerson != null">
+                #{responsiblePerson,jdbcType=VARCHAR},
+            </if>
+            <if test="responsiblePersonPhone != null">
+                #{responsiblePersonPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="rectificationProgress != null">
+                #{rectificationProgress,jdbcType=VARCHAR},
+            </if>
+            <if test="isCase != null">
+                #{isCase,jdbcType=VARCHAR},
+            </if>
+            <if test="isAppointment != null">
+                #{isAppointment,jdbcType=VARCHAR},
+            </if>
+            <if test="isFine != null">
+                #{isFine,jdbcType=VARCHAR},
+            </if>
+            <if test="isExposure != null">
+                #{isExposure,jdbcType=VARCHAR},
+            </if>
+            <if test="isRectification != null">
+                #{isRectification,jdbcType=VARCHAR},
+            </if>
+            <if test="isClose != null">
+                #{isClose,jdbcType=VARCHAR},
+            </if>
+            <if test="isTransfer != null">
+                #{isTransfer,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insertSelectiveList">
+        insert into   t_data_risk
+        (industry, enterprise_name, discovery_date, dangers_type, dangers_sources, dangers_details,
+        rectification_measures, rectification_date, regulatory_department, responsible_person,
+        responsible_person_phone, rectification_progress, is_case, is_appointment, is_fine,
+        is_exposure, is_rectification, is_close, is_transfer)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.industry},
+            #{item.enterpriseName},
+            #{item.discoveryDate},
+            #{item.dangersType},
+            #{item.dangersSources},
+            #{item.dangersDetails},
+            #{item.rectificationMeasures},
+            #{item.rectificationDate},
+            #{item.regulatoryDepartment},
+            #{item.responsiblePerson},
+            #{item.responsiblePersonPhone},
+            #{item.rectificationProgress},
+            #{item.isCase},
+            #{item.isAppointment},
+            #{item.isFine},
+            #{item.isExposure},
+            #{item.isRectification},
+            #{item.isClose},
+            #{item.isTransfer}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.znv.manage.common.bean.resource.Risk">
+        update t_data_risk
+        <set>
+            <if test="industry != null">
+                industry = #{industry,jdbcType=VARCHAR},
+            </if>
+            <if test="enterpriseName != null">
+                enterprise_name = #{enterpriseName,jdbcType=VARCHAR},
+            </if>
+            <if test="discoveryDate != null">
+                discovery_date = #{discoveryDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dangersType != null">
+                dangers_type = #{dangersType,jdbcType=VARCHAR},
+            </if>
+            <if test="dangersSources != null">
+                dangers_sources = #{dangersSources,jdbcType=VARCHAR},
+            </if>
+            <if test="dangersDetails != null">
+                dangers_details = #{dangersDetails,jdbcType=VARCHAR},
+            </if>
+            <if test="rectificationMeasures != null">
+                rectification_measures = #{rectificationMeasures,jdbcType=VARCHAR},
+            </if>
+            <if test="rectificationDate != null">
+                rectification_date = #{rectificationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="regulatoryDepartment != null">
+                regulatory_department = #{regulatoryDepartment,jdbcType=VARCHAR},
+            </if>
+            <if test="responsiblePerson != null">
+                responsible_person = #{responsiblePerson,jdbcType=VARCHAR},
+            </if>
+            <if test="responsiblePersonPhone != null">
+                responsible_person_phone = #{responsiblePersonPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="rectificationProgress != null">
+                rectification_progress = #{rectificationProgress,jdbcType=VARCHAR},
+            </if>
+            <if test="isCase != null">
+                is_case = #{isCase,jdbcType=VARCHAR},
+            </if>
+            <if test="isAppointment != null">
+                is_appointment = #{isAppointment,jdbcType=VARCHAR},
+            </if>
+            <if test="isFine != null">
+                is_fine = #{isFine,jdbcType=VARCHAR},
+            </if>
+            <if test="isExposure != null">
+                is_exposure = #{isExposure,jdbcType=VARCHAR},
+            </if>
+            <if test="isRectification != null">
+                is_rectification = #{isRectification,jdbcType=VARCHAR},
+            </if>
+            <if test="isClose != null">
+                is_close = #{isClose,jdbcType=VARCHAR},
+            </if>
+            <if test="isTransfer != null">
+                is_transfer = #{isTransfer,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

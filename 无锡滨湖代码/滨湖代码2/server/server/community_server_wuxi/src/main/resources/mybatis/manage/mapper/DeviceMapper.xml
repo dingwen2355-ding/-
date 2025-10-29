@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.DeviceMapper">
+
+    <resultMap id="videoDevice" type="com.znv.manage.common.bean.VideoDevice">
+        <id property="deviceId" column="device_id"/>
+        <result property="deviceName" column="device_name"/>
+        <result property="deviceKind" column="device_kind"/>
+        <result property="deviceType" column="device_type"/>
+        <result property="deviceTypeName" column="device_type_name"/>
+        <result property="gpsX" column="gpsx"/>
+        <result property="gpsY" column="gpsy"/>
+        <result property="deviceAddr" column="device_addr"/>
+        <result property="catalogueUrl" column="catalogue_url"/>
+    </resultMap>
+
+    <select id="getDeviceFixedVideo" resultMap="videoDevice">
+        SELECT
+        a.device_id,
+        a.device_name,
+        a.device_kind,
+        a.device_type,
+        a.gpsx,
+        a.gpsy,
+        a.device_addr,
+        a.device_type_name,
+        b.catalogue_url
+        FROM
+        (
+        SELECT
+        tcd.device_id,
+        tcd.device_name,
+        tcd.device_kind,
+        tcd.device_type,
+        tcd.gpsx,
+        tcd.gpsy,
+        tcd.street,
+        CASE
+        WHEN dc.`first_catalogue` IS NOT NULL THEN
+        dc.`first_catalogue`
+        ELSE
+        '其他'
+        END AS device_type_name,
+        tcd.install_addr AS device_addr
+        FROM
+        t_cfg_device tcd
+        LEFT JOIN t_cfg_device_catalogue dc ON tcd.device_id = dc.device_id
+        WHERE
+        tcd.device_kind = 6
+        ) a
+        LEFT JOIN t_cfg_device_catalogue_url b ON a.device_type_name = b.catalogue_name
+        where 1=1
+        and gpsx is not null
+        <if test="deviceTypeName != null">and a.device_type_name = #{deviceTypeName}</if>
+        <if test="precinctName != null">and a.street = #{precinctName}</if>
+    </select>
+
+    <select id="getDeviceFixedVideoType" resultType="map">
+    select
+    DISTINCT a.first_catalogue as deviceTypeName,
+    b.catalogue_url as catalogueUrl
+    from t_cfg_device_catalogue a left JOIN t_cfg_device_catalogue_url b on a.first_catalogue = b.catalogue_name
+    where
+    device_id in (select device_id from t_cfg_device where device_kind = 6 and gpsx is not null
+    <if test="precinctName != null">and street = #{precinctName}</if>
+    )
+</select>
+
+<select id="queryCityEyeDeviceList" resultType="map">
+    select
+        device_id deviceId,
+        device_name deviceName,
+        ifnull(gpsx,'') gpsx,
+        ifnull(gpsy,'') gpsy,
+        device_state deviceState
+    from t_cfg_device
+    where
+      device_kind = '666' AND device_state = 0 AND gpsx != '0.0' AND gpsx is not null
+    <if test="precinctId != null and precinctId != ''">and precinct_id = #{precinctId}</if>
+    <if test="deviceName != null and deviceName != ''">and device_name like CONCAT('%',#{deviceName},'%')</if>
+</select>
+
+    <insert id="saveHikDevice" parameterType="list">
+        INSERT INTO t_cfg_device(
+        device_id,
+        device_pid,
+        device_name,
+        device_kind,
+        install_addr,
+        device_state,
+        precinct_id,
+        gpsx,
+        gpsy
+        )
+        VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.cameraIndexCode},#{item.gbIndexCode},
+            #{item.name},'666',#{item.name},if(#{item.status}='1','0','1'),'510100',#{item.longitude},#{item.latitude})
+        </foreach>
+        ON duplicate KEY UPDATE
+        device_pid=VALUES(device_pid)
+        ,device_name=VALUES(device_name)
+        ,install_addr=VALUES(install_addr)
+        ,device_state=VALUES(device_state)
+        ,gpsx=VALUES(gpsx)
+        ,gpsy=VALUES(gpsy)
+    </insert>
+
+    <select id="getDeviceRotationMapping" resultType="map">
+        select device_id deviceId,rotation_type rotationType from t_cfg_device_rotation_mapping where 1=1
+        <if test="precinctName != null">and rotation_type in (select rotation_type from t_cfg_device_rotation_type where 1=1
+         and street = #{precinctName}
+            )
+        </if>
+        <if test="rotationType != null">and rotation_type = #{rotationType}</if>
+    </select>
+
+    <select id="getDeviceRotationType" resultType="map">
+        select id,rotation_type rotationType from t_cfg_device_rotation_type where 1=1
+        <if test="precinctName != null">and street = #{precinctName}</if>
+    </select>
+
+    <select id="getDeviceGpsIsNotNull" resultType="map">
+        select device_id deviceId, gpsx,gpsy from t_cfg_device where 1=1 and gpsx is not null and street is null
+    </select>
+
+    <update id="updateDeviceStreet">
+        update t_cfg_device set street = #{street} where device_id = #{deviceId}
+    </update>
+
+    <select id="queryIndividualList" resultType="map">
+        SELECT
+            a.device_id deviceId,
+            a.device_name deviceName,
+            ifnull(b.gpsx,'') gpsx,
+            ifnull(b.gpsy,'') gpsy,
+            ifnull(a.operator,'') unit,
+            ifnull(a.echart,'') echart
+        FROM
+            t_cfg_device a
+                LEFT JOIN (
+                SELECT
+                    a.device_id,
+                    a.survey_gpsx,
+                    a.survey_gpsy,
+                    a.gpsx,
+                    a.gpsy
+                FROM
+                    base_device_gps a
+                        INNER JOIN ( SELECT device_id, MAX( submit_time ) submit_time FROM base_device_gps GROUP BY device_id ) b ON a.device_id = b.device_id
+                        AND a.submit_time = b.submit_time
+            ) b ON a.device_id = b.device_id where a.device_kind = '31'
+    </select>
+
+    <select id="queryIndividualListByPrecinctId" resultType="map">
+        SELECT
+            a.device_id deviceId,
+            a.device_name deviceName,
+            ifnull(a.gpsx,'') gpsx,
+            ifnull(a.gpsy,'') gpsy,
+            ifnull(a.operator,'') unit,
+            ifnull(a.precinct_id,'') precinctId,
+            ifnull(a.device_pid,'') lqyUserId,
+            ifnull(a.camera_domain,'') lqySrcDomainCode,
+            ifnull(a.production_date,'') lqyGpsTime,
+            ifnull(a.echart,'') echart,
+            a.onoffline_state onofflineState
+        FROM
+            t_cfg_device a
+        where device_kind = '31' and ifnull(a.gpsx,'') != ''
+        <if test="precinctId != null and precinctId !=''">and FIND_IN_SET(a.precinct_id,#{precinctId})</if>
+        <if test="precinctId != null and precinctId !='' and precinctId =='510112'">and a.production_date between DATE_ADD(NOW(),INTERVAL -1 HOUR) and NOW() </if>
+        <if test="deviceId != null and deviceId != ''">and a.device_id = #{deviceId}</if>
+        <if test="noPrecinctIds != null and noPrecinctIds != ''">and !FIND_IN_SET(a.precinct_id,#{noPrecinctIds})</if>
+        <if test="devtype != null and devtype != ''">and a.devtype = #{devtype}</if>
+        <if test="noDevtype != null and noDevtype != ''">and a.devtype != #{noDevtype}</if>
+    </select>
+
+    <select id="queryIndividualListByPrecinctId2" resultType="map">
+        SELECT
+        a.device_id deviceId,
+        a.device_name deviceName,
+        ifnull(a.gpsx,'') gpsx,
+        ifnull(a.gpsy,'') gpsy,
+        ifnull(a.operator,'') unit,
+        ifnull(a.precinct_id,'') precinctId
+        FROM
+        t_cfg_device a
+        where device_kind = '31' and ifnull(a.gpsx,'') != ''and onoffline_state = '0'
+        <if test="precinctId != null and precinctId !=''">and a.precinct_id = #{precinctId}</if>
+        <if test="precinctId != null and precinctId !='' and precinctId =='510112'">and a.production_date between DATE_ADD(NOW(),INTERVAL -1 HOUR) and NOW() </if>
+    </select>
+
+    <select id="queryLongQuanDanBinIds" resultType="string">
+        SELECT
+        GROUP_CONCAT(device_id) deviceIds
+        FROM
+        t_cfg_device
+        where device_kind = '31' and precinct_id = '510112'
+    </select>
+
+    <select id="query32DeviceList" resultType="map">
+        SELECT
+            device_id deviceId,
+            device_name deviceName,
+            ifnull(gpsx,'') gpsx,
+            ifnull(gpsy,'') gpsy
+        FROM
+            t_cfg_device
+        WHERE
+            device_kind = '32' and ifnull(gpsx,'') != '' and ifnull(gpsy,'') != ''
+    </select>
+
+    <select id="query34DeviceList" resultType="map">
+        SELECT
+            device_id deviceId,
+            device_name deviceName,
+            ifnull(gpsx,'') gpsx,
+            ifnull(gpsy,'') gpsy
+        FROM
+            t_cfg_device
+        WHERE
+            device_kind = '34' and ifnull(gpsx,'') != '' and ifnull(gpsy,'') != ''
+    </select>
+
+    <insert id="updateQbjDanbinGps">
+        insert into t_cfg_device(
+        `device_id`,
+        `device_name`,
+        `device_kind`,
+        `precinct_id`,
+        `gpsx`,
+        `gpsy`
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.uid},
+            #{item.name},
+            '31',
+            '510113',
+            #{item.longitude},
+            #{item.latitude}
+            )
+        </foreach>
+        on duplicate key update
+        device_name = values(device_name),
+        precinct_id = values(precinct_id),
+        device_kind = values(device_kind),
+        gpsx = values(gpsx),
+        gpsy = values(gpsy)
+    </insert>
+
+    <insert id="updateLqyDanbinGps">
+        insert into t_cfg_device(
+        `device_id`,
+        `gpsx`,
+        `gpsy`
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.userId},
+            #{item.gpsX},
+            #{item.gpsY}
+            )
+        </foreach>
+        on duplicate key update
+        gpsx = values(gpsx),
+        gpsy = values(gpsy)
+    </insert>
+
+    <insert id="insertLqyDanbinGps">
+        insert into t_cfg_device(
+        `device_id`,
+        `device_pid`,
+        `device_name`,
+        `device_kind`,
+        `camera_domain`,
+        `operator`,
+        `production_date`,
+        `precinct_id`,
+        `gpsx`,
+        `gpsy`
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.deviceId},
+            #{item.userId},
+            #{item.userName},
+            #{item.deviceKind},
+            #{item.srcDomainCode},
+            #{item.operator},
+            #{item.time},
+            #{item.precinctId},
+            #{item.gpsX},
+            #{item.gpsY}
+            )
+        </foreach>
+        on duplicate key update
+        device_pid = values(device_pid),
+        device_name = values(device_name),
+        camera_domain = values(camera_domain),
+        production_date = values(production_date),
+        gpsx = values(gpsx),
+        gpsy = values(gpsy)
+    </insert>
+
+    <select id="queryXujianDanbin" resultType="map">
+        select device_pid deviceId from t_cfg_device where device_kind = '31' and precinct_id = #{precinctId}
+    </select>
+
+    <update id="updateXujianIndividualGps" parameterType="list">
+        update t_cfg_device
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="gpsx = case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    when precinct_id = #{precinctId} and device_pid=#{item.deviceId}then #{item.gpsx}
+                </foreach>
+            </trim>
+            <trim prefix="gpsy = case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    when precinct_id = #{precinctId} and device_pid=#{item.deviceId}then #{item.gpsy}
+                </foreach>
+            </trim>
+        </trim>
+        where precinct_id = #{precinctId} and device_pid in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.deviceId}
+        </foreach>
+    </update>
+
+    <insert id="updateChongZhouDanbinGps">
+        insert into t_cfg_device(
+        `device_id`,
+        `device_name`,
+        `precinct_id`,
+        `device_kind`,
+        `operator`,
+        `gpsx`,
+        `gpsy`,
+         echart
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.createUser},
+            #{item.name},
+            '510184',
+            '31',
+            #{item.roleName},
+            #{item.trackLong},
+            #{item.trackLat},
+            #{item.urlCode}
+            )
+        </foreach>
+        on duplicate key update
+        gpsx = values(gpsx),
+        gpsy = values(gpsy),
+        echart = values(echart)
+    </insert>
+
+    <insert id="updateGaoxinDanbinGps">
+        insert into t_cfg_device(
+        `device_id`,
+        `device_name`,
+        `precinct_id`,
+        `device_kind`,
+        `operator`,
+        `gpsx`,
+        `gpsy`
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.uid},
+            #{item.name},
+            '510187',
+            '31',
+            #{item.deptName},
+            #{item.la},
+            #{item.lon}
+            )
+        </foreach>
+        on duplicate key update
+        gpsx = values(gpsx),
+        gpsy = values(gpsy)
+    </insert>
+
+    <insert id="updateWEXDanbinGps">
+        insert into t_cfg_device(
+        `device_id`,
+        `device_name`,
+        `precinct_id`,
+        `device_kind`,
+        `operator`,
+        `gpsx`,
+        `gpsy`,
+        devtype,
+        onoffline_state
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.CustomerTel},
+            #{item.CustomerName},
+            #{precinctId},
+            '31',
+            #{item.CustomerClassName},
+            #{item.Lng},
+            #{item.Lat},
+            '威尔信',
+            if(#{item.AgentState}='0','1','0')
+            )
+        </foreach>
+        on duplicate key update
+        device_name = values(device_name),
+        gpsx = values(gpsx),
+        gpsy = values(gpsy),
+        devtype = values(devtype),
+        onoffline_state = values(onoffline_state)
+    </insert>
+
+    <insert id="updateWEXWurenjiGps">
+        insert into t_cfg_device(
+        `device_id`,
+        `device_name`,
+        `precinct_id`,
+        `device_kind`,
+        `operator`,
+        `gpsx`,
+        `gpsy`,
+        devtype,
+        url
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.VideoID},
+            #{item.VideoName},
+            #{precinctId},
+            '35',
+            #{item.GroupName},
+            #{item.Pos_x},
+            #{item.Pos_y},
+            '威尔信',
+            #{item.URL}
+            )
+        </foreach>
+        on duplicate key update
+        device_name = values(device_name),
+        gpsx = values(gpsx),
+        gpsy = values(gpsy),
+        url = values(url),
+        devtype = values(devtype)
+    </insert>
+
+
+    <insert id="saveXFC">
+        insert into t_data_xfc(
+        `id`,
+        `name`,
+        `dept`,
+        `gpsx`,
+        `gpsy`,
+        `isOnline`
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id},
+            #{item.name},
+            #{item.departmentName},
+            #{item.lon},
+            #{item.lat},
+            #{item.isOnline}
+            )
+        </foreach>
+        on duplicate key update
+        gpsx = values(gpsx),
+        gpsy = values(gpsy),
+        isOnline = values(isOnline)
+    </insert>
+
+
+    <insert id="updateShuangliuDanbinGps">
+        insert into t_cfg_device(
+        `device_id`,
+        `device_name`,
+        `precinct_id`,
+        `device_kind`,
+        `gpsx`,
+        `gpsy`
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.deviceId},
+            #{item.deviceName},
+            '510116',
+            '31',
+            #{item.gpsx},
+            #{item.gpsy}
+            )
+        </foreach>
+        on duplicate key update
+        device_name = values(device_name),
+        gpsx = values(gpsx),
+        gpsy = values(gpsy)
+    </insert>
+
+    <insert id="insertDb">
+        insert into t_cfg_device(
+        `device_id`,
+        `device_name`,
+        `precinct_id`,
+        `device_kind`,
+        `devtype`,
+        device_state,
+        device_pid
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.memTel},
+            #{item.memName},
+            '510100',
+            '31',
+             '',
+             1,
+            #{item.id}
+            )
+        </foreach>
+        on duplicate key update
+        time_stamp = now()
+
+    </insert>
+    <insert id="replaceDeviceBySync">
+        insert into t_cfg_device(
+        `device_id`,
+        `device_name`,
+        `precinct_id`,
+        `device_kind`,
+        `devtype`,
+        device_state,
+        gpsx,
+        gpsy,
+        org_id,
+        onoffline_state
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id},
+            #{item.name},
+            '510100',
+            '666',
+            '',
+            1,
+            #{item.gpsX},
+            #{item.gpsY},
+            #{item.orgId},
+            #{item.onofflineState}
+            )
+        </foreach>
+        on duplicate key update
+        time_stamp = now(),
+        device_name = values(device_name),
+        gpsx = values(gpsx),
+        gpsy = values(gpsy),
+        org_id = values(org_id),
+        onoffline_state = values(onoffline_state)
+    </insert>
+
+    <insert id="replaceOrgBySync">
+        insert into t_cfg_device_org(
+        `id`,
+        `parent_id`,
+        `org_name`,
+        `sort`
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id},
+            #{item.parentId},
+            #{item.name},
+            #{item.sort}
+            )
+        </foreach>
+        on duplicate key update
+        parent_id = values(parent_id),
+        org_name = values(org_name),
+        sort = values(sort)
+    </insert>
+</mapper>

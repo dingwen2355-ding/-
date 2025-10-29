@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.GaoDeApiDataDao">
+
+	<select id="queryWeather" resultType="java.util.HashMap">
+		select
+		id,
+		DATE_FORMAT(obs_time, '%Y-%m-%d %H:%i:%s') as obsTime,
+		temp,
+		feels_like feelsLike,
+		text,
+		wind_360 wind360,
+		wind_dir windDir,
+		wind_scale windScale,
+		wind_speed windSpeed,
+		humidity,
+		precip,
+		vis,
+		cloud
+		from t_weather_record where DATE_FORMAT(obs_time, '%Y-%m-%d') = DATE_FORMAT(now(), '%Y-%m-%d') order by update_time desc limit 1
+	</select>
+
+	<insert id="insertWeather">
+		insert into t_weather_record
+		(obs_time,temp,
+		feels_like,
+		text,
+		wind_360,
+		wind_dir,
+		wind_scale,
+		wind_speed,
+		humidity,
+		precip,
+		vis,
+		cloud)
+		values
+		(#{obsTime},
+		#{temp},
+		#{feelsLike},
+		#{text},
+		#{wind360},
+		#{windDir},
+		#{windScale},
+		#{windSpeed},
+		#{humidity},
+		#{precip},
+		#{vis},
+		#{cloud})
+	</insert>
+
+	<insert id="insertRoadInfo" parameterType="map">
+		INSERT INTO t_gaode_realtime_road (road_name, description, evaluation_expedite, evaluation_congested, evaluation_blocked,
+										   evaluation_unknown, evaluation_status, evaluation_description)
+		VALUES (#{road_name}, #{description}, #{evaluation_expedite}, #{evaluation_congested}, #{evaluation_blocked},
+				#{evaluation_unknown}, #{evaluation_status}, #{evaluation_description})
+	</insert>
+
+	<select id="queryLatestRoadInfo" parameterType="string" resultType="map">
+		SELECT id,
+			   road_name,
+			   description,
+			   evaluation_expedite,
+			   evaluation_congested,
+			   evaluation_blocked,
+			   evaluation_unknown,
+			   evaluation_status,
+			   evaluation_description
+		FROM t_gaode_realtime_road
+		WHERE road_name = #{roadName,jdbcType=VARCHAR}
+		ORDER BY id DESC
+		LIMIT 1
+	</select>
+
+
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>多边形</title>
+    <g id="页面-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="剖切-剖切" transform="translate(-255.000000, -151.000000)">
+            <g id="面剖切备份-5" transform="translate(255.000000, 151.000000)">
+                <rect id="矩形" fill="#000000" fill-rule="nonzero" opacity="0" x="0" y="0" width="24" height="24"></rect>
+                <g id="编组-3" transform="translate(2.000000, 2.000000)">
+                    <path d="M3.19953808,2.378 L3.19977969,1 C3.19977969,0.44771525 3.64749494,0 4.19977969,0 L18.1997797,0 C18.7520644,0 19.1997797,0.44771525 19.1997797,1 L19.1997797,15 C19.1997797,15.5522847 18.7520644,16 18.1997797,16 L15.3685381,16" id="路径" stroke="#FFFFFF" stroke-width="1.5"></path>
+                    <path d="M3.199,7.496 L8.50073743,9.86094927 L10.896,15.999 L4.19977969,16 C3.64749494,16 3.19977969,15.5522847 3.19977969,15 L3.199,7.496 Z" id="形状结合" fill="#FFFFFF" opacity="0.5"></path>
+                    <path d="M1.77524627,4.5 L10.0749168,7.47643438 L14,17.6329314 L8.18126375,19.63886 L1.77524627,19.63886 L0,11 L0.985238264,5.72684709 L1.77524627,4.5 Z" id="路径-43" stroke="#FFFFFF" stroke-width="1.5" stroke-linejoin="round" stroke-dasharray="2,2"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

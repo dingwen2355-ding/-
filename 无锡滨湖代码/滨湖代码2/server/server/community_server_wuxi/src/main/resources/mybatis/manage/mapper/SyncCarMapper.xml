@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.SyncCarDao">
+
+    <resultMap type="com.znv.manage.common.bean.SyncCar" id="SyncCarMap">
+        <result property="license" column="license" jdbcType="VARCHAR"/>
+        <result property="dept" column="dept" jdbcType="VARCHAR"/>
+        <result property="gpsx" column="gpsx" jdbcType="VARCHAR"/>
+        <result property="gpsy" column="gpsy" jdbcType="VARCHAR"/>
+        <result property="online" column="online" jdbcType="VARCHAR"/>
+        <result property="time" column="time" jdbcType="TIMESTAMP"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="districtCode" column="district_code" jdbcType="VARCHAR"/>
+        <result property="address" column="address" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SyncCarMap">
+        select license,
+               dept,
+               gpsx,
+               gpsy,
+               online, time, type, district_code, address
+        from t_data_sync_car
+        where license = #{license}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_data_sync_car
+        <where>
+            <if test="license != null and license != ''">
+                and license = #{license}
+            </if>
+            <if test="dept != null and dept != ''">
+                and dept = #{dept}
+            </if>
+            <if test="gpsx != null and gpsx != ''">
+                and gpsx = #{gpsx}
+            </if>
+            <if test="gpsy != null and gpsy != ''">
+                and gpsy = #{gpsy}
+            </if>
+            <if test="online != null and online != ''">
+                and online = #{online}
+            </if>
+            <if test="time != null">
+                and time = #{time}
+            </if>
+            <if test="type != null and type != ''">
+                and type = #{type}
+            </if>
+            <if test="districtCode != null and districtCode != ''">
+                and district_code = #{districtCode}
+            </if>
+            <if test="address != null and address != ''">
+                and address = #{address}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="license" useGeneratedKeys="true">
+        insert into t_data_sync_car(license, dept, gpsx, gpsy, online, type, district_code, address)
+        values (#{license}, #{dept}, #{gpsx}, #{gpsy}, #{online}, #{type}, #{districtCode}, #{address})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="license" useGeneratedKeys="true">
+        insert into t_data_sync_car(license, dept, gpsx, gpsy, online, type, district_code, address)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.license}, #{entity.dept}, #{entity.gpsx}, #{entity.gpsy}, #{entity.online}, #{entity.type},
+            #{entity.districtCode}, #{entity.address})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="license" useGeneratedKeys="true">
+        insert into t_data_sync_car(license, dept, gpsx, gpsy, online, type, district_code, address)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.license},#{entity.dept}, #{entity.gpsx}, #{entity.gpsy}, #{entity.online}, #{entity.type},
+            #{entity.districtCode}, #{entity.address})
+        </foreach>
+        on duplicate key update
+        dept = values(dept),
+        gpsx = values(gpsx),
+        gpsy = values(gpsy),
+        online = values(online),
+        time = values(time),
+        type = values(type),
+        district_code = values(district_code),
+        address = values(address)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update t_data_sync_car
+        <set>
+            <if test="dept != null and dept != ''">
+                dept = #{dept},
+            </if>
+            <if test="gpsx != null and gpsx != ''">
+                gpsx = #{gpsx},
+            </if>
+            <if test="gpsy != null and gpsy != ''">
+                gpsy = #{gpsy},
+            </if>
+            <if test="online != null and online != ''">
+                online = #{online},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="type != null and type != ''">
+                type = #{type},
+            </if>
+            <if test="districtCode != null and districtCode != ''">
+                district_code = #{districtCode},
+            </if>
+            <if test="address != null and address != ''">
+                address = #{address},
+            </if>
+        </set>
+        where license = #{license}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from t_data_sync_car
+        where license = #{license}
+    </delete>
+
+    <!--通过主键批量删除-->
+    <delete id="deleteBatch">
+        delete
+        from t_data_sync_car
+        where find_in_set(license, #{ids})
+    </delete>
+
+    <!--条件查询-->
+    <select id="queryByCondition" resultMap="SyncCarMap">
+        select
+        license, dept, gpsx, gpsy, online, time, type, district_code, address
+        from t_data_sync_car
+        <where>
+            <if test="license != null and license != ''">
+                and license = #{license}
+            </if>
+            <if test="dept != null and dept != ''">
+                and dept = #{dept}
+            </if>
+            <if test="online != null and online != ''">
+                and online = #{online}
+            </if>
+            <if test="type != null and type != ''">
+                and type like concat('%',#{type},'%')
+            </if>
+            <if test="districtCode != null and districtCode != ''">
+                and district_code = #{districtCode}
+            </if>
+                and gpsx is not null and gpsy is not null
+        </where>
+    </select>
+</mapper>
+

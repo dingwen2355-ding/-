@@ -1,0 +1,241 @@
+/**
+  * 弹框样式
+  * @custom-class d_form 表单
+  * @custom-class d_table 表格
+  */
+::v-deep.el-dialog {
+
+  /* 弹框：表单 */
+  &.d_form {
+    min-width: 528px;
+
+    .el-form {
+      &.el-form--label-top .el-form-item {
+        margin-bottom: 20px;
+
+        .el-form-item__label {
+          padding: 0;
+          line-height: 25px;
+          margin-bottom: 6px;
+        }
+      }
+
+      .el-form-item__error {
+        font-size: 12px;
+        margin-top: 3px;
+        right: 0;
+        left: auto;
+      }
+    }
+
+    .flex-end {
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .el-select {
+      width: 100%;
+    }
+
+    /* 上传3DT */
+    .upload-demo {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      background: #f9fafc;
+      border-radius: 4px;
+      border: 1px dashed #c4c4c6;
+      padding: 20px;
+
+      .upload {
+        i {
+          font-size: 30px;
+          color: #b0b0b0;
+        }
+
+        p {
+          margin: 0;
+          font-size: 14px;
+          font-weight: 400;
+          color: #b0b0b0;
+        }
+
+        h4 {
+          padding: 0;
+          margin: 0;
+          font-size: 14px;
+          font-weight: 400;
+          color: #65708a;
+          line-height: 18px;
+        }
+      }
+
+      .upload-anew {
+        font-size: 16px;
+        font-weight: 400;
+        color: #3e7de4;
+        line-height: 22px;
+        text-align: center;
+        width: 100%;
+        padding: 0;
+      }
+    }
+
+    /* 缩略图 */
+    .upload-thumbnail {
+      display: flex;
+      align-items: flex-end;
+
+      .el-upload {
+        width: auto;
+        line-height: 0;
+      }
+
+      .el-upload__tip {
+        margin-top: 0;
+        margin-left: 20px;
+
+        .el-button {
+          width: auto;
+        }
+
+        p {
+          color: #b0b0b0;
+          line-height: 22px;
+
+          &:not(:first-child) {
+            margin-top: 6px;
+          }
+        }
+      }
+
+      .thum-wrap {
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        text-align: center;
+        font-size: 40px;
+        border: 1px solid #c0ccda;
+        border-radius: 6px;
+        background-color: #fbfdff;
+      }
+
+      .thum-updata {
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        text-align: center;
+        font-size: 40px;
+        border: 1px dashed #c0ccda;
+        border-radius: 6px;
+        background-color: #fbfdff;
+      }
+    }
+
+    /* 折叠面板 */
+    .el-collapse {
+      border-top: none;
+      border-bottom: none;
+
+      .el-collapse-item__header {
+        border-bottom: none;
+        height: auto;
+        line-height: 20px;
+      }
+
+      .el-collapse-item__wrap {
+        border-bottom: none;
+        margin-top: 6px;
+
+        .el-form-item {
+          margin-bottom: 6px;
+        }
+      }
+
+      .el-collapse-item__content {
+        padding-bottom: 0;
+      }
+    }
+
+    /* 颜色拾取器 */
+    .el-color-picker {
+      height: 40px !important;
+      width: 100%;
+
+      .el-color-picker__trigger {
+        height: 40px !important;
+        width: 100%;
+        padding: 0;
+      }
+    }
+  }
+
+  /* 弹框：表格 */
+  &.d_table {
+    min-width: 1260px;
+    margin-bottom: 0;
+
+    &>.el-dialog__body {
+      padding-bottom: 20px;
+
+      /* 表格+分页 */
+      &>.el-table {
+        height: calc(70vh - 90px);
+
+        &>.el-table__body-wrapper {
+          height: calc(100% - 48px);
+          overflow: auto;
+        }
+      }
+
+      .content-wrap {
+        min-height: 60vh;
+        max-height: calc(75vh - 100px);
+
+        &>.el-table::before {
+          display: none;
+        }
+      }
+    }
+  }
+
+  /* 样式重置 */
+  .el-dialog__header {
+    padding-left: 20px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+
+    .el-dialog__title {
+      font-size: 22px;
+      font-weight: 500;
+      color: #000000;
+      line-height: 33px;
+    }
+
+    .el-dialog__headerbtn {
+      font-size: 24px;
+      color: #333333;
+    }
+  }
+
+  .el-dialog__body {
+    padding: 0 20px;
+  }
+
+  .el-dialog__footer {
+    display: flex;
+    justify-content: center;
+
+    .el-button {
+      min-width: 110px;
+    }
+  }
+}
+
+/* 滚动条 */
+.content-wrap {
+  max-height: calc(100vh - 380px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 10px;
+}

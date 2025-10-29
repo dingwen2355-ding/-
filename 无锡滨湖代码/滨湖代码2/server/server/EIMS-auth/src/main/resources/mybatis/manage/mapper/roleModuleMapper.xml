@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.RoleModuleServiceMapper">
+    <!--通过<resultMap>映射实体类属性名和表的字段名对应关系 -->
+    <resultMap type="java.util.HashMap" id="roleModuleMap">
+        <result property="id" column="id" />
+        <result property="roleId" column="role_id" />
+        <result property="moduleId" column="module_id" />
+    </resultMap>
+
+    <select id="queryRoleModules" resultType="java.util.HashMap" resultMap="roleModuleMap">
+        SELECT id, role_id, module_id FROM t_link_role_module
+        WHERE
+        <if test="ids != null">id in (${ids}) AND </if>
+        <if test="roleId != null">role_id = #{roleId} AND </if>
+        <if test="roleModules != null">module_id = #{roleModules} AND </if>
+        1=1;
+    </select>
+
+    <insert id="insertRoleModules" parameterType="map" useGeneratedKeys="false">
+        INSERT INTO t_link_role_module (role_id, module_id)
+        VALUES
+        <foreach collection="roleModules" item="item" separator=",">
+            (
+            #{roleId, jdbcType=BIGINT},
+            #{item, jdbcType=BIGINT}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateRoleModules" parameterType="map" useGeneratedKeys="false">
+        UPDATE t_link_role_module SET
+        role_id = #{roleId, jdbcType=BIGINT},
+        module_id = #{roleModules, jdbcType=BIGINT}
+        WHERE id = #{id};
+    </update>
+
+    <delete id="deleteRoleModules" parameterType="map">
+        DELETE FROM t_link_role_module
+        <trim prefix="where" suffixOverrides="and">
+            <if test="ids != null">id in (${ids}) and</if>
+            <if test="roleId != null"> role_id = #{roleId} and </if>
+            <if test="roleModules != null"> module_id in (${roleModules}) and</if>
+        </trim>
+    </delete>
+</mapper>

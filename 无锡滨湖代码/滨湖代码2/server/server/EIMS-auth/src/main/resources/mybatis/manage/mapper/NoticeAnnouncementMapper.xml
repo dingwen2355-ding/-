@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.NoticeAnnouncementDao">
+    <resultMap id="NoticeAnnouncementMap" type="com.znv.manage.common.bean.NoticeAnnouncement">
+        <id property="noticeId" column="notice_id"/>
+        <result property="announcementTitle" column="announcement_title"/>
+        <result property="announcementType" column="announcement_type"/>
+        <result property="announcementState" column="announcement_state"/>
+        <result property="announcementContent" column="announcement_content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="creator" column="creator"/>
+    </resultMap>
+    <select id="queryNoticeAnnouncement" resultType="map" resultMap="NoticeAnnouncementMap">
+        select
+        notice_id,
+        announcement_title,
+        announcement_type,
+        announcement_state,
+        announcement_content,
+        create_time,
+        creator
+        from t_data_notice_announcement
+        where 1=1
+        <if test="noticeId != null">and notice_id = #{noticeId}</if>
+        <if test="announcementTitle != null">and announcement_title like concat('%',#{announcementTitle},'%')</if>
+        <if test="announcementType != null">and announcement_type = #{announcementType}</if>
+        <if test="announcementState != null">and announcement_state = #{announcementState}</if>
+        <if test="announcementContent != null">and announcement_content like concat('%',#{announcementContent},'%')</if>
+        <if test="createTime != null">and create_time =#{createTime}</if>
+        <if test="creator != null">and creator = #{creator}</if>
+        order by notice_id ASC
+    </select>
+
+    <insert id="insertNoticeAnnouncement" parameterType="com.znv.manage.common.bean.NoticeAnnouncement"
+            useGeneratedKeys="false"
+            keyProperty="noticeId" keyColumn="notice_id">
+        INSERT INTO t_data_notice_announcement(notice_id,
+                                               announcement_title,
+                                               announcement_type,
+                                               announcement_state,
+                                               announcement_content,
+                                               creator,
+                                               create_time)
+        values (#{noticeId,jdbcType=VARCHAR},
+                #{announcementTitle,jdbcType=VARCHAR},
+                #{announcementType,jdbcType=VARCHAR},
+                #{announcementState,jdbcType=VARCHAR},
+                #{announcementContent,jdbcType=VARCHAR},
+                #{creator,jdbcType=VARCHAR},
+                #{createTime,jdbcType=DATE})
+    </insert>
+
+    <update id="updateNoticeAnnouncement" parameterType="com.znv.manage.common.bean.NoticeAnnouncement"
+            useGeneratedKeys="false">
+        UPDATE t_data_notice_announcement
+        <set>
+            <if test="announcementTitle != null">announcement_title = #{announcementTitle,jdbcType=VARCHAR},</if>
+            <if test="announcementType != null">announcement_type = #{announcementType,jdbcType = VARCHAR },</if>
+            <if test="announcementState != null">announcement_state = #{announcementState,jdbcType=VARCHAR},</if>
+            <if test="announcementContent != null">announcement_content = #{announcementContent,jdbcType=VARCHAR},</if>
+            <if test="creator != null">creator = #{creator,jdbcType=VARCHAR},</if>
+            <if test="createTime !=null">create_time = #{createTime, jdbcType=DATE},</if>
+        </set>
+        WHERE notice_id = #{noticeId};
+    </update>
+
+    <delete id="deleteNoticeAnnouncement" parameterType="com.znv.manage.common.bean.NoticeAnnouncement">
+        DELETE FROM t_data_notice_announcement
+        WHERE
+        notice_id in
+        <foreach collection="array"  item="noticeId"  open="(" separator="," close=")">
+            ${noticeId}
+        </foreach>
+    </delete>
+
+    <select id="queryNoticeAnnouncementByTitle" resultType="map" resultMap="NoticeAnnouncementMap">
+        select
+        notice_id,
+        announcement_title,
+        announcement_type,
+        announcement_state,
+        announcement_content,
+        create_time,
+        creator
+        from t_data_notice_announcement
+        where 1=1
+        <if test="announcementTitle != null">and announcement_title like concat('%',#{announcementTitle},'%')</if>
+        order by notice_id ASC
+    </select>
+
+</mapper>

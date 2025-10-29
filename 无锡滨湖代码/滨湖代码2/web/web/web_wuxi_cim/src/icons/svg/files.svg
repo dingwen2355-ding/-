@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="38px" height="50px" viewBox="0 0 38 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>压缩包</title>
+    <g id="页面-3" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="工程管理-新增" transform="translate(-1243.000000, -381.000000)">
+            <g id="分组-2备份-6" transform="translate(1191.000000, 141.000000)">
+                <g id="编组-7" transform="translate(32.000000, 190.000000)">
+                    <g id="压缩包" transform="translate(20.000000, 50.000000)">
+                        <polygon id="矩形" fill="#3E7DE4" points="-1.42122425e-13 0 25.009722 0 38 13 38 50 0 50"></polygon>
+                        <polygon id="矩形" fill="#FFFFFF" points="25 1 37 13 25 13"></polygon>
+                        <g id="编组-19" transform="translate(13.000000, 11.000000)">
+                            <path d="M12,3 L12,6 L6,6 L6,3 L12,3 Z M6,0 L6,3 L0,3 L0,0 L6,0 Z" id="形状结合" fill="#FFFFFF"></path>
+                            <path d="M12,9 L12,12 L6,12 L6,9 L12,9 Z M6,6 L6,9 L0,9 L0,6 L6,6 Z" id="形状结合备份-6" fill="#FFFFFF"></path>
+                            <path d="M12,15 L12,18 L6,18 L6,15 L12,15 Z M6,12 L6,15 L0,15 L0,12 L6,12 Z" id="形状结合备份-7" fill="#FFFFFF"></path>
+                            <rect id="矩形" fill="#FFFFFF" x="0" y="18" width="12" height="14"></rect>
+                            <rect id="矩形" fill="#3E7DE4" x="2.5" y="26" width="7" height="4"></rect>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

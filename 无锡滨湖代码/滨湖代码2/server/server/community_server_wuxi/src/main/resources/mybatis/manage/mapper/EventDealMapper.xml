@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.EventDealMapper">
+
+	<select id="getEventDealFlowInfo" resultType="java.util.HashMap">
+		SELECT event_id eventId, id, event_title eventTitle, deal_content dealContent, DATE_FORMAT(record_time, '%Y-%m-%d %H:%i:%S') recordTime,
+		event_status eventStatus, picture_url pictureUrl, video_url videoUrl, status,unit_id unitId, unit_name unitName,
+		case flowStatus
+		when 'node-100' then '记录开单'
+		when 'node-200' then '受理派单'
+		when 'node-300' then '处置中'
+		when 'node-400' then '处置核查'
+		end as flowStatus
+		from data_history_event_deal_content
+		where event_id = #{eventId}
+		<if test="status != null"> and status=#{status}</if>
+		ORDER BY event_status, record_time
+	</select>
+
+	<select id="getEventNewDealFlowInfo" resultType="java.util.HashMap">
+		SELECT event_id eventId, id, event_title eventTitle, deal_content dealContent, DATE_FORMAT(record_time, '%Y-%m-%d %H:%i:%S') recordTime,
+		event_status eventStatus, picture_url pictureUrl, video_url videoUrl, status,unit_id unitId, unit_name unitName
+		from data_history_event_deal_content
+		where event_id = #{eventId} and `status`='0'
+		ORDER BY  record_time desc limit 1
+	</select>
+
+	<!--<select id="getEventInfo" resultType="java.util.HashMap">-->
+		<!--SELECT event_id eventId, b.event_type eventType, event_title eventTitle, happen_time acceptTime, area_code areaCode, area ,opinion_level opinionLevel,-->
+		<!--street_id streetId, street, address, a.desc description, danger_level dangerLevel, death, severe_wound servereWound, minor_wound minorWound,-->
+		<!--disappear, poisoning, gpsx, gpsy, plan_id planId,survey_gpsx surveyGpsx, survey_gpsy surveyGpsy-->
+		<!--from base_event_info a-->
+		<!--inner JOIN dict_event_type b on a.event_type=b.type_id-->
+		<!--where event_id = #{eventId}-->
+	<!--</select>-->
+
+	<select id="getEventInfo" resultType="map">
+		select a.ID eventId,
+			   EVENT_TITLE eventTitle,
+			   ifnull(a.type_id,'') eventTypeId,
+			   b.DICT_NAME eventType,
+			   EVENT_TIME acceptTime,
+			   OCCUR_ADDRESS address,
+			   SUMMARY `description`,
+			   STREET_ID streetId,
+			   c.precinct_name area,
+			   c.precinct_name street,
+			   a.LEVEL_NAME dangerLevel,
+			   d.DICT_NAME flowSource,
+			   DEATH_NUM death,
+			   MINOR_NUM minorWound,
+			   SERIOUS_NUM servereWound,
+		       LON gpsx,
+		       LAT gpsy,
+		       e.name emergencyPlanName,
+		       e.event_type_name emergencyPlanTypeName
+		from community_wuxi_eims.t_cfg_event a
+				 left join community_wuxi_eims.t_cfg_dict b on a.TYPE_ID=b.ID
+				 left join community_wuxi_eims.t_cfg_precinct c on a.STREET_ID=c.precinct_id
+				 left join community_wuxi_eims.t_cfg_dict d on a.source_id=b.ID
+				 left join community_wuxi_eims.t_cfg_plan_info_event e on e.event_id=a.id
+		where a.ID = #{eventId}
+	</select>
+
+	<select id="getEventEmergencyInfo" resultType="java.util.Map">
+		select a.plan_id emergencyPlanId, c.PB_NAME emergencyPlanName,c.PLANTYPENAME emergencyPlanTypeName
+		from base_event_info a
+		left join data_emergency_plan c on find_in_set(c.PB_ID, a.plan_id)
+		where a.event_id = #{eventId}
+	</select>
+
+	<insert id="insertEventDealInfo" parameterType="com.znv.manage.common.bean.HistoryDealContent">
+	insert into data_history_event_deal_content (event_id, event_title,
+      record_time, deal_content, event_status,
+      picture_url, video_url, unit_name, status)
+    values (#{eventId}, #{eventTitle},
+      #{recordTime}, #{dealContent}, #{eventStatus},
+      #{pictureUrl}, #{videoUrl}, #{unitName}, #{status})
+	</insert>
+
+	<update id="updateEventDealFLowInfo" parameterType="com.znv.manage.common.bean.HistoryDealContent">
+		update data_history_event_deal_content
+		<set>
+			<if test="eventId != null">
+				event_id = #{eventId,jdbcType=VARCHAR},
+			</if>
+			<if test="eventTitle != null">
+				event_title = #{eventTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="recordTime != null">
+				record_time = #{recordTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="dealContent != null">
+				deal_content = #{dealContent,jdbcType=VARCHAR},
+			</if>
+			<if test="eventStatus != null">
+				event_status = #{eventStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="pictureUrl != null">
+				picture_url = #{pictureUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="videoUrl != null">
+				video_url = #{videoUrl,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<delete id="deleteFlowByEventId">
+		delete
+		from data_history_event_deal_content
+		where event_id=#{eventId}
+	</delete>
+
+	<insert id="batchUpdateDealFlow">
+		INSERT INTO data_history_event_deal_content(
+		event_id,
+		event_title,
+		record_time,
+		deal_content,
+		event_status,
+		picture_url,
+		video_url,
+		unit_id,
+		unit_name,
+		status
+		)
+		VALUES
+		<foreach collection="lists" item="map" separator=",">
+			(
+			#{map.eventId},
+			#{map.eventTitle},
+			#{map.recordTime},
+			#{map.dealContent},
+			#{map.eventStatus},
+			#{map.pictureUrl},
+			#{map.videoUrl},
+			#{map.unitId},
+			#{map.unitName},
+			#{map.status}
+			)
+		</foreach>
+	</insert>
+
+
+	<select id="getDeviceList" resultType="com.znv.manage.common.bean.SyncDevice">
+		select device_id,device_name,gpsx as longitude ,gpsy as latitude from t_cfg_device WHERE device_kind = 666 and ifnull(gpsx,'') != '' and ifnull(gpsy,'') != ''
+	</select>
+	
+</mapper>

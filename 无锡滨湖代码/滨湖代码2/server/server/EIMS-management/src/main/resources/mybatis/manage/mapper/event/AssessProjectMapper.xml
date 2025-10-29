@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.event.AssessProjectDao">
+
+    <resultMap type="com.znv.manage.common.bean.event.AssessProject" id="AssessProjectMap">
+        <result property="id" column="ID" jdbcType="INTEGER"/>
+        <result property="projectName" column="PROJECT_NAME" jdbcType="VARCHAR"/>
+        <result property="content" column="CONTENT" jdbcType="VARCHAR"/>
+        <result property="standard" column="STANDARD" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="AssessProjectMap">
+        select
+          ID, PROJECT_NAME, CONTENT, STANDARD
+        from T_CFG_ASSESS_PROJECT
+        where ID = #{id}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from T_CFG_ASSESS_PROJECT
+        <where>
+            <if test="id != null">
+                and ID = #{id}
+            </if>
+            <if test="projectName != null and projectName != ''">
+                and PROJECT_NAME = #{projectName}
+            </if>
+            <if test="content != null and content != ''">
+                and CONTENT = #{content}
+            </if>
+            <if test="standard != null and standard != ''">
+                and STANDARD = #{standard}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_ASSESS_PROJECT(PROJECT_NAME, CONTENT, STANDARD)
+        values (#{projectName}, #{content}, #{standard})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_ASSESS_PROJECT(PROJECT_NAME, CONTENT, STANDARD)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.projectName}, #{entity.content}, #{entity.standard})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into T_CFG_ASSESS_PROJECT(PROJECT_NAME, CONTENT, STANDARD)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.projectName}, #{entity.content}, #{entity.standard})
+        </foreach>
+        on duplicate key update
+        PROJECT_NAME = values(PROJECT_NAME),
+        CONTENT = values(CONTENT),
+        STANDARD = values(STANDARD)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update T_CFG_ASSESS_PROJECT
+        <set>
+            <if test="projectName != null and projectName != ''">
+                PROJECT_NAME = #{projectName},
+            </if>
+            <if test="content != null and content != ''">
+                CONTENT = #{content},
+            </if>
+            <if test="standard != null and standard != ''">
+                STANDARD = #{standard},
+            </if>
+        </set>
+        where ID = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from T_CFG_ASSESS_PROJECT where ID = #{id}
+    </delete>
+    
+    <!--通过主键批量删除-->
+    <delete id="deleteBatch">
+        delete from T_CFG_ASSESS_PROJECT where find_in_set(ID,#{ids})
+    </delete>
+
+    <!--条件查询-->
+    <select id="queryByCondition" resultMap="AssessProjectMap">
+        select
+          ID, PROJECT_NAME, CONTENT, STANDARD          
+        from T_CFG_ASSESS_PROJECT
+        <where>
+            <if test="id != null">
+                and ID = #{id}
+            </if>
+            <if test="projectName != null and projectName != ''">
+                and PROJECT_NAME like concat('%',#{projectName},'%')
+            </if>
+        </where>
+    </select>
+</mapper>
+

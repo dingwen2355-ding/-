@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.event.EventSituationDao">
+    <select id="quartAnalysis" resultType="map">
+        SELECT quarters.q AS q,
+               COALESCE(qCount, 0) AS qCount
+        FROM (
+                 SELECT 1 AS q
+                 UNION SELECT 2
+                 UNION SELECT 3
+                 UNION SELECT 4
+             ) AS quarters
+                 LEFT JOIN (
+            SELECT FLOOR((DATE_FORMAT(EVENT_TIME,'%m')-1)/3)+1 AS q,
+                   COUNT(*) AS qCount
+            FROM T_CFG_EVENT
+            WHERE DATE_FORMAT(EVENT_TIME,'%Y') = YEAR(NOW())
+            AND SOURCE_ID = 11
+        GROUP BY FLOOR((DATE_FORMAT(EVENT_TIME,'%m')-1)/3)+1
+            ) AS event_counts
+        ON quarters.q = event_counts.q
+        ORDER BY quarters.q ASC;
+    </select>
+
+    <select id="eventLevelCount" resultType="map">
+       SELECT a.DICT_NAME as levelName,ifnull(b.count,0) as levelCount FROM
+       (select ID,DICT_NAME
+        from T_CFG_DICT
+        where PARENT_ID =(SELECT ID FROM T_CFG_DICT WHERE DICT_NAME = '事件级别') ) a
+        LEFT JOIN (SELECT COUNT(LEVEL) AS count,LEVEL FROM T_CFG_EVENT
+        where 1 = 1
+        and SOURCE_ID = 11
+        <if test="beginTime!=null">and EVENT_TIME &gt;= #{beginTime}</if>
+        <if test="endTime!=null">and EVENT_TIME &lt; #{endTime}</if>
+        GROUP BY LEVEL) b
+        ON a.ID = b.LEVEL
+    </select>
+
+    <select id="eventStreetCount" resultType="map">
+        select precinct.precinct_name streetName ,COALESCE(streetCount, 0) streetCount from (select precinct_name from t_cfg_precinct where up_precinct_id='10019') precinct
+        left join (select count(*) as streetCount,b.PRECINCT_NAME as streetName
+        from T_CFG_EVENT a
+        left join T_CFG_PRECINCT b on a.STREET_ID = b.PRECINCT_ID
+        where 1 = 1
+        and SOURCE_ID = 11
+        <if test="beginTime!=null">and a.EVENT_TIME &gt;= #{beginTime}</if>
+        <if test="endTime!=null">and a.EVENT_TIME &lt; #{endTime}</if>
+        group by b.PRECINCT_NAME) as event_counts on precinct.precinct_name=streetName
+    </select>
+
+        <select id="burstEventTotalCount" resultType="map">
+        select a.DICT_NAME as typeName,
+        ifnull(b.totalCount,0) as totalCount,
+        ifnull(b.deathCount,0) as deathCount,
+        ifnull(b.hurtCount,0) as hurtCount from
+		(select ID,DICT_NAME
+        from T_CFG_DICT
+        where PARENT_ID =(SELECT ID FROM T_CFG_DICT WHERE DICT_NAME = '事件-事故类型'))a
+        left join
+        (select b.DICT_NAME as typeName,
+		sum(a.SERIOUS_NUM)+sum(a.MINOR_NUM)+sum(a.DEATH_NUM) as totalCount,
+        sum(a.DEATH_NUM) as deathCount,
+        sum(a.SERIOUS_NUM)+sum(a.MINOR_NUM) as hurtCount
+        from T_CFG_EVENT a
+        left join T_CFG_DICT b on a.TYPE_ID = b.ID
+        where 1 = 1
+        and SOURCE_ID = 11
+        <if test="beginTime!=null">and a.EVENT_TIME &gt;= #{beginTime}</if>
+        <if test="endTime!=null">and a.EVENT_TIME &lt; #{endTime}</if>
+        group by b.DICT_NAME)b on a.DICT_NAME = b.typeName
+    </select>
+
+    <select id="burstEventTypeCount" resultType="map">
+        select a.DICT_NAME as typeName,
+        ifnull(b.totalCount,0) as totalCount from
+        (select ID,DICT_NAME
+        from T_CFG_DICT
+        where PARENT_ID =(SELECT ID FROM T_CFG_DICT WHERE DICT_NAME = #{type} and DICT_TYPE = '事件-事故类型'))a
+        left join
+        (select b.DICT_NAME as typeName,
+        count(*) as totalCount
+        from T_CFG_EVENT a
+        left join T_CFG_DICT b on a.SMALL_TYPE_ID = b.ID
+        where 1 = 1
+        and SOURCE_ID = 11
+        and TYPE_ID = (select ID from T_CFG_DICT where DICT_NAME = #{type} and DICT_TYPE = '事件-事故类型')
+        <if test="beginTime!=null">and a.EVENT_TIME &gt;= #{beginTime}</if>
+        <if test="endTime!=null">and a.EVENT_TIME &lt; #{endTime}</if>
+        group by b.DICT_NAME)b on a.DICT_NAME = b.typeName
+    </select>
+
+    <select id="getTypeList" resultType="map">
+        select ID as id,DICT_NAME as name from T_CFG_DICT
+        where PARENT_ID =(SELECT ID FROM T_CFG_DICT WHERE DICT_NAME = '事件-事故类型')
+    </select>
+
+    <select id="burstEventByType" resultType="java.lang.Long">
+        select count(*) from t_cfg_event a
+        where a.type_id=#{typeId}
+        <if test="beginTime!=null">and a.EVENT_TIME &gt;= #{beginTime}</if>
+        <if test="endTime!=null">and a.EVENT_TIME &lt; #{endTime}</if>
+    </select>
+</mapper>
+

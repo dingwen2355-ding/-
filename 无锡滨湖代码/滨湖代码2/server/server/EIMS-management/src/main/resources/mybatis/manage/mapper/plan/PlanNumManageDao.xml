@@ -1,0 +1,747 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.znv.manage.dao.plan.PlanNumManageDao">
+    <insert id="addPlanNumInfo" parameterType="com.znv.manage.common.bean.plan.PlanInfoBean"
+            useGeneratedKeys="true" keyProperty="planNumInfoBean.id">
+        INSERT INTO t_cfg_plan_num_info
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="planNumInfoBean.name != null" >name,</if>
+            <if test="planNumInfoBean.emergencyTypeId != null" >emergency_type_id,</if>
+            <if test="planNumInfoBean.emergencyTypeName != null" >emergency_type_name,</if>
+            <if test="planNumInfoBean.createId != null" >create_id,</if>
+            <if test="planNumInfoBean.createName != null" >create_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planNumInfoBean.name != null" >#{planNumInfoBean.name},</if>
+            <if test="planNumInfoBean.emergencyTypeId != null" >#{planNumInfoBean.emergencyTypeId},</if>
+            <if test="planNumInfoBean.emergencyTypeName != null" >#{planNumInfoBean.emergencyTypeName},</if>
+            <if test="planNumInfoBean.createId != null" >#{planNumInfoBean.createId},</if>
+            <if test="planNumInfoBean.createName != null" >#{planNumInfoBean.createName},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePlanNumInfo" parameterType="com.znv.manage.common.bean.plan.PlanNumInfoBean">
+        update t_cfg_plan_num_info
+        <set>
+            <if test="planNumInfoBean.name != null" >name = #{planNumInfoBean.name},</if>
+            <if test="planNumInfoBean.emergencyTypeId != null" >emergency_type_id = #{planNumInfoBean.emergencyTypeId},</if>
+            <if test="planNumInfoBean.emergencyTypeName != null" >emergency_type_name = #{planNumInfoBean.emergencyTypeName},</if>
+            <if test="planNumInfoBean.createId != null" >create_id = #{planNumInfoBean.createId},</if>
+            <if test="planNumInfoBean.createName != null" >create_name = #{planNumInfoBean.createName},</if>
+        </set>
+        where id = #{planNumInfoBean.id}
+    </update>
+
+    <insert id="addPlanNumData" parameterType="com.znv.manage.common.bean.plan.PlanNumDataBean" >
+        INSERT INTO t_cfg_plan_num_data
+        (plan_num_id,file_name,file_url,remark,create_time)
+        VALUES
+        <foreach collection="planNumDataBeans" item="item" separator=",">
+            (
+            #{item.planNumId},
+            #{item.fileName},
+            #{item.fileUrl},
+            #{item.remark},
+            #{item.createTime}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updatePlanNumData" parameterType="com.znv.manage.common.bean.plan.PlanNumDataBean">
+        update t_cfg_plan_num_data
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="file_url=case" suffix="end,">
+                <foreach collection="planNumDataBeans" item="item" index="index">
+                    <if test="item.fileUrl!=null and item.fileUrl!=''">
+                        when id=#{item.id} then #{item.fileUrl}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="file_name=case" suffix="end,">
+                <foreach collection="planNumDataBeans" item="item" index="index">
+                    <if test="item.fileName!=null and item.fileName!=''">
+                        when id=#{item.id} then #{item.fileName}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="remark=case" suffix="end,">
+                <foreach collection="planNumDataBeans" item="item" index="index">
+                    <if test="item.remark!=null and item.remark!=''">
+                        when id=#{item.id} then #{item.remark}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="planNumDataBeans" item="item" index="index" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <delete id="delPlanNumDataById" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_num_data where
+        id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanNumData" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_num_data where
+        plan_num_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <insert id="addPlanNumPre" parameterType="com.znv.manage.common.bean.plan.AddPlanNumPreBean" >
+        INSERT INTO t_cfg_plan_num_pre
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="addPlanNumPreBean.planNumId != null" >plan_num_id,</if>
+            <if test="addPlanNumPreBean.commandSystem != null" >command_system,</if>
+            <if test="addPlanNumPreBean.departmentalResponsibilities != null" >departmental_responsibilities,</if>
+            <if test="addPlanNumPreBean.associatedTeams != null" >associated_teams,</if>
+            <if test="addPlanNumPreBean.associatedResettlementSites != null" >associated_resettlement_sites,</if>
+            <if test="addPlanNumPreBean.relatedMaterials != null" >related_materials,</if>
+            <if test="addPlanNumPreBean.expert != null" >expert,</if>
+            <if test="addPlanNumPreBean.groupNum != null" >group_num,</if>
+            <if test="addPlanNumPreBean.personNum != null" >person_num,</if>
+            <if test="addPlanNumPreBean.remark != null" >remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="addPlanNumPreBean.planNumId != null" >#{addPlanNumPreBean.planNumId},</if>
+            <if test="addPlanNumPreBean.commandSystem != null" >#{addPlanNumPreBean.commandSystem},</if>
+            <if test="addPlanNumPreBean.departmentalResponsibilities != null" >#{addPlanNumPreBean.departmentalResponsibilities},</if>
+            <if test="addPlanNumPreBean.associatedTeams != null" >#{addPlanNumPreBean.associatedTeams},</if>
+            <if test="addPlanNumPreBean.associatedResettlementSites != null" >#{addPlanNumPreBean.associatedResettlementSites},</if>
+            <if test="addPlanNumPreBean.relatedMaterials != null" >#{addPlanNumPreBean.relatedMaterials},</if>
+            <if test="addPlanNumPreBean.expert != null" >#{addPlanNumPreBean.expert},</if>
+            <if test="addPlanNumPreBean.groupNum != null" >#{addPlanNumPreBean.groupNum},</if>
+            <if test="addPlanNumPreBean.personNum != null" >#{addPlanNumPreBean.personNum},</if>
+            <if test="addPlanNumPreBean.remark != null" >#{addPlanNumPreBean.remark},</if>
+        </trim>
+    </insert>
+
+    <insert id="addPlanNumPreGroup" parameterType="com.znv.manage.common.bean.plan.SavePlanNumGroupBean" >
+        INSERT INTO t_cfg_plan_num_group
+        (plan_num_id,group_name)
+        VALUES
+        <foreach collection="savePlanNumGroupBeans" item="item" separator=",">
+            (
+            #{item.planNumId},
+            #{item.groupName}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="addPlanNumPreGroupPerson" parameterType="com.znv.manage.common.bean.plan.GroupPersonBean" >
+        INSERT INTO t_cfg_plan_num_group_person
+        (group_id,plan_num_id,person_name,post,phone_number
+        ,office,duty,contact_person,contact_duty,contact_office_phone,contact_cell_phone)
+        VALUES
+        <foreach collection="addGroupPersonBeans" item="item" separator=",">
+            (
+            #{item.groupId},
+            #{item.planNumId},
+            #{item.personName},
+            #{item.post},
+            #{item.phoneNumber},
+            #{item.office},
+            #{item.duty},
+            #{item.contactPerson},
+            #{item.contactDuty},
+            #{item.contactOfficePhone},
+            #{item.contactCellPhone}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="addPlanNumPreSystem" parameterType="com.znv.manage.common.bean.plan.PlanNumSystemBean" >
+        INSERT INTO t_cfg_plan_num_system
+        (plan_num_id,system_unit,system_name,system_environment,system_url)
+        VALUES
+        <foreach collection="planNumSystemBeans" item="item" separator=",">
+            (
+            #{item.planNumId},
+            #{item.systemUnit},
+            #{item.systemName},
+            #{item.systemEnvironment},
+            #{item.systemUrl}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updatePlanNumPre" parameterType="com.znv.manage.common.bean.plan.UpdatePlanNumPreBean">
+        UPDATE t_cfg_plan_num_pre
+        <set>
+            <if test="updatePlanNumPreBean.planNumId != null" >plan_num_id=#{updatePlanNumPreBean.planNumId},</if>
+            <if test="updatePlanNumPreBean.commandSystem != null" >command_system=#{updatePlanNumPreBean.commandSystem},</if>
+            <if test="updatePlanNumPreBean.departmentalResponsibilities != null" >departmental_responsibilities=#{updatePlanNumPreBean.departmentalResponsibilities},</if>
+            <if test="updatePlanNumPreBean.associatedTeams != null" >associated_teams=#{updatePlanNumPreBean.associatedTeams},</if>
+            <if test="updatePlanNumPreBean.associatedResettlementSites != null" >associated_resettlement_sites=#{updatePlanNumPreBean.associatedResettlementSites},</if>
+            <if test="updatePlanNumPreBean.relatedMaterials != null" >related_materials=#{updatePlanNumPreBean.relatedMaterials},</if>
+            <if test="updatePlanNumPreBean.expert != null" >expert=#{updatePlanNumPreBean.expert},</if>
+            <if test="updatePlanNumPreBean.groupNum != null" >group_num=#{updatePlanNumPreBean.groupNum},</if>
+            <if test="updatePlanNumPreBean.personNum != null" >person_num=#{updatePlanNumPreBean.personNum},</if>
+            <if test="updatePlanNumPreBean.remark != null" >remark=#{updatePlanNumPreBean.remark},</if>
+        </set>
+        WHERE id = #{updatePlanNumPreBean.id};
+    </update>
+
+    <update id="updatePlanNumPreGroup" parameterType="com.znv.manage.common.bean.plan.SavePlanNumGroupBean">
+        update t_cfg_plan_num_group
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="plan_num_id=case" suffix="end,">
+                <foreach collection="savePlanNumGroupBeans" item="item" index="index">
+                    <if test="item.planNumId!=null and item.planNumId!=''">
+                        when id=#{item.id} then #{item.planNumId}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="group_name=case" suffix="end,">
+                <foreach collection="savePlanNumGroupBeans" item="item" index="index">
+                    <if test="item.groupName!=null and item.groupName!=''">
+                        when id=#{item.id} then #{item.groupName}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="savePlanNumGroupBeans" item="item" index="index" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <update id="updatePlanNumPreGroupPerson" parameterType="com.znv.manage.common.bean.plan.GroupPersonBean">
+        update t_cfg_plan_num_group_person
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="person_name=case" suffix="end,">
+                <foreach collection="updateGroupPersonBeans" item="item" index="index">
+                    <if test="item.personName!=null and item.personName!=''">
+                        when id=#{item.id} then #{item.personName}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="post=case" suffix="end,">
+                <foreach collection="updateGroupPersonBeans" item="item" index="index">
+                    <if test="item.post!=null and item.post!=''">
+                        when id=#{item.id} then #{item.post}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="phone_number=case" suffix="end,">
+                <foreach collection="updateGroupPersonBeans" item="item" index="index">
+                    <if test="item.phoneNumber!=null and item.phoneNumber!=''">
+                        when id=#{item.id} then #{item.phoneNumber}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="office=case" suffix="end,">
+                <foreach collection="updateGroupPersonBeans" item="item" index="index">
+                    <if test="item.office!=null and item.office!=''">
+                        when id=#{item.id} then #{item.office}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="duty=case" suffix="end,">
+                <foreach collection="updateGroupPersonBeans" item="item" index="index">
+                    <if test="item.duty!=null and item.duty!=''">
+                        when id=#{item.id} then #{item.duty}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="updateGroupPersonBeans" item="item" index="index" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <delete id="delPlanNumPreGroupPersonById" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_num_group_person where
+        id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanNumPreGroup" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_num_group where
+        id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanNumPreGroupPerson" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_num_group_person where
+        group_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updatePlanNumPreSystem" parameterType="com.znv.manage.common.bean.plan.PlanNumSystemBean">
+        update t_cfg_plan_num_system
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="system_unit=case" suffix="end,">
+                <foreach collection="updatePlanNumSystemBeans" item="item" index="index">
+                    <if test="item.systemUnit!=null and item.systemUnit!=''">
+                        when id=#{item.id} then #{item.systemUnit}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="system_name=case" suffix="end,">
+                <foreach collection="updatePlanNumSystemBeans" item="item" index="index">
+                    <if test="item.systemName!=null and item.systemName!=''">
+                        when id=#{item.id} then #{item.systemName}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="system_environment=case" suffix="end,">
+                <foreach collection="updatePlanNumSystemBeans" item="item" index="index">
+                    <if test="item.systemEnvironment!=null and item.systemEnvironment!=''">
+                        when id=#{item.id} then #{item.systemEnvironment}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="system_url=case" suffix="end,">
+                <foreach collection="updatePlanNumSystemBeans" item="item" index="index">
+                    <if test="item.systemUrl!=null and item.systemUrl!=''">
+                        when id=#{item.id} then #{item.systemUrl}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="updatePlanNumSystemBeans" item="item" index="index" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <delete id="delPlanNumPreSystem" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_num_system where
+        id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="countPlanNumPreGroup" parameterType="java.lang.String" resultType="com.znv.manage.common.bean.plan.CountPlanNumPreGroupBean">
+        SELECT a.groupNum, b.personNum FROM
+       (SELECT COUNT(1) AS groupNum FROM t_cfg_plan_num_group WHERE plan_num_id = #{id}) a,
+       (SELECT COUNT(1) AS personNum FROM t_cfg_plan_num_group_person WHERE plan_num_id = #{id}) b
+    </select>
+
+    <update id="updatePlanNumGroupCount" parameterType="com.znv.manage.common.bean.plan.CountPlanNumPreGroupBean">
+        UPDATE t_cfg_plan_num_pre
+        <set>
+            <if test="countPlanNumPreGroupBean.groupNum != null">group_num= #{countPlanNumPreGroupBean.groupNum},</if>
+            <if test="countPlanNumPreGroupBean.personNum != null">person_num= #{countPlanNumPreGroupBean.personNum},</if>
+        </set>
+        WHERE plan_num_id = #{countPlanNumPreGroupBean.id};
+    </update>
+
+    <select id="getGroupId" parameterType="java.lang.String" resultType="java.lang.String">
+       select id from t_cfg_plan_num_group where plan_num_id=#{planNumId} and group_name=#{groupName}
+    </select>
+
+    <select id="getPlanNumId" resultType="java.lang.String">
+         SELECT id FROM t_cfg_plan_num_info WHERE name=#{planNumName}
+    </select>
+
+    <select id="queryPlanNum" parameterType="com.znv.manage.common.bean.plan.QueryPlanNumBean" resultType="com.znv.manage.common.bean.plan.PlanNumInfoBean">
+        select a.id, a.name,
+        a.emergency_type_id AS emergencyTypeId, a.emergency_type_name AS emergencyTypeName,
+        a.create_id AS createId, a.create_name AS createName,
+        a.level_id as levelId, a.level_name as levelName,
+        DATE_FORMAT(a.create_time, '%Y-%m-%d %H:%i:%S') AS createTime, DATE_FORMAT(a.modify_time, '%Y-%m-%d %H:%i:%S') AS modifyTime
+        FROM t_cfg_plan_num_info a
+        <where>
+            <if test="queryPlanNumBean.name != null  and queryPlanNumBean.name != '' "> and a.name LIKE CONCAT("%", #{queryPlanNumBean.name},'%')</if>
+            <if test="queryPlanNumBean.createId != null  and queryPlanNumBean.createId != '' "> and a.create_id=#{queryPlanNumBean.createId} </if>
+        </where>
+    </select>
+
+    <select id="getNumFileUrl" resultType="java.lang.String">
+         SELECT file_url  FROM t_cfg_plan_num_data WHERE plan_num_id=#{planId}
+    </select>
+
+    <insert id="addPlanNumEmergencySupport" parameterType="com.znv.manage.common.bean.plan.PlanNumEmergencySupportBean" >
+        INSERT INTO t_cfg_plan_num_emergency_support
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="planNumEmergencySupportBean.planNumId != null" >plan_num_id,</if>
+            <if test="planNumEmergencySupportBean.communication != null" >communication,</if>
+            <if test="planNumEmergencySupportBean.emergencyTeamSupport != null" >emergency_team_support,</if>
+            <if test="planNumEmergencySupportBean.emergencySupplies != null" >emergency_supplies,</if>
+            <if test="planNumEmergencySupportBean.personTransfer != null" >person_transfer,</if>
+            <if test="planNumEmergencySupportBean.powerSupply != null" >power_supply,</if>
+            <if test="planNumEmergencySupportBean.energySecurity != null" >energy_security,</if>
+            <if test="planNumEmergencySupportBean.transportation != null" >transportation,</if>
+            <if test="planNumEmergencySupportBean.medicalInsurance != null" >medical_insurance,</if>
+            <if test="planNumEmergencySupportBean.security != null" >security,</if>
+            <if test="planNumEmergencySupportBean.financialSecurity != null" >financial_security,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planNumEmergencySupportBean.planNumId != null" >#{planNumEmergencySupportBean.planNumId},</if>
+            <if test="planNumEmergencySupportBean.communication != null" >#{planNumEmergencySupportBean.communication},</if>
+            <if test="planNumEmergencySupportBean.emergencyTeamSupport != null" >#{planNumEmergencySupportBean.emergencyTeamSupport},</if>
+            <if test="planNumEmergencySupportBean.emergencySupplies != null" >#{planNumEmergencySupportBean.emergencySupplies},</if>
+            <if test="planNumEmergencySupportBean.personTransfer != null" >#{planNumEmergencySupportBean.personTransfer},</if>
+            <if test="planNumEmergencySupportBean.powerSupply != null" >#{planNumEmergencySupportBean.powerSupply},</if>
+            <if test="planNumEmergencySupportBean.energySecurity != null" >#{planNumEmergencySupportBean.energySecurity},</if>
+            <if test="planNumEmergencySupportBean.transportation != null" >#{planNumEmergencySupportBean.transportation},</if>
+            <if test="planNumEmergencySupportBean.medicalInsurance != null" >#{planNumEmergencySupportBean.medicalInsurance},</if>
+            <if test="planNumEmergencySupportBean.security != null" >#{planNumEmergencySupportBean.security},</if>
+            <if test="planNumEmergencySupportBean.financialSecurity != null" >#{planNumEmergencySupportBean.financialSecurity},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePlanNumEmergencySupport" parameterType="com.znv.manage.common.bean.plan.PlanNumEmergencySupportBean">
+        update t_cfg_plan_num_emergency_support
+        <set>
+            <if test="planNumEmergencySupportBean.planNumId != null" >plan_num_id = #{planNumEmergencySupportBean.planNumId},</if>
+            <if test="planNumEmergencySupportBean.communication != null" >communication = #{planNumEmergencySupportBean.communication},</if>
+            <if test="planNumEmergencySupportBean.emergencyTeamSupport != null" >emergency_team_support = #{planNumEmergencySupportBean.emergencyTeamSupport},</if>
+            <if test="planNumEmergencySupportBean.emergencySupplies != null" >emergency_supplies = #{planNumEmergencySupportBean.emergencySupplies},</if>
+            <if test="planNumEmergencySupportBean.personTransfer != null" >person_transfer = #{planNumEmergencySupportBean.personTransfer},</if>
+            <if test="planNumEmergencySupportBean.powerSupply != null" >power_supply = #{planNumEmergencySupportBean.powerSupply},</if>
+            <if test="planNumEmergencySupportBean.energySecurity != null" >energy_security = #{planNumEmergencySupportBean.energySecurity},</if>
+            <if test="planNumEmergencySupportBean.transportation != null" >transportation = #{planNumEmergencySupportBean.transportation},</if>
+            <if test="planNumEmergencySupportBean.medicalInsurance != null" >medical_insurance = #{planNumEmergencySupportBean.medicalInsurance},</if>
+            <if test="planNumEmergencySupportBean.security != null" >security = #{planNumEmergencySupportBean.security},</if>
+            <if test="planNumEmergencySupportBean.financialSecurity != null" >financial_security = #{planNumEmergencySupportBean.financialSecurity},</if>
+        </set>
+        where id = #{planNumEmergencySupportBean.id}
+    </update>
+
+    <insert id="addPlanNumEmergencyStop" parameterType="com.znv.manage.common.bean.plan.PlanNumEmergencyStopBean" >
+        INSERT INTO t_cfg_plan_num_emergency_stop
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="planNumEmergencyStopBean.planNumId != null" >plan_num_id,</if>
+            <if test="planNumEmergencyStopBean.terminationCondition != null" >termination_condition,</if>
+            <if test="planNumEmergencyStopBean.terminateProgram != null" >terminate_program,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planNumEmergencyStopBean.planNumId != null" >#{planNumEmergencyStopBean.planNumId},</if>
+            <if test="planNumEmergencyStopBean.terminationCondition != null" >#{planNumEmergencyStopBean.terminationCondition},</if>
+            <if test="planNumEmergencyStopBean.terminateProgram != null" >#{planNumEmergencyStopBean.terminateProgram},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePlanNumEmergencyStop" parameterType="com.znv.manage.common.bean.plan.PlanNumEmergencyStopBean">
+        update t_cfg_plan_num_emergency_stop
+        <set>
+            <if test="planNumEmergencyStopBean.planNumId != null" >plan_num_id = #{planNumEmergencyStopBean.planNumId},</if>
+            <if test="planNumEmergencyStopBean.terminationCondition != null" >termination_condition = #{planNumEmergencyStopBean.terminationCondition},</if>
+            <if test="planNumEmergencyStopBean.terminateProgram != null" >terminate_program = #{planNumEmergencyStopBean.terminateProgram},</if>
+        </set>
+        where id = #{planNumEmergencyStopBean.id}
+    </update>
+
+    <insert id="addPlanNumEmergencyResponse" parameterType="com.znv.manage.common.bean.plan.PlanNumEmergencyResponseBean" >
+        INSERT INTO t_cfg_plan_num_emergency_response
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="planNumEmergencyResponseBean.planNumId != null" >plan_num_id,</if>
+            <if test="planNumEmergencyResponseBean.levelId != null" >level_id,</if>
+            <if test="planNumEmergencyResponseBean.levelName != null" >level_name,</if>
+            <if test="planNumEmergencyResponseBean.startCondition != null" >start_condition,</if>
+            <if test="planNumEmergencyResponseBean.responseAction != null" >response_action,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planNumEmergencyResponseBean.planNumId != null" >#{planNumEmergencyResponseBean.planNumId},</if>
+            <if test="planNumEmergencyResponseBean.levelId != null" >#{planNumEmergencyResponseBean.levelId},</if>
+            <if test="planNumEmergencyResponseBean.levelName != null" >#{planNumEmergencyResponseBean.levelName},</if>
+            <if test="planNumEmergencyResponseBean.startCondition != null" >#{planNumEmergencyResponseBean.startCondition},</if>
+            <if test="planNumEmergencyResponseBean.responseAction != null" >#{planNumEmergencyResponseBean.responseAction},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePlanNumEmergencyResponse" parameterType="com.znv.manage.common.bean.plan.PlanNumEmergencyResponseBean">
+        update t_cfg_plan_num_emergency_response
+        <set>
+            <if test="planNumEmergencyResponseBean.planNumId != null" >plan_num_id = #{planNumEmergencyResponseBean.planNumId},</if>
+            <if test="planNumEmergencyResponseBean.levelId != null" >level_id = #{planNumEmergencyResponseBean.levelId},</if>
+            <if test="planNumEmergencyResponseBean.levelName != null" >level_name = #{planNumEmergencyResponseBean.levelName},</if>
+            <if test="planNumEmergencyResponseBean.startCondition != null" >start_condition = #{planNumEmergencyResponseBean.startCondition},</if>
+            <if test="planNumEmergencyResponseBean.responseAction != null" >response_action = #{planNumEmergencyResponseBean.responseAction},</if>
+        </set>
+        where id = #{planNumEmergencyResponseBean.id}
+    </update>
+
+    <insert id="addPlanNumMonitor" parameterType="com.znv.manage.common.bean.plan.PlanNumMonitorBean" >
+        INSERT INTO t_cfg_plan_num_monitor
+        (plan_num_id,monitor_group,monitor_type_id,monitor_type_name,remark)
+        VALUES
+        <foreach collection="planNumMonitorBeans" item="item" separator=",">
+            (
+            #{item.planNumId},
+            #{item.monitorGroup},
+            #{item.monitorTypeId},
+            #{item.monitorTypeName},
+            #{item.remark}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updatePlanNumMonitor" parameterType="com.znv.manage.common.bean.plan.PlanNumMonitorBean">
+        update t_cfg_plan_num_monitor
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="monitor_group=case" suffix="end,">
+                <foreach collection="planNumMonitorBeans" item="item" index="index">
+                    <if test="item.monitorGroup!=null and item.monitorGroup!=''">
+                        when id=#{item.id} then #{item.monitorGroup}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="monitor_type_id=case" suffix="end,">
+                <foreach collection="planNumMonitorBeans" item="item" index="index">
+                    <if test="item.monitorTypeId!=null and item.monitorTypeId!=''">
+                        when id=#{item.id} then #{item.monitorTypeId}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="monitor_type_name=case" suffix="end,">
+                <foreach collection="planNumMonitorBeans" item="item" index="index">
+                    <if test="item.monitorTypeName!=null and item.monitorTypeName!=''">
+                        when id=#{item.id} then #{item.monitorTypeName}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="remark=case" suffix="end,">
+                <foreach collection="planNumMonitorBeans" item="item" index="index">
+                    <if test="item.remark!=null and item.remark!=''">
+                        when id=#{item.id} then #{item.remark}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="planNumMonitorBeans" item="item" index="index" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <delete id="delPlanNumMonitorById" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_num_monitor where
+        id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="getPlanNumDataByPlanId" parameterType="java.lang.String" resultType="com.znv.manage.common.bean.plan.PlanNumDataBean">
+        select id, plan_num_id as planNumId, file_name as fileName, file_url as fileUrl
+        from t_cfg_plan_num_data where plan_num_id=#{id}
+    </select>
+
+    <select id="getPlanNumPreBeanByPlanId" parameterType="java.lang.String" resultType="com.znv.manage.common.bean.plan.PlanNumPreBean">
+        select id, plan_num_id as planNumId, command_system as commandSystem, departmental_responsibilities as departmentalResponsibilities,
+        associated_teams as associatedTeams, associated_resettlement_sites as associatedResettlementSites, related_materials as relatedMaterials,
+        expert as expert, group_num as groupNum, person_num as personNum, remark as remark
+        from t_cfg_plan_num_pre where plan_num_id=#{planNumId}
+    </select>
+
+    <select id="getPlanNumGroupBeanByPlanId" parameterType="java.lang.String" resultType="com.znv.manage.common.bean.plan.PlanNumGroupBean">
+        select id, plan_num_id as planNumId, group_name as groupName
+        from t_cfg_plan_num_group where plan_num_id=#{planNumId}
+    </select>
+
+    <select id="getGroupPersonBean" parameterType="java.lang.String" resultType="com.znv.manage.common.bean.plan.GroupPersonBean">
+        select id, plan_num_id as planNumId, group_id as groupId, person_name as personName,
+        post as post, phone_number as phoneNumber, office, duty, contact_person AS contactPerson,
+        contact_duty AS contactDuty, contact_office_phone AS contactOfficePhone, contact_cell_phone AS contactCellPhone
+        from t_cfg_plan_num_group_person where group_id=#{groupId}
+    </select>
+
+    <select id="getPlanNumSystemBean" parameterType="java.lang.String" resultType="com.znv.manage.common.bean.plan.PlanNumSystemBean">
+        select id, plan_num_id as planNumId, system_unit as systemUnit, system_name as systemName,
+        system_environment as systemEnvironment, system_url as systemUrl
+        from t_cfg_plan_num_system where plan_num_id=#{planNumId}
+    </select>
+
+    <select id="getPlanNumMonitorBean" parameterType="java.lang.String" resultType="com.znv.manage.common.bean.plan.PlanNumMonitorBean">
+        select id, plan_num_id as planNumId, monitor_group as monitorGroup, monitor_type_id as monitorTypeId,
+        monitor_type_name as monitorTypeName, remark as remark
+        from t_cfg_plan_num_monitor where plan_num_id=#{planNumId}
+    </select>
+
+    <select id="getPlanNumEmergencyResponseBean" parameterType="java.lang.String" resultType="com.znv.manage.common.bean.plan.PlanNumEmergencyResponseBean">
+        select id, plan_num_id as planNumId, level_id as levelId, level_name as levelName,
+        start_condition as startCondition, response_action as responseAction
+        from t_cfg_plan_num_emergency_response where plan_num_id=#{planNumId}
+    </select>
+
+    <select id="getPlanNumEmergencySupportBean" parameterType="java.lang.String" resultType="com.znv.manage.common.bean.plan.PlanNumEmergencySupportBean">
+        select id, plan_num_id as planNumId, communication as communication, emergency_team_support as emergencyTeamSupport,
+        emergency_supplies as emergencySupplies, person_transfer as personTransfer, power_supply as powerSupply,
+        energy_security as energySecurity, transportation as transportation, medical_insurance as medicalInsurance,
+        security as security, financial_security as financialSecurity
+        from t_cfg_plan_num_emergency_support where plan_num_id=#{planNumId}
+    </select>
+
+    <select id="getPlanNumEmergencyStopBean" parameterType="java.lang.String" resultType="com.znv.manage.common.bean.plan.PlanNumEmergencyStopBean">
+        select id, plan_num_id as planNumId, termination_condition as terminationCondition, terminate_program as terminateProgram
+        from t_cfg_plan_num_emergency_stop where plan_num_id=#{planNumId}
+    </select>
+
+    <select id="getPlanNumDataBean" parameterType="java.lang.String" resultType="com.znv.manage.common.bean.plan.PlanNumDataBean">
+        select id, plan_num_id as planNumId, file_name as fileName, file_url as fileUrl,
+        DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%S') as createTime, remark AS remark
+        from t_cfg_plan_num_data where plan_num_id=#{planNumId}
+    </select>
+
+    <delete id="delPlanNumInfo" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_num_info where
+        id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanNumMonitor" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_num_monitor where
+        plan_num_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanNumEmergencyResponse" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_num_emergency_response where
+        plan_num_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanNumEmergencySupport" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_num_emergency_support where
+        plan_num_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanNumEmergencyStop" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_num_emergency_stop where
+        plan_num_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanNumPre" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_num_pre where
+        plan_num_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanNumGroup" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_num_group where
+        plan_num_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanNumGroupPerson" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_num_group_person where
+        plan_num_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="delPlanNumSystem" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_num_system where
+        plan_num_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <insert id="addPlanNumGroup" parameterType="com.znv.manage.common.bean.plan.PlanNumGroupBean" >
+        INSERT INTO t_cfg_plan_num_group
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="planNumGroupBean.planNumId != null" >plan_num_id,</if>
+            <if test="planNumGroupBean.groupName != null" >group_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planNumGroupBean.planNumId != null" >#{planNumGroupBean.planNumId},</if>
+            <if test="planNumGroupBean.groupName != null" >#{planNumGroupBean.groupName},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePlanNumGroup" parameterType="com.znv.manage.common.bean.plan.PlanNumGroupBean">
+        update t_cfg_plan_num_group
+        <set>
+            <if test="planNumGroupBean.planNumId != null" >plan_num_id = #{planNumGroupBean.planNumId},</if>
+            <if test="planNumGroupBean.groupName != null" >group_name = #{planNumGroupBean.groupName},</if>
+        </set>
+        where id = #{planNumGroupBean.id}
+    </update>
+
+    <delete id="delGroup" parameterType="java.lang.String">
+        DELETE FROM t_cfg_plan_num_group where
+        id = #{id}
+    </delete>
+
+    <update id="updatePlanLevel" parameterType="java.lang.String">
+        update t_cfg_plan_num_info
+        <set>
+            <if test="level != null" >level_id = #{level},</if>
+            <if test="levelName != null" >level_name = #{levelName},</if>
+        </set>
+        where id = #{planNumId}
+    </update>
+
+    <select id="getEmergencyResponse" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(1)
+        from t_cfg_plan_num_emergency_response where plan_num_id=#{planNumId}
+    </select>
+
+    <select id="getGroupNames" parameterType="java.lang.String" resultType="java.lang.String">
+        select monitor_group
+        from t_cfg_plan_num_monitor where plan_num_id=#{planNumId}
+    </select>
+
+    <select id="getEventIds" parameterType="java.lang.String" resultType="java.lang.String">
+        select DISTINCT event_id
+        from t_command_process where plan_num_id=#{planNumId}
+    </select>
+
+    <update id="updateRewardDuty" parameterType="com.znv.manage.common.bean.plan.RewardDutyBean" >
+        update t_cfg_plan_num_info
+        <set>
+            <if test="rewardDutyBean.rewardDuty != null" >reward_duty = #{rewardDutyBean.rewardDuty},</if>
+        </set>
+        where id = #{rewardDutyBean.id}
+    </update>
+
+    <select id="queryRewardDuty"  parameterType="java.lang.String" resultType="java.lang.String">
+        select reward_duty
+        FROM t_cfg_plan_num_info WHERE id = #{id}
+    </select>
+
+    <select id="getPlanNumIdById"  parameterType="java.lang.String" resultType="java.lang.String">
+        select plan_num_id
+        FROM t_cfg_plan_num_group_person WHERE
+        id in
+        <foreach collection="groupIds" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getFileData" resultType="java.util.Map">
+         SELECT file_url as fileUrl, file_name as fileName FROM t_cfg_plan_num_data WHERE plan_num_id=#{planId}
+    </select>
+
+    <select id="getPlanNumIdByName"  parameterType="java.lang.String" resultType="java.lang.String">
+        select id
+        FROM t_cfg_plan_num_info WHERE name = #{name} limit 1
+    </select>
+</mapper>

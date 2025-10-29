@@ -1,0 +1,19 @@
+{
+  "name": "znvmap",
+  "version": "1.0.90",
+  "description": "中兴力维地图组件",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "creek",
+  "license": "ISC",
+  "dependencies": {
+    "jquery": "^3.4.1",
+    "esri-loader": "^2.14.0",
+    "axios": "^0.19.0"
+  },
+  "__npminstall_done": "Fri Jul 02 2021 11:03:03 GMT+0800 (GMT+08:00)",
+  "_from": "znvmap@1.0.90",
+  "_resolved": "https://registry.nlark.com/znvmap/download/znvmap-1.0.90.tgz?cache=0&sync_timestamp=1625194936176&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fznvmap%2Fdownload%2Fznvmap-1.0.90.tgz"
+}

@@ -1,0 +1,17 @@
+﻿.smLayerGoogleCopyright {
+    right: 3rem;
+    bottom: 2rem;
+    left: auto;  
+}
+.smLayerGoogleV3.smLayerGoogleCopyright {
+    bottom: 0rem;
+    right: 0rem !important;
+}
+.smLayerGooglePoweredBy {
+    left: 2rem;
+    bottom: 2rem;
+}
+.smLayerGoogleV3.smLayerGooglePoweredBy {
+    bottom: 0rem !important;
+}
+

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.FireAwarenessSBLXZDDao">
+
+	<insert id="insertSBLXZDData">
+		insert into t_28_sblxzd(
+		device_name,
+		device_id,
+		collect_time,
+		create_time
+		 )values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.deviceName},
+			#{item.deviceId},
+			#{item.collectTime},
+			current_timestamp
+			)
+		</foreach>
+	</insert>
+
+
+	<update id="updateSBLXZDData">
+		<foreach collection="list" separator=";" item="item" index="index">
+			update t_28_sblxzd
+			<set>
+				<if test="item.deviceName !=null and item.deviceName != '' ">device_name=#{item.deviceName},</if>
+				<if test="item.collectTime !=null and item.collectTime != '' ">collect_time= #{item.collectTime}</if>
+			</set>
+			where device_id = #{item.deviceId}
+		</foreach>
+	</update>
+
+
+	<select id="queryExist" parameterType="com.znv.manage.common.bean.FireAwarenessSyncSBLXZD" resultType="java.lang.Integer">
+		select count(1) as num from t_28_sblxzd
+		where 1=1
+		<if test="deviceId != null and deviceId != '' "> and device_id = #{deviceId}</if>
+		<if test="collectTime != null and collectTime != '' "> and collect_time = #{collectTime}</if>
+	</select>
+
+	<delete id="truncateSBLXZDData">
+        TRUNCATE table t_28_sblxzd
+    </delete>
+
+	
+</mapper>

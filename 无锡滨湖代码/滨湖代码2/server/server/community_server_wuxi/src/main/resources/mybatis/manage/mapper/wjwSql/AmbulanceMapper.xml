@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.wjw.dao.AmbulanceDao">
+
+    <select id="queryAmbulanceGpsList" resultType="map">
+        SELECT
+            t.`name` deviceNo,
+            t.`name` carNo,
+            t.geo_json_point jsonPoint,
+            ifnull(t.department_name,'') departmentName,
+            t.is_online,
+            t.speed,
+            t.angle
+        FROM
+            (
+                SELECT
+                    max(create_time) AS create_time,
+                    `name`
+                FROM
+                    stg_jhc_gps_info
+                where
+                    1=1
+                    <if test="deviceNo != null and deviceNo != ''">and `name` = #{deviceNo}</if>
+                GROUP BY
+                    `name`
+            ) a
+                LEFT JOIN stg_jhc_gps_info t ON
+                    1=1
+                    and t.`name` = a.`name`
+                    AND t.create_time = a.create_time
+    </select>
+
+    <select id="queryAmbulanceGpsListByDeviceNo" resultType="map">
+        SELECT
+            `name` deviceNo,
+            `name` carNo,
+            geo_json_point jsonPoint,
+            date_format(create_time,'%Y-%m-%d %H:%i:%s') reportTime,
+            is_online,
+            speed,
+            angle
+        FROM
+            stg_jhc_gps_info
+        where `name` = #{deviceNo}
+            and DATEDIFF(create_time,now())=-1
+        ORDER BY create_time
+    </select>
+</mapper>

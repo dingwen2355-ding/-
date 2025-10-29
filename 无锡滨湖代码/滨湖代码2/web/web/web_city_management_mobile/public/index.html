@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" class="root-font-size">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+  <script src="./config/sysConfig.js"></script>
+  <script src="./utils/jweixin-1.6.0.js"></script>
+  <script type="text/javascript" exclude="iclient-classic" include="tianditu"
+    src="https://iclient.supermap.io/dist/classic/include-classic.js"></script>
+  <title>无锡滨湖智慧城市</title>
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but vue-test doesn't work properly without JavaScript enabled. Please enable it to
+      continue.</strong>
+  </noscript>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+<style>
+  /* 竖屏 */
+  @media screen and (orientation:portrait) {
+    .root-font-size {
+      font-size: 0.1333333vw
+    }
+  }
+
+  /* 横屏 */
+  @media screen and (orientation:landscape) {
+    .root-font-size {
+      font-size: 0.06833333vw
+    }
+  }
+</style>
+
+</html>

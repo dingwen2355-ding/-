@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.RegionalManagementDao">
+
+
+    <resultMap id="map" type="java.util.HashMap">
+        <result property="precinctId" column="precinct_id"/>
+        <result property="precinctAddr" column="precinct_addr"/>
+        <result property="precinctName" column="precinct_name"/>
+        <result property="upPrecinctId" column="up_precinct_id"/>
+        <result property="precinctKind" column="precinct_kind"/>
+        <result property="regionXY" column="region_xy"/>
+        <result property="areaCode" column="area_code"/>
+        <result property="gpsX" column="gpsx"/>
+        <result property="gpsY" column="gpsy"/>
+        <result property="gpsZ" column="gpsz"/>
+        <result property="gpsType" column="gps_type"/>
+        <result property="createUser" column="create_user"/>
+    </resultMap>
+
+    <!--根据活动查询区域-->
+    <select id="queryRelationPrecinctIds" resultType="java.util.Map">
+        SELECT
+        b.id AS id,
+        b.event_id AS precinctId,
+        b.event_name AS precinctName,
+        b.event_addr AS precinctAddr,
+        b.gps_type AS gpsType,
+        b.gpsx AS gpsx,
+        b.gpsy AS gpsy,
+        b.gpsz AS gpsz,
+        b.region_xy1 AS regionXy1,
+        b.region_xy2 AS regionXy2,
+        b.region_xy3 AS regionXy3,
+        b.create_user AS createUser,
+        b.everyday_time AS everydayTime,
+        b.event_start_time AS eventStartTime,
+        b.event_end_time AS eventEndTime,
+        b.condt_framework_img AS condtFrameworkImg,
+        b.host_unit_name AS hostUnitName,
+        b.host_unit_lc_code AS hostUnitLcCode,
+        b.security_units AS securityUnits,
+        b.create_time AS createTime,
+        b.update_time AS updateTime
+        FROM  t_cfg_precinct_event b
+        LEFT JOIN t_cfg_precinct_relation a
+        ON a.precinct_id = b.event_id
+        WHERE a.event_id=#{eventId}
+    </select>
+
+    <!--根据区域查询活动-->
+    <select id="queryEventIds" resultType="java.util.Map">
+        SELECT
+        b.id AS id,
+        b.event_id AS eventId,
+        b.event_name AS eventName,
+        b.event_addr AS eventAddr,
+        b.gps_type AS gpsType,
+        b.gpsx AS gpsx,
+        b.gpsy AS gpsy,
+        b.gpsz AS gpsz,
+        b.region_xy1 AS regionXy1,
+        b.region_xy2 AS regionXy2,
+        b.region_xy3 AS regionXy3,
+        b.create_user AS createUser,
+        b.everyday_time AS everydayTime,
+        b.event_start_time AS eventStartTime,
+        b.event_end_time AS eventEndTime,
+        b.condt_framework_img AS condtFrameworkImg,
+        b.host_unit_name AS hostUnitName,
+        b.host_unit_lc_code AS hostUnitLcCode,
+        b.security_units AS securityUnits,
+        b.create_time AS createTime,
+        b.update_time AS updateTime
+        FROM
+        t_cfg_precinct_relation a
+        LEFT JOIN t_cfg_precinct_event b
+        ON a.event_id = b.event_id
+        WHERE
+        b.event_id is not null and
+        a.precinct_id=#{precinctId}
+    </select>
+
+    <select id="select" resultMap="map" parameterType="String">
+        SELECT
+        precinct_id,precinct_name,precinct_addr,up_precinct_id,precinct_kind,
+        gps_type,gpsx,gpsy,gpsz,area_code,create_user,order_num
+        <if test="precinctKindTree == null or precinctKindTree ==''">
+            ,region_xy
+        </if>
+
+        FROM t_cfg_precinct
+
+        where
+        <if test="precinctId != null and precinctId!=''">find_in_set(precinct_id,#{precinctId})AND</if>
+        <if test="address != null and address!=''">precinct_addr=#{address} AND</if>
+        <if test="precinctName != null and precinctName!=''">(precinct_name LIKE CONCAT("%",#{precinctName},"%") or
+            precinct_id LIKE CONCAT("%",#{precinctName},"%"))AND
+        </if>
+        <if test="upPrecinctId != null and upPrecinctId!=''">up_precinct_id=#{upPrecinctId} AND</if>
+        <if test="precinctKind != null and precinctKind!=''">precinct_kind=#{precinctKind} AND</if>
+        <if test="regionXY != null and regionXY!=''">region_xy=#{regionXY} AND</if>
+        <if test="areaCode != null and areaCode!=''">area_code=#{areaCode} AND</if>
+        <if test="gpsX != null and gpsX!=''">gpsx=#{gpsX} AND</if>
+        <if test="gpsY != null and gpsY!=''">gpsy=#{gpsY} AND</if>
+        <if test="gpsZ != null and gpsZ!=''">gpsz=#{gpsZ} AND</if>
+        <if test="gpsType != null and gpsType!=''">gps_type=#{gpsType} AND</if>
+        <if test="precinctKindTree != null and precinctKindTree !=''">FIND_IN_SET(precinct_kind,#{precinctKindTree})
+            AND
+        </if>
+        precinct_id is not null
+        order by order_num desc
+    </select>
+
+    <insert id="insert" parameterType="String">
+       insert into t_cfg_precinct (precinct_id,precinct_addr,precinct_name,up_precinct_id,precinct_kind,region_xy,area_code,gpsx,gpsy,gpsz,gps_type,create_user,order_num)
+       values (#{precinctId},#{address},#{precinctName},#{upPrecinctId},#{precinctKind},#{regionXY},#{areaCode},#{gpsX},#{gpsY},#{gpsZ},#{gpsType},#{createUser},#{orderNum});
+    </insert>
+
+    <insert id="insertRelPrecinct" parameterType="String">
+       insert into t_rel_precinct (precinct_id,precinct_name,up_precinct_id,precinct_kind)
+       values (#{precinctId},#{precinctName},#{upPrecinctId},#{precinctKind});
+    </insert>
+
+    <update id="updateRelPrecinct" parameterType="String">
+       update t_rel_precinct set precinct_name=#{precinctName},precinct_kind=#{precinctKind},
+       up_precinct_id=#{upPrecinctId}where precinct_id=#{precinctId};
+    </update>
+
+    <delete id="deleteRelPrecinct" parameterType="String">
+       delete from t_rel_precinct where precinct_id=#{precinctId};
+    </delete>
+
+    <update id="update" parameterType="String">
+       update t_cfg_precinct set precinct_addr=#{address},precinct_name=#{precinctName},
+       up_precinct_id=#{upPrecinctId},precinct_kind=#{precinctKind},
+       region_xy=#{regionXY},area_code=#{areaCode},gpsx=#{gpsX},gpsy=#{gpsY} ,gpsz=#{gpsZ},gps_type=#{gpsType},order_num=#{orderNum} where precinct_id=#{precinctId};
+    </update>
+
+    <delete id="delete" parameterType="String">
+       delete from t_cfg_precinct where precinct_id=#{precinctId};
+    </delete>
+
+    <select id="getnum" resultType="java.lang.Integer" parameterType="String">
+        SELECT count(*) FROM t_cfg_precinct where  precinct_id  LIKE CONCAT(#{precinctId},'%') ;
+    </select>
+
+    <select id="querySubRegional" resultType="string">
+        SELECT
+        precinct_id as precinctId
+        FROM t_cfg_precinct
+        WHERE
+        find_in_set(up_precinct_id, #{precinctId})
+    </select>
+
+    <select id="queryCenterCode" resultType="string">
+        SELECT precinct_id FROM t_cfg_precinct WHERE precinct_name = "监控中心";
+    </select>
+
+    <resultMap id="gpsType" type="java.util.HashMap">
+        <result property="name" column="name"/>
+        <result property="gpsType" column="gps_type"/>
+    </resultMap>
+    <select id="queryGpsType" resultMap="gpsType">
+        SELECT * FROM t_dict_gpstype;
+    </select>
+
+    <resultMap id="precinctKind" type="java.util.HashMap">
+        <result property="name" column="name"/>
+        <result property="precinctKind" column="precinct_kind"/>
+    </resultMap>
+    <select id="queryPrecinctKind" resultMap="precinctKind">
+        SELECT * FROM t_dict_precinctkind ;
+    </select>
+
+    <resultMap id="queryExpansionMap" type="java.util.HashMap">
+        <result property="precinctId" column="precinct_id"/>
+        <result property="extendCol" column="extend_col"/>
+        <result property="extendColValue" column="extend_col_value"/>
+    </resultMap>
+    <select id="queryExpansion" resultMap="queryExpansionMap">
+        SELECT * FROM t_cfg_precinctextend WHERE FIND_IN_SET(precinct_id,#{precinctId});
+    </select>
+
+    <select id="queryPrecinct" resultType="int" parameterType="String">
+        SELECT count(1) FROM ${tableName} WHERE
+        <choose>
+            <when test="tableName == 't_cfg_house'">
+                village_id = #{precinctId} limit 1;
+            </when>
+            <otherwise>
+                precinct_id = #{precinctId} limit 1;
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="queryPrecinctById" resultType="java.util.HashMap">
+        SELECT precinct_id as precinctId,precinct_name as precinctName,precinct_kind as precinctKind,up_precinct_id as
+        up_precinct_id
+        FROM t_cfg_precinct
+        where 1=1
+        <if test="upPrecinctId != null and upPrecinctId!=''">AND up_precinct_id=#{upPrecinctId}</if>
+        <if test="precinctKind != null and precinctKind!=''">AND precinct_kind=#{precinctKind}</if>
+        <if test='forStreet == "1"'>and street_no is not null</if>
+    </select>
+
+    <!-- 查询权限配置信息 -->
+    <select id="queryPrivilegePrecinctIds" resultType="String">
+    	SELECT precinct_id AS precinctId
+    	FROM t_light_application_auth
+    	WHERE card_id=#{cardId}
+    	AND authority_model=#{authType}
+    	AND (user_type=1 OR user_type=0)
+    	ORDER BY id DESC
+		LIMIT 1
+    </select>
+
+    <!-- 查询下级组织机构，只查201、202、203、204 -->
+    <select id="queryPrecinctIdsDown" resultType="String">
+		SELECT 
+		fn_get_rel_precinctdown_secondary(#{precinctId}) AS precinctIdStr
+	</select>
+
+
+    <select id="getStdId" statementType="CALLABLE" resultType="java.lang.String">
+		call up_create_max_objectid(
+		#{i_object_item,jdbcType=VARCHAR,mode=IN},
+		#{i_object_maxid,jdbcType=BIGINT,mode=IN},
+		#{i_object_flag,jdbcType=INTEGER,mode=IN})
+	</select>
+
+</mapper>

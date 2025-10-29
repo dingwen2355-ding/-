@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.HospitalJZGHDao">
+
+	<insert id="insertJZGHData">
+		insert into t_32_jzgh(
+			JZLGFY,
+			REC_CODE,
+			SCSJ,
+			BLFY,
+			JMJE2,
+			EXPERT_CODE,
+			ORGAN_CODE,
+			PERSONNAME,
+			PACT_NAME,
+			YYLSH,
+			YLFYJSFSDM_MC,
+			HZLYDL,
+			YLFYLYLBDM_MC,
+			SFYY,
+			CZFY,
+			GHFSDM_MC,
+			REC_NAME,
+			OP_EM_SD_NO,
+			JMJE,
+			REC_IDCARD,
+			CNAME_VISIT_STATUS,
+			BIRTHDAY,
+			IDTYPE,
+			UND_PAY,
+			OP_EM_NO,
+			ZJFY,
+			GHLSH,
+			ZHXGJG_DM,
+			OTHERCARDNO,
+			OTH_FEE,
+			ZFY,
+			ZFBZ,
+			EXPERT_IDCARD,
+			STFBH,
+			GHLB_DM,
+			SYS_CODE,
+			ADDRESS,
+			IDNO,
+			ZHXGJG_MC,
+			GHFS_DM,
+			JSSJ,
+			OTHERCARDTYPE,
+			IDCARD,
+			ADDRESSTYPE,
+			OP_EM_MARK,
+			YLFYLYLB_DM,
+			VISIT_DATE,
+			YLFYJFS_DM,
+			CONTACTNO,
+			CNAME_OP_EM_MARK,
+			GHSJ,
+			DPT_NAME,
+			Last_modified,
+			CARDNO,
+			SFYYBS,
+			CNAME_VISIT_TIME,
+			DIAG_FEE,
+			REC_DT,
+			SEXCODE,
+			PACT_CODE,
+			EXPERT_NAME,
+			THSJ,
+			VISIT_STATUS,
+			ORGAN_NAME,
+			FPHM,
+			VISIT_TIME,
+			DPT_CODE,
+			REGI_FEE,
+			PHRID,
+			GHLBDM_MC,
+			CNAME_OTHERCARDTYPE,
+			create_time
+		 )values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.JZLGFY},
+			#{item.REC_CODE},
+			#{item.SCSJ},
+			#{item.BLFY},
+			#{item.JMJE2},
+			#{item.EXPERT_CODE},
+			#{item.ORGAN_CODE},
+			#{item.PERSONNAME},
+			#{item.PACT_NAME},
+			#{item.YYLSH},
+			#{item.YLFYJSFSDM_MC},
+			#{item.HZLYDL},
+			#{item.YLFYLYLBDM_MC},
+			#{item.SFYY},
+			#{item.CZFY},
+			#{item.GHFSDM_MC},
+			#{item.REC_NAME},
+			#{item.OP_EM_SD_NO},
+			#{item.JMJE},
+			#{item.REC_IDCARD},
+			#{item.CNAME_VISIT_STATUS},
+			#{item.BIRTHDAY},
+			#{item.IDTYPE},
+			#{item.UND_PAY},
+			#{item.OP_EM_NO},
+			#{item.ZJFY},
+			#{item.GHLSH},
+			#{item.ZHXGJG_DM},
+			#{item.OTHERCARDNO},
+			#{item.OTH_FEE},
+			#{item.ZFY},
+			#{item.ZFBZ},
+			#{item.EXPERT_IDCARD},
+			#{item.STFBH},
+			#{item.GHLB_DM},
+			#{item.SYS_CODE},
+			#{item.ADDRESS},
+			#{item.IDNO},
+			#{item.ZHXGJG_MC},
+			#{item.GHFS_DM},
+			#{item.JSSJ},
+			#{item.OTHERCARDTYPE},
+			#{item.IDCARD},
+			#{item.ADDRESSTYPE},
+			#{item.OP_EM_MARK},
+			#{item.YLFYLYLB_DM},
+			#{item.VISIT_DATE},
+			#{item.YLFYJFS_DM},
+			#{item.CONTACTNO},
+			#{item.CNAME_OP_EM_MARK},
+			#{item.GHSJ},
+			#{item.DPT_NAME},
+			#{item.Last_modified},
+			#{item.CARDNO},
+			#{item.SFYYBS},
+			#{item.CNAME_VISIT_TIME},
+			#{item.DIAG_FEE},
+			#{item.REC_DT},
+			#{item.SEXCODE},
+			#{item.PACT_CODE},
+			#{item.EXPERT_NAME},
+			#{item.THSJ},
+			#{item.VISIT_STATUS},
+			#{item.ORGAN_NAME},
+			#{item.FPHM},
+			#{item.VISIT_TIME},
+			#{item.DPT_CODE},
+			#{item.REGI_FEE},
+			#{item.PHRID},
+			#{item.GHLBDM_MC},
+			#{item.CNAME_OTHERCARDTYPE},
+			current_timestamp
+			)
+		</foreach>
+	</insert>
+
+	<select id="queryExist" parameterType="com.znv.manage.common.bean.HospitalSyncJZGH" resultType="java.lang.Integer">
+		select count(1) as num from t_32_jzgh
+		where 1=1
+		<if test="JZLGFY != null and JZLGFY != '' "> and JZLGFY = #{JZLGFY}</if>
+		<if test="REC_CODE != null and REC_CODE != '' "> and REC_CODE = #{REC_CODE}</if>
+		<if test="SCSJ != null and SCSJ != '' "> and SCSJ = #{SCSJ}</if>
+		<if test="BLFY != null and BLFY != '' "> and BLFY = #{BLFY}</if>
+		<if test="JMJE2 != null and JMJE2 != '' "> and JMJE2 = #{JMJE2}</if>
+		<if test="EXPERT_CODE != null and EXPERT_CODE != '' "> and EXPERT_CODE = #{EXPERT_CODE}</if>
+		<if test="ORGAN_CODE != null and ORGAN_CODE != '' "> and ORGAN_CODE = #{ORGAN_CODE}</if>
+		<if test="PERSONNAME != null and PERSONNAME != '' "> and PERSONNAME = #{PERSONNAME}</if>
+		<if test="PACT_NAME != null and PACT_NAME != '' "> and PACT_NAME = #{PACT_NAME}</if>
+		<if test="YYLSH != null and YYLSH != '' "> and YYLSH = #{YYLSH}</if>
+		<if test="YLFYJSFSDM_MC != null and YLFYJSFSDM_MC != '' "> and YLFYJSFSDM_MC = #{YLFYJSFSDM_MC}</if>
+		<if test="HZLYDL != null and HZLYDL != '' "> and HZLYDL = #{HZLYDL}</if>
+		<if test="YLFYLYLBDM_MC != null and YLFYLYLBDM_MC != '' "> and YLFYLYLBDM_MC = #{YLFYLYLBDM_MC}</if>
+		<if test="SFYY != null and SFYY != '' "> and SFYY = #{SFYY}</if>
+		<if test="CZFY != null and CZFY != '' "> and CZFY = #{CZFY}</if>
+		<if test="GHFSDM_MC != null and GHFSDM_MC != '' "> and GHFSDM_MC = #{GHFSDM_MC}</if>
+		<if test="REC_NAME != null and REC_NAME != '' "> and REC_NAME = #{REC_NAME}</if>
+		<if test="OP_EM_SD_NO != null and OP_EM_SD_NO != '' "> and OP_EM_SD_NO = #{OP_EM_SD_NO}</if>
+		<if test="JMJE != null and JMJE != '' "> and JMJE = #{JMJE}</if>
+		<if test="REC_IDCARD != null and REC_IDCARD != '' "> and REC_IDCARD = #{REC_IDCARD}</if>
+		<if test="CNAME_VISIT_STATUS != null and CNAME_VISIT_STATUS != '' "> and CNAME_VISIT_STATUS = #{CNAME_VISIT_STATUS}</if>
+		<if test="BIRTHDAY != null and BIRTHDAY != '' "> and BIRTHDAY = #{BIRTHDAY}</if>
+		<if test="IDTYPE != null and IDTYPE != '' "> and IDTYPE = #{IDTYPE}</if>
+		<if test="UND_PAY != null and UND_PAY != '' "> and UND_PAY = #{UND_PAY}</if>
+		<if test="OP_EM_NO != null and OP_EM_NO != '' "> and OP_EM_NO = #{OP_EM_NO}</if>
+		<if test="ZJFY != null and ZJFY != '' "> and ZJFY = #{ZJFY}</if>
+		<if test="GHLSH != null and GHLSH != '' "> and GHLSH = #{GHLSH}</if>
+		<if test="ZHXGJG_DM != null and ZHXGJG_DM != '' "> and ZHXGJG_DM = #{ZHXGJG_DM}</if>
+		<if test="OTHERCARDNO != null and OTHERCARDNO != '' "> and OTHERCARDNO = #{OTHERCARDNO}</if>
+		<if test="OTH_FEE != null and OTH_FEE != '' "> and OTH_FEE = #{OTH_FEE}</if>
+		<if test="ZFY != null and ZFY != '' "> and ZFY = #{ZFY}</if>
+		<if test="ZFBZ != null and ZFBZ != '' "> and ZFBZ = #{ZFBZ}</if>
+		<if test="EXPERT_IDCARD != null and EXPERT_IDCARD != '' "> and EXPERT_IDCARD = #{EXPERT_IDCARD}</if>
+		<if test="STFBH != null and STFBH != '' "> and STFBH = #{STFBH}</if>
+		<if test="GHLB_DM != null and GHLB_DM != '' "> and GHLB_DM = #{GHLB_DM}</if>
+		<if test="SYS_CODE != null and SYS_CODE != '' "> and SYS_CODE = #{SYS_CODE}</if>
+		<if test="ADDRESS != null and ADDRESS != '' "> and ADDRESS = #{ADDRESS}</if>
+		<if test="IDNO != null and IDNO != '' "> and IDNO = #{IDNO}</if>
+		<if test="ZHXGJG_MC != null and ZHXGJG_MC != '' "> and ZHXGJG_MC = #{ZHXGJG_MC}</if>
+		<if test="GHFS_DM != null and GHFS_DM != '' "> and GHFS_DM = #{GHFS_DM}</if>
+		<if test="JSSJ != null and JSSJ != '' "> and JSSJ = #{JSSJ}</if>
+		<if test="OTHERCARDTYPE != null and OTHERCARDTYPE != '' "> and OTHERCARDTYPE = #{OTHERCARDTYPE}</if>
+		<if test="IDCARD != null and IDCARD != '' "> and IDCARD = #{IDCARD}</if>
+		<if test="ADDRESSTYPE != null and ADDRESSTYPE != '' "> and ADDRESSTYPE = #{ADDRESSTYPE}</if>
+		<if test="OP_EM_MARK != null and OP_EM_MARK != '' "> and OP_EM_MARK = #{OP_EM_MARK}</if>
+		<if test="YLFYLYLB_DM != null and YLFYLYLB_DM != '' "> and YLFYLYLB_DM = #{YLFYLYLB_DM}</if>
+		<if test="VISIT_DATE != null and VISIT_DATE != '' "> and VISIT_DATE = #{VISIT_DATE}</if>
+		<if test="YLFYJFS_DM != null and YLFYJFS_DM != '' "> and YLFYJFS_DM = #{YLFYJFS_DM}</if>
+		<if test="CONTACTNO != null and CONTACTNO != '' "> and CONTACTNO = #{CONTACTNO}</if>
+		<if test="CNAME_OP_EM_MARK != null and CNAME_OP_EM_MARK != '' "> and CNAME_OP_EM_MARK = #{CNAME_OP_EM_MARK}</if>
+		<if test="GHSJ != null and GHSJ != '' "> and GHSJ = #{GHSJ}</if>
+		<if test="DPT_NAME != null and DPT_NAME != '' "> and DPT_NAME = #{DPT_NAME}</if>
+		<if test="Last_modified != null and Last_modified != '' "> and Last_modified = #{Last_modified}</if>
+		<if test="CARDNO != null and CARDNO != '' "> and CARDNO = #{CARDNO}</if>
+		<if test="SFYYBS != null and SFYYBS != '' "> and SFYYBS = #{SFYYBS}</if>
+		<if test="CNAME_VISIT_TIME != null and CNAME_VISIT_TIME != '' "> and CNAME_VISIT_TIME = #{CNAME_VISIT_TIME}</if>
+		<if test="DIAG_FEE != null and DIAG_FEE != '' "> and DIAG_FEE = #{DIAG_FEE}</if>
+		<if test="REC_DT != null and REC_DT != '' "> and REC_DT = #{REC_DT}</if>
+		<if test="SEXCODE != null and SEXCODE != '' "> and SEXCODE = #{SEXCODE}</if>
+		<if test="PACT_CODE != null and PACT_CODE != '' "> and PACT_CODE = #{PACT_CODE}</if>
+		<if test="EXPERT_NAME != null and EXPERT_NAME != '' "> and EXPERT_NAME = #{EXPERT_NAME}</if>
+		<if test="THSJ != null and THSJ != '' "> and THSJ = #{THSJ}</if>
+		<if test="VISIT_STATUS != null and VISIT_STATUS != '' "> and VISIT_STATUS = #{VISIT_STATUS}</if>
+		<if test="ORGAN_NAME != null and ORGAN_NAME != '' "> and ORGAN_NAME = #{ORGAN_NAME}</if>
+		<if test="FPHM != null and FPHM != '' "> and FPHM = #{FPHM}</if>
+		<if test="VISIT_TIME != null and VISIT_TIME != '' "> and VISIT_TIME = #{VISIT_TIME}</if>
+		<if test="DPT_CODE != null and DPT_CODE != '' "> and DPT_CODE = #{DPT_CODE}</if>
+		<if test="REGI_FEE != null and REGI_FEE != '' "> and REGI_FEE = #{REGI_FEE}</if>
+		<if test="PHRID != null and PHRID != '' "> and PHRID = #{PHRID}</if>
+		<if test="GHLBDM_MC != null and GHLBDM_MC != '' "> and GHLBDM_MC = #{GHLBDM_MC}</if>
+		<if test="CNAME_OTHERCARDTYPE != null and CNAME_OTHERCARDTYPE != '' "> and CNAME_OTHERCARDTYPE = #{CNAME_OTHERCARDTYPE}</if>
+		and DATE(create_time) = CURDATE()
+	</select>
+
+	
+</mapper>

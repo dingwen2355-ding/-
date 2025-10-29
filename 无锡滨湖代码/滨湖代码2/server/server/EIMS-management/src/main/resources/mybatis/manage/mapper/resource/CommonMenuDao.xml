@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.resource.CommonMenuDao">
+	<select id="getRegion" resultType="java.util.HashMap">
+		select precinct_id id ,precinct_name name from t_cfg_precinct
+		where precinct_kind='110' order by sort
+	</select>
+
+	<select id="getBelongArea" resultType="java.util.HashMap">
+		SELECT area FROM basic_organization GROUP BY area
+		  order by field(area,'市直管','张店区','淄川区','博山区','周村区','临淄区','桓台县','高青县','沂源县','高新区','经开区','文昌湖区')
+	</select>
+	<select id="getBelongUnit" resultType="java.util.HashMap">
+		SELECT ID AS id , ORGA_NAME AS name FROM basic_organization
+		<if test="area!=null and area!=''">
+			where area = #{area}
+		</if>
+		ORDER BY TYPE ASC,PARENT_ID ASC,ORGA_NAME ASC
+	</select>
+
+	<select id="getBeManagedType" resultType="java.util.HashMap">
+		select
+		  ID as id,
+		  DICT_CH_NAME AS name
+		from
+		  sys_business_dict
+		where PARENT_ID =
+		  (select
+			id
+		  from
+			sys_business_dict
+		  where DICT_KEY = 'BE_MANAGED_TYPE')
+	</select>
+
+	<select id="getStorageLevel" resultType="java.util.HashMap">
+		select
+		  ID as id,
+		  DICT_CH_NAME AS name
+		from
+		  sys_business_dict
+		where PARENT_ID =
+		  (select
+			id
+		  from
+			sys_business_dict
+		  where DICT_KEY = 'STORAGE_LEVEL')
+	</select>
+
+	<select id="getStorageType" resultType="java.util.HashMap">
+		SELECT
+		  ID AS id,
+		  DICT_CH_NAME AS NAME
+		FROM
+		  sys_business_dict
+		WHERE PARENT_ID =
+		  (SELECT
+			id
+		  FROM
+			sys_business_dict
+		  WHERE DICT_KEY = 'STORAGE_TYPE')
+	</select>
+
+	<select id="getIndustry" resultType="java.util.HashMap">
+		select
+		  ID as id,
+		  DICT_CH_NAME AS name
+		from
+		  sys_business_dict
+		where PARENT_ID =
+		  (select
+			id
+		  from
+			sys_business_dict
+		  where DICT_KEY = 'INDUSTRY_TYPE')
+	</select>
+
+	<select id="getHelpType" resultType="java.util.HashMap">
+		select
+		  ID as id,
+		  DICT_CH_NAME AS name
+		from
+		  sys_business_dict
+		where PARENT_ID =
+		  (select
+			id
+		  from
+			sys_business_dict
+		  where DICT_KEY = 'HELP_TYPE')
+	</select>
+
+	<select id="queryStockByRegion" resultType="java.lang.String">
+		select group_concat(a.id) from resource_stock_info a
+										   left join(select id,DICT_CH_NAME regionName from sys_business_dict where PARENT_ID='1') b
+													on a.REGION=b.id
+		where b.id=#{region}
+	</select>
+</mapper>

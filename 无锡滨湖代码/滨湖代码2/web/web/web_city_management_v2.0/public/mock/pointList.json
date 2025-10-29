@@ -1,0 +1,276 @@
+{
+  "code": 0,
+  "message": "正常",
+  "data": [
+    {
+      "deviceId": "32011717041310351642",
+      "deviceName": "天生桥大道与观峰路口-南电警",
+      "deviceKind": "6",
+      "deviceType": "91001",
+      "deviceTypeName": "道路",
+      "deviceAddr": "天生桥大道与观峰路口-南电警",
+      "gpsX": "119.0192566",
+      "gpsY": "31.6389141"
+    },
+    {
+      "deviceId": "32011717041310351684",
+      "deviceName": "天生桥大道与观峰路口-南卡口",
+      "deviceKind": "6",
+      "deviceType": "91001",
+      "deviceTypeName": "道路",
+      "deviceAddr": "天生桥大道与观峰路口-南卡口",
+      "gpsX": "119.0192261",
+      "gpsY": "31.6388950"
+    },
+    {
+      "deviceId": "32011717041310351784",
+      "deviceName": "施马线与溧石线路口-南球机",
+      "deviceKind": "6",
+      "deviceType": "91001",
+      "deviceTypeName": "道路",
+      "deviceAddr": "施马线与溧石线路口-南球机",
+      "gpsX": "118.9156113",
+      "gpsY": "31.5633221"
+    },
+    {
+      "deviceId": "32011717041310351832",
+      "deviceName": "施马线与溧石线路口-西卡口",
+      "deviceKind": "6",
+      "deviceType": "91001",
+      "deviceTypeName": "道路",
+      "deviceAddr": "施马线与溧石线路口-西卡口",
+      "gpsX": "118.9154358",
+      "gpsY": "31.5633221"
+    },
+    {
+      "deviceId": "32011717041310352537",
+      "deviceName": "施马线与溧石线路口与溧石线-北电警",
+      "deviceKind": "6",
+      "deviceType": "91001",
+      "deviceTypeName": "道路",
+      "deviceAddr": "施马线与溧石线路口与溧石线-北电警",
+      "gpsX": "118.9146652",
+      "gpsY": "31.5633221"
+    },
+    {
+      "deviceId": "32011717041310351180",
+      "deviceName": "老明线与观音寺路口-南卡口",
+      "deviceKind": "6",
+      "deviceType": "91002",
+      "deviceTypeName": "商业场所",
+      "deviceAddr": "老明线与观音寺路口-南卡口",
+      "gpsX": "119.1303940",
+      "gpsY": "31.5633221"
+    },
+    {
+      "deviceId": "32011717041310351191",
+      "deviceName": "天生桥大道与观峰路口-东2",
+      "deviceKind": "6",
+      "deviceType": "91002",
+      "deviceTypeName": "商业场所",
+      "deviceAddr": "天生桥大道与观峰路口-东2",
+      "gpsX": "119.0194016",
+      "gpsY": "31.6390724"
+    },
+    {
+      "deviceId": "32011717041310351216",
+      "deviceName": "天生桥大道与观峰路口-东电警1",
+      "deviceKind": "6",
+      "deviceType": "91002",
+      "deviceTypeName": "商业场所",
+      "deviceAddr": "天生桥大道与观峰路口-东电警1",
+      "gpsX": "119.0194702",
+      "gpsY": "31.6391487"
+    },
+    {
+      "deviceId": "32011717041310351249",
+      "deviceName": "老明线与观音寺路口-东电警",
+      "deviceKind": "6",
+      "deviceType": "91002",
+      "deviceTypeName": "商业场所",
+      "deviceAddr": "老明线与观音寺路口-东电警",
+      "gpsX": "119.1303787",
+      "gpsY": "31.5633221"
+    },
+    {
+      "deviceId": "32011717041310351371",
+      "deviceName": "天生桥大道与观峰路口-西电警1",
+      "deviceKind": "6",
+      "deviceType": "91002",
+      "deviceTypeName": "商业场所",
+      "deviceAddr": "天生桥大道与观峰路口-西电警1",
+      "gpsX": "119.0190201",
+      "gpsY": "31.6390896"
+    },
+    {
+      "deviceId": "32011717041310351476",
+      "deviceName": "施马线与溧石线路口-西辅2",
+      "deviceKind": "6",
+      "deviceType": "91002",
+      "deviceTypeName": "商业场所",
+      "deviceAddr": "施马线与溧石线路口-西辅2",
+      "gpsX": "118.9138794",
+      "gpsY": "31.5633221"
+    },
+    {
+      "deviceId": "32011717041310351628",
+      "deviceName": "老明线与观音寺路口-东卡口",
+      "deviceKind": "6",
+      "deviceType": "91002",
+      "deviceTypeName": "商业场所",
+      "deviceAddr": "老明线与观音寺路口-东卡口",
+      "gpsX": "119.1303864",
+      "gpsY": "31.5633221"
+    },
+    {
+      "deviceId": "00000000001310015561",
+      "deviceName": "监管病房2",
+      "deviceKind": "6",
+      "deviceType": "91003",
+      "deviceTypeName": "防台防汛",
+      "deviceAddr": "监管病房2",
+      "gpsX": "119.0478821",
+      "gpsY": "31.6622524"
+    },
+    {
+      "deviceId": "00000000001310017628",
+      "deviceName": "监管病房1",
+      "deviceKind": "6",
+      "deviceType": "91003",
+      "deviceTypeName": "防台防汛",
+      "deviceAddr": "监管病房1",
+      "gpsX": "119.0478821",
+      "gpsY": "31.6622524"
+    },
+    {
+      "deviceId": "32011717041310350193",
+      "deviceName": "施马线与溧石线路口-西球机",
+      "deviceKind": "6",
+      "deviceType": "91003",
+      "deviceTypeName": "防台防汛",
+      "deviceAddr": "施马线与溧石线路口-西球机",
+      "gpsX": "118.9155197",
+      "gpsY": "31.5633221"
+    },
+    {
+      "deviceId": "32011717041310350505",
+      "deviceName": "天生桥大道与观峰路口-东卡口1",
+      "deviceKind": "6",
+      "deviceType": "91003",
+      "deviceTypeName": "防台防汛",
+      "deviceAddr": "天生桥大道与观峰路口-东卡口1",
+      "gpsX": "119.0194016",
+      "gpsY": "31.6391582"
+    },
+    {
+      "deviceId": "32011717041310350554",
+      "deviceName": "施马线与溧石线路口-西卡口1",
+      "deviceKind": "6",
+      "deviceType": "91003",
+      "deviceTypeName": "防台防汛",
+      "deviceAddr": "施马线与溧石线路口-西卡口1",
+      "gpsX": "118.9155350",
+      "gpsY": "31.5633221"
+    },
+    {
+      "deviceId": "32011717041310351069",
+      "deviceName": "天生桥大道与观峰路口-西1",
+      "deviceKind": "6",
+      "deviceType": "91003",
+      "deviceTypeName": "防台防汛",
+      "deviceAddr": "天生桥大道与观峰路口-西1",
+      "gpsX": "119.0190582",
+      "gpsY": "31.6391029"
+    },
+    {
+      "deviceId": "32011717041310351096",
+      "deviceName": "施马线与溧石线路口-西辅1",
+      "deviceKind": "6",
+      "deviceType": "91003",
+      "deviceTypeName": "防台防汛",
+      "deviceAddr": "施马线与溧石线路口-西辅1",
+      "gpsX": "118.9139099",
+      "gpsY": "31.5633221"
+    },
+    {
+      "deviceId": "32011717041310352597",
+      "deviceName": "施马线与溧石线路口-东电警",
+      "deviceKind": "6",
+      "deviceType": null,
+      "deviceTypeName": null,
+      "deviceAddr": "施马线与溧石线路口-东电警",
+      "gpsX": "118.9161453",
+      "gpsY": "31.5633221"
+    },
+    {
+      "deviceId": "32011717041310352630",
+      "deviceName": "天生桥大道与观峰路口-西1",
+      "deviceKind": "6",
+      "deviceType": null,
+      "deviceTypeName": null,
+      "deviceAddr": "天生桥大道与观峰路口-西1",
+      "gpsX": "119.0189896",
+      "gpsY": "31.6391163"
+    },
+    {
+      "deviceId": "32011717041310352868",
+      "deviceName": "老明线与观音寺路口-北球机",
+      "deviceKind": "6",
+      "deviceType": null,
+      "deviceTypeName": null,
+      "deviceAddr": "老明线与观音寺路口-北球机",
+      "gpsX": "119.1301651",
+      "gpsY": "31.5633221"
+    },
+    {
+      "deviceId": "32011717041310353291",
+      "deviceName": "天生桥大道与观峰路口-南球机",
+      "deviceKind": "6",
+      "deviceType": null,
+      "deviceTypeName": null,
+      "deviceAddr": "天生桥大道与观峰路口-南球机",
+      "gpsX": "119.0191803",
+      "gpsY": "31.6389332"
+    },
+    {
+      "deviceId": "32011717041310353555",
+      "deviceName": "施马线与溧石线路口-南电警",
+      "deviceKind": "6",
+      "deviceType": null,
+      "deviceTypeName": null,
+      "deviceAddr": "施马线与溧石线路口-南电警",
+      "gpsX": "118.9156036",
+      "gpsY": "31.5633221"
+    },
+    {
+      "deviceId": "32011717041310353811",
+      "deviceName": "柘宁东路—老街农行T型口-东卡口",
+      "deviceKind": "6",
+      "deviceType": null,
+      "deviceTypeName": null,
+      "deviceAddr": "柘宁东路—老街农行T型口-东卡口",
+      "gpsX": "118.9163208",
+      "gpsY": "31.5633221"
+    },
+    {
+      "deviceId": "32011717041310354029",
+      "deviceName": "柘宁东路—老街农行T型口-西卡口",
+      "deviceKind": "6",
+      "deviceType": null,
+      "deviceTypeName": null,
+      "deviceAddr": "柘宁东路—老街农行T型口-西卡口",
+      "gpsX": "118.9158936",
+      "gpsY": "31.5633221"
+    },
+    {
+      "deviceId": "32011717041310354472",
+      "deviceName": "老明线与观音寺路口-北卡口",
+      "deviceKind": "6",
+      "deviceType": null,
+      "deviceTypeName": null,
+      "deviceAddr": "老明线与观音寺路口-北卡口",
+      "gpsX": "119.1301804",
+      "gpsY": "31.5633221"
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.PrivilegeDao">
+    
+    <select id="queryPrecinctListByKind" resultType="map">
+        select ifnull(a.precinct_name,"") as precinctName,
+        ifnull(a.precinct_id,"") as precinctId,
+        ifnull(a.precinct_kind,"") as precinctKind,
+        ifnull(a.up_precinct_id,"") as upPrecinctId
+        from t_cfg_precinct a
+        where 1=1
+        <if test="precinctTreeIds != null">and find_in_set(a.precinct_id,#{precinctTreeIds})</if>
+        <if test="precinctId != null">and a.up_precinct_id =#{precinctId}</if>
+        <if test="precinctKind != null">and a.precinct_kind =#{precinctKind}</if>
+    </select>
+
+    <select id="getUserPricinctTree" resultType="map">
+        select user_name as userName,
+        user_id as userId,
+        ifnull(precinct_tree_id,"") as precinctTreeId
+        from t_cfg_user
+        where 1=1
+        <if test="userId != null">and user_id =#{userId}</if>
+    </select>
+
+    <select id="getPrecinctInfo" resultType="map">
+        select precinct_id precinctId,
+        precinct_name precinctName
+        from t_cfg_precinct
+        where 1=1
+        <if test="precinctId != null">and find_in_set(precinct_id, #{precinctId})</if>
+    </select>
+
+    <update id="updateUserPricinctTree">
+        update t_cfg_user
+        set precinct_tree_id=#{precinctTreeId}
+        where 1=1
+        <if test="userId != null">and user_id =#{userId}</if>
+    </update>
+
+    <select id="queryPrecinctExist" resultType="map">
+        select *
+        from t_cfg_precinct a
+        where 1=1
+        <if test="precinctId != null">and a.precinct_id =#{precinctId}</if>
+    </select>
+
+    <insert id="addPrecinctData" parameterType="com.znv.manage.bean.user.PrecinctBean">
+        INSERT INTO t_cfg_precinct
+        (
+        precinct_id,
+        precinct_name,
+        precinct_addr,
+        up_precinct_id,
+        precinct_kind,
+        region_name,
+        street_name,
+        street_no,
+        building_no,
+        unit_no,
+        floor_no,
+        house_no,
+        map_addr,
+        gpsx,
+        gpsy,
+        region_xy,
+        house_area
+        )
+        VALUES
+        (
+        #{precinctId},
+        #{precinctName},
+        #{precinctAddr},
+        #{upPrecinctId},
+        #{precinctKind},
+        #{regionName},
+        #{streetName},
+        #{streetNo},
+        #{buildingNo},
+        #{unitNo},
+        #{floorNo},
+        #{houseNo},
+        #{mapAddr},
+        #{gpsX},
+        #{gpsY},
+        #{regionXY},
+        #{houseArea}
+        )
+    </insert>
+
+    <select id="queryPrecinctKind" resultType="map">
+        SELECT precinct_kind precinctKind
+        from t_cfg_precinct
+        where precinct_id = #{precinctId}
+    </select>
+
+    <select id="getPrecinctIds" resultType="string">
+      select group_concat(precinct_id) precinctId
+      from
+      t_cfg_precinct, (select @v_precinct_ids := fn_get_precinctdown(#{precinctId}))a
+      where find_in_set(precinct_id, @v_precinct_ids)
+      </select>
+
+    <select id="getUserStreetId" resultType="String">
+        select street_id streetId from t_cfg_user where user_id = #{userId}
+    </select>
+
+    <select id="queryPrecinctUp" resultType="string">
+        SELECT @v_down_precinct_id := fn_get_precinctup(#{precinctId})
+    </select>
+</mapper>

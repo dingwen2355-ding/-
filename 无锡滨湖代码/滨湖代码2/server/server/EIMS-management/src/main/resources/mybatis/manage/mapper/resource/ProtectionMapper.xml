@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.resource.ProtectionDao">
+    <resultMap id="BaseResultMap" type="com.znv.manage.common.bean.resource.Protection">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="protection_name" jdbcType="VARCHAR" property="protectionName"/>
+        <result column="protection_type" jdbcType="VARCHAR" property="protectionType"/>
+        <result column="destination_address" jdbcType="VARCHAR" property="destinationAddress"/>
+        <result column="manager_name" jdbcType="VARCHAR" property="managerName"/>
+        <result column="manager_phone" jdbcType="VARCHAR" property="managerPhone"/>
+        <result column="last_inspection" jdbcType="DATE" property="lastInspection"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, protection_name, protection_type, destination_address, manager_name, manager_phone,
+    last_inspection
+    </sql>
+    <select id="queryProtectionList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_data_protection
+        where 1=1
+        <if test="protectionName != null and protectionName != ''">
+            AND protection_name like concat('%',#{protectionName},'%')
+        </if>
+        <if test="protectionType != null and protectionType != ''">
+            AND protection_type like concat('%',#{protectionType},'%')
+        </if>
+    </select>
+    <delete id="deleteByPrimaryKey">
+        delete
+        from t_data_protection
+        where find_in_set(id, #{ids})
+    </delete>
+
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.znv.manage.common.bean.resource.Protection" useGeneratedKeys="true">
+        insert into t_data_protection
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="protectionName != null">
+                protection_name,
+            </if>
+            <if test="protectionType != null">
+                protection_type,
+            </if>
+            <if test="destinationAddress != null">
+                destination_address,
+            </if>
+            <if test="managerName != null">
+                manager_name,
+            </if>
+            <if test="managerPhone != null">
+                manager_phone,
+            </if>
+            <if test="lastInspection != null">
+                last_inspection,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="protectionName != null">
+                #{protectionName,jdbcType=VARCHAR},
+            </if>
+            <if test="protectionType != null">
+                #{protectionType,jdbcType=VARCHAR},
+            </if>
+            <if test="destinationAddress != null">
+                #{destinationAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="managerName != null">
+                #{managerName,jdbcType=VARCHAR},
+            </if>
+            <if test="managerPhone != null">
+                #{managerPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="lastInspection != null">
+                #{lastInspection,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insertSelectiveList">
+        insert into  t_data_protection
+        (protection_name, protection_type, last_inspection, destination_address, manager_name, manager_phone)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.protectionName},
+            #{item.protectionType},
+            #{item.lastInspection},
+            #{item.destinationAddress},
+            #{item.managerName},
+            #{item.managerPhone}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.znv.manage.common.bean.resource.Protection">
+        update t_data_protection
+        <set>
+            <if test="protectionName != null">
+                protection_name = #{protectionName,jdbcType=VARCHAR},
+            </if>
+            <if test="protectionType != null">
+                protection_type = #{protectionType,jdbcType=VARCHAR},
+            </if>
+            <if test="destinationAddress != null">
+                destination_address = #{destinationAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="managerName != null">
+                manager_name = #{managerName,jdbcType=VARCHAR},
+            </if>
+            <if test="managerPhone != null">
+                manager_phone = #{managerPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="lastInspection != null">
+                last_inspection = #{lastInspection,jdbcType=DATE},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+
+
+
+</mapper>

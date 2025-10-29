@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.EventJointMapper">
+    <select id="queryDepartment" resultType="map">
+        select
+        id,
+        name,
+        county_name countyName,
+        county_id countyId
+        from t_event_department
+        where 1=1
+        <if test="id!=null and id!=''">
+            and id=#{id}
+        </if>
+        <if test="name!=null and name!=''">
+            and name=#{name}
+        </if>
+        <if test="level!=null and level!=''">
+            and level=#{level}
+        </if>
+        <if test="secondaryName!=null and secondaryName!=''">
+            and secondary_name=#{secondaryName}
+        </if>
+    </select>
+
+    <select id="queryAllSecondary" resultType="map">
+        select
+        distinct secondary_name name,
+                 secondary_id id
+        from t_event_department
+    </select>
+
+
+    <select id="queryDepartmentLow" resultType="map">
+        select
+            id,
+            name,
+            county_name countyName,
+            county_id countyId
+        from t_event_department
+        where 1=1 and `level`='区市县' and id not in (select county_id from t_event_department where `level`='区市县')
+    </select>
+
+    <select id="queryAllCounty" resultType="map">
+        select
+            distinct county_name name,
+                     county_id id
+        from t_event_department
+        where county_name is not null
+    </select>
+
+    <select id="queryTitle" resultType="map">
+        select id,
+        incoming_flow_no eventId,
+        event_id eventIdNew,
+        question_title title,
+        (select group_concat(name) from t_event_department where find_in_set(id,departments)) departments,
+        DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') createDate
+        from t_event_bill
+        where 1=1
+        <if test="eventId!=null and eventId!=''">
+            and incoming_flow_no = #{eventId}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            and create_time &gt; #{startDate}
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            and create_time &lt; #{endDate}
+        </if>
+        order by create_time desc
+    </select>
+
+    <insert id="saveBill" parameterType="com.znv.manage.common.bean.EventBill">
+        insert into t_event_bill(incoming_flow_no,
+                                 question_title,
+                                 bill_json,
+                                 departments,
+                                 event_id)
+        values (#{incomingFlowNo},
+                #{questionTitle},
+                #{billJson},
+                #{departments},
+                #{eventId})
+    </insert>
+
+</mapper>

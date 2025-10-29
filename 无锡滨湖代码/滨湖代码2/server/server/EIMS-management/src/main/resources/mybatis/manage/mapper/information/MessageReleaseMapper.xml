@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.znv.manage.dao.information.MessageReleaseMapper" >
+  <resultMap id="BaseResultMap" type="com.znv.manage.common.bean.information.MessageRelease" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="message_title" property="messageTitle" jdbcType="VARCHAR" />
+    <result column="message_type1" property="messageType1" jdbcType="VARCHAR" />
+    <result column="message_type2" property="messageType2" jdbcType="VARCHAR" />
+    <result column="release_time" property="releaseTime" jdbcType="TIMESTAMP" />
+    <result column="message_content" property="messageContent" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_command_message_release
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true"  keyProperty="id"  parameterType="com.znv.manage.common.bean.information.MessageRelease" >
+    insert into t_command_message_release (id,
+                                           message_title,
+                                           message_type1,
+                                           message_type2,
+                                           release_time,
+                                           message_content
+      )
+    values (#{id,jdbcType=BIGINT},
+            #{messageTitle,jdbcType=VARCHAR},
+            #{messageType1,jdbcType=VARCHAR},
+            #{messageType2,jdbcType=VARCHAR},
+            #{releaseTime,jdbcType=TIMESTAMP},
+            #{messageContent,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.znv.manage.common.bean.information.MessageRelease" >
+    update t_command_message_release
+    set message_title = #{messageTitle,jdbcType=VARCHAR},
+      message_type1 = #{messageType1,jdbcType=VARCHAR},
+      message_type2 = #{messageType2,jdbcType=VARCHAR},
+      release_time = #{releaseTime,jdbcType=TIMESTAMP},
+      message_content = #{messageContent,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="getMessage" resultType="com.znv.manage.common.bean.information.MessageRelease">
+    select id,
+           ifnull(message_title,'') messageTitle,
+           ifnull(message_type1,'') messageType1,
+           ifnull(message_type2,'') messageType2,
+           ifnull(DATE_FORMAT(release_time, '%Y-%m-%d %H:%i:%s'),'') releaseTime,
+           ifnull(message_content,'') messageContent
+    from t_command_message_release
+    where 1=1
+    <if test="title!=null and title!=''">
+      and message_title like concat('%',#{title},'%')
+    </if>
+    <if test="type1!=null and type1!=''">
+      and message_type1 = #{type1}
+    </if>
+    <if test="type2!=null and type2!=''">
+      and message_type2 = #{type2}
+    </if>
+    <if test="startDate!=null and startDate!=''">
+      and release_time &gt;= #{startDate}
+    </if>
+    <if test="endDate!=null and endDate!=''">
+      and release_time &lt;= #{endDate}
+    </if>
+  </select>
+    <select id="getMessages" resultType="com.znv.manage.common.bean.information.MessageRelease">
+        select id,
+               ifnull(message_title,'') messageTitle,
+               ifnull(message_type1,'') messageType1,
+               ifnull(message_type2,'') messageType2,
+               ifnull(DATE_FORMAT(release_time, '%Y-%m-%d %H:%i:%s'),'') releaseTime,
+               ifnull(message_content,'') messageContent
+        from t_command_message_release
+        where id IN
+        <foreach collection="list" separator="," item="item" open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

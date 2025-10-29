@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.ZdzskjcsjDao">
+    <insert id="insertZdzskjcsjList">
+        INSERT INTO t_59_zdzskjcsj
+        (
+        voice,
+        vis,
+        hourr,
+        bg,
+        warmList,
+        updateTime,
+        next3day,
+        wd,
+        fireLlevel,
+        t,
+        obtid,
+        humidity,
+        stationName,
+        hour24r,
+        countryName,
+        ws
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.voice},
+            #{item.vis},
+            #{item.hourr},
+            #{item.bg},
+            #{item.warmList},
+            #{item.updateTime},
+            #{item.next3day},
+            #{item.wd},
+            #{item.fireLlevel},
+            #{item.t},
+            #{item.obtid},
+            #{item.humidity},
+            #{item.stationName},
+            #{item.hour24r},
+            #{item.countryName},
+            #{item.ws}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateZdzskjcsjList">
+        <foreach collection="list" separator=";" item="item" index="index">
+            update t_59_zdzskjcsj
+            <set>
+                <if test="item.voice != null and item.voice != ''">voice=#{item.voice},</if>
+                <if test="item.vis != null and item.vis != ''">vis=#{item.vis},</if>
+                <if test="item.hourr != null and item.hourr != ''">hourr=#{item.hourr},</if>
+                <if test="item.bg != null and item.bg != ''">bg=#{item.bg},</if>
+                <if test="item.warmList != null and item.warmList != ''">warmList=#{item.warmList},</if>
+                <if test="item.updateTime != null and item.updateTime != ''">updateTime=#{item.updateTime},</if>
+                <if test="item.next3day != null and item.next3day != ''">next3day=#{item.next3day},</if>
+                <if test="item.wd != null and item.wd != ''">wd=#{item.wd},</if>
+                <if test="item.fireLlevel != null and item.fireLlevel != ''">fireLlevel=#{item.fireLlevel},</if>
+                <if test="item.t != null and item.t != ''">t=#{item.t},</if>
+                <if test="item.obtid != null and item.obtid != ''">obtid=#{item.obtid},</if>
+                <if test="item.humidity != null and item.humidity != ''">humidity=#{item.humidity},</if>
+                <if test="item.stationName != null and item.stationName != ''">stationName=#{item.stationName},</if>
+                <if test="item.hour24r != null and item.hour24r != ''">hour24r=#{item.hour24r},</if>
+                <if test="item.countryName != null and item.countryName != ''">countryName=#{item.countryName},</if>
+                <if test="item.ws != null and item.ws != ''">ws=#{item.ws}</if>
+            </set>
+            where `SJWXHXPMC`=#{item.SJWXHXPMC}
+        </foreach>
+    </update>
+
+    <select id="queryZdzskjcsjList" resultType="int">
+        select count(1) from t_59_zdzskjcsj where SJWXHXPMC=#{SJWXHXPMC} and RKSJ = #{RKSJ}
+    </select>
+
+    <delete id="deleteZdzskjcsjList">
+        delete from t_59_zdzskjcsj
+    </delete>
+</mapper>

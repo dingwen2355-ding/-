@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.ArrivedResourceMapper">
+
+
+  <resultMap id="arrivedResourceMap" type="map">
+    <result property="unitId" column="unitId"/>
+    <result property="unitName" column="unitName"/>
+    <result property="eventId" column="eventId"/>
+      <result property="sort" column="sort"/>
+    <association property="resourceList" column="{eventId=eventId,unitId = unitId}" select="queryResourceList">
+    </association>
+  </resultMap>
+
+  <select id="queryArrivedResourceListByEventId" resultMap="arrivedResourceMap">
+    SELECT
+      DISTINCT(a.unit_id) unitId,
+      if(ifnull(a.unit_id,'')='',a.unit_name,ifnull(b.name,'')) unitName,
+      a.event_id eventId,
+      b.sort
+    FROM
+        base_arrived_resources a LEFT JOIN base_unit b on a.unit_id = b.id
+    WHERE
+        event_id = #{eventId}
+        order by b.sort is null,b.sort
+  </select>
+
+  <select id="queryResourceList" resultType="map">
+    SELECT
+        a.resource_id resourceId,
+        ifnull(b.name,'') resourceName,
+        a.count,
+        ifnull(b.type,'') type,
+        DATE_FORMAT(arrive_time, '%Y-%m-%d %H:%i:%S') arriveTime
+    FROM
+        base_arrived_resources a
+    LEFT JOIN base_dict_resource b ON a.resource_id = b.id
+    WHERE
+        event_id = #{eventId}
+    AND unit_id = #{unitId}
+  </select>
+
+    <select id="queryUnitList" resultType="map">
+        select id,name as unitName
+        from base_unit
+        where 1=1
+        <if test="type != null and type != ''">and type = #{type}</if>
+        <if test="precinctId != null and precinctId != ''">and area_id = #{precinctId}</if>
+        <if test="type == null or type == ''">and (type = '1' or type = '2')</if>
+        order by sort is null,sort
+    </select>
+
+    <select id="queryResourceTypeList" resultType="map">
+        select id,name as resourceName,type from base_dict_resource
+    </select>
+
+    <select id="queryArrivedResourceList" resultType="map">
+        select
+        a.id,
+          a.event_id eventId,
+          a.unit_id unitId,
+        if(ifnull(a.unit_id,'')='',a.unit_name,ifnull(b.name,'')) unitName,
+          a.resource_id resourceId,
+          ifnull(c.name,'') resourceName,
+          ifnull(c.type,'') type,
+          a.count,
+          DATE_FORMAT(a.arrive_time, '%Y-%m-%d %H:%i:%S') arriveTime,
+         b.sort
+        from base_arrived_resources a
+        left join base_unit b on a.unit_id = b.id
+        left join base_dict_resource c on a.resource_id = c.id
+        where 1=1
+        <!--更新去重使用-->
+        <if test="updateId != null and updateId != ''">and a.id != #{updateId}</if>
+        <if test="eventId != null and eventId != ''">and a.event_id = #{eventId}</if>
+        <if test="unitId != null and unitId != ''">and a.unit_id = #{unitId}</if>
+        <if test="resourceId != null and resourceId != ''">and a.resource_id = #{resourceId}</if>
+        <if test="precinctId != null and precinctId != ''">and b.area_id = #{precinctId}</if>
+        order by b.sort is null,b.sort
+    </select>
+
+    <insert id="insertArrivedResource">
+        insert into base_arrived_resources(event_id,unit_id,resource_id,count,arrive_time)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.eventId},#{item.unitId},#{item.resourceId},#{item.count},#{item.arriveTime})
+        </foreach>
+    </insert>
+
+    <update id="updateArrivedResource">
+        update base_arrived_resources
+        set event_id = #{eventId},unit_id = #{unitId},resource_id = #{resourceId},count = #{count},arrive_time = #{arriveTime}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteArrivedResourceById">
+        delete from base_arrived_resources where id in (${id})
+    </delete>
+
+    <delete id="deleteArrivedResourceByEventId">
+        delete from base_arrived_resources where event_id=#{eventId}
+    </delete>
+
+    <insert id="saveArrivedResource">
+        INSERT INTO base_arrived_resources (
+            event_id,
+            unit_id,
+        unit_name,
+            resource_id,
+            count,
+            arrive_time
+        )
+        VALUES
+        <foreach collection="maps" item="map" separator=",">
+            (#{map.eventId},#{map.unitId},#{map.unitName},#{map.resourceId},#{map.count},#{map.arriveTime})
+        </foreach>
+    </insert>
+
+    <insert id="addResourceType">
+        insert into base_dict_resource (name,type) values (#{name},#{type});
+    </insert>
+
+    <select id="queryResourceId" resultType="String">
+        select id from base_dict_resource where name = #{name} and type = #{type}
+    </select>
+</mapper>

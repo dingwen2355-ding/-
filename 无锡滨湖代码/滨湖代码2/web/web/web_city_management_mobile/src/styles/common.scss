@@ -1,0 +1,69 @@
+@import './transition.scss';
+@import './variables.scss';
+@import './vant.scss';
+@import './fonts/iconFont/iconfont.css';
+
+// common
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  color: #E5EDFF;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+a:focus,
+a:active {
+  outline: none;
+}
+
+ul, li {
+  text-decoration: none;
+  list-style: none;
+}
+
+/*chrome滚动条颜色设置*/
+*::-webkit-scrollbar {
+  width: 7px;
+  display: none;
+  background-color: transparent;
+}
+
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+*::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+*::-webkit-scrollbar-thumb {
+  background: rgba(144, 147, 153, .3);
+  border-radius: 6px;
+}
+
+@font-face {
+  font-family: 'DIN Condensed';
+  src: url(./fonts/DINCondensedC-2.ttf);
+}
+
+@font-face {
+  font-family: 'PingFang SC';
+  src: url(./fonts/苹方黑体-中粗-简.ttf);
+}
+
+@font-face {
+  font-family: 'PingFangSC-Medium';
+  src: url(./fonts/苹方黑体-中粗-简.ttf);
+}
+
+@font-face {
+  font-family: 'PingFangSC-Regular';
+  src: url(./fonts/苹方黑体-准-简.ttf);
+}

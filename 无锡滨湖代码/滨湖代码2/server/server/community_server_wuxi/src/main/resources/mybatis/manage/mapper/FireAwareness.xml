@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.FireAwarenessDao">
+
+    <select id="getRealTimePerception" resultType="java.util.HashMap">
+        select concat_ws(',',a.alarmTime,a.valueType,a.callAddress) as alarmContent,
+            a.streetName,b.precinct_id as streetId from (select CASE valueType
+            WHEN 1 THEN
+            '剩余电流'
+            WHEN 2 THEN
+            '电压'
+            WHEN 3 THEN
+            '电流'
+            WHEN 4 THEN
+            '温度'
+            WHEN 5 THEN
+            '浓度'
+            WHEN 6 THEN
+            '其他'
+            else '其他'
+            END as valueType,alarmTime,callAddress,
+            SUBSTRING_INDEX(SUBSTRING_INDEX(callAddress,'>',3),'>',-1) as streetName
+            FROM t_22_ssbj ) a
+            LEFT JOIN t_cfg_precinct b ON a.streetName = b.precinct_name
+            where 1=1
+            <if test="beginTime != null">
+                and a.alarmTime &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and a.alarmTime &lt;= #{endTime}
+            </if>
+            <if test="beginTime == null and endTime == null ">
+                and DATE(a.alarmTime) = CURDATE()
+            </if>
+            <if test="precinctId != null and precinctId != '' ">
+                and b.precinct_id = #{precinctId}
+            </if>
+            <if test="precinctName != null and precinctName != '' ">
+                and b.precinct_name = #{precinctName}
+            </if>
+            order by alarmTime desc
+            <if test="limit != null and limit != '' ">
+                limit 0,${limit}
+            </if>
+    </select>
+
+    <!--<select id="getRealTimePerceptionCount" resultType="Integer">
+        select count(1) from t_22_ssbj
+        where 1=1
+        <if test="beginTime != null">
+            and alarmTime &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and alarmTime &lt;= #{endTime}
+        </if>
+        <if test="beginTime == null and endTime == null ">
+            and DATE(alarmTime) = CURDATE()
+        </if>
+    </select>-->
+
+    <select id="getSensorCount" resultType="Integer">
+        select count(1) from (select SUBSTRING_INDEX(SUBSTRING_INDEX(callAddress,'>',3),'>',-1) as streetName,status from t_26_sbxx) a
+        left join t_cfg_precinct b on a.streetName = b.precinct_name where 1=1
+        <if test="status != -1">
+            and a.status = #{status}
+        </if>
+        <if test="precinctId != null and precinctId != '' ">
+            and b.precinct_id = #{precinctId}
+        </if>
+        <if test="precinctName != null and precinctName != '' ">
+            and b.precinct_name = #{precinctName}
+        </if>
+    </select>
+
+</mapper>

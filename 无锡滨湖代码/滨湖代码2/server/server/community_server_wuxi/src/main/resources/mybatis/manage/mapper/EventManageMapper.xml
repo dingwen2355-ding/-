@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.EventManageMapper">
+
+    <select id="queryPlanIdsByEventType" resultType="string">
+        SELECT
+            emergency_plan_id planId
+        FROM
+            relation_event_type
+        WHERE
+            event_type_id = #{eventType}
+    </select>
+
+    <select id="queryEventInfo" resultType="java.util.HashMap">
+        select a.ID eventId,
+        EVENT_TITLE eventTitle,
+        TYPE_ID event_type,
+        b.DICT_NAME event_type_name,
+        DATE_FORMAT(EVENT_TIME, '%Y-%m-%d %H:%i:%s') happen_time,
+        OCCUR_ADDRESS address,
+        SUMMARY `desc`,
+        STREET_ID area_code,
+        c.precinct_name area,
+        a.LEVEL_NAME level,
+        d.DICT_NAME flowSource,
+        e.id planId
+        from community_wuxi_eims.t_cfg_event a
+        left join community_wuxi_eims.t_cfg_dict b on a.TYPE_ID=b.ID
+        left join community_wuxi_eims.t_cfg_precinct c on a.STREET_ID=c.precinct_id
+        left join community_wuxi_eims.t_cfg_dict d on a.source_id=b.ID
+        left join community_wuxi_eims.t_cfg_plan_info_event e on a.id=e.event_id
+        where 1=1
+        <if test="type!=null">
+            and b.`DICT_NAME`=#{type}
+        </if>
+        <if test="title">
+            and a.EVENT_TITLE like concat('%',#{title},'%')
+        </if>
+        <if test="address">
+            and a.address like concat('%',#{address},'%')
+        </if>
+        <if test="happenTime !=null">
+            and a.EVENT_TIME>=#{happenTime}
+        </if>
+        <if test="endTime !=null">
+            and a.EVENT_TIME&lt;=#{endTime}
+        </if>
+        <if test="eventId !=null">
+            and a.ID=#{eventId}
+        </if>
+        <if test="level !=null">
+            and a.LEVEL_NAME=#{level}
+        </if>
+        <if test="area !=null">
+            and c.precinct_name=#{area}
+        </if>
+        <if test="precinctId != null and precinctId != ''">
+            and STREET_ID = #{precinctId}
+        </if>
+        order by a.EVENT_TIME desc
+    </select>
+
+    <insert id="insertEventInfo">
+        insert into base_event_info (
+            event_id,
+            event_type,
+            event_type_name,
+            event_title,
+            happen_time,
+            address,
+            `desc`,
+            area_code,
+            area,
+            plan_id,
+            gpsx,
+            gpsy
+        )
+        VALUES(
+              #{eventId},
+            #{eventType},
+              #{eventTypeName},
+            #{eventTitle},
+            #{happenTime},
+            #{address},
+            #{desc},
+            #{areaCode},
+            #{area},
+            #{planId},
+            #{gpsx},
+            #{gpsy}
+              )
+
+    </insert>
+
+    <select id="queryEventTypeList" resultType="map">
+        SELECT
+            id,
+            DICT_NAME typeName
+        FROM
+            community_wuxi_eims.t_cfg_dict where PARENT_ID=1
+    </select>
+
+    <update id="updateEventInfoByKey">
+        update base_event_info
+        set plan_id = #{emIds}
+        where event_id = #{eventId}
+    </update>
+
+    <select id="getEvent" resultType="map">
+        select * from base_event_info where event_id = #{eventId}
+    </select>
+
+    <update id="updateEventOpinionLevel" parameterType="java.util.List">
+        update base_event_info
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="opinion_level = case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    when event_id=#{item.eventId} then #{item.opinionLevel}
+                </foreach>
+            </trim>
+        </trim>
+        where event_id in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.eventId}
+        </foreach>
+    </update>
+
+    <delete id="deleteEventPlanCfg">
+        delete from t_cfg_emergency_plan where event_id = #{eventId} and plan_id = #{planId}
+    </delete>
+
+    <select id="queryEventPlanCfgList" resultType="String">
+        select
+            plan_id
+        from t_cfg_emergency_plan where event_id = #{eventId}
+    </select>
+
+    <insert id="saveEmergencyPlanCfg">
+        insert into t_cfg_emergency_plan(event_id,plan_id)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.eventId},
+            #{item.planId})
+        </foreach>
+    </insert>
+
+    <insert id="insertEventSync">
+        insert into t_data_event_info(
+        `flow_no`,
+        `flow_title`,
+        `flow_source`,
+        `class_1`,
+        `flow_status`,
+        `address`,
+        `create_date`
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.flowNo},
+            #{item.$flowTitle$},
+            #{item.flowSource},
+            #{item.$class_1$},
+            #{item.flowStatus},
+            #{item.AppealAddress},
+            #{item.creatDate}
+            )
+        </foreach>
+        on duplicate key update
+        flow_title = values(flow_title),
+        flow_source = values(flow_source),
+        class_1 = values(class_1),
+        flow_status = values(flow_status),
+        flow_source = values(flow_source),
+        address = values(address),
+        create_date = values(create_date)
+    </insert>
+
+    <select id="queryEventInfoList" resultType="java.util.HashMap">
+        SELECT
+            a.flow_no flowNo,
+            a.flow_title flowTitle,
+            a.flow_status flowStatus,
+            b.status_name statusName,
+            a.class_1 class1,
+            a.flow_source flowSource,
+            a.create_date createDate,
+            a.address address
+        FROM
+            t_data_event_info a
+        LEFT JOIN t_dict_event_status b ON a.flow_status = b.status_id
+        WHERE 1=1
+            <if test="beginTime != null">
+                and a.create_date &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and a.create_date &lt;= #{endTime}
+            </if>
+        ORDER BY a.create_date desc
+    </select>
+
+    <select id="queryEventStatisticsMap" resultType="map">
+        SELECT
+            ifnull(count(flow_no),0) totalCount,
+            ifnull(sum(case flow_status when '107' then 1 else 0 end),0) as endCount,
+            flow_source flowSource
+        FROM
+            t_data_event_info
+        where 1=1
+        <if test="beginTime != null">
+            and create_date &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and create_date &lt;= #{endTime}
+        </if>
+        group by flow_source
+    </select>
+</mapper>

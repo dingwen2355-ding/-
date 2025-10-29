@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.znv.manage.dao.FireAwarenessBJHCLDao">
+
+	<insert id="insertBJHCLData">
+		insert into t_23_bjhcl(
+		lxrdh,
+		deviceInstallAddress,
+		deviceType,
+		userlist,
+		callDeviceId,
+		rgqr,
+		callAddress,
+		pxpy,
+		counts,
+		lxr,
+		dipostTime,
+		alarmTimes,
+		callDeviceZoonId,
+		theResults,
+		dipostUserId,
+		callType,
+		deviceTypeMc,
+		positionName,
+		hfnr,
+		bz,
+		unitId,
+		id,
+		collect_time,
+		callTime,
+		create_time
+		 )values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.lxrdh},
+			#{item.deviceInstallAddress},
+			#{item.deviceType},
+			#{item.userlist},
+			#{item.callDeviceId},
+			#{item.rgqr},
+			#{item.callAddress},
+			#{item.pxpy},
+			#{item.counts},
+			#{item.lxr},
+			#{item.dipostTime},
+			#{item.alarmTimes},
+			#{item.callDeviceZoonId},
+			#{item.theResults},
+			#{item.dipostUserId},
+			#{item.callType},
+			#{item.deviceTypeMc},
+			#{item.positionName},
+			#{item.hfnr},
+			#{item.bz},
+			#{item.unitId},
+			#{item.id},
+			#{item.collectTime},
+			#{item.callTime},
+			current_timestamp
+			)
+		</foreach>
+	</insert>
+
+
+	<select id="queryExist" parameterType="com.znv.manage.common.bean.FireAwarenessSyncBJHCL" resultType="java.lang.Integer">
+		select count(1) as num from t_23_bjhcl
+		where 1=1
+		<if test="deviceType != null and deviceType != '' "> and deviceType = #{deviceType}</if>
+		<if test="id != null and id != '' "> and id = #{id}</if>
+		 and DATE(create_time) = CURDATE()
+	</select>
+
+	<delete id="deleteBJHCLData">
+        delete from  t_23_bjhcl where  DATE(create_time) = CURDATE()
+    </delete>
+
+
+	
+</mapper>
