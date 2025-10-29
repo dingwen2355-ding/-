@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.SecurityUserRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="securityUserRecordResultMap" type="com.jslc.modules.szbh.entity.SecurityUserRecord">
+        <result column="id" property="id"/>
+        <result column="account" property="account"/>
+        <result column="secret_error_residue_time" property="secretErrorResidueTime"/>
+        <result column="secret_last_try_time" property="secretLastTryTime"/>
+        <result column="secret_unlock_time" property="secretUnlockTime"/>
+        <result column="secret_error_residue_time_captcha" property="secretErrorResidueTimeCaptcha"/>
+        <result column="captcha_last_try_time" property="captchaLastTryTime"/>
+    </resultMap>
+
+
+    <select id="selectSecurityUserRecordPage" resultMap="securityUserRecordResultMap">
+        select * from bh_security_user_record where is_deleted = 0
+    </select>
+
+</mapper>

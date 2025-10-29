@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.CatalogueTableFieldMapper">
+
+    <resultMap id="BaseResultMap" type="com.grandlynn.spa.catalogue.entity.CatalogueTableFieldDO">
+        <!--@Table catalogue_table_field-->
+        <result property="id" column="id" />
+        <result property="tenantId" column="tenant_id" />
+        <result property="version" column="version" />
+        <result property="appId" column="app_id" />
+        <result property="remark" column="remark" />
+        <result property="deleted" column="is_deleted" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdTime" column="created_time" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedTime" column="updated_time" />
+        <result property="sysTableId" column="sys_table_id" />
+        <result property="fieldName" column="field_name" />
+        <result property="fieldAlias" column="field_alias" />
+        <result property="fieldType" column="field_type" />
+        <result property="fieldLength" column="field_length" />
+        <result property="fieldVersion" column="field_version" />
+        <result property="fieldState" column="field_state" />
+        <result property="fieldEncoded" column="field_encoded" />
+        <result property="fieldObtuse" column="field_obtuse" />
+        <result property="fieldPrimaryKey" column="field_primary_key" />
+        <result property="fieldPosition" column="field_position" />
+        <result property="fieldDesc" column="field_desc" />
+        <result property="fieldTotalLog" column="field_total_log" />
+        <result property="fieldTotalMemory" column="field_total_memory" />
+        <result column="intermediate" property="intermediate" />
+        <result column="version_no" property="versionNo" />
+        <result column="field_name_ch" property="fieldNameCh" />
+        <result column="dict_state" property="dictState" />
+        <result column="dict_table" property="dictTable" />
+        <result column="dict_standard" property="dictStandard" />
+        <result column="share_type" property="shareType" />
+        <result column="share_condition" property="shareCondition" />
+        <result column="law_dependency" property="lawDependency" />
+        <result column="allow_null" property="allowNull" />
+        <result column="allow_index" property="allowIndex" />
+        <result column="law_dependency_attach" property="lawDependencyAttach" />
+    </resultMap>
+
+    <!-- 根据系统id查找目录编制的表和字段内容   -->
+    <select id="findCatalogueListBySysIds" resultType="com.grandlynn.spa.catalogue.dto.ExportSysCatalogueTemplateDTO">
+        SELECT
+            t.org_sys_id as sysId,
+            t.sys_name sysName ,
+            t.data_resource_name dataResourceName ,
+            t.data_resource_abstract dataResourceAbstract ,
+            t.data_resource_save_type dataResourceSaveType ,
+            t.database_type databaseType ,
+            t."table_name" tableName ,
+            f.dict_state dictState,
+            f.allow_null allowNull,
+            f.allow_index allowIndex,
+            f.field_name fieldName ,
+            f.field_name_ch fieldNameCh ,
+            f.field_type fieldType ,
+            f.field_length fieldLength ,
+            f.field_encoded fieldEncoded ,
+            f.field_obtuse fieldObtuse ,
+            f.field_primary_key fieldPrimaryKey ,
+            f.field_position fieldPosition ,
+            f.field_desc fieldDesc ,
+            f.field_total_log fieldTotalLog ,
+            f.field_total_memory fieldTotalMemory ,
+            f.dict_table dictTable,
+            f.dict_standard dictStandard,
+            f.share_type shareType,
+            f.share_condition shareCondition,
+            t.table_share_type tableShareType ,
+            t.law_depency lawDepency ,
+            t.share_status shareStatus ,
+            t.open_type openType ,
+            t.update_period updatePeriod ,
+            t.open_condition openCondition ,
+            t.open_depency openDepency ,
+            t.table_share_desc tableShareDesc ,
+            t."position" "position",
+            t.resource_code resourceCode,
+            t.resource_type resourceType,
+            t.data_domain dataDomain,
+            t.table_create_time tableCreateTime,
+            t.table_update_time tableUpdateTime,
+            crc.name    categoryName,
+            cri.name    itemName,
+            crca.name   catalogueName,
+            t.database_name,
+            t.org_id,
+            t.resource_format_type,
+            t.resource_format_type_desc,
+            co.node_name    nodeName,
+            t.source_type     sourceType,
+            t.resource_format_category		resourceFormatCategory,
+            t.data_range		dataRange,
+            t.catalogue_level		catalogueLevel,
+            t.simplify		simplify,
+            t.matter		matter,
+            t.matter_code		matterCode,
+            t.matter_basic_code		matterBasicCode,
+            t.activity_list_code		activityListCode,
+            t.business_for_code		businessForCode,
+            t.deliver_channel		deliverChannel,
+            t.is_electronic_certificate		isElectronicCertificate,
+            t.application_scene		applicationScene,
+            t.is_mount_resource		isMountResource,
+            t.register_platform		registerPlatform,
+            t.approve_result		approveResult,
+            t.share_way_category		shareWayCategory,
+            t.share_way_type		shareWayType,
+            crd.name		domainCode,
+            cric.name		industryCategoryCode,
+            cras.name		applicationSceneCode,
+            t.basic_category		basicCategory,
+            t.service_object_category		serviceObjectCategory,
+            t.category_tag		categoryTag,
+            t.manage_way		manageWay,
+            t.morphology_category		morphologyCategory,
+            t.source_dept_name		sourceDeptName,
+            t.node_code		nodeCode,
+            t.resource_format		resourceFormat,
+            t.matter_domain		matterDomain,
+            t.application_scene_desc		applicationSceneDesc,
+            t.matter_domain_desc		matterDomainDesc,
+            t.update_period_desc		updatePeriodDesc,
+            t.data_size		dataSize,
+            t.table_share_type_desc 	tableShareTypeDesc,
+            t.subject_category 		subjectCategory,
+            t.morphology_category   morphologyCategory,
+            f.field_precision 		fieldPrecision,
+            f.data_level 			dataLevel,
+            f.is_norm 				isNorm,
+            t.service_org_name      serviceOrgName,
+            t.service_org_code      serviceOrgCode
+        FROM catalogue_sys_table t
+        LEFT JOIN catalogue_table_field f ON t.id=f.sys_table_id AND f.is_deleted = 0
+        LEFT JOIN catalogue_resource_category crc ON crc.id=t.category_id
+        LEFT JOIN catalogue_resource_item cri ON cri.id=t.item_id
+        LEFT JOIN catalogue_resource_catalogue crca ON crca.id=t.catalogue_id
+
+        LEFT JOIN catalogue_resource_domain crd ON crd.code=t.domain_code
+        LEFT JOIN catalogue_resource_industry_category cric ON cric.code=t.industry_category_code
+        LEFT JOIN catalogue_resource_application_scene cras ON cras.code=t.application_scene_code
+        LEFT JOIN catalogue_org co on co.id = t.org_id
+        <where>
+            <if test="request.sysIds != null">
+                t.org_sys_id in
+                <foreach collection="request.sysIds" item = "sysId" index="index" open="(" close=")" separator=",">
+                    #{sysId}
+                </foreach>
+            </if>
+            <if test="request.orgIds != null">
+                t.org_id in
+                <foreach collection="request.orgIds" item = "orgId" index="index" open="(" close=")" separator=",">
+                    #{orgId}
+                </foreach>
+            </if>
+            <if test="request.intermediate != null">
+                and t.intermediate = #{request.intermediate}
+            </if>
+        </where>
+        AND t.is_deleted = 0
+        order by  t.org_id,co.node_name, t.data_resource_name
+    </select>
+
+</mapper>

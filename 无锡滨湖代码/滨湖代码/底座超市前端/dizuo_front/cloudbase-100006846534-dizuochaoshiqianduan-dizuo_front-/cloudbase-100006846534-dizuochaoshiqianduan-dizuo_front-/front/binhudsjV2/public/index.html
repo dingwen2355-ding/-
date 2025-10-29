@@ -1,0 +1,58 @@
+<!--
+ * @Descripttion: 数据中心
+ * @version: 
+ * @Author: GM
+ * @Date: 2021-05-26 17:54:57
+ * @LastEditors: GM
+ * @LastEditTime: 2021-05-27 16:46:49
+-->
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <!-- 指定Expires值为一个早已过去的时间，访问时若重复在地址栏按回车，每次都会重复访问 -->
+  <meta http-equiv="Expires" content="0">
+  <!-- 禁止浏览器从本地计算机的缓存中访问页面内容。(这样设定，访问者将无法脱机浏览。) -->
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="content-type" content="no-cache, must-revalidate" />
+  <meta http-equiv="expires" content="Wed, 26 Feb 1997 08:21:57 GMT" />
+  <!-- Cache-control值为no-cache时，访问此页面不会在Internet临时文件夹留下页面备份 -->
+  <meta http-equiv="Cache-control" content="no-cache">
+  <meta http-equiv="Cache" content="no-cache">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <!-- <link rel="stylesheet" href="mapApi/ol/ol.css"> -->
+  <!-- 地图配置文件 -->
+  <!--第三方资源-->
+  <script src="<%= BASE_URL %>jQuery-1.10.2/jquery-1.10.2.min.js"></script>
+  <!-- <script type="text/javascript" src="mapApi/mapconfig.js"></script> -->
+  <!-- 使用CDN的CSS文件 -->
+  <% for (var i in htmlWebpackPlugin.options.cdn && htmlWebpackPlugin.options.cdn.css) { %>
+    <link href="<%= htmlWebpackPlugin.options.cdn.css[i] %>" rel="preload" as="style">
+    <link href="<%= htmlWebpackPlugin.options.cdn.css[i] %>" rel="stylesheet">
+    <% } %>
+      <!-- 地图api -->
+      <!-- <script type="text/javascript" src="mapApi/ol/ol.js"></script> -->
+      <title>
+        <%= htmlWebpackPlugin.options.title %>
+      </title>
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
+        Please enable it to continue.</strong>
+  </noscript>
+  <div id="app"></div>
+  <div>
+    <%= htmlWebpackPlugin.options.cdn%>
+  </div>
+  <!-- built files will be auto injected -->
+  <% for (var i in htmlWebpackPlugin.options.cdn && htmlWebpackPlugin.options.cdn.js) { %>
+    <script src="<%= htmlWebpackPlugin.options.cdn.js[i] %>"></script>
+    <% } %>
+</body>
+
+</html>

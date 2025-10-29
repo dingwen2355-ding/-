@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.SecuritySettingMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="securitySettingResultMap" type="com.jslc.modules.szbh.entity.SecuritySetting">
+        <result column="secret_strength" property="secretStrength"/>
+        <result column="secret_max_length" property="secretMaxLength"/>
+        <result column="secret_min_length" property="secretMinLength"/>
+        <result column="is_login_lock" property="isLoginLock"/>
+        <result column="secret_error_lock_time" property="secretErrorLockTime"/>
+        <result column="secret_try_time_range" property="secretTryTimeRange"/>
+        <result column="secret_unlock_time" property="secretUnlockTime"/>
+        <result column="is_captcha_lock" property="isCaptchaLock"/>
+        <result column="sercet_error_time_captcha" property="sercetErrorTimeCaptcha"/>
+        <result column="captcha_try_time_range" property="captchaTryTimeRange"/>
+    </resultMap>
+
+
+    <select id="selectSecuritySettingPage" resultMap="securitySettingResultMap">
+        select * from bh_security_setting where is_deleted = 0
+    </select>
+
+</mapper>

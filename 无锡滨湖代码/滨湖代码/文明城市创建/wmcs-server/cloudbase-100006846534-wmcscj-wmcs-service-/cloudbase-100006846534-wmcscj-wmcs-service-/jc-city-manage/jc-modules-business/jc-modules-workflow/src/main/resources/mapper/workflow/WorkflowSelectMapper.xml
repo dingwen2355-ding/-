@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.workflow.web.mapper.WorkflowSelectMapper">
+
+    <select id="page" resultType="cn.wxgis.jc.workflow.resp.WfEventReportResponse">
+        select i.starttime, i.endtime, data.*, data.event_title check_item,
+               his.attchpath, et.`name` event_type_name, etT.`name` event_type_two_name, etO.`name` event_type_one_name,
+        (select case when count(1) then 1 else 0 end `status` from wf_event_extension e where e.flowinstanceid = data.flowinstanceid and e.nodeid = data.nodeid and (e.`status` = 0 or e.`status` = 1)) extensionStatus,
+        (select case when count(1) then 1 else 0 end `status` from wf_event_appeal a where a.flowinstanceid = data.flowinstanceid and (a.`status` = 0 or a.`status` = 1)) appealStatus
+        from wf_event_report data
+        left join wf_instance i on i.id = data.flowinstanceid
+        left join wf_node_history his on his.flowinstanceid = data.flowinstanceid and his.nodeid = 'Start'
+        left join quota_event_type et on et.id = data.event_type
+        left join quota_event_type etT on etT.id = et.parent_id
+        left join quota_event_type etO on etO.id = etT.parent_id
+        <where>
+            and data.del_flag = 0
+            <if test="param.code != null and param.code != ''">
+                and data.code like concat('%', #{param.code}, '%')
+            </if>
+            <if test="param.cycleId != null and param.cycleId != ''">
+                and data.cycle_id = #{param.cycleId}
+            </if>
+            <if test="param.typeId != null and param.typeId != ''">
+                and data.check_points_type_id like concat('%', #{param.typeId}, '%')
+            </if>
+            <if test="param.checkPoints != null and param.checkPoints != ''">
+                and data.check_points like concat('%', #{param.checkPoints},'%')
+            </if>
+            <if test="param.content != null and param.content != ''">
+                and data.content like concat('%', #{param.content},'%')
+            </if>
+            <if test="param.eventType != null and param.eventType != ''">
+                and et.id = #{param.eventType}
+            </if>
+            <if test="param.status != null">
+                and data.status = #{param.status}
+            </if>
+            <if test="param.statusArray != null and param.statusArray.size > 0">
+                and data.status in
+                <foreach collection="param.statusArray" item="item" index="index"
+                         open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="param.endType != null">
+                and data.end_type = #{param.endType}
+            </if>
+            <if test="param.eventSource != null and param.eventSource != ''">
+                and data.event_source = #{param.eventSource}
+            </if>
+            <if test="param.eventExamine != null">
+                and data.end_examine = #{param.endExamine}
+            </if>
+
+        </where>
+        order by data.create_time desc
+    </select>
+
+    <select id="myReport" resultType="cn.wxgis.jc.workflow.resp.WfEventReportResponse">
+        select i.starttime, i.endtime, data.*, data.event_title check_item,
+               his.attchpath, et.`name` event_type_name, etT.`name` event_type_two_name, etO.`name` event_type_one_name,
+        (select case when count(1) then 1 else 0 end `status` from wf_event_extension e where e.flowinstanceid = data.flowinstanceid and e.nodeid = data.nodeid and (e.`status` = 0 or e.`status` = 1)) extension_status,
+        (select case when count(1) then 1 else 0 end `status` from wf_event_appeal a where a.flowinstanceid = data.flowinstanceid and (a.`status` = 0 or a.`status` = 1)) appeal_status
+        from wf_event_report data
+        left join wf_instance i on i.id = data.flowinstanceid
+        left join wf_node_history his on his.flowinstanceid = data.flowinstanceid and his.nodeid = 'Start'
+        left join quota_event_type et on et.id = data.event_type
+        left join quota_event_type etT on etT.id = et.parent_id
+        left join quota_event_type etO on etO.id = etT.parent_id
+        <where>
+            and data.del_flag = 0
+            <if test="param.code != null and param.code != ''">
+                and data.code like concat('%', #{param.code}, '%')
+            </if>
+            <if test="param.cycleId != null and param.cycleId != ''">
+                and data.cycle_id = #{param.cycleId}
+            </if>
+            <if test="param.typeId != null and param.typeId != ''">
+                and data.check_points_type_id like concat('%', #{param.typeId}, '%')
+            </if>
+            <if test="param.checkPoints != null and param.checkPoints != ''">
+                and data.check_points like concat('%', #{param.checkPoints},'%')
+            </if>
+            <if test="param.content != null and param.content != ''">
+                and data.content like concat('%', #{param.content},'%')
+            </if>
+            <if test="param.reporterId != null and param.reporterId != ''">
+                and data.reporter_id = #{param.reporterId}
+            </if>
+            <if test="param.eventType != null and param.eventType != ''">
+                and et.id = #{param.eventType}
+            </if>
+            <if test="param.statusArray != null and param.statusArray.size > 0">
+                and data.status in
+                <foreach collection="param.statusArray" item="item" index="index"
+                         open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by data.create_time desc
+    </select>
+
+
+    <select id="give" resultType="cn.wxgis.jc.workflow.resp.WfEventReportResponse">
+        select i.starttime, i.endtime, data.*, data.event_title check_item,
+        his.attchpath, et.`name` event_type_name, etT.`name` event_type_two_name, etO.`name` event_type_one_name,
+         (select case when count(1) then 1 else 0 end `status` from wf_event_extension e where e.flowinstanceid = data.flowinstanceid and e.nodeid = data.nodeid and (e.`status` = 0 or e.`status` = 1)) extension_status,
+        (select case when count(1) then 1 else 0 end `status` from wf_event_appeal a where a.flowinstanceid = data.flowinstanceid and (a.`status` = 0 or a.`status` = 1)) appeal_status,
+        t.id taskid
+        from wf_event_report data
+        left join wf_instance i on i.id = data.flowinstanceid
+        left join wf_node_history his on his.flowinstanceid = data.flowinstanceid and his.nodeid = 'Start'
+        left join quota_event_type et on et.id = data.event_type
+        left join quota_event_type etT on etT.id = et.parent_id
+        left join quota_event_type etO on etO.id = etT.parent_id
+        left join wf_task t on t.flowinstanceid = data.flowinstanceid and t.handle_deptid = #{param.handlerid}
+        <where>
+            and data.del_flag = 0
+            and data.status = 20
+            <if test="param.code != null and param.code != ''">
+                and data.code like concat('%', #{param.code}, '%')
+            </if>
+            <if test="param.cycleId != null and param.cycleId != ''">
+                and data.cycle_id = #{param.cycleId}
+            </if>
+            <if test="param.typeId != null and param.typeId != ''">
+                and data.check_points_type_id like concat('%', #{param.typeId}, '%')
+            </if>
+            <if test="param.checkPoints != null and param.checkPoints != ''">
+                and data.check_points like concat('%', #{param.checkPoints},'%')
+            </if>
+            <if test="param.content != null and param.content != ''">
+                and data.content like concat('%', #{param.content},'%')
+            </if>
+        </where>
+        order by data.create_time desc
+    </select>
+
+    <select id="allocate" resultType="cn.wxgis.jc.workflow.resp.WfEventReportResponse">
+        select i.starttime, i.endtime, data.*, data.event_title check_item,
+        his.attchpath, et.`name` event_type_name, etT.`name` event_type_two_name, etO.`name` event_type_one_name,
+        de.handle_dept, de.nodename handle_nodename, de.`status` handle_status, de.timelimit handle_timelimit, de.timeout_flag handle_timeout_flag, de.extension_flag handle_extension_flag,
+        (select case when count(1) then 1 else 0 end `status` from wf_event_extension e where e.flowinstanceid = data.flowinstanceid and e.nodeid = data.nodeid and (e.`status` = 0 or e.`status` = 1)) extension_status,
+        (select case when count(1) then 1 else 0 end `status` from wf_event_appeal a where a.flowinstanceid = data.flowinstanceid and (a.`status` = 0 or a.`status` = 1)) appeal_status,
+        t.id taskid
+        from wf_event_report data
+        left join wf_instance i on i.id = data.flowinstanceid
+        left join wf_node_history his on his.flowinstanceid = data.flowinstanceid and his.nodeid = 'Start'
+        left join quota_event_type et on et.id = data.event_type
+        left join quota_event_type etT on etT.id = et.parent_id
+        left join quota_event_type etO on etO.id = etT.parent_id
+        left join wf_task t on t.flowinstanceid = data.flowinstanceid
+        left join wf_dept_event de on de.flowinstanceid = data.flowinstanceid
+        <where>
+            and data.del_flag = 0
+            and t.handle_deptid = #{param.handleDeptid}
+            <if test="param.code != null and param.code != ''">
+                and data.code like concat('%', #{param.code}, '%')
+            </if>
+            <if test="param.cycleId != null and param.cycleId != ''">
+                and data.cycle_id = #{param.cycleId}
+            </if>
+            <if test="param.typeId != null and param.typeId != ''">
+                and data.check_points_type_id like concat('%', #{param.typeId}, '%')
+            </if>
+            <if test="param.checkPoints != null and param.checkPoints != ''">
+                and data.check_points like concat('%', #{param.checkPoints},'%')
+            </if>
+            <if test="param.content != null and param.content != ''">
+                and data.content like concat('%', #{param.content},'%')
+            </if>
+            <if test="param.status != null and param.status != ''">
+                and de.status = #{param.status}
+            </if>
+        </where>
+        group by t.id
+        order by data.create_time desc
+    </select>
+
+    <select id="todo" resultType="cn.wxgis.jc.workflow.resp.WfEventReportResponse">
+        select i.starttime, i.endtime, data.*, data.event_title check_item,
+               his.attchpath, et.`name` event_type_name, etT.`name` event_type_two_name, etO.`name` event_type_one_name,
+        de.handle_dept, de.nodename handle_nodename, de.`status` handle_status, de.timelimit handle_timelimit, de.timeout_flag handle_timeout_flag, de.extension_flag handle_extension_flag,
+        (select case when count(1) then 1 else 0 end `status` from wf_event_extension e where e.flowinstanceid = data.flowinstanceid and e.nodeid = data.nodeid and (e.`status` = 0 or e.`status` = 1)) extension_status,
+        (select case when count(1) then 1 else 0 end `status` from wf_event_appeal a where a.flowinstanceid = data.flowinstanceid and (a.`status` = 0 or a.`status` = 1)) appeal_status,
+        t.id taskid
+        from wf_event_report data
+        left join wf_instance i on i.id = data.flowinstanceid
+        left join wf_node_history his on his.flowinstanceid = data.flowinstanceid and his.nodeid = 'Start'
+        left join quota_event_type et on et.id = data.event_type
+        left join quota_event_type etT on etT.id = et.parent_id
+        left join quota_event_type etO on etO.id = etT.parent_id
+        left join wf_task t on t.flowinstanceid = data.flowinstanceid
+        left join wf_dept_event de on de.flowinstanceid = data.flowinstanceid and de.id = t.dept_event_id
+        <where>
+            and data.del_flag = 0
+            and t.handle_deptid = #{param.handleDeptid}
+            <if test="param.code != null and param.code != ''">
+                and data.code like concat('%', #{param.code}, '%')
+            </if>
+            <if test="param.cycleId != null and param.cycleId != ''">
+                and data.cycle_id = #{param.cycleId}
+            </if>
+            <if test="param.typeId != null and param.typeId != ''">
+                and data.check_points_type_id like concat('%', #{param.typeId}, '%')
+            </if>
+            <if test="param.checkPoints != null and param.checkPoints != ''">
+                and data.check_points like concat('%', #{param.checkPoints},'%')
+            </if>
+            <if test="param.content != null and param.content != ''">
+                and data.content like concat('%', #{param.content},'%')
+            </if>
+            <if test="param.status != null and param.status != ''">
+                and de.status = #{param.status}
+            </if>
+        </where>
+        group by t.id
+        order by data.create_time desc
+    </select>
+
+    <select id="handled" resultType="cn.wxgis.jc.workflow.resp.WfEventReportResponse">
+        select i.starttime, i.endtime, data.*, data.event_title check_item,
+               his.attchpath, et.`name` event_type_name, etT.`name` event_type_two_name, etO.`name` event_type_one_name,
+        de.handle_dept, de.nodename handle_nodename, de.`status` handle_status, de.timelimit handle_timelimit, de.timeout_flag handle_timeout_flag, de.extension_flag handle_extension_flag,
+        (select case when count(1) then 1 else 0 end `status` from wf_event_extension e where e.flowinstanceid = data.flowinstanceid and e.nodeid = data.nodeid and (e.`status` = 0 or e.`status` = 1)) extension_status,
+        (select case when count(1) then 1 else 0 end `status` from wf_event_appeal a where a.flowinstanceid = data.flowinstanceid and (a.`status` = 0 or a.`status` = 1)) appeal_status
+        from wf_event_report data
+        left join wf_instance i on i.id = data.flowinstanceid
+        left join wf_node_history his on his.flowinstanceid = data.flowinstanceid and his.nodeid = 'Start'
+        left join quota_event_type et on et.id = data.event_type
+        left join quota_event_type etT on etT.id = et.parent_id
+        left join quota_event_type etO on etO.id = etT.parent_id
+        left join wf_dept_event de on de.flowinstanceid = data.flowinstanceid and de.handle_deptid = #{param.handleDeptid}
+        <where>
+            and data.del_flag = 0
+            and data.flowinstanceid in (select distinct flowinstanceid from wf_node_history where handlerid = #{param.handlerid})
+            <if test="param.code != null and param.code != ''">
+                and data.code like concat('%', #{param.code}, '%')
+            </if>
+            <if test="param.cycleId != null and param.cycleId != ''">
+                and data.cycle_id = #{param.cycleId}
+            </if>
+            <if test="param.typeId != null and param.typeId != ''">
+                and data.check_points_type_id like concat('%', #{param.typeId}, '%')
+            </if>
+            <if test="param.checkPoints != null and param.checkPoints != ''">
+                and data.check_points like concat('%', #{param.checkPoints},'%')
+            </if>
+            <if test="param.content != null and param.content != ''">
+                and data.content like concat('%', #{param.content},'%')
+            </if>
+            <if test="param.status != null and param.status != ''">
+                and data.status > #{param.status}
+            </if>
+        </where>
+        order by data.create_time desc
+    </select>
+
+    <select id="check" resultType="cn.wxgis.jc.workflow.resp.WfEventReportResponse">
+        select i.starttime, i.endtime, data.*,  data.event_title check_item,
+               his.attchpath, et.`name` event_type_name, etT.`name` event_type_two_name, etO.`name` event_type_one_name,
+        de.handle_dept, de.nodename handle_nodename, de.`status` handle_status, de.timelimit handle_timelimit, de.timeout_flag handle_timeout_flag, de.extension_flag handle_extension_flag,
+        (select case when count(1) then 1 else 0 end `status` from wf_event_extension e where e.flowinstanceid = data.flowinstanceid and e.nodeid = data.nodeid and (e.`status` = 0 or e.`status` = 1)) extension_status,
+        (select case when count(1) then 1 else 0 end `status` from wf_event_appeal a where a.flowinstanceid = data.flowinstanceid and (a.`status` = 0 or a.`status` = 1)) appeal_status,
+        t.id taskid
+        from wf_event_report data
+        left join wf_instance i on i.id = data.flowinstanceid
+        left join wf_node_history his on his.flowinstanceid = data.flowinstanceid and his.nodeid = 'Start'
+        left join quota_event_type et on et.id = data.event_type
+        left join quota_event_type etT on etT.id = et.parent_id
+        left join quota_event_type etO on etO.id = etT.parent_id
+        left join wf_task t on t.flowinstanceid = data.flowinstanceid
+        left join wf_dept_event de on de.flowinstanceid = data.flowinstanceid and de.id = t.dept_event_id
+        <where>
+            and data.del_flag = 0
+            and t.handle_deptid = #{param.handleDeptid}
+            and data.status = 50
+            <if test="param.code != null and param.code != ''">
+                and data.code like concat('%', #{param.code}, '%')
+            </if>
+            <if test="param.cycleId != null and param.cycleId != ''">
+                and data.cycle_id = #{param.cycleId}
+            </if>
+            <if test="param.typeId != null and param.typeId != ''">
+                and data.check_points_type_id like concat('%', #{param.typeId}, '%')
+            </if>
+            <if test="param.checkPoints != null and param.checkPoints != ''">
+                and data.check_points like concat('%', #{param.checkPoints},'%')
+            </if>
+            <if test="param.content != null and param.content != ''">
+                and data.content like concat('%', #{param.content},'%')
+            </if>
+            <if test="param.statusArray != null and param.statusArray.size > 0">
+                and data.status in
+                <foreach collection="param.statusArray" item="item" index="index"
+                         open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        group by data.flowinstanceid
+        order by data.create_time desc
+    </select>
+
+    <select id="finish" resultType="cn.wxgis.jc.workflow.resp.WfEventReportResponse">
+        select i.starttime, i.endtime, data.*, data.event_title check_item,
+               his.attchpath, et.`name` event_type_name, etT.`name` event_type_two_name, etO.`name` event_type_one_name,
+        (select case when count(1) then 1 else 0 end `status` from wf_event_extension e where e.flowinstanceid = data.flowinstanceid and e.nodeid = data.nodeid and (e.`status` = 0 or e.`status` = 1)) extension_status,
+        (select case when count(1) then 1 else 0 end `status` from wf_event_appeal a where a.flowinstanceid = data.flowinstanceid and (a.`status` = 0 or a.`status` = 1)) appealStatus
+        from wf_event_report data
+        left join wf_instance i on i.id = data.flowinstanceid
+        left join wf_node_history his on his.flowinstanceid = data.flowinstanceid and his.nodeid = 'Start'
+        left join quota_event_type et on et.id = data.event_type
+        left join quota_event_type etT on etT.id = et.parent_id
+        left join quota_event_type etO on etO.id = etT.parent_id
+        left join wf_dept_event de on de.flowinstanceid = data.flowinstanceid and de.handle_deptid = #{param.handleDeptid}
+        <where>
+            and data.status = 60
+            and data.flowinstanceid in (select distinct flowinstanceid from wf_node_history where handlerid = #{param.handlerid})
+            <if test="param.code != null and param.code != ''">
+                and data.code like concat('%', #{param.code}, '%')
+            </if>
+            <if test="param.cycleId != null and param.cycleId != ''">
+                and data.cycle_id = #{param.cycleId}
+            </if>
+            <if test="param.typeId != null and param.typeId != ''">
+                and data.check_points_type_id like concat('%', #{param.typeId}, '%')
+            </if>
+            <if test="param.checkPoints != null and param.checkPoints != ''">
+                and data.check_points like concat('%', #{param.checkPoints},'%')
+            </if>
+            <if test="param.content != null and param.content != ''">
+                and data.content like concat('%', #{param.content},'%')
+            </if>
+        </where>
+        order by data.create_time desc
+    </select>
+
+    <select id="citizen" resultType="cn.wxgis.jc.workflow.resp.WfEventReportResponse">
+        select i.starttime, i.endtime, data.*, data.event_title check_item,
+               his.attchpath, et.`name` event_type_name, etT.`name` event_type_two_name, etO.`name` event_type_one_name,
+        (select case when count(1) then 1 else 0 end `status` from wf_event_extension e where e.flowinstanceid = data.flowinstanceid and e.nodeid = data.nodeid and (e.`status` = 0 or e.`status` = 1)) extension_status,
+        (select case when count(1) then 1 else 0 end `status` from wf_event_appeal a where a.flowinstanceid = data.flowinstanceid and (a.`status` = 0 or a.`status` = 1)) appeal_status
+        from wf_event_report data
+        left join wf_instance i on i.id = data.flowinstanceid
+        left join wf_node_history his on his.flowinstanceid = data.flowinstanceid and his.nodeid = 'Start'
+        left join quota_event_type et on et.id = data.event_type
+        left join quota_event_type etT on etT.id = et.parent_id
+        left join quota_event_type etO on etO.id = etT.parent_id
+        <where>
+            and data.del_flag = 0
+            and data.citizen_flag = 1
+            <if test="param.checkPoints != null and param.checkPoints != ''">
+                and data.check_points like concat('%', #{param.checkPoints},'%')
+            </if>
+            <if test="param.content != null and param.content != ''">
+                and data.content like concat('%', #{param.content},'%')
+            </if>
+        </where>
+        order by data.create_time desc
+    </select>
+
+    <select id="handleList" resultType="cn.wxgis.jc.workflow.resp.WorkflowTaskResponse">
+        select task.*, report.report_time, report.report_person, report.phone, report.address, report.coordinate, report.dept_ids, report.dept_names,
+        report.event_source, report.emergency, report.`level`, report.region_code, report.region_name, report.content,
+        report.event_title, report.check_points, report.check_points_type, his.attchpath,
+        et.`name` event_type_name, etT.`name` event_type_two_name, etO.`name` event_type_one_name
+        from wf_task task
+        left join wf_event_report report on report.flowinstanceid = task.flowinstanceid
+        left join wf_node_history his on his.flowinstanceid = report.flowinstanceid and his.nodeid = 'Start'
+        left join quota_event_type et on et.id = report.event_type
+        left join quota_event_type etT on etT.id = et.parent_id
+        left join quota_event_type etO on etO.id = etT.parent_id
+        <where>
+            and task.flowinstanceid = #{param.flowinstanceid}
+            and task.handle_deptid = #{param.handleDeptid}
+        </where>
+    </select>
+
+</mapper>

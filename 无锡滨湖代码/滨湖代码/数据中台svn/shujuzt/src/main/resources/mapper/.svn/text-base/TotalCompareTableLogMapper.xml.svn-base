@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.TotalCompareTableLogMapper">
+
+    <select id="unmatch" resultType="com.grandlynn.spa.catalogue.dto.TotalCompareUnmatchDto">
+        SELECT
+            t.id tableId, t.data_resource_name tableName, o.node_no nodeNo,o.node_name nodeName,
+            (select count(1) from foreign_total_list where node_no = o.node_no) count
+        FROM
+            catalogue_sys_table T
+        LEFT JOIN
+            total_compare_table_log tt ON tt.cata_table_id = t."id"
+        JOIN
+            catalogue_org_sys s ON t.org_sys_id = s.id
+        JOIN
+            catalogue_org_content_relation r ON r.content_id = s."id"
+        JOIN
+            catalogue_org o ON o.id = r.org_id
+        WHERE
+            T.is_deleted = 0
+        AND
+            tt.id is null
+        ORDER BY
+            count,o.node_name
+
+    </select>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.civilization.data.mapper.VolunteerMapper">
+
+    <select id="selectPageCustom" resultType="cn.wxgis.jc.civilization.data.resp.DataVolunteerResponse">
+        select * from (
+            select data.* from data_volunteer data
+        ) t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="findResponseById" resultType="cn.wxgis.jc.civilization.data.resp.DataVolunteerResponse">
+        select data.*, jdata.name region_name
+        from data_volunteer data
+        left join sys_dept jdata on jdata.id = data.region_code
+        where data.id = #{id}
+    </select>
+
+</mapper>

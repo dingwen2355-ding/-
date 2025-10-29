@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.screen.web.mapper.CheckPointsMapper">
+
+    <select id="getCheckPointsTypePage" resultType="cn.wxgis.jc.screen.domain.vo.points.CheckPointsTypeVo">
+        select id, name, dept_ids, dept_names from data_check_points_type
+    </select>
+
+    <select id="getCheckPointsPage" resultType="cn.wxgis.jc.screen.domain.vo.points.CheckPointsVo">
+        select r.name region_name, r.id region_code, t.id typeId, t.name typeName, p.id, p.name, p.latitude, p.longitude,
+        (select count(1) from data_check_points_mark m where m.points_id = p.id) markCount
+        from data_check_points p
+        left join data_check_points_type t on t.id = p.type_id
+        left join sys_dept r on r.id = p.region_code
+        <where>
+            <if test="param.regionCode != null and param.regionCode != ''">
+                and r.id = #{param.regionCode}
+            </if>
+            <if test="param.regionName != null and param.regionName != ''">
+                and r.name = #{param.regionName}
+            </if>
+            <if test="param.name != null and param.name != ''">
+                and p.name like concat('%', #{param.name}, '%')
+            </if>
+            <if test="param.typeId != null and param.typeId != ''">
+                and t.id in
+                <foreach collection="param.typeIds" open="(" close=")" separator="," item = "typeId" index="index">
+                    #{typeId}
+                </foreach>
+            </if>
+            <if test="param.typeName != null and param.typeName != ''">
+                and t.name like concat('%', #{param.typeName}, '%')
+            </if>
+        </where>
+    </select>
+
+
+    <select id="getCheckPointsTypeCount" resultType="java.lang.Integer">
+        select IFNULL(count(1), 0) from data_check_points_type
+    </select>
+
+    <select id="getCheckPointsCount" resultType="java.lang.Integer">
+        select IFNULL(count(1), 0) from data_check_points
+    </select>
+
+    <select id="getEventPointsCount" resultType="java.lang.Integer">
+        select count(1) from (
+            select distinct point_name  from (
+                select check_points point_name from wf_event_report
+                union
+                select point_name from work_event
+            ) point_name
+        ) data
+    </select>
+
+    <select id="getCheckUserList" resultType="cn.wxgis.jc.screen.domain.vo.points.CheckUserVo">
+        select id, name, phone from data_check_user where find_in_set(#{pointsId},  points_id) > 0;
+    </select>
+
+    <select id="getCheckTaskList" resultType="cn.wxgis.jc.screen.domain.vo.points.CheckTaskVo">
+        select id, points_type_name, points_name, check_item, content, create_time, status from work_check_task where type = 1 and points_type_id = #{pointsTypeId}
+        union
+        select id, points_type_name, points_name, check_item, content, create_time, status from work_check_task where type = 2 and points_id = #{pointsId}
+    </select>
+
+    <select id="findCheckUserById" resultType="cn.wxgis.jc.civilization.data.po.DataCheckUser">
+        select * from data_check_user
+    </select>
+
+</mapper>

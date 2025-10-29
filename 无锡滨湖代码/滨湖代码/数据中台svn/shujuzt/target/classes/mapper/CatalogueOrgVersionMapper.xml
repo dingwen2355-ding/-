@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.CatalogueOrgVersionMapper">
+
+    <resultMap id="BaseResultMap" type="com.grandlynn.spa.catalogue.entity.CatalogueOrgVersionDO">
+        <!--@Table catalogue_org-->
+        <result property="id" column="id"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="version" column="version"/>
+        <result property="appId" column="app_id"/>
+        <result property="remark" column="remark"/>
+        <result property="deleted" column="is_deleted"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="updatedBy" column="updated_by"/>
+        <result property="updatedTime" column="updated_time"/>
+        <result property="nodeName" column="node_name"/>
+        <result property="nodeCode" column="node_code"/>
+        <result property="nodeType" column="node_type"/>
+        <result property="enable" column="enable"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="leaf" column="leaf"/>
+        <result property="contact" column="contact"/>
+        <result property="phone" column="phone"/>
+        <result property="nodeNameSimplify" column="node_name_simplify"/>
+        <result property="nodeNo" column="node_no"/>
+        <result property="oaId" column="oa_id"/>
+        <result column="intermediate" property="intermediate"/>
+        <result column="version_no" property="versionNo"/>
+        <result column="old_id" property="oldId"/>
+    </resultMap>
+
+    <insert id="insertFromOrg">
+	    INSERT INTO catalogue_org_version (
+            old_id,
+            tenant_id,
+            app_id,
+            VERSION,
+            remark,
+            is_deleted,
+            created_by,
+            updated_by,
+            created_time,
+            updated_time,
+            node_name,
+            node_code,
+            node_type,
+            ENABLE,
+            contact,
+            phone,
+            node_name_simplify,
+            leaf,
+            node_no,
+            parent_id,
+            oa_id,
+            intermediate,
+            version_no
+        ) SELECT id,
+            tenant_id,
+            app_id,
+            VERSION,
+            remark,
+            is_deleted,
+            created_by,
+            updated_by,
+            created_time,
+            updated_time,
+            node_name,
+            node_code,
+            node_type,
+            ENABLE,
+            contact,
+            phone,
+            node_name_simplify,
+            leaf,
+            node_no,
+            parent_id,
+            oa_id,
+            0,
+            #{orgDO.versionNo}
+        FROM
+            catalogue_org
+        where
+            tenant_id = #{orgDO.tenantId} and
+            app_id = #{orgDO.appId} and
+            intermediate = 1
+	</insert>
+</mapper>

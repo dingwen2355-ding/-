@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.BhApplicationManagementMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="bhApplicationManagementResultMap" type="com.jslc.modules.szbh.entity.BhApplicationManagement">
+        <result column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="name" property="name"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="app_id" property="appId"/>
+        <result column="app_secret" property="appSecret"/>
+        <result column="logo" property="logo"/>
+        <result column="description" property="description"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="contacts" property="contacts"/>
+        <result column="telephone" property="telephone"/>
+        <result column="url" property="url"/>
+        <result column="is_ground" property="isGround"/>
+        <result column="is_enable" property="isEnable"/>
+        <result column="is_recommend" property="isRecommend"/>
+        <result column="is_send_sms" property="isSendSms"/>
+        <result column="protocol" property="protocol"/>
+        <result column="user_column" property="userColumn"/>
+        <result column="sort" property="sort"/>
+        <result column="is_updated" property="isUpdated"/>
+        <result column="data_source" property="dataSource"/>
+        <result column="ent_id" property="entId"/>
+        <result column="icon" property="icon"/>
+    </resultMap>
+
+    <resultMap id="bhApplicationManagementVOResultMap" type="com.jslc.modules.szbh.vo.BhApplicationManagementVO" extends="bhApplicationManagementResultMap">
+        <result column="userName" property="userName"/>
+        <result column="account" property="account"/>
+        <result column="positionDeptId" property="positionDeptId"/>
+        <result column="positionDeptName" property="positionDeptName"/>
+        <result column="manageDeptId" property="manageDeptId"/>
+        <result column="manageDeptName" property="manageDeptName"/>
+    </resultMap>
+
+
+    <select id="selectBhApplicationManagementPage" resultMap="bhApplicationManagementResultMap">
+        select * from bh_application_management where is_deleted = 0
+    </select>
+    <select id="getPageList" resultMap="bhApplicationManagementVOResultMap">
+        select bam.*, bac.name as categoryName,bac.type ,(CASE WHEN bam.is_ground = 1 THEN '上架' ELSE '未上架' END) as  isGroundName ,
+        (CASE WHEN bam.is_recommend = 1 THEN '推荐' ELSE '不推荐' END) as  isRecommendName
+        from bh_application_management bam
+        left join bh_application_category bac on bam.category_id = bac.id and bac.is_deleted = 0
+        where bam.is_deleted = 0
+
+        <if test="name != null and name != ''">
+            and (bam.name like concat('%',#{name},'%') or bam.app_id like concat('%',#{name},'%'))
+        </if>
+
+        <if test="isGround != null">
+            and bam.is_ground = #{isGround}
+        </if>
+
+        <if test="isRecommend != null">
+            and bam.is_recommend = #{isRecommend}
+        </if>
+        <if test="appCategoryIds != null">
+            and bam.category_id in
+            <foreach collection="appCategoryIds" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        order by bam.sort asc ,bam.create_time desc
+    </select>
+    <select id="getDetail" resultMap="bhApplicationManagementVOResultMap">
+        select bam.*,bac.name as categoryName ,(CASE WHEN bam.is_ground = 1 THEN '上架' ELSE '未上架' END) as  isGroundName,
+        (CASE WHEN bam.is_recommend = 1 THEN '推荐' ELSE '不推荐' END) as  isRecommendName
+        from bh_application_management bam
+        left join bh_application_category bac on bam.category_id = bac.id
+        where bam.is_deleted = 0 and bam.id = #{id}
+    </select>
+
+    <select id="getUserApplicationManagementByAccount" resultMap="bhApplicationManagementVOResultMap">
+        select distinct buam.create_time as userTime, buam.app_order as appOrder,bu.id as userId,bd.dept_id positionDeptId,bd.name positionDeptName,bu.name userName,bu.account,bd1.dept_id manageDeptId,bd1.name manageDeptName,bam.*,ocd.web_server_redirect_uri as webUri
+        from bh_user bu
+        inner join bh_user_application_management buam on buam.user_id = bu.id
+        inner join bh_application_management bam on bam.id = buam.application_management_id and bam.is_deleted = 0
+        inner join bh_dept bd on bd.id = buam.dept_id and bd.is_deleted = 0
+        inner join oauth_client_details ocd on ocd.client_id = bam.app_id
+        left join bh_dept bd1 on bd1.dept_id = bam.dept_id and bd1.is_deleted = 0
+        where bu.account = #{account} and bam.is_enable = 1 and bam.is_ground = 1
+        <if test="keyword != null and keyword !=''">
+            and bam.name like concat('%',#{keyword},'%')
+        </if>
+        order by buam.app_order asc
+    </select>
+
+    <select id="getAppSecretByAppId" resultType="java.lang.String">
+        select bam.app_secret
+        from bh_application_management bam
+        where bam.app_id = #{appId}
+    </select>
+    <select id="getList" resultMap="bhApplicationManagementResultMap">
+        select bam.*
+        from bh_application_management bam
+        inner join bh_application_category bac on bac.id =bam.category_id and bac.is_deleted = 0
+        where bam.is_deleted = 0 and bam.is_enable = 1 and bac.type = 1
+        <if test="key != null and key !=''">
+            and bam.name like concat('%',#{key},'%')
+        </if>
+    </select>
+
+    <select id="applicationDept" resultMap="com.jslc.modules.szbh.mapper.BhDeptMapper.bhDeptResultMap">
+        select distinct bd.dept_id,bd.name,bd.sort
+        from bh_application_management bam
+        inner join bh_dept bd on bd.dept_id = bam.dept_id and bd.is_deleted = 0 and bd.is_enable = 1
+        where bam.is_deleted = 0 and bam.is_enable = 1
+        order by bd.sort
+    </select>
+
+    <select id="getApplicationByClassificationAndDept" resultMap="bhApplicationManagementVOResultMap">
+        select bam.*,bd.id manageDeptId, bd.name manageDeptName,0 isAuthorization,ocd.web_server_redirect_uri as webUri
+        from bh_application_management bam
+        inner join bh_dept bd on bd.dept_id = bam.dept_id and bd.is_deleted = 0 and bd.is_enable = 1
+        inner join bh_application_category bac on bac.id = bam.category_id and bac.is_deleted = 0 and bac.type = 1
+        inner join bh_application_category bac1 on bac1.id = bac.parent_id and bac1.is_deleted = 0 and bac1.type = 1
+        inner join oauth_client_details ocd on ocd.client_id = bam.app_id
+        where bam.is_deleted = 0 and bam.is_enable = 1 and bam.is_ground = 1 and bac1.name = '应用' and bam.app_id &lt;&gt; 'ZmVLiSl0'
+        <if test="deptId != null">
+            and bam.dept_id = #{deptId}
+        </if>
+        <if test="applicationClassificationId != null">
+            and bam.category_id = #{applicationClassificationId}
+        </if>
+        <if test="keywords != null and keywords !=''">
+            and bam.name like concat('%',#{keywords},'%')
+        </if>
+        order by bam.sort
+    </select>
+
+    <select id="getAppUserRecord" resultType="com.jslc.modules.szbh.vo.CommonMapVO">
+        select client_id id,count(1) value from bh_app_use_record where username = #{account} group by client_id
+    </select>
+
+    <select id="getApplicationActivation" resultType="com.jslc.modules.szbh.dto.ApplicationActivationDTO">
+        select bam.app_id,bam.id,bam.app_id,bam.name,count(1) recordNum
+        from bh_application_management bam
+        inner join bh_app_use_record baur on baur.client_id = bam.app_id
+        where bam.is_deleted = 0 and bam.is_enable = 1
+        <if test="startTime != null">
+            and baur.create_time between #{startTime} and #{endTime}
+        </if>
+        group by bam.id,bam.app_id,bam.name
+    </select>
+
+    <select id="getApplicationActivationCount" resultType="java.lang.Long">
+        select count(1) recordNum
+        from bh_application_management bam
+        inner join bh_app_use_record baur on baur.client_id = bam.app_id
+        where bam.is_deleted = 0 and bam.is_enable = 1
+        <if test="startTime != null">
+            and baur.create_time between #{startTime} and #{endTime}
+        </if>
+    </select>
+
+    <select id="getApplicationCategoryParent" resultType="com.jslc.modules.szbh.vo.CommonMapVO">
+        select id,name value from bh_application_category where name in ('应用','组件','工具') and type = 1
+    </select>
+
+    <select id="getApplicationManagementCount" resultType="java.lang.Integer">
+        select count(1) from bh_application_category bac
+        inner join bh_application_management bam on bam.category_id = bac.id and bam.is_deleted = 0 and bam.is_enable = 1
+        where bac.is_deleted = 0 and bac.is_enable = 1
+        and bac.id in (
+            select id from bh_application_category where parent_id = #{id}
+        )
+    </select>
+    <select id="getUserAppById" resultMap="bhApplicationManagementVOResultMap">
+		select bam.*
+        from bh_application_management bam
+        inner join bh_user_application_management buam on buam.application_management_id = bam.id
+		where bam.is_deleted = 0 and buam.user_id = #{userId}
+
+    </select>
+    <select id="getAppSumData" resultMap="bhApplicationManagementVOResultMap">
+        select bam.*,bd.id manageDeptId, bd.name manageDeptName,0 isAuthorization,ocd.web_server_redirect_uri as webUri,bac.name
+        from bh_application_management bam
+        inner join bh_dept bd on bd.dept_id = bam.dept_id and bd.is_deleted = 0 and bd.is_enable = 1
+        inner join bh_application_category bac on bac.id = bam.category_id and bac.is_deleted = 0 and bac.type = 1
+        inner join bh_application_category bac1 on bac1.id = bac.parent_id and bac1.is_deleted = 0 and bac1.type = 1
+        inner join oauth_client_details ocd on ocd.client_id = bam.app_id
+        where bam.is_deleted = 0 and bam.is_enable = 1 and bac1.name = '应用'
+
+        <if test="start != null">
+            and bam.create_time between #{start} and #{end}
+        </if>
+    </select>
+
+    <select id="getUserAppByAccount" resultMap="bhApplicationManagementVOResultMap">
+        select distinct buam.app_order as appOrder,bu.id as userId,bd.dept_id positionDeptId,bd.name positionDeptName,bu.name userName,bu.account,bd1.dept_id manageDeptId,bd1.name manageDeptName,bam.*,ocd.web_server_redirect_uri as webUri
+        from bh_user bu
+        inner join bh_user_application_management buam on buam.user_id = bu.id
+        inner join bh_application_management bam on bam.id = buam.application_management_id and bam.is_deleted = 0
+        inner join bh_dept bd on bd.id = buam.dept_id and bd.is_deleted = 0
+        inner join oauth_client_details ocd on ocd.client_id = bam.app_id
+        left join bh_dept bd1 on bd1.dept_id = bam.dept_id and bd1.is_deleted = 0
+        where bu.account = #{account} and bam.is_enable = 1
+        <if test="keyword != null and keyword !=''">
+            and bam.name like concat('%',#{keyword},'%')
+        </if>
+        order by buam.app_order asc
+    </select>
+</mapper>

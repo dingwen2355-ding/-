@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.workflow.web.mapper.WfDeptEventMapper">
+
+    <select id="findByTaskId" resultType="cn.wxgis.jc.workflow.po.WfDeptEvent">
+        select de.*
+        from wf_dept_event de
+                 left join wf_task t on t.dept_event_id = de.id
+        where t.id = #{taskId}
+    </select>
+    <select id="findHighNode" resultType="cn.wxgis.jc.workflow.po.WfDeptEvent">
+        select * from wf_dept_event where flowinstanceid = #{flowinstanceid} and status <![CDATA[ < ]]> 50 order by nodeid desc limit 0,1
+
+    </select>
+
+</mapper>

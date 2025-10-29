@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.customer.mapper.HouseInfoMapper">
+
+	<resultMap type="ResidentInfo" id="ResidentInfo">
+		<id     property="id"        column="ID"           />
+		<result property="name"      column="NAME"         />
+		<result property="zjzl"        column="ZJZL"            />
+		<result property="idNumber"        column="IDNUMBER"            />
+		<result property="HKSXDM" column="HKSXDM"    />
+		<result property="HKSX"       column="HKSX"           />
+		<result property="HKXZ"            column="HKXZ"                />
+		<result property="HISTORY"           column="HISTORY"               />
+		<result property="types"     column="TYPES"        />
+		<result property="CZRKTYPE"     column="CZRKTYPE"        />
+		<result property="buildingCode"     column="BUILDINGCODE"        />
+		<result property="roomCode"     column="ROOMCODE"        />
+		<result property="SJCZSJ"     column="SJCZSJ"        />
+		<result property="SYNC_DATE"     column="SYNC_DATE"        />
+	</resultMap>
+
+	<resultMap type="roomBaseInfo" id="roomBaseInfo">
+		<id     property="id"        column="ID"           />
+		<result property="roomName"      column="ROOMNAME"         />
+		<result property="usa"        column="USA"            />
+		<result property="location"        column="LOCATION"            />
+		<result property="floor" column="FLOOR"    />
+		<result property="unite"       column="UNITE"           />
+		<result property="flpprShowName"            column="FLOORSHOWNAME"                />
+		<result property="uniteShowName"           column="UNITESHOWNAME"               />
+		<result property="buildingCode"     column="BUILDINGCODE"        />
+		<result property="roomCode"     column="ROOMCODE"        />
+		<result property="fangCha"     column="FANGCHA"        />
+		<result property="barCode"     column="BARCODE"        />
+		<result property="barCodeInfo"     column="BARCODEINFO"        />
+		<result property="addTime"     column="ADDTIME"        />
+		<result property="addUserCode"     column="ADDUSERCODE"        />
+		<result property="addUserName"     column="ADDUSERNAME"        />
+		<result property="QXDM"     column="QXDM"        />
+		<result property="PCSDM"     column="PCSDM"        />
+		<result property="XZJDDM"     column="XZJDDM"        />
+		<result property="SQDM"     column="SQDM"        />
+		<result property="FJDM"     column="FJDM"        />
+		<result property="fangChaTime"     column="FANGCHATIME"        />
+		<result property="WGDM"     column="WGDM"        />
+		<result property="standardAddress"     column="STANDARDADDRESS"        />
+		<result property="dah"     column="DAH"        />
+		<result property="hh"     column="HH"        />
+		<result property="state"     column="STATE"        />
+		<result property="fangChaUserCode"     column="FANGCHAUSERCODE"        />
+		<result property="fangChaUserNanme"     column="FANGCHAUSERNAME"        />
+		<result property="SJCZSJ"     column="SJCZSJ"        />
+		<result property="updateTime"     column="UPDATETIME"        />
+		<result property="updateUserCode"     column="UPDATEUSERCODE"        />
+		<result property="updateUserName"     column="UPDATEUSERNAME"        />
+		<result property="deleteTime"     column="DELETETIME"        />
+		<result property="deleteUserCode"     column="DELETEUSERCODE"        />
+		<result property="deleteUserName"     column="DELETEUSERNAME"        />
+		<result property="MLPID"     column="MLPID"        />
+		<result property="YBZMLPID"     column="YBZMLPID"        />
+		<result property="BDYY"     column="BDYY"        />
+		<result property="SFQZ"     column="SFQZ"        />
+		<result property="roomType"     column="ROOMTYPE"        />
+		<result property="SYNC_DATE"     column="SYNC_DATE"        />
+		<result property="lz"     column="lz"        />
+
+
+	</resultMap>
+
+	<select id="getRoomBaseInfoByBuindingCode" parameterType="string" resultMap="roomBaseInfo">
+<!--		SELECT room.* from room_base_info room-->
+<!--		 join (SELECT-->
+<!--		BUILDINGCODE-->
+<!--		FROM-->
+<!--		(-->
+<!--		SELECT DISTINCT-->
+<!--		aa.BUILDINGCODE,-->
+<!--		bb.gml_id-->
+<!--		FROM-->
+<!--		resident_info aa-->
+<!--		RIGHT JOIN stg_bh_rkk.rfgl_data bb ON aa.ID = bb.id-->
+<!--		) cc-->
+<!--		WHERE-->
+<!--		 1=1-->
+<!--		<if test="gmlId != null and gmlId != ''">-->
+<!--			and cc.gml_id =#{gmlId}-->
+<!--		</if>-->
+<!--		)dd-->
+<!--		on room.BUILDINGCODE=dd.BUILDINGCODE-->
+<!--		order by room.UNITE,room.`FLOOR`,room.ROOMNAME-->
+		select a.*,b.lz from (
+		SELECT
+		DISTINCT uniteshowname,roomname,unite,`FLOOR`,location,BUILDINGCODE,roomcode
+		FROM
+		room_base_info room
+		WHERE
+		buildingcode IN ( SELECT DISTINCT buildingcode FROM stg_bh_rkk.rfgl_n_data WHERE uuid IN ( SELECT ID FROM stg_bh_rkk.rfgl_data
+		WHERE 1=1
+
+		<if test="gmlId != null and gmlId != ''">
+			and gml_id =#{gmlId}
+		</if>
+		    ) )
+		ORDER BY BUILDINGCODE,UNITE,room.`FLOOR`,room.ROOMNAME
+		    ) a left join buildings_info b on a.BUILDINGCODE=b.BUILDINGCODE where b.LZ is not null
+
+	</select>
+<!--	<select id="getresidentInfoByRoomCode" resultType="ResidentInfo">-->
+<!--		SELECT * from resident_info  room where 1=1-->
+<!--		<if test="roomCode != null and roomCode != ''">-->
+<!--			and room.ROOMCODE=#{roomCode}-->
+<!--		</if>-->
+<!--	</select>-->
+
+
+	<resultMap type="cmApp" id="cmAppResult">
+		<id     property="id"        column="id"           />
+		<result property="sortBy"      column="sort_by"         />
+		<result property="delFlag"        column="del_flag"            />
+		<result property="createBy"        column="create_by"            />
+		<result property="createTime"  column="create_time"    />
+		<result property="updateBy"       column="update_by"           />
+		<result property="updateTime"            column="update_time"                />
+		<result property="remark"           column="remark"               />
+		<result property="appType"     column="app_type"        />
+		<result property="appModule"     column="app_module"        />
+		<result property="appSerialNo"     column="app_serial_no"        />
+		<result property="appPic"     column="app_pic"        />
+		<result property="appName"     column="app_name"        />
+		<result property="recommendFlag"     column="recommend_flag"        />
+		<result property="status"     column="status"        />
+		<result property="appLink"     column="app_link"        />
+		<result property="appScreenshot"     column="app_screenshot"        />
+		<result property="applicationReason"     column="application_reason"        />
+		<result property="dept"     column="dept"        />
+		<result property="casAppId"     column="cas_app_id"        />
+		<result property="principalName"     column="principal_name"        />
+		<result property="principalPhone"     column="principal_phone"        />
+		<result property="upload"     column="upload"   javaType="java.sql.Blob" typeHandler="com.ruoyi.system.customer.domain.ListToStringHandler"     />
+		<result property="source"     column="source"        />
+		<result property="unitType"     column="unit_type"        />
+		<result property="moban"       column="moban"   javaType="java.sql.Blob" typeHandler="com.ruoyi.system.customer.domain.ListToStringHandler"        />
+		<result property="rowid"     column="rowid"        />
+		<result property="shangjiatime"     column="shangjiatime"        />
+		<result property="liangdian"     column="liangdian"        />
+		<result property="liangdianpic"     column="liangdianpic"        />
+		<result property="danwei"     column="danwei"        />
+		<result property="danweiType"     column="danwei_type"        />
+		<result property="shengqingliang"     column="shengqingliang"        />
+		<result property="fangwenliang"     column="fangwenliang"        />
+		<result property="show"     column="show"        />
+		<result property="zhiding"     column="zhiding"        />
+
+	</resultMap>
+
+	<select id="getCmAppDetail" parameterType="string" resultMap="cmAppResult">
+		select * from cm_app where  id =#{id}
+	</select>
+
+	<select id="getAllAppList" resultMap="cmAppResult">
+		SELECT
+		*
+		FROM
+		(
+		SELECT ROW_NUMBER
+		( ) OVER ( PARTITION BY b.cm_app_id ORDER BY b.update_time DESC ) rowid,
+		A.*,
+		b.update_time shangjiatime,
+		'0' shengqingliang,
+		 '0'  fangwenliang
+		FROM
+		cm_app
+		A JOIN cm_app_examine b ON A.ID = b.cm_app_id
+		WHERE
+		A.del_flag = '0'
+		AND status = '0'
+		ORDER BY
+		A.ID
+		) TEMP
+		WHERE
+		rowid = 1
+		<if test="appModule != null and appModule != ''">
+			and app_module  =#{appModule}
+		</if>
+		<if test="appType != null and appType != ''">
+			and app_type like concat('%', #{appType}, '%')
+		</if>
+		<if test="source != null and source != ''">
+			and source  =#{source}
+		</if>
+
+		<if test="shangjiatime != null and shangjiatime != '' and shangjiatime == 0">
+			ORDER BY shangjiatime desc
+		</if>
+		<if test="shangjiatime != null and shangjiatime != '' and shangjiatime == 1">
+			ORDER BY shangjiatime
+		</if>
+	</select>
+
+	<select id="getAllAppListForAdmin" resultMap="cmAppResult">
+
+		SELECT
+		A.*
+		FROM
+		cm_app
+		A
+		WHERE
+		A.del_flag = '0'
+
+		<if test="appModule != null and appModule != ''">
+			and app_module  =#{appModule}
+		</if>
+		<if test="appName != null and appName != ''">
+			and app_name  like concat('%', #{appName}, '%')
+		</if>
+		<if test="appType != null and appType != ''">
+			and app_type like concat('%', #{appType}, '%')
+		</if>
+		<if test="source != null and source != ''">
+			and source  =#{source}
+		</if>
+		<if test="recommendFlag != null and recommendFlag != ''">
+			and recommend_flag  =#{recommendFlag}
+		</if>
+		<if test="status != null and status != ''">
+			and status  =#{status}
+		</if>
+		order by zhiding desc ,update_time desc
+
+	</select>
+
+	<select id="getAllAppList2" resultMap="cmAppResult">
+		SELECT
+		*
+		FROM
+		(
+		SELECT ROW_NUMBER
+		( ) OVER ( PARTITION BY b.cm_app_id ORDER BY b.update_time DESC ) rowid,
+		A.*,
+		b.update_time shangjiatime,
+		'0' shengqingliang,
+		'0'  fangwenliang
+		FROM
+		cm_app
+		A JOIN cm_app_examine b ON A.ID = b.cm_app_id
+		WHERE
+		A.del_flag = '0'
+
+		ORDER BY
+		A.ID
+		) TEMP
+		WHERE
+		rowid = 1
+		<if test="appModule != null and appModule != ''">
+			and app_module  =#{appModule}
+		</if>
+		<if test="appType != null and appType != ''">
+			and app_type like concat('%', #{appType}, '%')
+		</if>
+		<if test="source != null and source != ''">
+			and source  =#{source}
+		</if>
+
+		<if test="shangjiatime != null and shangjiatime != '' and shangjiatime == 0">
+			ORDER BY shangjiatime desc
+		</if>
+		<if test="shangjiatime != null and shangjiatime != '' and shangjiatime == 1">
+			ORDER BY shangjiatime
+		</if>
+	</select>
+
+	<select id="getTuiJian" resultMap="cmAppResult">
+
+		SELECT
+		A.*
+		FROM
+		cm_app
+		A
+		WHERE
+		A.del_flag = '0'
+		AND a.status = '0'
+		and a.recommend_flag='0'
+		ORDER BY
+		A.update_time desc
+
+	</select>
+
+	<select id="getModuleCouts" resultType="java.util.Map">
+		SELECT case when app_module='1669301899511230465' then '组件'
+					when app_module='1669301825683091458' then '工具'
+					when app_module='1669301968486559746' then '应用' else app_module end appmodule,counts
+
+		from
+			( SELECT  app_module ,count(1) counts FROM cm_app where del_flag='0' and status='0'  GROUP BY app_module ) a
+
+		UNION ALL
+		select '最新上架' as appmodule, count(1) as counts  from
+			(SELECT ROW_NUMBER
+						( ) OVER ( PARTITION BY b.cm_app_id ORDER BY b.update_time DESC ) rowid,
+					 A.*,
+					b.update_time shangjiatime
+			 FROM
+				 cm_app
+					 A JOIN cm_app_examine b ON A.ID = b.cm_app_id where
+				 A.del_flag = '0'
+																	 AND status = '0') temp where temp.rowid=1 and update_time &gt; current_date - interval '7 days'
+		UNION ALL
+		select '应用推荐' appmodule, count(1) as counts from  cm_app where del_flag='0' and status='0' and recommend_flag='0'
+	</select>
+	<select id="getresidentInfoByRoomCode" resultType="java.util.Map">
+		SELECT * from stg_bh_rkk.bh_distinct_zhrkxxb where
+		1=1
+		<if test="roomCode != null and roomCode != ''">
+			and ROOMCODE=#{roomCode}
+		</if>
+
+	</select>
+	<select id="getLastApp" resultType="com.ruoyi.system.customer.domain.CmApp">
+		SELECT * FROM cm_app where update_time &gt;=NOW()::date +  interval '  -7 day' and update_time &lt;= now()::timestamp +  '1day'
+		and del_flag='0' and status='0'
+
+	</select>
+
+	<update id="updateStatusById">
+
+	</update>
+
+</mapper>

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/base
+END
+PageRequest.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/base/PageRequest.java
+END
+BaseRequest.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/base/BaseRequest.java
+END
+BaseEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/base/BaseEntity.java
+END
+BaseResponse.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/base/BaseResponse.java
+END

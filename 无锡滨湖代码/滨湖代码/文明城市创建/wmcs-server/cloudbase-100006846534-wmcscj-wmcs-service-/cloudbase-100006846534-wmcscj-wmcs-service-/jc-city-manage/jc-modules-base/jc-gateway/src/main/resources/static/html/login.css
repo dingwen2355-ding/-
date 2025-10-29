@@ -1,0 +1,307 @@
+/* 默认基础样式 */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+p,
+blockquote,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+pre,
+form,
+fieldset,
+legend,
+button,
+input,
+textarea,
+th,
+td,
+p {
+  margin: 0;
+  padding: 0;
+}
+
+body,
+button,
+input,
+select,
+textarea,
+p {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 100%;
+}
+
+address,
+cite,
+dfn,
+em,
+var {
+  font-style: normal;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+sup {
+  vertical-align: text-top;
+}
+
+sub {
+  vertical-align: text-bottom;
+}
+
+legend {
+  color: #000;
+}
+
+fieldset,
+img {
+  border: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font-size: 100%;
+}
+
+video {
+  object-fit: cover;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.pover {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-items {
+  align-items: center;
+}
+
+.flex-between {
+  justify-content: space-between;
+}
+
+html,
+body {
+  width: 100vw;
+  height: 100%;
+  overflow: hidden;
+  background: url("images/bodybg.png") no-repeat left top;
+  background-size: cover;
+  position: relative;
+}
+
+.loginpic1 {
+  position: absolute;
+  left: 3.07vw;
+  top: 12.34vw;
+  width: 55.41vw;
+  height: 32.44vw;
+}
+
+.loginWrap {
+  position: absolute;
+  top: 15.55vw;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28.64vw;
+  height: 18.14vw;
+  background: #ffffff;
+  border: 1px solid #707070;
+  border-radius: 10px;
+  padding: 2.6vw 1.35vw;
+}
+
+.Lgtop {
+  position: absolute;
+  top: 11.55vw;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 33.64vw;
+  height: 3.14vw;
+  line-height: 3.14vw;
+  padding: 0vw 1.05vw;
+  color: #ffffff;
+}
+
+.Lgtop .Lgtitle {
+  width: 100%;
+  text-align: center;
+  font-size: 2.35vw;
+  font-weight: bold;
+  font-family: "宋体";
+  text-shadow: 5px 5px 5px #999999;
+  -webkit-text-stroke:.2px #000;
+  -webkit-box-reflect: below 0px -webkit-linear-gradient(top,rgba(250,250,250,0),rgba(250,250,250,.05) 70%,rgba(250,250,250,0.3));
+  box-reflect: below 0px linear-gradient(top,rgba(250,250,250,0),rgba(250,250,250,.05) 70%,rgba(250,250,250,0.3));
+}
+
+.Lgtop img {
+  width: 3.36vw;
+  height: 3.36vw;
+  cursor: pointer;
+}
+
+.Lgcontent .inputWrap {
+  width: 22.86vw;
+  height: 3.22vw;
+  background: #f4f4f4;
+  border: 1px solid #ebebeb;
+  border-radius: 5px;
+  margin: 0 1.51vw;
+  margin-bottom: 1.56vw;
+  padding: 1.19vw;
+}
+
+.Lgcontent .inputWrap input {
+  background: #f4f4f4;
+  border: none;
+  outline: none;
+  font-size: 0.83vw;
+  width: 100%;
+}
+
+.Lgcontent .inputWrap input::placeholder {
+  font-size: 0.83vw;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.Lgcontent .username img {
+  width: 0.83vw;
+  height: 0.93vw;
+  margin-right: 0.46vw;
+}
+
+.Lgcontent .userpsd img {
+  width: 0.72vw;
+  height: 0.83vw;
+  margin-right: 0.46vw;
+}
+
+.submitWrap {
+  margin-top: 1.19vw;
+}
+
+.manual {
+  display: inline-block;
+  margin-top: 1vw;
+  margin-right: 1.51vw;
+  font-size: 0.83vw;
+  color: #1d7bff;
+  float: right;
+  cursor: pointer;
+}
+
+.submitWrap .submit {
+  width: 22.86vw;
+  height: 2.86vw;
+  background: linear-gradient(90deg, #3a93f5 0%, #1d7bfa 100%);
+  opacity: 1;
+  border-radius: 5px;
+  border: none;
+  font-size: 1.04vw;
+  color: #ffffff;
+  cursor: pointer;
+  margin: 0 1.51vw;
+}
+
+.loginDown {
+  display: none;
+}
+
+.codeImg {
+  width: 9.84vw;
+  margin: 0 auto;
+  display: block;
+}
+
+.manualDialog {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  position: relative;
+  z-index: 100;
+}
+
+.verification {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -15vw;
+  margin-top: -3.4375vw;
+  width: 30vw;
+  background: white;
+  border-radius: 5px;
+  padding: 1vw;
+}
+
+.verification input {
+  width: 100%;
+  height: 2vw;
+  margin-top: 0.5vw;
+  font-size: .9vw;
+}
+
+.manualButWrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1vw;
+}
+
+.manualButWrap p {
+  width: 5vw;
+  height: 2vw;
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #3a93f5 0%, #1d7bfa 100%);
+  text-align: center;
+  line-height: 2vw;
+  margin-left: 0.5vw;
+}
+
+.manualButWrap p:nth-child(1) {
+  color: #1d7bfa;
+  background: white;
+  border: 1px solid #1d7bfa;
+}
+

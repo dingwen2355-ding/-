@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.SysAdminUserRoleMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, role_id
+    </sql>
+
+    <select id="existsUserNum" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM sys_admin_user_role t
+        JOIN sys_admin_user u ON u.id = t.user_id
+        WHERE t.is_deleted = 0 AND u.is_deleted = 0 AND t.role_id = #{roleId}
+    </select>
+
+    <select id="getUsersByRoleId" resultType="java.lang.Integer" >
+        select user_id from sys_admin_user_role where  role_id = #{roleId}
+    </select>
+
+    <select id="getUsersByOrgRoleId" resultType="com.grandlynn.spa.catalogue.dto.UserInfoDTO">
+        SELECT us.id,
+               us.name  userName,
+               orgs.node_name   orgName,
+               us.tel mobile
+        from sys_admin_user us
+        LEFT JOIN sys_admin_user_org org on org.user_id = us.id and org.is_deleted = 0
+        LEFT JOIN catalogue_org orgs on orgs.id = org.org_id and orgs.is_deleted = 0
+        LEFT JOIN sys_admin_user_role role on role.user_id = us.id and role.is_deleted = 0
+        WHERE us.is_deleted = 0 and us.status = 0 and org.org_id = #{orgId} and role.role_id = #{roleId}
+    </select>
+
+    <select id="getUsersInfoByRoleId" resultType="com.grandlynn.spa.catalogue.dto.UserInfoDTO">
+        SELECT us.id,
+               us.name  userName,
+               orgs.node_name   orgName,
+               us.tel mobile,
+               sr.name  roleName
+        from sys_admin_user us
+        LEFT JOIN sys_admin_user_org org on org.user_id = us.id and org.is_deleted = 0
+        LEFT JOIN catalogue_org orgs on orgs.id = org.org_id and orgs.is_deleted = 0
+        LEFT JOIN sys_admin_user_role role on role.user_id = us.id and role.is_deleted = 0
+        LEFT JOIN sys_role sr on sr.id = role.role_id and sr.is_deleted = 0
+        WHERE us.is_deleted = 0 and us.status = 0 and sr.id = #{roleId}
+    </select>
+
+</mapper>

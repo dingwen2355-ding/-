@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.data.mapper.WorkThresholdMapper">
+
+    <select id="findByWarnType" resultType="cn.wxgis.jc.civilization.quota.vo.EventTypeVo">
+        select data.alarm_type warn_type, data.event_type, t.name eventTypeName, t1.id eventTypeOne, t1.name eventTypeOneName, t2.id eventTypeTwo, t2.name eventTypeTwoName
+        from work_threshold data
+                 left join  quota_event_type t on t.id = data.event_type
+                 left join quota_event_type t2 on t2.id = t.parent_id
+                 left join quota_event_type t1 on t1.id = t2.parent_id
+        where  t.id not in (select parent_id from quota_event_type where parent_id = t.id)
+          and  data.alarm_type = #{warnType}
+    </select>
+</mapper>

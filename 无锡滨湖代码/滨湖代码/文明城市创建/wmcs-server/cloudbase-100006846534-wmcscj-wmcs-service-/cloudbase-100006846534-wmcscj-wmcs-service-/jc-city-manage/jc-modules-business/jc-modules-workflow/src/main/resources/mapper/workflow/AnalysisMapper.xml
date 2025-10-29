@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.workflow.web.mapper.AnalysisMapper">
+
+    <select id="eventCount" resultType="cn.wxgis.jc.workflow.web.vo.EventCountVo">
+        select *, count(1) count from (
+            select r.cycle, p.`name` point_name, pt.name type_name, SUBSTRING_INDEX(SUBSTRING_INDEX(r.dept_names, ",", b.help_topic_id+1), ",", -1) dept_name
+            from wf_event_report r
+            left join data_check_points p on p.id = r.check_points_id
+            left join data_check_points_type pt on pt.id = r.check_points_type_id
+            join mysql.help_topic b ON b.help_topic_id <![CDATA[ < ]]> (length(r.dept_names) - length(REPLACE (r.dept_names, ',', '')) + 1)
+            union
+            select e.check_name, e.point_name, e.type_name, SUBSTRING_INDEX(SUBSTRING_INDEX(e.depart_name, ",", b.help_topic_id+1), ",", -1) dept_name
+            from work_event e
+            join mysql.help_topic b ON b.help_topic_id <![CDATA[ < ]]> (length(e.depart_name) - length(REPLACE (e.depart_name, ',', '')) + 1)
+        ) data
+        where data.cycle = #{cycle}
+        group by dept_name
+    </select>
+
+    <select id="eventFinishCount" resultType="cn.wxgis.jc.workflow.web.vo.EventCountVo">
+        select *, count(1) count from (
+            select r.cycle, p.`name` point_name, pt.name type_name, SUBSTRING_INDEX(SUBSTRING_INDEX(r.dept_names, ",", b.help_topic_id+1), ",", -1) dept_name
+            from wf_event_report r
+            left join data_check_points p on p.id = r.check_points_id
+            left join data_check_points_type pt on pt.id = r.check_points_type_id
+            join mysql.help_topic b ON b.help_topic_id <![CDATA[ < ]]> (length(r.dept_names) - length(REPLACE (r.dept_names, ',', '')) + 1) where r.`status` = 60
+            union
+            select e.check_name, e.point_name, e.type_name, SUBSTRING_INDEX(SUBSTRING_INDEX(e.depart_name, ",", b.help_topic_id+1), ",", -1) dept_name
+            from work_event e
+            join mysql.help_topic b ON b.help_topic_id <![CDATA[ < ]]> (length(e.depart_name) - length(REPLACE (e.depart_name, ',', '')) + 1) where e.state = 3
+        ) data
+        where data.cycle = #{cycle}
+        group by dept_name
+    </select>
+
+    <select id="eventTimeoutCount" resultType="cn.wxgis.jc.workflow.web.vo.EventCountVo">
+        select *, count(1) count from (
+            select r.cycle, p.`name` point_name, pt.name type_name, SUBSTRING_INDEX(SUBSTRING_INDEX(r.dept_names, ",", b.help_topic_id+1), ",", -1) dept_name
+            from wf_event_report r
+            left join data_check_points p on p.id = r.check_points_id
+            left join data_check_points_type pt on pt.id = r.check_points_type_id
+            join mysql.help_topic b ON b.help_topic_id <![CDATA[ < ]]> (length(r.dept_names) - length(REPLACE (r.dept_names, ',', '')) + 1) where r.timeout_flag = 1
+            union
+            select e.check_name, e.point_name, e.type_name, SUBSTRING_INDEX(SUBSTRING_INDEX(e.depart_name, ",", b.help_topic_id+1), ",", -1) dept_name
+            from work_event e
+            join mysql.help_topic b ON b.help_topic_id <![CDATA[ < ]]> (length(e.depart_name) - length(REPLACE (e.depart_name, ',', '')) + 1) where e.state = 2
+            ) data
+        where data.cycle = #{cycle}
+        group by dept_name
+    </select>
+
+</mapper>

@@ -1,0 +1,75 @@
+<template>
+  <div class="card" style="    margin-top: 20%;">
+    <a-row type="flex" align="middle" justify="space-around" >
+      <a-col :span="8">
+    <a-card @click="control('0')" class=" open" hoverable>
+        <div class="content">
+        <a-icon class="icon" type="logout" />
+        <div class="text">开门</div>
+    </div>
+    </a-card>
+    </a-col>
+      <a-col :span="8">
+        
+    <a-card  @click="control('1')" class=" close" hoverable>
+        <div class="content">
+        <a-icon class="icon" type="login" />
+         <div class="text">关门</div>
+        </div>
+    </a-card>
+    </a-col>
+
+    </a-row>
+  </div>
+</template>
+
+<script>
+    import {postAction} from '@/api/manage'
+export default {
+    data(){
+        return {
+            loading:false
+        }
+    },
+    methods:{
+    control(type){  //0:常开 ； 1:门闭（撤销）
+        this.loading=true
+        postAction('/alarm/openControl',{},{params:{param:type}}).then(res=>{
+            if(res.success){
+                this.$message.success(res.message)
+                
+            }else{
+                this.$message.error(res.message)
+            }
+        }).finally(()=>{
+            this.loading=false
+        })
+    }
+}
+}
+</script>
+
+<style lang="less">
+.card{
+   .open{
+    color:green;
+   }
+   .close{
+    color:red;
+   }
+    
+    .content{
+        height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    .icon{
+        font-size: 170px;
+    }
+    .text{
+        font-size: 70px;
+    }
+    } 
+}
+</style>

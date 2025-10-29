@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.CatalogueOrgContentRelationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.grandlynn.spa.catalogue.entity.CatalogueOrgContentRelationDO">
+        <id column="id" property="id" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="version" property="version" />
+        <result column="app_id" property="appId" />
+        <result column="remark" property="remark" />
+        <result column="is_deleted" property="deleted" />
+        <result column="created_by" property="createdBy" />
+        <result column="created_time" property="createdTime" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="updated_time" property="updatedTime" />
+        <result column="org_id" property="orgId" />
+        <result column="org_no" property="orgNo" />
+        <result column="content_type" property="contentType" />
+        <result column="content_id" property="contentId" />
+        <result column="intermediate" property="intermediate" />
+        <result column="version_no" property="versionNo" />
+    </resultMap>
+
+    <!-- 根据组织节点和挂在内容类型查询组织下挂载的内容列表  -->
+    <select id="findSysContentByOrgId" resultType="com.grandlynn.spa.catalogue.dto.SysContentDTO">
+       select
+            r.org_id orgId,
+            r.content_type contentType,
+            r.content_id contentId,
+            s.sys_name sysName,
+            s."enable" "enable" ,
+            s.node_no nodeNo ,
+            s.node_name nodeName ,
+            s.sys_name_simplify sysNameSimplify ,
+            s.build_level buildLevel ,
+            s.platform_name platformName ,
+            s.deploy_type deployType ,
+            s.build_status buildStatus ,
+            s.sys_status sysStatus ,
+            s.function_desc functionDesc ,
+            s.sys_type sysType ,
+            s.use_range useRange ,
+            s.up_time upTime,
+            s.build_time buildTime,
+            s.security_level securityLevel,
+            s.sys_remark sysRemark,
+            s.admin_staff adminStaff,
+            s.admin_phone adminPhone,
+            s.contract_company contractCompany,
+            s.contract_staff contractStaff,
+            s.contract_phone contractPhone,
+
+            s.parent_sys parentSys,
+            s.sys_type_desc sysTypeDesc,
+            s.vertical_type verticalType,
+            s.device_type deviceType,
+            s.device_type_desc deviceTypeDesc,
+            s.integration integration,
+            s.sys_url sysUrl,
+            s.implement_company implementCompany,
+            s.implement_staff implementStaff,
+            s.implement_phone implementPhone,
+            s.operation_company operationCompany,
+            s.operation_staff operationStaff,
+            s.operation_phone operationPhone,
+            s.deploy_location deployLocation,
+            s.deploy_location_desc deployLocationDesc,
+            s.net_type netType,
+            s.net_type_desc netTypeDesc,
+            s.security_level_desc securityLevelDesc,
+            s.fort_database_type fortDatabaseType,
+            s.writer,
+            s.created_time,
+            s.use_range_desc
+        from
+            catalogue_org_content_relation  r
+        left join
+            catalogue_org_sys s
+        on
+            r.content_id = s.id
+        <where>
+            r.is_deleted = 0 and s.is_deleted = 0
+            <if test="orgIds != null and orgIds.length != 0">
+                and r.org_id in
+                <foreach collection="orgIds" item="orgId" index="index" open="(" close=")" separator=",">
+                    #{orgId}
+                </foreach>
+            </if>
+            <if test="intermediate != null">
+                and r.intermediate = #{intermediate} and s.intermediate = #{intermediate}
+            </if>
+            <if test="contentType != null">
+                and r.content_type = #{contentType}
+            </if>
+            <if test="sysName != null and sysName != ''">
+                and s.sys_name LIKE CONCAT('%', #{sysName}, '%')
+            </if>
+            <if test="sysStatus != null and sysStatus != ''">
+                and s.sys_status = #{sysStatus}
+            </if>
+            <if test="sysType != null and sysType != ''">
+                and s.sys_type = #{sysType}
+            </if>
+            <if test="netType != null and netType != ''">
+                and s.net_type = #{netType}
+            </if>
+        </where>
+        ORDER BY s.id desc
+    </select>
+
+
+    <!-- 根据组织节点数组和挂在内容类型查询组织下挂载的内容列表  -->
+    <select id="findSystemsByOrgIds" resultType="com.grandlynn.spa.catalogue.dto.SystemsDTO">
+        select
+            r.org_id orgId,
+            r.content_id as sysId,
+            s.sys_name sysName,
+            s.node_name nodeName
+        from
+            catalogue_org_sys s
+        left join
+            catalogue_org_content_relation  r
+        on
+            r.content_id = s.id
+        <where>
+            r.is_deleted = 0 and s.is_deleted = 0
+            <if test="intermediate != null">
+                and r.intermediate = #{intermediate} and s.intermediate = #{intermediate}
+            </if>
+            <if test="orgIds != null and orgIds.length != 0">
+                and r.org_id in
+                <foreach collection="orgIds" item="orgId" index="index" open="(" close=")" separator=",">
+                    #{orgId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+</mapper>

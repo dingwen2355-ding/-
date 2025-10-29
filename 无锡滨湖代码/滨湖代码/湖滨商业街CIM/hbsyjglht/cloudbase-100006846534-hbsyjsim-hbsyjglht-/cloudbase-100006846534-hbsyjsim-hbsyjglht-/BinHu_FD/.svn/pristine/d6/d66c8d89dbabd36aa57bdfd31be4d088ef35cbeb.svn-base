@@ -1,0 +1,119 @@
+<template>
+  <a-modal
+  :visible="visible"
+  destroyOnClose
+  :footer="null"
+  :bodyStyle="{padding:0,'line-height':0}"
+  :width="800"
+    @cancel="hide"
+    cancelText="关闭">
+  <div  class="video">
+   <video
+       class="videoPlay"
+       style="    width: 800px;
+    height: 450px;"
+       autoplay
+       controls
+       muted
+       id="videoElement"
+     ></video>
+   </div>
+  </a-modal>
+</template>
+<script>
+import flvjs from 'flv.js'
+export default {
+   
+  data () {
+    return {
+      visible:false,
+      flvPlayer: null,
+      data:{},
+      //url: 'http://172.23.46.4:80/192.168.1.142/f4ece4fbcb6342f48b5a684ed4c3802b.live.flv'
+    }
+  },
+  mounted () {
+   /*  this.$nextTick(() => {
+      // url为播放视频的路径,type可以是 'flv',也可以是'mp4'
+      if(this.data&&this.data.httpFlvUrl)
+      this.createVideo (this.data.httpFlvUrl, 'flv')
+    }) */
+  },
+  beforeDestroy () {
+    if (this.flvPlayer) {
+      this.destoryVideo(this.flvPlayer)
+    }
+  },
+  methods: {
+    show(record){
+      this.data=JSON.parse(JSON.stringify(record))
+      this.visible=true
+      this.$nextTick(()=>{
+        if(this.data&&this.data.httpFlvUrl)
+        this.createVideo (this.data.httpFlvUrl, 'flv')
+        else{
+          this.$message.warning('没有监控链接')
+          this.hide()
+        }
+      })
+     
+    },
+    hide(){
+     
+      if(this.flvPlayer){
+      this.destoryVideo(this.flvPlayer)
+    }
+      this.visible=false
+    },
+    
+    createVideo (url, type) {
+      if (flvjs.isSupported()) {
+        var videoElement = document.getElementById('videoElement')
+        this.flvPlayer = flvjs.createPlayer(
+          {
+            type: type,
+            "isLive": true,
+            hasAudio: false,
+            url: url
+          },
+          {
+            enableWorker: false, // 不启用分离线程
+            enableStashBuffer: false, // 关闭IO隐藏缓冲区
+            reuseRedirectedURL: true, // 重用301/302重定向url，用于随后的请求，如查找、重新连接等。
+            autoCleanupSourceBuffer: true, // 自动清除缓存
+            fixAudioTimestampGap: false
+          }
+        )
+
+        this.flvPlayer.attachMediaElement(videoElement)
+        // this.flvPlayer.load();
+
+        if (this.url !== '' && this.url !== null) {
+          this.flvPlayer.load()
+          this.flvPlayer.play()
+        }
+      }
+      this.flvPlayer.on(flvjs.Events.ERROR, (errType, errDetail) => {
+        // alert('网络波动,正在尝试连接中...');
+        if (this.flvPlayer) {
+          this.reloadVideo(this.flvPlayer)
+        }
+      })
+    },
+    reloadVideo (flvPlayer) {
+      this.destoryVideo(flvPlayer)
+      // this.url为视频播放的路径
+      this.createVideo(this.url, 'flv')
+    },
+    destoryVideo (flvPlayer) {
+      flvPlayer.pause()
+      flvPlayer.unload()
+      flvPlayer.detachMediaElement()
+      flvPlayer.destroy()
+      flvPlayer = null
+    }
+  }
+}
+</script>
+<style lang='less' scoped>
+</style>

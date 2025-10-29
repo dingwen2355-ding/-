@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>双屏</title>
+    <g id="崂山" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="拆除" transform="translate(-181.000000, -661.000000)">
+            <g id="双屏" transform="translate(181.000000, 661.000000)">
+                <rect id="矩形" x="0" y="0" width="24" height="24" rx="4"></rect>
+                <g id="编组-10" transform="translate(1.000000, 5.000000)">
+                    <rect id="矩形" stroke="#FFFFFF" stroke-width="1.5" x="0.75" y="0.75" width="8.5" height="12.5"></rect>
+                    <rect id="矩形备份-15" fill="#D8D8D8" x="2.5" y="2.5" width="5" height="9"></rect>
+                    <rect id="矩形备份-14" stroke="#FFFFFF" stroke-width="1.5" x="12.75" y="0.75" width="8.5" height="12.5"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

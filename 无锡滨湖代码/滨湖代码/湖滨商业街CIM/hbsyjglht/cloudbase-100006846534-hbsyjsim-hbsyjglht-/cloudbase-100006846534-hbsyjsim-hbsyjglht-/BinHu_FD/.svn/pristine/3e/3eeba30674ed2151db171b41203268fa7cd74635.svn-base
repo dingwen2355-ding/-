@@ -1,0 +1,71 @@
+<template>
+  <div >
+    <a-modal class="waringModal" :maskClosable="false" :mask="false" :closable="false" :visible="visible" okText="开门" @ok="ok" @cancel="cancel" cancelText="忽略">
+        <div style="    color: red;
+    font-weight: bold;
+    font-family: auto;" slot="title">
+    <a-icon  type="warning" />
+            警告
+        </div>
+        <div style="font-size:20px;color:red">
+            XX房间发生一级灾情！<br/>
+    灾情原因：火灾<br/>
+    报警设备：XX楼XX房间西南角烟感器
+        </div>
+   
+    </a-modal>
+  </div>
+</template>
+
+<script>
+import { postAction } from '../../api/manage'
+export default {
+data(){return{
+    data:{},
+    visible:false,
+    url:{control:'/alarm/openControl'}
+}},methods:{
+    show(record){
+        this.data=JSON.parse(JSON.stringify(record))
+        this.visible=true
+    },
+    ok(){
+       this.control('0')
+        
+    },
+    cancel(){
+       // this.control('1')
+       this.close()
+    },
+    close(){
+        this.visible=false
+    },
+    control(type){  //0:常开 ； 1:门闭（撤销）
+        postAction(this.url.control,{},{params:{param:type}}).then(res=>{
+            if(res.success){
+                this.$message.success(res.message)
+                this.close()
+            }else{
+                this.$message.error(res.message)
+            }
+        })
+    }
+}
+}
+</script>
+
+<style lang="less">
+.waringModal {
+    pointer-events: none;
+    .ant-modal{
+       
+    position: absolute !important;
+    bottom: 0 !important;
+    top: auto;
+    right: 0 !important;
+}
+.ant-modal-content{
+    box-shadow: 0 4px 12px #ff000099 !important;
+}
+}
+</style>

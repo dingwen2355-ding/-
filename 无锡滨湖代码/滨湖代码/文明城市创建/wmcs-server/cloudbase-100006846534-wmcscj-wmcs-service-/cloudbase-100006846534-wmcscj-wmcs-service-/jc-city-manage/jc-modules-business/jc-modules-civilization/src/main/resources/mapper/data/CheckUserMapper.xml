@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.civilization.data.mapper.CheckUserMapper">
+
+    <select id="selectPageCustom" resultType="cn.wxgis.jc.civilization.data.resp.DataCheckUserResponse">
+        select * from (
+            select cu.*, d.name dept_name, u.nick_name user_name from data_check_user cu
+            left join sys_dept d on d.id = cu.dept_id
+            left join sys_user u on u.id =cu.user_id
+        ) t
+        <where>
+            ${ew.sqlSegment}
+            ${params.dataScope}
+        </where>
+    </select>
+
+    <select id="listByPoints" resultType="cn.wxgis.jc.civilization.data.po.DataCheckUser">
+        select * from data_check_user where find_in_set(#{pointsId},  points_id) > 0;
+    </select>
+
+    <select id="listByDeptId" resultType="cn.wxgis.jc.civilization.data.resp.DataCheckUserResponse">
+        select c.*, d.name region_name, d.`name` dept_name
+        from data_check_user c
+        left join sys_dept d on d.id = c.dept_id
+        <where>
+            d.id = #{deptId}
+        </where>
+    </select>
+
+    <select id="listByPointsId" resultType="cn.wxgis.jc.civilization.data.resp.DataCheckUserResponse">
+        select c.*, r.name region_name, d.`name` dept_name, dd.dict_label type_name
+        from data_check_user c
+            left join sys_dept r on r.id = c.region_code
+            left join sys_dept d on d.id = c.dept_id
+            left join sys_dict_data dd on dd.dict_type = 'data_inspector_type' and dd.dict_value = c.type
+        where find_in_set(#{pointsId},  points_id) > 0;
+    </select>
+</mapper>

@@ -1,0 +1,431 @@
+.shijiantimeline {
+    height: 545px;
+    overflow: auto;
+}
+
+.shijianxiangqing {
+    position: absolute;
+    top: 180px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1136px;
+    height: 650px;
+    background: #053475eb;
+    z-index: 9999;
+
+    .title {
+        width: 100%;
+        height: 48px;
+        background: url("@/assets/img/title-m.png") no-repeat;
+        background-size: cover;
+
+        .titlebg {
+            margin-left: 50%;
+            transform: translateX(-50%);
+            width: 360px;
+            height: 48px;
+            line-height: 48px;
+            text-align: center;
+            background: url("@/assets/img/titleline.png") no-repeat;
+            background-size: 360px 13px;
+            background-position-y: 18px;
+            font-size: 20px;
+            color: #fff;
+        }
+
+    }
+
+    .content {
+        padding: 10px;
+        margin: 10px;
+        width: 1098px;
+        height: 545px;
+    }
+
+    .close {
+        position: absolute;
+        top: 0px;
+        right: 20px;
+        font-size: 36px;
+        color: aqua;
+        cursor: pointer;
+    }
+
+    .file {
+        width: 100%;
+    }
+
+    .bottom {
+        width: 100%;
+        position: absolute;
+        bottom: 10px;
+    }
+
+    .video {
+        position: absolute;
+        top: 80px;
+        right: 40px;
+        width: 700px;
+        height: 430px;
+    }
+}
+
+.jqForm {
+    position: absolute;
+    top: 180px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1136px;
+    height: 650px;
+    background: #053475eb;
+    z-index: 9999;
+
+    .title {
+        width: 100%;
+        height: 48px;
+        background: url("@/assets/img/title-m.png") no-repeat;
+        background-size: cover;
+
+        .titlebg {
+            margin-left: 50%;
+            transform: translateX(-50%);
+            width: 360px;
+            height: 48px;
+            line-height: 48px;
+            text-align: center;
+            background: url("@/assets/img/titleline.png") no-repeat;
+            background-size: 360px 13px;
+            background-position-y: 18px;
+            font-size: 20px;
+            color: #fff;
+        }
+
+    }
+
+    .content {
+        padding: 10px;
+        margin: 10px;
+        width: 368px;
+        height: 545px;
+    }
+
+    .close {
+        position: absolute;
+        top: 0px;
+        right: 20px;
+        font-size: 36px;
+        color: aqua;
+        cursor: pointer;
+    }
+
+    .file {
+        width: 100%;
+
+        img {
+            width: 30%;
+            height: 180px;
+            margin-right: 2%;
+        }
+    }
+
+    .bottom {
+        width: 100%;
+        position: absolute;
+        bottom: 10px;
+    }
+
+    .video {
+        position: absolute;
+        top: 80px;
+        right: 40px;
+        width: 700px;
+        height: 430px;
+    }
+}
+
+.duchadianweixiangqing {
+    position: absolute;
+    top: 180px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1136px;
+    height: 650px;
+    background: #053475eb;
+    z-index: 9999;
+
+    .title {
+        width: 100%;
+        height: 48px;
+        background: url("@/assets/img/title-m.png") no-repeat;
+        background-size: cover;
+
+        .titlebg {
+            margin-left: 50%;
+            transform: translateX(-50%);
+            width: 360px;
+            height: 48px;
+            line-height: 48px;
+            text-align: center;
+            background: url("@/assets/img/titleline.png") no-repeat;
+            background-size: 360px 13px;
+            background-position-y: 18px;
+            font-size: 20px;
+            color: #fff;
+        }
+
+    }
+
+    .content {
+        padding: 10px;
+        margin: 10px;
+        width: 1098px;
+        height: 545px;
+
+        .tbody {
+            height: 350px;
+            overflow: auto;
+
+            .active {
+                background-color: #4BE9FF50;
+            }
+
+            .tr {
+                width: 100%;
+                height: 40px;
+                line-height: 40px;
+                cursor: pointer;
+                border-bottom: 1px solid #ffffff50;
+                color: #fff;
+                font-size: 20px;
+
+                div:nth-child(1) {
+                    width: 30%;
+                    float: left;
+                    color: #4BE9FF;
+                }
+
+                div:nth-child(2) {
+                    width: 70%;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    float: right;
+                }
+            }
+        }
+
+    }
+
+    .close {
+        position: absolute;
+        top: 0px;
+        right: 20px;
+        font-size: 36px;
+        color: aqua;
+        cursor: pointer;
+    }
+
+}
+
+.cancelSearch {
+    position: absolute;
+    top: 680px;
+    right: 1300px;
+    z-index: 999;
+}
+
+.mapPop {
+    width: 120px;
+    height: 32px;
+    background: url("@/assets/img/pop.png") no-repeat;
+    background-size: cover;
+    display: flex;
+    flex-direction: row;
+    line-height: 32px;
+    justify-content: flex-start;
+    font-size: 16px;
+}
+
+.mapPop .text1 {
+    color: #fff;
+    margin-left: 15px;
+}
+
+.mapPop .text2 {
+    color: #4BE9FF
+}
+
+.tips {
+    font-size: 20px;
+    color: #fff;
+}
+
+#mousemove-marker {
+    background-color: #00000090;
+    border-radius: 8px;
+    font-size: 16px;
+    line-height: 40px;
+    height: 40px;
+    color: #fff;
+    min-width: 80px;
+    padding: 0 10px;
+    text-align: center;
+}
+
+
+
+.gongdanliebiao {
+    position: absolute;
+    top: 220px;
+    left: 38%;
+    transform: translateX(-50%);
+    width: 300px;
+    max-height: 528px;
+    background: #053475eb;
+    padding: 10px;
+    border-radius: 8px;
+
+    .searchInput {
+        width: 300px;
+    }
+
+    .content {
+        width: 300px;
+        overflow: auto;
+        max-height: 550px;
+
+        .active {
+            background-color: #4BE9FF50;
+        }
+
+        .tr {
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            cursor: pointer;
+            border-bottom: 1px solid #ffffff50;
+            color: #fff;
+            font-size: 20px;
+
+            // div:nth-child(1) {
+            //     width: 20%;
+            //     float: left;
+            //     text-align: center;
+            // }
+
+            div:nth-child(1) {
+                width: 50%;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                float: left;
+                color: #4BE9FF;
+
+            }
+
+            div:nth-child(2) {
+                width: 30%;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                float: left;
+
+            }
+
+            div:nth-child(3) {
+                width: 20%;
+                float: right;
+                text-align: center;
+            }
+        }
+    }
+
+}
+
+.pageclass {
+    padding: 10px 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+
+.aiguojidixiangqing {
+    position: absolute;
+    top: 180px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1136*0.8px;
+    height: 650*0.9px;
+    background: #053475eb;
+    z-index: 9999;
+
+    .title {
+        width: 100%;
+        height: 48px;
+        background: url("@/assets/img/title-m.png") no-repeat;
+        background-size: cover;
+
+        .titlebg {
+            margin-left: 50%;
+            transform: translateX(-50%);
+            width: 360px;
+            height: 48px;
+            line-height: 48px;
+            text-align: center;
+            background: url("@/assets/img/titleline.png") no-repeat;
+            background-size: 360px 13px;
+            background-position-y: 18px;
+            font-size: 20px;
+            color: #fff;
+        }
+
+    }
+
+    .content {
+        padding: 10px;
+        margin: 10px;
+        width: 1098*0.8px;
+        height: 545*0.9px;
+
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            top: 60px;
+            right: 80px;
+
+            img {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    }
+
+    .close {
+        position: absolute;
+        top: 0px;
+        right: 20px;
+        font-size: 36px;
+        color: aqua;
+        cursor: pointer;
+    }
+
+    .file {
+        width: 100%;
+
+        img {
+            width: 30%;
+            height: 180px;
+            margin-right: 2%;
+        }
+    }
+}
+
+.jqPop {
+    width: 80px;
+    height: 80px;
+    background: url("@/assets/img/flyto.png");
+    background-size: contain;
+}

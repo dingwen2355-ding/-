@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.CatalogueOrgContentRelationVersionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.grandlynn.spa.catalogue.entity.CatalogueOrgContentRelationVersionDO">
+        <id column="id" property="id" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="version" property="version" />
+        <result column="app_id" property="appId" />
+        <result column="remark" property="remark" />
+        <result column="is_deleted" property="deleted" />
+        <result column="created_by" property="createdBy" />
+        <result column="created_time" property="createdTime" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="updated_time" property="updatedTime" />
+        <result column="org_id" property="orgId" />
+        <result column="org_no" property="orgNo" />
+        <result column="content_type" property="contentType" />
+        <result column="content_id" property="contentId" />
+        <result column="intermediate" property="intermediate" />
+        <result column="old_id" property="oldId" />
+        <result column="version_no" property="versionNo" />
+    </resultMap>
+
+    <!-- 根据组织节点和挂在内容类型查询组织下挂载的内容列表  -->
+    <select id="findSysContentByOrgId" resultType="com.grandlynn.spa.catalogue.dto.SysContentDTO">
+        SELECT
+        T.ID,
+        T.oldid,
+        T.versionno,
+        T.contentId,
+        T.isdeleted,
+        T.orgId,
+        T.contentType,
+        s.sid as sId,
+        s.soldid as soldId,
+        s.versionno,
+        s.sysName,
+        s."enable",
+        s.nodeNo,
+        s.nodeName,
+        s.sysNameSimplify,
+        s.buildLevel,
+        s.platformName,
+        s.deployType,
+        s.buildStatus,
+        s.sysStatus,
+        s.functionDesc,
+        s.sysType,
+        s.useRange,
+        s.upTime,
+        s.buildTime,
+        s.securityLevel,
+        s.sysRemark,
+        s.adminStaff,
+        s.adminPhone,
+        s.contractCompany,
+        s.contractStaff,
+        s.contractPhone,
+        s.parentSys,
+        s.sysTypeDesc,
+        s.verticalType,
+        s.deviceType,
+        s.deviceTypeDesc,
+        s.integration,
+        s.sysUrl,
+        s.implementCompany,
+        s.implementStaff,
+        s.implementPhone,
+        s.operationCompany,
+        s.operationStaff,
+        s.operationPhone,
+        s.deployLocation,
+        s.deployLocationDesc,
+        s.netType,
+        s.netTypeDesc,
+        s.securityLevelDesc,
+        s.fortDatabaseType,
+        s.writer
+        FROM
+        (
+        SELECT
+        v.ID ID,
+        v.old_id oldid,
+        v.version_no versionno,
+        v.content_id contentId,
+        v.is_deleted isdeleted,
+        v.org_id orgId,
+        v.content_type contentType
+        FROM
+        (
+        SELECT MAX
+        ( r.version_no ) versionNo,
+        r.old_id
+        FROM
+        catalogue_org_content_relation_version r
+        WHERE
+        r.is_deleted = 0
+        <if test="versionNo != null">
+            AND r.version_no &lt;= #{versionNo}
+        </if>
+        <if test="orgId != null">
+            and r.org_id = #{orgId}
+        </if>
+        GROUP BY
+        r.old_id
+        ) b
+        INNER JOIN catalogue_org_content_relation_version v ON b.versionNo = v.version_no
+        AND b.old_id = v.old_id
+        )
+        T LEFT JOIN (
+        SELECT
+        v.ID sid,
+        v.old_id soldid,
+        v.version_no versionno,
+        v.is_deleted isdeleted,
+        v.sys_name sysName,
+        v."enable" "enable",
+        v.node_no nodeNo,
+        v.node_name nodeName,
+        v.sys_name_simplify sysNameSimplify,
+        v.build_level buildLevel,
+        v.platform_name platformName,
+        v.deploy_type deployType,
+        v.build_status buildStatus,
+        v.sys_status sysStatus,
+        v.function_desc functionDesc,
+        v.sys_type sysType,
+        v.use_range useRange,
+        v.up_time upTime,
+        v.build_time buildTime,
+        v.security_level securityLevel,
+        v.sys_remark sysRemark,
+        v.admin_staff adminStaff,
+        v.admin_phone adminPhone,
+        v.contract_company contractCompany,
+        v.contract_staff contractStaff,
+        v.contract_phone contractPhone,
+        v.parent_sys parentSys,
+        v.sys_type_desc sysTypeDesc,
+        v.vertical_type verticalType,
+        v.device_type deviceType,
+        v.device_type_desc deviceTypeDesc,
+        v.integration integration,
+        v.sys_url sysUrl,
+        v.implement_company implementCompany,
+        v.implement_staff implementStaff,
+        v.implement_phone implementPhone,
+        v.operation_company operationCompany,
+        v.operation_staff operationStaff,
+        v.operation_phone operationPhone,
+        v.deploy_location deployLocation,
+        v.deploy_location_desc deployLocationDesc,
+        v.net_type netType,
+        v.net_type_desc netTypeDesc,
+        v.security_level_desc securityLevelDesc,
+        v.fort_database_type fortDatabaseType,
+        v.writer
+        FROM
+        (
+        SELECT MAX
+        ( r.version_no ) versionNo,
+        r.old_id
+        FROM
+        catalogue_org_sys_version r
+        WHERE
+        r.is_deleted = 0
+        <if test="versionNo != null">
+            AND r.version_no &lt;= #{versionNo}
+        </if>
+        GROUP BY
+        r.old_id
+        ) b
+        INNER JOIN catalogue_org_sys_version v ON b.versionNo = v.version_no
+        AND b.old_id = v.old_id
+        ) s ON T.contentId = s.soldid
+        AND T.versionno = s.versionno
+        WHERE
+        T.isdeleted = 0
+        AND s.isdeleted = 0
+    </select>
+
+    <!-- 根据组织节点数组和挂在内容类型查询组织下挂载的内容列表  -->
+<!--    <select id="findSystemsByOrgIds" resultType="dto.com.grandlynn.spa.catalogue.SystemsDTO">-->
+<!--        select-->
+<!--            o.old_id orgId,-->
+<!--            p.sysId,-->
+<!--            p.sysName,-->
+<!--            o.node_name nodeName-->
+<!--        from-->
+<!--        catalogue_org_version o-->
+<!--        left join-->
+<!--        (-->
+<!--            SELECT-->
+<!--            T.orgId,-->
+<!--            T.contentId as sysId,-->
+<!--            s.sysName,-->
+<!--            s.nodeName-->
+<!--            FROM-->
+<!--            (-->
+<!--            SELECT-->
+<!--            v.ID ID,-->
+<!--            v.old_id oldid,-->
+<!--            v.version_no versionno,-->
+<!--            v.content_id contentId,-->
+<!--            v.is_deleted isdeleted,-->
+<!--            v.org_id orgId,-->
+<!--            v.content_type contentType-->
+<!--            FROM-->
+<!--            (-->
+<!--            SELECT MAX-->
+<!--            ( r.version_no ) versionNo,-->
+<!--            r.old_id-->
+<!--            FROM-->
+<!--            catalogue_org_content_relation_version r-->
+<!--            WHERE-->
+<!--            r.is_deleted = 0-->
+<!--            <if test="versionNo != null">-->
+<!--                AND r.version_no &lt;= #{versionNo}-->
+<!--            </if>-->
+<!--            <if test="orgIds != null and orgIds.length != 0">-->
+<!--                and r.org_id in-->
+<!--                <foreach collection="orgIds" item="orgId" index="index" open="(" close=")" separator=",">-->
+<!--                    #{orgId}-->
+<!--                </foreach>-->
+<!--            </if>-->
+<!--            GROUP BY-->
+<!--            r.old_id-->
+<!--            ) b-->
+<!--            INNER JOIN catalogue_org_content_relation_version v ON b.versionNo = v.version_no-->
+<!--            AND b.old_id = v.old_id-->
+<!--            )-->
+<!--            T LEFT JOIN (-->
+<!--            SELECT-->
+<!--            v.ID sid,-->
+<!--            v.old_id soldid,-->
+<!--            v.version_no versionno,-->
+<!--            v.is_deleted isdeleted,-->
+<!--            v.sys_name sysName,-->
+<!--            v.node_name nodeName-->
+<!--            FROM-->
+<!--            (-->
+<!--            SELECT MAX-->
+<!--            ( r.version_no ) versionNo,-->
+<!--            r.old_id-->
+<!--            FROM-->
+<!--            catalogue_org_sys_version r-->
+<!--            WHERE-->
+<!--            r.is_deleted = 0-->
+<!--            <if test="versionNo != null">-->
+<!--                AND r.version_no &lt;= #{versionNo}-->
+<!--            </if>-->
+<!--            GROUP BY-->
+<!--            r.old_id-->
+<!--            ) b-->
+<!--            INNER JOIN catalogue_org_sys_version v ON b.versionNo = v.version_no-->
+<!--            AND b.old_id = v.old_id-->
+<!--            ) s ON T.contentId = s.soldid-->
+<!--            AND T.versionno = s.versionno-->
+<!--            WHERE-->
+<!--            T.isdeleted = 0-->
+<!--            AND s.isdeleted = 0-->
+<!--        ) p-->
+<!--        on o.old_id = p.orgId-->
+<!--        where-->
+<!--        o.is_deleted = 0-->
+<!--        <if test="versionNo != null">-->
+<!--            AND o.version_no = #{versionNo}-->
+<!--        </if>-->
+<!--        <if test="orgIds != null and orgIds.length != 0">-->
+<!--            and o.old_id in-->
+<!--            <foreach collection="orgIds" item="orgId" index="index" open="(" close=")" separator=",">-->
+<!--                #{orgId}-->
+<!--            </foreach>-->
+<!--        </if>-->
+<!--        order by o.old_id asc-->
+<!--    </select>-->
+
+
+    <!-- 根据组织节点数组和挂在内容类型查询组织下挂载的内容列表  剔除组织节点下系统为空的组织数据 -->
+    <select id="findSystemsByOrgIds" resultType="com.grandlynn.spa.catalogue.dto.SystemsDTO">
+        SELECT
+        T.orgId,
+        T.contentId as sysId,
+        s.sysName,
+        s.platformName,
+        s.nodeName
+        FROM
+        (
+        SELECT
+        v.ID ID,
+        v.old_id oldid,
+        v.version_no versionno,
+        v.content_id contentId,
+        v.is_deleted isdeleted,
+        v.org_id orgId,
+        v.content_type contentType
+        FROM
+        (
+        SELECT MAX
+        ( r.version_no ) versionNo,
+        r.old_id
+        FROM
+        catalogue_org_content_relation_version r
+        WHERE
+        r.is_deleted = 0
+        <if test="versionNo != null">
+            AND r.version_no &lt;= #{versionNo}
+        </if>
+        <if test="orgIds != null and orgIds.length != 0">
+            and r.org_id in
+            <foreach collection="orgIds" item="orgId" index="index" open="(" close=")" separator=",">
+                #{orgId}
+            </foreach>
+        </if>
+        GROUP BY
+        r.old_id
+        ) b
+        INNER JOIN catalogue_org_content_relation_version v ON b.versionNo = v.version_no
+        AND b.old_id = v.old_id
+        )
+        T LEFT JOIN (
+        SELECT
+        v.ID sid,
+        v.old_id soldid,
+        v.version_no versionno,
+        v.is_deleted isdeleted,
+        v.sys_name sysName,
+        v.platform_name platformName,
+        v.node_name nodeName
+        FROM
+        (
+        SELECT MAX
+        ( r.version_no ) versionNo,
+        r.old_id
+        FROM
+        catalogue_org_sys_version r
+        WHERE
+        r.is_deleted = 0
+        <if test="versionNo != null">
+            AND r.version_no &lt;= #{versionNo}
+        </if>
+        GROUP BY
+        r.old_id
+        ) b
+        INNER JOIN catalogue_org_sys_version v ON b.versionNo = v.version_no
+        AND b.old_id = v.old_id
+        ) s ON T.contentId = s.soldid
+        AND T.versionno = s.versionno
+        WHERE
+        T.isdeleted = 0
+        AND s.isdeleted = 0
+        order by s.soldid asc
+    </select>
+
+    <insert id="insertFromOld">
+    INSERT INTO catalogue_org_content_relation_version (
+        old_id,
+        tenant_id,
+        app_id,
+        VERSION,
+        remark,
+        is_deleted,
+        created_by,
+        updated_by,
+        created_time,
+        updated_time,
+        org_id,
+        content_type,
+        content_id,
+        org_no,
+        intermediate,
+        version_no
+    ) SELECT id,
+        tenant_id,
+        app_id,
+        VERSION,
+        remark,
+        is_deleted,
+        created_by,
+        updated_by,
+        created_time,
+        updated_time,
+        org_id,
+        content_type,
+        content_id,
+        org_no,
+        0,
+        version_no
+    FROM
+        catalogue_org_content_relation
+    where
+        tenant_id = #{oldDO.tenantId} and
+        app_id = #{oldDO.appId} and
+        intermediate = 1 and
+        version_no = #{oldDO.versionNo}
+    </insert>
+</mapper>

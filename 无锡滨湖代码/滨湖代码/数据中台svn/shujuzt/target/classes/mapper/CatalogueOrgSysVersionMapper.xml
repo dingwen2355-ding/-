@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.CatalogueOrgSysVersionMapper">
+
+    <resultMap id="BaseResultMap" type="com.grandlynn.spa.catalogue.entity.CatalogueOrgSysVersionDO">
+        <!--@Table catalogue_org_sys-->
+        <id column="id" property="id" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="app_id" property="appId" />
+        <result column="version" property="version" />
+        <result column="remark" property="remark" />
+        <result column="is_deleted" property="deleted" />
+        <result column="created_by" property="createdBy" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="created_time" property="createdTime" />
+        <result column="updated_time" property="updatedTime" />
+        <result column="sys_name" property="sysName" />
+        <result column="enable" property="enable" />
+        <result column="node_no" property="nodeNo" />
+        <result column="node_name" property="nodeName" />
+        <result column="sys_name_simplify" property="sysNameSimplify" />
+        <result column="build_level" property="buildLevel" />
+        <result column="platform_name" property="platformName" />
+        <result column="deploy_type" property="deployType" />
+        <result column="build_status" property="buildStatus" />
+        <result column="sys_status" property="sysStatus" />
+        <result column="function_desc" property="functionDesc" />
+        <result column="sys_type" property="sysType" />
+        <result column="use_range" property="useRange" />
+        <result column="up_time" property="upTime" />
+        <result column="build_time" property="buildTime" />
+        <result column="security_level" property="securityLevel" />
+        <result column="sys_remark" property="sysRemark" />
+        <result column="admin_staff" property="adminStaff" />
+        <result column="admin_phone" property="adminPhone" />
+        <result column="contract_company" property="contractCompany" />
+        <result column="contract_staff" property="contractStaff" />
+        <result column="contract_phone" property="contractPhone" />
+        <result column="intermediate" property="intermediate" />
+
+        <result column="parent_sys" property="parentSys" />
+        <result column="sys_type_desc" property="sysTypeDesc" />
+        <result column="vertical_type" property="verticalType" />
+        <result column="device_type" property="deviceType" />
+        <result column="device_type_desc" property="deviceTypeDesc" />
+        <result column="integration" property="integration" />
+        <result column="sys_url" property="sysUrl" />
+        <result column="implement_company" property="implementCompany" />
+        <result column="implement_staff" property="implementStaff" />
+        <result column="implement_phone" property="implementPhone" />
+        <result column="operation_company" property="operationCompany" />
+        <result column="operation_staff" property="operationStaff" />
+        <result column="operation_phone" property="operationPhone" />
+        <result column="deploy_location" property="deployLocation" />
+        <result column="deploy_location_desc" property="deployLocationDesc" />
+        <result column="net_type" property="netType" />
+        <result column="net_type_desc" property="netTypeDesc" />
+        <result column="security_level_desc" property="securityLevelDesc" />
+        <result column="fort_database_type" property="fortDatabaseType" />
+        <result column="old_id" property="oldId" />
+        <result column="writer" property="writer" />
+    </resultMap>
+
+
+    <insert id="insertFromOld">
+    INSERT INTO catalogue_org_sys_version (
+        old_id,
+        tenant_id,
+        app_id,
+        VERSION,
+        remark,
+        is_deleted,
+        created_by,
+        updated_by,
+        created_time,
+        updated_time,
+        sys_name,
+        ENABLE,
+        node_no,
+        node_name,
+        sys_name_simplify,
+        build_level,
+        platform_name,
+        deploy_type,
+        build_status,
+        sys_status,
+        function_desc,
+        sys_type,
+        use_range,
+        up_time,
+        build_time,
+        security_level,
+        sys_remark,
+        admin_staff,
+        admin_phone,
+        contract_company,
+        contract_staff,
+        contract_phone,
+        intermediate,
+        parent_sys,
+        sys_type_desc,
+        vertical_type,
+        device_type,
+        device_type_desc,
+        integration,
+        sys_url,
+        implement_company,
+        implement_staff,
+        implement_phone,
+        operation_company,
+        operation_staff,
+        operation_phone,
+        deploy_location,
+        deploy_location_desc,
+        net_type,
+        net_type_desc,
+        security_level_desc,
+        fort_database_type,
+        version_no,
+        writer
+    ) SELECT id,
+        tenant_id,
+        app_id,
+        VERSION,
+        remark,
+        is_deleted,
+        created_by,
+        updated_by,
+        created_time,
+        updated_time,
+        sys_name,
+        ENABLE,
+        node_no,
+        node_name,
+        sys_name_simplify,
+        build_level,
+        platform_name,
+        deploy_type,
+        build_status,
+        sys_status,
+        function_desc,
+        sys_type,
+        use_range,
+        up_time,
+        build_time,
+        security_level,
+        sys_remark,
+        admin_staff,
+        admin_phone,
+        contract_company,
+        contract_staff,
+        contract_phone,
+        0,
+        parent_sys,
+        sys_type_desc,
+        vertical_type,
+        device_type,
+        device_type_desc,
+        integration,
+        sys_url,
+        implement_company,
+        implement_staff,
+        implement_phone,
+        operation_company,
+        operation_staff,
+        operation_phone,
+        deploy_location,
+        deploy_location_desc,
+        net_type,
+        net_type_desc,
+        security_level_desc,
+        fort_database_type,
+        version_no,
+        writer
+    FROM
+        catalogue_org_sys
+    where
+        tenant_id = #{oldDO.tenantId} and
+        app_id = #{oldDO.appId} and
+        intermediate = 1 and
+        version_no = #{oldDO.versionNo}
+    </insert>
+</mapper>

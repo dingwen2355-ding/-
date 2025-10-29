@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.system.web.mapper.SysUserMapper">
+
+    <select id="selectPageCustom" resultType="cn.wxgis.jc.system.resp.SysUserResponse">
+        select * from (
+            select data.*, jdata.name deptName
+            from sys_user data
+            left join sys_dept jdata on jdata.id = data.dept_id
+        ) t
+        <where>
+            ${ew.sqlSegment}
+            ${params.dataScope}
+        </where>
+    </select>
+
+    <select id="findUnifyUserByUsername" resultType="cn.wxgis.jc.synch.unify.po.UnifyUser">
+        select * from unify_user where account = #{username}
+    </select>
+
+</mapper>

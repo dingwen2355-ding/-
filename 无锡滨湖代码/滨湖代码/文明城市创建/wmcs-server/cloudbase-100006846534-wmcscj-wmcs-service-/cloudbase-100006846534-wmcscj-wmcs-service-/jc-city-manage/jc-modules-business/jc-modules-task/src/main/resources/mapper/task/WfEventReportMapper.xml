@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.task.mapper.WfEventReportMapper">
+
+    <select id="findCheckPointsResponse"
+            resultType="cn.wxgis.jc.civilization.data.resp.DataCheckPointsResponse">
+        select c.*, t.`name` type_name, r.name region_name
+        from data_check_points c
+                 left join data_check_points_type t on t.id = c.type_id
+                 left join sys_dept r on r.id = c.region_code
+        where c.id = #{checkPointsId}
+    </select>
+
+</mapper>

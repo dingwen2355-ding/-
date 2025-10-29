@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.BhNoticeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="bhNoticeResultMap" type="com.jslc.modules.szbh.entity.BhNotice">
+        <result column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="release_time" property="releaseTime"/>
+        <result column="notice_type" property="noticeType"/>
+        <result column="info_source" property="infoSource"/>
+        <result column="off_shelf_time" property="offShelfTime"/>
+        <result column="is_top" property="isTop"/>
+        <result column="files" property="files"/>
+    </resultMap>
+    <resultMap id="bhNoticeVOResultMap" type="com.jslc.modules.szbh.vo.BhNoticeVO" extends="bhNoticeResultMap">
+
+    </resultMap>
+
+
+    <resultMap id="bhNoticeRestVOResultMap" type="com.jslc.modules.szbh.vo.BhNoticeRestVO">
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="release_time" property="releaseTime"/>
+        <result column="notice_type" property="noticeType"/>
+        <result column="info_source" property="infoSource"/>
+        <result column="off_shelf_time" property="offShelfTime"/>
+        <result column="is_top" property="isTop"/>
+        <result column="files" property="files"/>
+    </resultMap>
+
+    <select id="selectBhNoticePage" resultMap="bhNoticeVOResultMap">
+        select bn.* ,bu.account from bh_notice bn
+        left join blade_user bu on bu.id = bn.create_user and bu.is_deleted = 0
+        where bn.is_deleted = 0
+        <if test="title != null and title != ''">
+            and bn.title like concat('%',#{title},'%')
+        </if>
+        <if test="noticeType != null">
+            and bn.notice_type = #{noticeType}
+        </if>
+
+        <if test="start != null and end != null">
+            and bn.release_time between #{start} and #{end}
+        </if>
+        <if test="downStart != null and downEnd != null">
+            and bn.off_shelf_time between #{downStart} and #{downEnd}
+        </if>
+        <if test="isTop != null">
+            and bn.is_top = #{isTop}
+        </if>
+
+        <if test="type != null">
+
+            <if test="type ==0">
+                and now() &lt; bn.release_time
+            </if>
+
+            <if test="type ==1">
+                and now() >= bn.release_time
+            </if>
+        </if>
+        order by is_top desc,create_time desc
+    </select>
+
+
+    <select id="noticeList" resultMap="bhNoticeRestVOResultMap">
+        select bn.* ,bu.account
+        from bh_notice bn
+        left join blade_user bu on bu.id = bn.create_user and bu.is_deleted = 0
+        where bn.is_deleted = 0
+        <if test="noticeType != null">
+            and bn.notice_type = #{noticeType}
+        </if>
+        and bn.release_time &lt;= #{releaseTime}
+        and (bn.off_shelf_time is null or bn.off_shelf_time >= #{offShelfTime})
+        order by is_top desc,release_time desc
+    </select>
+    <select id="getNoticeList" resultMap="bhNoticeVOResultMap">
+        select bn.* ,bu.account
+        from bh_notice bn
+        left join blade_user bu on bu.id = bn.create_user and bu.is_deleted = 0
+        where bn.is_deleted = 0
+        <if test="noticeType != null">
+            and bn.notice_type = #{noticeType}
+        </if>
+        <if test="title">
+            and bn.title like concat('%',#{title},'%')
+        </if>
+        and bn.release_time &lt;= #{releaseTime}
+        and (bn.off_shelf_time is null or bn.off_shelf_time >= #{offShelfTime})
+        order by is_top desc,release_time desc
+    </select>
+
+</mapper>

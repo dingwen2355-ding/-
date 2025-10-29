@@ -1,0 +1,277 @@
+<template>
+  <div class="tinymce-editor">
+    <editor
+      v-if="!reloading"
+      v-model="myValue"
+      :init="init"
+      :disabled="disabled"
+      :fullscreen_native="fullscreen"
+      @onClick="onClick">
+    </editor>
+    
+<input v-show="false" ref="fileRef" type="file" @change="fileChange">
+ 
+<!--  <el-button @click="uploadFile"></el-button>
+  
+   -->
+   <a-modal :closable="false" width="10px" centered :mask="false" :bodyStyle="{padding:0}" :visible="colorModalVisible" title="" :footer="null" @cancel="e=>colorModalVisible=false">
+    <Sketch-picker :value="backgroundCoolor" @input="selectColor" />
+   </a-modal>
+   
+  </div>
+</template>
+
+<script>
+  import tinymce from 'tinymce/tinymce'
+  import Editor from '@tinymce/tinymce-vue'
+  import 'tinymce/themes/silver/theme'
+  import 'tinymce/plugins/image'
+  import 'tinymce/plugins/link'
+  import 'tinymce/plugins/media'
+  import 'tinymce/plugins/table'
+  import 'tinymce/plugins/lists'
+  import 'tinymce/plugins/contextmenu'
+  import 'tinymce/plugins/wordcount'
+  import 'tinymce/plugins/colorpicker'
+  import 'tinymce/plugins/textcolor'
+  import 'tinymce/plugins/fullscreen'
+  import 'tinymce/icons/default'
+/*   import "tinymce/icons/default/icons"; */
+
+import {
+
+  Sketch,
+} from "vue-color";
+
+  import { uploadAction,getFileAccessHttpUrl } from '@/api/manage'
+  import { getVmParentByName } from '@/utils/util'
+import { postAction } from '../../../api/manage'
+  export default {
+    components: {
+      Editor,
+      "Sketch-picker": Sketch,
+    },
+    props: {
+      value: {
+        type: String,
+        required:false
+      },
+      backgroundCoolor:{
+        type: String,
+        default:'#fff'
+      },
+      triggerChange:{
+        type: Boolean,
+        default: false,
+        required:false
+      },
+      disabled: {
+        type: Boolean,
+        default: false
+      },
+      fullscreen: {
+        type: Boolean,
+        default: false
+      },
+      plugins: {
+        type: [String, Array],
+        default: 'lists image link media table textcolor wordcount contextmenu fullscreen'
+      },
+      toolbar: {
+        type: [String, Array],
+        default: 'undo redo |  formatselect | bold italic | fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | lists link unlink image media table | removeformat | fullscreen',
+        branding:false
+      }
+    },
+    data() {
+      return {
+       
+        colorModalVisible:false,
+        //初始化配置
+        init: {
+          language_url: '/tinymce/langs/zh_CN.js',
+          language: 'zh_CN',
+          skin_url: '/tinymce/skins/lightgray',
+          height: 500,
+          plugins: 'print preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media template advcode codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists wordcount  textpattern help emoticons autosave bdmap indent2em autoresize formatpainter axupimgs importword kityformula-editor',
+          toolbar: 'code undo redo restoredraft | cut copy paste pastetext | forecolor backcolor bold italic underline strikethrough link anchor | alignleft aligncenter alignright alignjustify outdent indent | \
+            styleselect formatselect fontselect fontsizeselect | bullist numlist | blockquote subscript superscript removeformat | \
+            table image media charmap emoticons hr pagebreak insertdatetime print preview | fullscreen |  lineheight  | axupimgs selectColor mybutton importword kityformula-editor ',
+            setup:  (editor)=> {           
+                let that=this
+                        // 注册一个icon
+                        editor.ui.registry.addIcon(
+                            "more-img",
+                            `<svg viewBox="0 0 1024 1024" width="26" height="26"><path d="M395.264 634.368l-62.976-87.04c-8.192-11.264-22.016-11.264-30.208 0L186.368 707.584c-8.192 11.264-3.584 20.992 11.264 20.992h530.432c14.336 0 19.456-9.216 10.752-20.992L555.52 456.704c-8.704-11.776-22.016-11.264-30.208 0L395.264 634.368z m16.896-262.656c0 28.16 23.04 51.2 51.2 51.2s51.2-23.04 51.2-51.2-23.04-51.2-51.2-51.2-51.2 23.04-51.2 51.2z" p-id="2140"></path><path d="M118.784 244.736h688.128c-7.168 0-12.8-5.632-12.8-12.8v560.64c0-7.168 5.632-12.8 12.8-12.8H118.784c7.168 0 12.8 5.632 12.8 12.8v-560.64c0 6.656-5.632 12.8-12.8 12.8zM80.896 792.064c0 20.992 16.896 38.4 38.4 38.4h688.128c20.992 0 38.4-17.408 38.4-38.4V231.936c0-20.992-16.896-38.4-38.4-38.4h-688.64c-20.992 0-38.4 17.408-38.4 38.4v560.128z" p-id="2141"></path><path d="M832 333.312h79.36c-6.144 0-10.752-4.608-10.752-10.752v466.944c0-5.632 4.608-10.752 10.752-10.752H832c6.144 0 10.752 4.608 10.752 10.752V322.56c0 6.144-5.12 10.752-10.752 10.752z m-31.744 456.192c0 17.408 14.336 31.744 31.744 31.744h79.36c17.408 0 31.744-14.336 31.744-31.744V322.56c0-17.408-14.336-31.744-31.744-31.744H832c-17.408 0-31.744 14.336-31.744 31.744v466.944z" p-id="2142"></path></svg>`
+                        );
+                        // 注册一个自定义的按钮
+                        editor.ui.registry.addButton("axupimgs", {
+                            icon: `more-img`,
+                            title:'选择背景',
+                            onAction: function (_) {
+                            
+                             that.handleUpload()
+                               // that.saveImgs = true
+                               // that.editor = editor
+                            }
+                        });
+
+                        // 注册一个icon
+                        editor.ui.registry.addIcon(
+                            "select-color",
+                            `<svg t="1664504852485" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6933" width="28" height="28"><path d="M896 384c-46.72-46.72-160.64-25.6-219.52-10.24L448.64 152.96l-21.76 21.76L313.6 65.28 223.36 152.96 336.64 262.4 66.56 524.16v2.56L448.64 896l359.68-349.44L960 693.12S960 448 896 384zM194.56 524.16l255.36-247.68 254.72 247.68H194.56z" p-id="6934" fill="#1296db"></path></svg>`);
+                        // 注册一个自定义的按钮
+                        editor.ui.registry.addButton("selectColor", {
+                            icon: `select-color`,
+                            title:'选择颜色',
+                            onAction: function (_) {
+                            console.log(_);
+                             that.showPickColor()
+                               // that.saveImgs = true
+                               // that.editor = editor
+                            }
+                        });
+
+                           // 注册一个icon
+                           editor.ui.registry.addIcon(
+                            "save-img",
+                            `<svg t="1664438278554" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2588" width="28" height="28"><path d="M704 128H192c-35.2 0-64 28.8-64 64v640c0 35.2 28.8 64 64 64h640c35.2 0 64-28.8 64-64V320L704 128zM256 256h320v128H256V256z m256 512c-70.4 0-128-57.6-128-128s57.6-128 128-128 128 57.6 128 128-57.6 128-128 128z" p-id="2589" fill="#2cd4e0"></path></svg>`
+                        );
+                        // 注册一个自定义的按钮
+                        editor.ui.registry.addButton("mybutton", {
+                            icon: `save-img`,
+                            title:'选择背景',
+                            onAction: function (_) {
+                              let modelName=''
+                              that.$confirm({
+                                title: '请输入模板名称',
+                                content: <aInput vModel={modelName} ></aInput>,
+                                onOk() {
+                                  return that.addModel(modelName)
+                                },
+                                onCancel() {},
+                              });
+                            }
+                        });
+                      },
+                      color_picker_callback: function(callback, value) {
+                        console.log('选择颜色:',value);
+    callback('#FF00FF');
+  },
+          branding: false,
+          menubar: false,
+          toolbar_drawer: false,
+          fontsize_formats: "8pt 9pt 10pt 11pt 12pt 13pt 14pt 15pt 16pt 18pt 24pt 36pt 48pt 70pt 80pt 90pt 100pt 110pt 120pt 140pt 160pt 180pt 200pt 220pt 240pt 260pt 300pt 340pt 380pt 430pt 480pt 560pt ",
+          images_upload_handler: (blobInfo, success) => {
+            let formData = new FormData()
+            formData.append('file', blobInfo.blob(), blobInfo.filename());
+            formData.append('biz', "jeditor");
+            formData.append("jeditor","1");
+            uploadAction(window._CONFIG['domianURL']+"/sys/common/upload", formData).then((res) => {
+              if (res.success) {
+                if(res.message == 'local'){
+                  const img = 'data:image/jpeg;base64,' + blobInfo.base64()
+                  success(img)
+                }else{
+                  let img = getFileAccessHttpUrl(res.message)
+                  success(img)
+                }
+              }
+            })
+          }
+        },
+        myValue: this.value,
+        reloading: false,
+        url:{
+        add:'info/infoModel/add',
+        edit:'info/infoModel/edit'
+      }
+      }
+    },
+    mounted() {
+      this.initATabsChangeAutoReload()
+    },
+    methods: {
+    addModel(modelName){
+     return  postAction(this.url.add,{modelName,content:this.myValue}).then(res=>{
+        if(res.success){
+          this.$message.success('添加成功')
+          this.$emit('ok')
+        }else{
+          this.$message.error(res.message)
+        }
+      })
+    },
+     // 按钮事件  触发input输入框
+     handleUpload () {
+       this.$refs.fileRef.dispatchEvent(new MouseEvent('click'))  //弹出选择本地文件
+     },
+     fileChange(e){
+      console.log(e)
+      
+      this.fileToBase64(this.$refs.fileRef.files[0],(base)=>{
+        this.$emit('selectBackground',base)
+        console.log(base)
+      })
+     },
+      fileToBase64(file, callback) {
+  const fileReader = new FileReader()
+  fileReader.readAsDataURL(file)
+  fileReader.onload = function () {
+    callback(this.result)
+  }
+},
+showPickColor(){
+  this.colorModalVisible=true
+},
+selectColor(e){
+  this.$emit('selectColor',e.hex8)
+ // console.log(e);
+},
+      reload() {
+        this.reloading = true
+        this.$nextTick(() => this.reloading = false)
+      },
+
+      onClick(e) {
+        this.$emit('onClick', e, tinymce)
+      },
+      //可以添加一些自己的自定义事件，如清空内容
+      clear() {
+        this.myValue = ''
+      },     
+      initATabsChangeAutoReload() {
+        // 获取父级
+        let tabs = getVmParentByName(this, 'ATabs')
+        let tabPane = getVmParentByName(this, 'ATabPane')
+        if (tabs && tabPane) {
+          // 用户自定义的 key
+          let currentKey = tabPane.$vnode.key
+          // 添加事件监听
+          tabs.$on('change', (key) => {
+            // 切换到自己时执行reload
+            if (currentKey === key) {
+              this.reload()
+            }
+          })
+        }
+      },
+
+    },
+    watch: {
+      value(newValue) {
+        this.myValue = (newValue == null ? '' : newValue)
+      },
+      myValue(newValue) {
+        if(this.triggerChange){
+          this.$emit('change', newValue)
+        }else{
+          this.$emit('input', newValue)
+        }
+      }
+    }
+  }
+
+</script>
+<style scoped>
+</style>

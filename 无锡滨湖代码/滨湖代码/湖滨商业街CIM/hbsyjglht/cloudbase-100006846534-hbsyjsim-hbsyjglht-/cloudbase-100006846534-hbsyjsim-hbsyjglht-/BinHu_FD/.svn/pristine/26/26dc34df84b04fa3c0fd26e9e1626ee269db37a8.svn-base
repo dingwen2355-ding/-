@@ -1,0 +1,86 @@
+<template>
+  <a-modal title="流程设计" :maskClosable="false" :footer="null" width="100%" height="100%" destroyOnClose centered
+    v-bind="$attrs" :visible="visible" v-on="$listeners" @cancel="handleModalCancle">
+    <progress-designer @saveProcess="handleSaveProcess" ref="progressDesigner" v-if="showPd" :initXmlStr="xmlStr">
+    </progress-designer>
+  </a-modal>
+</template>
+
+<script>
+import ProgressDesigner from '@/bpmn/ProgressDesigner'
+import { postAction, getAction } from '@/api/manage'
+export default {
+  components: {
+    ProgressDesigner,
+  },
+  data() {
+    return {
+      processDefinitionId: '0',
+      xmlStr: '',
+      showPd: false,
+      visible: false,
+    }
+  },
+  methods: {
+    add() {
+      this.processDefinitionId = '0'
+      this.xmlStr = ''
+      this.visible = true
+      this.showPd = true
+    },
+    edit(processId) {
+      this.processDefinitionId = processId
+      this.visible = true
+      getAction('/processModel/getXml', { modelId: processId }).then((res) => {
+        this.xmlStr = res.result
+        this.showPd = true
+      })
+    },
+    handleSaveProcess(xmlStr) {
+      // window.bpmnInstances.modeling.layoutConnection()
+      // console.log()
+
+      const canvas = window?.bpmnInstances?.modeler.get("canvas");
+      const rootElement = canvas.getRootElement();
+      const rootElementBaseInfo = rootElement.businessObject;
+
+      // let bpmnElement = window?.bpmnInstances?.bpmnElement
+      // let elementBaseInfo = JSON.parse(JSON.stringify(bpmnElement.businessObject))
+      console.log(rootElement)
+      let processkey = rootElementBaseInfo.id
+      let processName = rootElementBaseInfo.name
+      let processDescriptor = xmlStr
+      let param = {
+        processkey: processkey,
+        processName: processName,
+        processDescriptor: processDescriptor,
+        processDefinitionId: this.processDefinitionId,
+      }
+      postAction('/processModel/save', param).then((res) => {
+        if (res.success) {
+          this.$message.success('创建成功')
+        }
+      })
+    },
+    handleModalCancle() {
+      this.visible = false
+      this.showPd = false
+    },
+  },
+  watch: {},
+}
+</script>
+<style lang="less" scoped>
+/deep/.ant-modal {
+  padding: 0;
+
+  .ant-modal-content {
+    height: 100%;
+
+    .ant-modal-body {
+      padding: 0;
+      height: calc(100% - 55px);
+    }
+  }
+}
+</style>

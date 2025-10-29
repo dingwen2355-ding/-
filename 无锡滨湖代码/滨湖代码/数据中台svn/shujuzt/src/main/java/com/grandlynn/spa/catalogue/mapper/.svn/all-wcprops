@@ -1,0 +1,311 @@
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper
+END
+CatalogueDataSourceMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueDataSourceMapper.java
+END
+CatalogueSysTableVersionMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueSysTableVersionMapper.java
+END
+TotalCompareFieldLogMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/TotalCompareFieldLogMapper.java
+END
+CatalogueDataSourceDatabaseMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 142
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueDataSourceDatabaseMapper.java
+END
+CatalogueOrgSysVersionMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueOrgSysVersionMapper.java
+END
+CatalogueHelpDocumentMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueHelpDocumentMapper.java
+END
+CatalogueFieldBaseConfigMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueFieldBaseConfigMapper.java
+END
+CatalogueTableFieldVersionMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueTableFieldVersionMapper.java
+END
+SysAdminUserRoleMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/SysAdminUserRoleMapper.java
+END
+OrgDsServiceMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/OrgDsServiceMapper.java
+END
+SysRoleMenuMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/SysRoleMenuMapper.java
+END
+CatalogueSysOrgMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueSysOrgMapper.java
+END
+CatalogueOrgContentRelationVersionMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 149
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueOrgContentRelationVersionMapper.java
+END
+AnalysisMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/AnalysisMapper.java
+END
+CatalogueOrgMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueOrgMapper.java
+END
+CatalogueResourceDomainMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueResourceDomainMapper.java
+END
+DataSharingAccountMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/DataSharingAccountMapper.java
+END
+CatalogueOrgContentRelationMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 142
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueOrgContentRelationMapper.java
+END
+SysAdminUserOrgMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/SysAdminUserOrgMapper.java
+END
+TotalCompareTableLogMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/TotalCompareTableLogMapper.java
+END
+CatalogueResourceCategoryMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueResourceCategoryMapper.java
+END
+CatalogueResourceIndustryCategoryMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 148
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueResourceIndustryCategoryMapper.java
+END
+CatalogueOrgSysMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueOrgSysMapper.java
+END
+CatalogueResourceCatalogueMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueResourceCatalogueMapper.java
+END
+ForeignCityResourceDomainMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/ForeignCityResourceDomainMapper.java
+END
+TableMatterMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/TableMatterMapper.java
+END
+ForeignTotalListMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/ForeignTotalListMapper.java
+END
+SysAdminUserMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/SysAdminUserMapper.java
+END
+CatalogueDataSourceApiMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueDataSourceApiMapper.java
+END
+CatalogueSysTableResourceSerialMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 146
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueSysTableResourceSerialMapper.java
+END
+SysMenuMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/SysMenuMapper.java
+END
+CatalogueResourceItemMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueResourceItemMapper.java
+END
+CatalogueSysTableMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueSysTableMapper.java
+END
+SysOperationLogMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/SysOperationLogMapper.java
+END
+ForeignCityResourceTypeMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/ForeignCityResourceTypeMapper.java
+END
+SysTemplateMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/SysTemplateMapper.java
+END
+SysRoleMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/SysRoleMapper.java
+END
+CatalogueFileOperationLogMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueFileOperationLogMapper.java
+END
+CataloguePublishCheckMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CataloguePublishCheckMapper.java
+END
+CatalogueForeignBaseConfigMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueForeignBaseConfigMapper.java
+END
+ForeignOaOrgMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/ForeignOaOrgMapper.java
+END
+CatalogueOrgVersionMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueOrgVersionMapper.java
+END
+CatalogueTableApproveRecordMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 142
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueTableApproveRecordMapper.java
+END
+ForeignSysMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/ForeignSysMapper.java
+END
+SmsMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/SmsMapper.java
+END
+CatalogueTableBaseConfigMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueTableBaseConfigMapper.java
+END
+ForeignCityResourceOrgMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/ForeignCityResourceOrgMapper.java
+END
+CatalogueOrgTypeMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueOrgTypeMapper.java
+END
+CatalogueTableFieldMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueTableFieldMapper.java
+END
+CatalogueVersionLogMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueVersionLogMapper.java
+END
+CatalogueResourceApplicationSceneMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 148
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/mapper/CatalogueResourceApplicationSceneMapper.java
+END

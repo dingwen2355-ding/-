@@ -1,0 +1,78 @@
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          lowerCaseServiceId: true
+          enabled: true
+      default-filters:
+        - name: RequestSize
+          args:
+            maxSize: 10240000
+      routes:
+        # 认证中心
+        - id: jc-auth
+          uri: lb://jc-auth
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+        # 文件服务
+        - id: jc-file
+          uri: lb://jc-file
+          predicates:
+            - Path=/file/**
+          filters:
+            - StripPrefix=1
+        # 系统模块
+        - id: jc-system
+          uri: lb://jc-system
+          predicates:
+            - Path=/system/**
+          filters:
+            - StripPrefix=1
+        # 业务模块
+        - id: jc-civilization
+          uri: lb://jc-civilization
+          predicates:
+            - Path=/civilization/**
+          filters:
+            - StripPrefix=1
+        # 工作流模块
+        - id: jc-workflow
+          uri: lb://jc-workflow
+          predicates:
+            - Path=/workflow/**
+          filters:
+            - StripPrefix=1
+        # 大屏接口模块
+        - id: jc-screen
+          uri: lb://jc-screen
+          predicates:
+            - Path=/screen/**
+          filters:
+            - StripPrefix=1
+        # 大屏接口模块
+        - id: jc-warn
+          uri: lb://jc-warn
+          predicates:
+            - Path=/warn/**
+          filters:
+            - StripPrefix=1
+
+# 安全配置
+security:
+  # 不校验白名单
+  ignore:
+    whites:
+      - /*/v3/api-docs
+      - /auth/**
+      - /file/api/*
+      - /file/upload
+      - /workflow/user/*
+      - /workflow/synch/*
+      - /screen/api/**
+      - /civilization/video/warn/list
+      - /civilization/video/hls
+      - /civilization/influx/**
+      - /warn/influx/topic

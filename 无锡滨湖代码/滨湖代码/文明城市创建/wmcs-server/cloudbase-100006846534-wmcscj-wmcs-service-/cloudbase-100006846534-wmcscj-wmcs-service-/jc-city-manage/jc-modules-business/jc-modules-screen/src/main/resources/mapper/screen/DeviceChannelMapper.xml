@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.screen.web.mapper.DeviceChannelMapper">
+
+    <select id="getDeviceChannelList" resultType="cn.wxgis.jc.screen.domain.vo.points.DeviceChannelVo">
+        select c.id, c.channel_id, c.device_code, c.gps_x, c.gps_y, c.name, c.org_code, t.`name` org_name
+        from data_device_channel c
+                 left join data_device_tree t on t.id = c.org_code
+        where c.gps_x is not null and c.gps_x != 0 and c.gps_y is not null  and c.gps_y != 0
+    </select>
+
+    <select id="getRegionDeviceList" resultType="cn.wxgis.jc.screen.domain.vo.points.RegionDeviceVo">
+        select d.region_code, d.region_name, c.`name`, c.id channel_id, c.gps_x, c.gps_y
+        from data_region_device d
+            left join data_device_channel c on c.id = d.channel_id
+        <where>
+            <if test="regionName != null and regionName != ''">
+                and d.region_name like concat('%', #{regionName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getTaskPointsList" resultType="cn.wxgis.jc.screen.domain.vo.points.TaskPointsVo">
+        select type, status, region_name, region_code, points_type_id type_id, points_type_name type_name, id, name, latitude, longitude
+        from  (
+                  select ct.type, ct.status, ct.points_type_id, ct.points_type_name, cp.region_name, cp.region_code, cp.id, cp.name name, cp.latitude, cp.longitude
+                  from work_check_task ct
+                           left join data_check_points cp on cp.id = ct.points_id
+                  where ct.points_id is not null
+                  union
+                  select ct.type, ct.status, ct.points_type_id, ct.points_type_name, cp.region_name, cp.region_code, cp.id, cp.name name, cp.latitude, cp.longitude from data_check_points cp
+                                                                                                                                                                             left join work_check_task ct on ct.points_type_id = cp.type_id
+                  where ct.points_id is null and ct.id is not null
+              ) data
+    </select>
+
+</mapper>

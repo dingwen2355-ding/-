@@ -1,0 +1,55 @@
+spring:
+  redis:
+    host: 192.168.0.20
+    port: 6379
+    database: 10
+    password: admin123&PM
+    timeout: 50000
+  jpa:
+    properties:
+      hibernate:
+        dialect:  org.hibernate.dialect.MySQL57InnoDBDialect
+    hibernate:
+      ddl-auto: update
+      #是否显示sql 语句
+    database: mysql
+    show-sql: true
+    open-in-view: true
+
+## JPA配置
+jpa:
+  comment:
+    enable: true
+
+## mybatis配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper_locations: classpath:mapper/**/*.xml
+
+# feign 配置
+feign:
+  sentinel:
+    enabled: true
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 10000
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+
+swagger:
+  enabled: true
+  title: 工作流模块接口文档
+  description: IVV接口文档
+  version: 1.0
+  name: aiveily

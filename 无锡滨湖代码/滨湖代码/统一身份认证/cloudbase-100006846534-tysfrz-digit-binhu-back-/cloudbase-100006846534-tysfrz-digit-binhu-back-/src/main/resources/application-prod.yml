@@ -1,0 +1,113 @@
+#数据源配置
+spring:
+  redis:
+    ##redis 单机环境配置
+    host: 192.250.161.205
+    port: 5135
+    password: redis@Dandian
+    database: 1
+    ssl: false
+    ##redis 集群环境配置
+    #cluster:
+    #  nodes: 127.0.0.1:7001,127.0.0.1:7002,127.0.0.1:7003
+    #  commandTimeout: 5000
+  datasource:
+    # MySql
+    url: jdbc:mysql://192.250.161.229:15008/szbh?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+    username: dandian
+    password: gO]874Nu51}86{Mu
+    # PostgreSQL
+    #url: jdbc:postgresql://127.0.0.1:5432/bladex_boot
+    #username: postgres
+    #password: 123456
+    # Oracle
+    #url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
+    #username: BLADEX_BOOT
+    #password: BLADEX_BOOT
+    # SqlServer
+    #url: jdbc:sqlserver://127.0.0.1:1433;DatabaseName=bladex_boot
+    #username: bladex_boot
+    #password: bladex_boot
+    # DaMeng
+    #url: jdbc:dm://127.0.0.1:5236/BLADEX_BOOT?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8
+    #username: BLADEX_BOOT
+    #password: BLADEX_BOOT
+
+#第三方登陆
+social:
+  enabled: true
+  domain: http://127.0.0.1:1888
+
+#blade配置
+blade:
+  #分布式锁配置
+  lock:
+    ##是否启用分布式锁
+    enabled: false
+    ##redis服务地址
+    address: redis://192.250.161.205:5135
+  #本地文件上传
+  file:
+    remote-mode: true
+    upload-domain: http://localhost:8999
+    remote-path: /usr/share/nginx/html
+
+# 政务微信
+zwwx:
+  tokenUrl: https://2.20.105.11:10443/cgi-bin/gettoken
+  corpId: ww29a8dfb1be6173c1
+  corpSecret: aUABPtxgLu6s5ITEFmGz4-GqSrYhAaBV4K0D993c690
+  deptUrl: https://2.20.105.11:10443/cgi-bin/department/list
+  userUrl: https://2.20.105.11:10443/cgi-bin/user/list
+  deptId: 373
+
+# 短信账号密钥
+sms:
+  address: http://2.22.67.1:88/SmsService
+  # 短信账号
+  #  appId: wxnldzcs
+  appId: wxszbhrjpt
+  # 短信秘钥
+  #  secret: GIgkKyRCUVDcTrSw
+  secret: cvvdVqdTYm2bJiuh
+  #  localUrl: http://2.21.137.200:8080/squirrel-service/sms/sendSMS
+  localUrl: http://127.0.0.1:81/squirrel-service/sms/sendSMS
+
+# 都市圈应用配置
+systemApp:
+  appId: c3piaGdldHRva2Vu
+  appSecret: b933b14b5fe60b1cf3b4cb347eae831c
+#单点登录配置
+sso:
+  oauth2:
+    client:
+      #分配给第三方系统id
+      client-id: ZmVLiSl0
+      #分配给第三方系统秘钥
+      client-secret: d8ec371ccd3eac3c8382461ae7506ef211ffd7aa
+      #获取tocken信息地址
+      access-token-uri: http://127.0.0.1:8081/oauth/token
+      #获取用户认证信息
+      user-authorization-uri: http://2.21.137.200:8081/oauth/authorize
+      #获取token成功后重定向页面
+      home-page: http://2.21.137.200/#/sso/login
+      #重定向地址
+      redirect-uri: http://2.21.137.200/api/sso/login
+      #根据token获取用户信息
+      user-token-url: http://127.0.0.1:8081/user/token
+file:
+  uploadUrl: http://192.170.13.74:9000/file/upload
+  downloadUrl: http://2.21.137.202:8080/img/civilization
+#平台名称
+serverName: 统一身份认证平台(133)
+#ip相同动作异常地址
+ipAbnormalUrl: 58.215.28.118:58808/abnor_function
+#ip相同动作异常通知管理员
+ipAbnormalNoticeMobile: 13333333333
+hsm:
+  openEncrypt: false  #开启加密验证
+  host: 2.21.137.227:19080
+  url: 'http://${hsm.host}'
+  ak: AKCACEADCIBIBECCLVDC
+  sk: RFFETkJRSkVSOEpQM0YzQQ==
+  keyId: ea7edd94-dd69-4d60-92c8-7888930c57a8

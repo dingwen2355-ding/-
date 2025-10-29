@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.CatalogueOrgSysMapper">
+
+    <resultMap id="BaseResultMap" type="com.grandlynn.spa.catalogue.entity.CatalogueOrgSysDO">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+        <result property="appId" column="app_id" jdbcType="BIGINT"/>
+        <result property="version" column="version" jdbcType="SMALLINT"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="deleted" column="is_deleted" jdbcType="SMALLINT"/>
+        <result property="createdBy" column="created_by" jdbcType="VARCHAR"/>
+        <result property="updatedBy" column="updated_by" jdbcType="VARCHAR"/>
+        <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+        <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
+        <result property="sysName" column="sys_name" jdbcType="VARCHAR"/>
+        <result property="enable" column="enable" jdbcType="SMALLINT"/>
+        <result property="nodeNo" column="node_no" jdbcType="VARCHAR"/>
+        <result property="nodeName" column="node_name" jdbcType="VARCHAR"/>
+        <result property="sysNameSimplify" column="sys_name_simplify" jdbcType="VARCHAR"/>
+        <result property="buildLevel" column="build_level" jdbcType="VARCHAR"/>
+        <result property="platformName" column="platform_name" jdbcType="VARCHAR"/>
+        <result property="deployType" column="deploy_type" jdbcType="VARCHAR"/>
+        <result property="buildStatus" column="build_status" jdbcType="VARCHAR"/>
+        <result property="sysStatus" column="sys_status" jdbcType="VARCHAR"/>
+        <result property="functionDesc" column="function_desc" jdbcType="VARCHAR"/>
+        <result property="sysType" column="sys_type" jdbcType="VARCHAR"/>
+        <result property="useRange" column="use_range" jdbcType="VARCHAR"/>
+        <result property="upTime" column="up_time" jdbcType="VARCHAR"/>
+        <result property="buildTime" column="build_time" jdbcType="VARCHAR"/>
+        <result property="securityLevel" column="security_level" jdbcType="VARCHAR"/>
+        <result property="sysRemark" column="sys_remark" jdbcType="VARCHAR"/>
+        <result property="adminStaff" column="admin_staff" jdbcType="VARCHAR"/>
+        <result property="adminPhone" column="admin_phone" jdbcType="VARCHAR"/>
+        <result property="contractCompany" column="contract_company" jdbcType="VARCHAR"/>
+        <result property="contractStaff" column="contract_staff" jdbcType="VARCHAR"/>
+        <result property="contractPhone" column="contract_phone" jdbcType="VARCHAR"/>
+        <result property="intermediate" column="intermediate" jdbcType="SMALLINT"/>
+        <result property="parentSys" column="parent_sys" jdbcType="VARCHAR"/>
+        <result property="sysTypeDesc" column="sys_type_desc" jdbcType="VARCHAR"/>
+        <result property="verticalType" column="vertical_type" jdbcType="VARCHAR"/>
+        <result property="deviceType" column="device_type" jdbcType="VARCHAR"/>
+        <result property="deviceTypeDesc" column="device_type_desc" jdbcType="VARCHAR"/>
+        <result property="integration" column="integration" jdbcType="VARCHAR"/>
+        <result property="sysUrl" column="sys_url" jdbcType="VARCHAR"/>
+        <result property="implementCompany" column="implement_company" jdbcType="VARCHAR"/>
+        <result property="implementStaff" column="implement_staff" jdbcType="VARCHAR"/>
+        <result property="implementPhone" column="implement_phone" jdbcType="VARCHAR"/>
+        <result property="operationCompany" column="operation_company" jdbcType="VARCHAR"/>
+        <result property="operationStaff" column="operation_staff" jdbcType="VARCHAR"/>
+        <result property="operationPhone" column="operation_phone" jdbcType="VARCHAR"/>
+        <result property="deployLocation" column="deploy_location" jdbcType="VARCHAR"/>
+        <result property="deployLocationDesc" column="deploy_location_desc" jdbcType="VARCHAR"/>
+        <result property="netType" column="net_type" jdbcType="VARCHAR"/>
+        <result property="netTypeDesc" column="net_type_desc" jdbcType="VARCHAR"/>
+        <result property="securityLevelDesc" column="security_level_desc" jdbcType="VARCHAR"/>
+        <result property="fortDatabaseType" column="fort_database_type" jdbcType="VARCHAR"/>
+        <result property="versionNo" column="version_no" jdbcType="VARCHAR"/>
+        <result property="writer" column="writer" jdbcType="VARCHAR"/>
+        <result property="projectName" column="project_name" jdbcType="VARCHAR"/>
+        <result property="projectCode" column="project_code" jdbcType="VARCHAR"/>
+        <result property="constructionFund" column="construction_fund" jdbcType="VARCHAR"/>
+        <result property="operationFee" column="operation_fee" jdbcType="VARCHAR"/>
+        <result property="dataCapacity" column="data_capacity" jdbcType="VARCHAR"/>
+        <result property="purchaseCode" column="purchase_code" jdbcType="VARCHAR"/>
+        <result property="budgetCode" column="budget_code" jdbcType="VARCHAR"/>
+        <result property="informationFlowCode" column="information_flow_code" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,tenant_id,app_id,
+        version,remark,is_deleted,
+        created_by,updated_by,created_time,
+        updated_time,sys_name,enable,
+        node_no,node_name,sys_name_simplify,
+        build_level,platform_name,deploy_type,
+        build_status,sys_status,function_desc,
+        sys_type,use_range,up_time,
+        build_time,security_level,sys_remark,
+        admin_staff,admin_phone,contract_company,
+        contract_staff,contract_phone,intermediate,
+        parent_sys,sys_type_desc,vertical_type,
+        device_type,device_type_desc,integration,
+        sys_url,implement_company,implement_staff,
+        implement_phone,operation_company,operation_staff,
+        operation_phone,deploy_location,deploy_location_desc,
+        net_type,net_type_desc,security_level_desc,
+        fort_database_type,version_no,writer,
+        project_name,project_code,construction_fund,
+        operation_fee,data_capacity,purchase_code,
+        budget_code,information_flow_code
+    </sql>
+
+
+    <select id="getSysByOrgIdAndSysName" resultType="com.grandlynn.spa.catalogue.dto.SystemsDTO">
+        SELECT
+            s.id as sysId,
+            s.sys_name sysName,
+            s.node_name nodeName,
+            r.org_id orgId
+        FROM
+                catalogue_org_content_relation r
+            LEFT JOIN
+                catalogue_org_sys s
+            ON
+                r.content_id = s.ID
+        WHERE
+            r.is_deleted = 0
+            AND s.is_deleted = 0
+        <if test="request.tenantId != null">
+            AND r.tenant_id = #{request.tenantId}
+        </if>
+        <if test="request.appId != null">
+            AND r.app_id = #{request.appId}
+        </if>
+        <if test="request.sysName != null">
+            AND s.sys_name = #{request.sysName}
+        </if>
+        <if test="request.orgId != null">
+            AND r.org_id = #{request.orgId}
+        </if>
+    </select>
+
+    <select id="getSysAndOrgNameBySysIds" resultType="com.grandlynn.spa.catalogue.dto.SystemsDTO">
+        SELECT
+            o.node_name as nodeName,
+            o.node_no as nodeNo,
+            r.content_id as sysId,
+            r.org_id as orgId
+        FROM
+            catalogue_org o
+        LEFT JOIN
+            catalogue_org_content_relation r
+        ON
+            r.org_id = o.ID and r.is_deleted = 0 and r.content_type = 1
+        WHERE
+            o.is_deleted = 0
+        <if test="request.tenantId != null">
+            AND o.tenant_id = #{request.tenantId}
+        </if>
+        <if test="request.appId != null">
+            AND o.app_id = #{request.appId}
+        </if>
+        <if test="request.sysIds != null">
+            AND r.content_id in
+            <foreach collection="request.sysIds" item = "sysId" index="index" open="(" close=")" separator=",">
+                #{sysId}
+            </foreach>
+        </if>
+        <if test="request.orgId != null">
+            AND o.id = #{request.orgId}
+        </if>
+    </select>
+
+</mapper>

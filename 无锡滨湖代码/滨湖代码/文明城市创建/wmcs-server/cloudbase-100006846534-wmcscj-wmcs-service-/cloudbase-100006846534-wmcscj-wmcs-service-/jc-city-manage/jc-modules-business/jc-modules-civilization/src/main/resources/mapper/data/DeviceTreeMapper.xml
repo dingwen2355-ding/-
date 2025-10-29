@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.civilization.data.mapper.DeviceTreeMapper">
+    <delete id="deleteAll">
+        delete from data_device_tree
+    </delete>
+
+    <select id="selectPageCustom" resultType="cn.wxgis.jc.civilization.data.resp.DataDeviceTreeResponse">
+        select * from (
+            select data.*, data.region_code dept_id, dd.parent_id dept_parent_id from data_device_tree data
+            left join sys_dept dd on dd.id = data.region_code
+        ) t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+
+    <select id="selectPageCustomNoParent"
+            resultType="cn.wxgis.jc.civilization.data.resp.DataDeviceTreeResponse">
+        select * from (
+            select concat(p1.name, ' -> ', p2.name) parent_name, d.region_code dept_id, dd.parent_id dept_parent_id,
+                   d.*
+            from data_device_tree d
+            left join data_device_tree p2 on p2.id = d.parent_id
+            left join data_device_tree p1 on p1.id = p2.parent_id
+            left join sys_dept dd on dd.id = d.region_code
+            <where>
+                and d.is_parent = 0
+                <if test="params.selectStatus == 1">
+                    and d.region_code is not null and d.region_code != ''
+                </if>
+                <if test="params.selectStatus == 0">
+                    and (d.region_code is null or d.region_code = '')
+                </if>
+            </where>
+        ) t
+        <where>
+            ${ew.sqlSegment}
+            ${params.dataScope}
+        </where>
+    </select>
+
+    <select id="voList" resultType="cn.wxgis.jc.civilization.data.resp.DataDeviceTreeResponse">
+        select d.*, pd.name parentName
+        from data_device_tree d
+        left join data_device_tree pd on pd.id = d.parent_id
+        <where>
+            and d.del_flag = 0
+            <if test="name != null and name != ''">
+                and (d.name like concat('%', #{name},'%') or d.org_sn like concat('%', #{name},'%'))
+            </if>
+        </where>
+        order by d.sort desc, d.create_time desc
+    </select>
+
+    <select id="channelCountListByOrgCode" resultType="cn.wxgis.jc.civilization.data.vo.TreeChannelCountVo">
+        select org_code, IFNULL(count(1), 0) channel_count from data_device_channel
+        where org_code in
+        <foreach collection="orgCodes" open="(" close=")" separator="," item = "item" index="index">
+            #{item}
+        </foreach>
+        group by org_code
+
+    </select>
+
+
+</mapper>

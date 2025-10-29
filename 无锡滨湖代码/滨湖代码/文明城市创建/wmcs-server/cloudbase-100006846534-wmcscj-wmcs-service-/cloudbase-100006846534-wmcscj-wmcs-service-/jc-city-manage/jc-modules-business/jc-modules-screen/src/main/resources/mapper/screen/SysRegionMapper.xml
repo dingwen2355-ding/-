@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.screen.web.mapper.SysRegionMapper">
+
+
+    <select id="list" resultType="java.lang.String">
+        select region_name from sys_region
+        <where>
+            <if test="number != null and number != '' and number != 0">
+                and LENGTH(region_code) = #{number}
+            </if>
+        </where>
+        order by order_num
+    </select>
+
+    <select id="deptList" resultType="java.lang.String">
+        select name from sys_dept where type = 1
+    </select>
+
+</mapper>

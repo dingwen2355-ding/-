@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.customer.mapper.CmMobanMapper">
+
+    <resultMap type="cmMoban" id="cmAppResult">
+        <id     property="id"        column="id"           />
+        <result property="delFlag"        column="del_flag"            />
+        <result property="createBy"        column="create_by"            />
+        <result property="createTime"  column="create_time"    />
+        <result property="updateBy"       column="update_by"           />
+        <result property="updateTime"            column="update_time"                />
+        <result property="remark"           column="remark"               />
+        <result property="miaoshu"     column="miaoshu"        />
+        <result property="upload"     column="upload"   javaType="java.sql.Blob" typeHandler="com.ruoyi.system.customer.domain.ListToStringHandler"     />
+        <result property="name"     column="name"        />
+        <result property="type"     column="type"        />
+        <result property="isUse"     column="is_use"        />
+        <result property="yonghu"     column="yonghu"        />
+    </resultMap>
+
+    <update id="updateIsUseTo0ByType">
+        update cm_moban set is_use='0' where type=#{type}
+    </update>
+    <select id="getmobanUrl" resultMap="cmAppResult">
+        select * from cm_moban where del_flag='0' and is_use='1' and type=#{type}
+    </select>
+</mapper>

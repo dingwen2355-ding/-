@@ -1,0 +1,56 @@
+@import './theme.scss';
+/****************************************************** 看板相关 ******/
+// $thKBLine: #e6e6e6; // 看板标题下划线颜色
+$thKBSTableTitle: #dfecec; // 看板内小表格表头颜色
+// info模式
+$thKBInfo: #1a8586; // info模式看板标题颜色
+// danger模式
+$thKBDanger: #e63434; // danger模式看板标题颜色
+
+/****************************************************** 输入，下拉框相关 ******/
+$thInputBorder: #489D9E; // 边框颜色
+$thInputBorderHover: #489D9E; // 滑过时颜色
+$thInputBorderFocus: #489D9E; // 选中时颜色
+
+$thInpSelectLineBG: #fff; // 下拉选择框字体颜色
+$thInpSelectLineT: $thGInfo; // 下拉选择框字体颜色
+
+$thInpSelectLineBGHover: #6fadac; // 滑过：下拉选择框背景颜色
+$thInpSelectLineTHover: #fff; // 滑过：下拉选择框字体颜色
+
+$thInpSelectLineBGSelect: #12908d; // 选中：下拉选择框字体颜色
+$thInpSelectLineTSelect: #fff; // 选中：下拉选择框字体颜色
+
+$thInpSelectLineBGRange: $thGThemeL; // 多选时跨范围内选中显示的背景色
+$thInpSelectLineTRange: #fff; // 多选时跨范围内选中显示的文字颜色
+
+$thInpSelectLineBGDis: #f3f3f3; // 禁用背景色
+$thInpSelectLineTDis: #ccc; // 禁用文字色
+
+/****************************************************** 表格，分页相关 ******/
+$thPGActive: #489D9E; // 分页栏选中的文字颜色
+$thPGHover: #489D9E; // 分页栏选中的文字颜色
+$thTableThBG: #FAFAFA; // 页面表格头部背景色
+$thTableThCo: #333333; // 页面表格头字体颜色
+$thTableCo: #666666; // 表格默认字体颜色
+
+/****************************************************** tab标签 ******/
+$thTabBG:#12908c; // tab标签的背景色
+$thTabT: #fff; // tab标签文字色
+
+$thTabBGHover: #6fadac; // 滑过：tab标签的背景色
+$thTabTHover: #fff; // 滑过：tab标签文字色
+
+$thTabBGActive: #7d8594; // 选中：tab标签的背景色
+$thTabTActive: #fff; // 选中：tab标签文字色
+
+/****************************************************** 季度组件 小tab s-small ******/
+$thSTabBG: #fff; // tab标签的背景色
+$thSTabT: $thGInfo; // tab标签文字色
+$thSTabBorder: #e6e6e6; // tab标签边框色
+
+$thSTabBGHover: #6fadac; // 滑过：tab标签的背景色
+$thSTabTHover: #fff; // 滑过：tab标签文字色
+
+$thSTabBGActive: #12908d; // 选中：tab标签的背景色
+$thSTabTActive: #fff; // 选中：tab标签文字色

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.civilization.assess.mapper.CivilizationLevelMapper">
+
+    <select id="getMonthList" resultType="java.lang.String">
+        select month from assess_civilization_level
+        <where>
+            <if test="month != null and month != ''">
+                and month = #{month}
+            </if>
+        </where>
+        group by month order by month desc
+    </select>
+
+    <select id="countByMonth" resultType="java.lang.Integer">
+        select count(1) from assess_civilization_level where month = #{month} and type = #{type}
+    </select>
+
+</mapper>

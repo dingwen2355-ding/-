@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.civilization.data.mapper.CivilizationCompanyMapper">
+
+    <select id="selectPageCustom"
+            resultType="cn.wxgis.jc.civilization.data.resp.DataCivilizationCompanyResponse">
+        select * from (
+            select data.*, data.region_code dept_id from data_civilization_company data
+        ) t
+        <where>
+            ${ew.sqlSegment}
+            ${params.dataScope}
+        </where>
+    </select>
+
+    <select id="findResponseById"
+            resultType="cn.wxgis.jc.civilization.data.resp.DataCivilizationCompanyResponse">
+        select data.*, jdata.name region_name
+        from data_civilization_company data
+            left join sys_dept jdata on jdata.id = data.region_code
+        where data.id = #{id}
+    </select>
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.civilization.assess.mapper.EventIndexMapper">
+
+    <select id="eventList" resultType="cn.wxgis.jc.civilization.assess.vo.AssessVo">
+        select * from (
+            select e.id, 5 event_source, e.check_name, e.check_value, e.region_name, e.type_name, e.point_name, e.check_itemid, e.check_item_name, et.`name` event_type_name, check_info content, depart_name dept_name,
+            DATE_FORMAT(e.check_date, '%Y-%m-%d %h:%i:%s') check_date,e.score,
+            case when state = 3 then 1 else 0 end as `status`
+            from work_event e
+            left join data_check_item ci on ci.id = e.check_itemid
+            left join quota_event_type et on et.id = ci.event_type_id
+            union
+            select e.id, 1 event_source, e.cycle check_name, c.number check_value, e.region_name, ct.`name` type_name, cp.name point_name, e.check_item_id check_itemid, e.event_title check_item, et.name event_type_name, e.content, e.dept_names, DATE_FORMAT(e.report_time, '%Y-%m-%d %h:%i:%s') check_date, e.score, case when `status` = 60 then 1 else 0 end as `status`
+            from wf_event_report e
+            left join quota_event_type et on et.id = e.event_type
+            left join data_check_points_type ct on ct.id = e.check_points_type_id
+            left join data_check_points cp on cp.id = e.check_points_id
+            left join quota_assess_cycle c on c.id = e.cycle_id
+        ) data
+        <where>
+            <if test="checkName != null and checkName != ''">
+                and check_name = #{checkName}
+            </if>
+        </where>
+    </select>
+
+    <select id="eventTypeCountList" resultType="cn.wxgis.jc.civilization.assess.vo.EventTypeCountVo">
+        select IFNULL(pq.`name`, '其他') name, IFNULL(pqt.name, '其他') parent_name, count(1) count from (
+            select e.id, 5 event_source, e.check_name, e.check_value, e.region_name, e.type_name, e.point_name, e.check_itemid, e.check_item_name, et.`name` event_type_name, check_info content, depart_name dept_name,
+            DATE_FORMAT(e.check_date, '%Y-%m-%d %h:%i:%s') check_date,e.score,
+            case when state = 3 then 1 else 0 end as `status`
+            from work_event e
+            left join data_check_item ci on ci.id = e.check_itemid
+            left join quota_event_type et on et.id = ci.event_type_id
+            union
+            select e.id, 1 event_source, e.cycle check_name, c.number check_value, e.region_name, ct.`name` type_name, cp.name point_name, e.check_item_id check_itemid, e.event_title check_item, et.name event_type_name, e.content, e.dept_names, DATE_FORMAT(e.report_time, '%Y-%m-%d %h:%i:%s') check_date, e.score, case when `status` = 60 then 1 else 0 end as `status`
+            from wf_event_report e
+            left join quota_event_type et on et.id = e.event_type
+            left join data_check_points_type ct on ct.id = e.check_points_type_id
+            left join data_check_points cp on cp.id = e.check_points_id
+            left join quota_assess_cycle c on c.id = e.cycle_id
+        ) data
+        left join quota_event_type q1 on q1.name = event_type_name
+        left join quota_event_type pq on pq.id = q1.parent_id
+        left join quota_event_type pqt on pqt.id = pq.parent_id
+        group by parent_name
+        order by count  desc
+    </select>
+
+    <select id="eventTypeCountByCycle" resultType="cn.wxgis.jc.civilization.assess.vo.EventTypeCountVo">
+        select IFNULL(pq.`name`, '其他') name, IFNULL(pqt.name, '其他') parent_name, count(1) count from (
+            select e.id, 5 event_source, e.check_name, e.check_value, e.region_name, e.type_name, e.point_name, e.check_itemid, e.check_item_name, et.`name` event_type_name, check_info content, depart_name dept_name,
+            DATE_FORMAT(e.check_date, '%Y-%m-%d %h:%i:%s') check_date,e.score,
+            case when state = 3 then 1 else 0 end as `status`
+            from work_event e
+            left join data_check_item ci on ci.id = e.check_itemid
+            left join quota_event_type et on et.id = ci.event_type_id
+            where e.check_name = #{checkName}
+            union
+            select e.id, 1 event_source, e.cycle check_name, c.number check_value, e.region_name, ct.`name` type_name, cp.name point_name, e.check_item_id check_itemid, e.event_title check_item, et.name event_type_name, e.content, e.dept_names, DATE_FORMAT(e.report_time, '%Y-%m-%d %h:%i:%s') check_date, e.score, case when `status` = 60 then 1 else 0 end as `status`
+            from wf_event_report e
+            left join quota_event_type et on et.id = e.event_type
+            left join data_check_points_type ct on ct.id = e.check_points_type_id
+            left join data_check_points cp on cp.id = e.check_points_id
+            left join quota_assess_cycle c on c.id = e.cycle_id
+            where e.cycle = #{checkName}
+        ) data
+        left join quota_event_type q1 on q1.name = event_type_name
+        left join quota_event_type pq on pq.id = q1.parent_id
+        left join quota_event_type pqt on pqt.id = pq.parent_id
+        group by parent_name
+        order by count desc
+    </select>
+
+
+    <select id="quotaInfo" resultType="cn.wxgis.jc.civilization.assess.vo.QuotaInfoVo">
+        select IFNULL(SUM(score), 0) score_total, count(1) points_count, (select count(1) from data_check_points) points_count_total from (
+            select e.id, 5 event_source, e.check_name, e.check_value, e.region_name, e.type_name, e.point_name, e.check_itemid, e.check_item_name, et.`name` event_type_name, check_info content, depart_name dept_name,
+            DATE_FORMAT(e.check_date, '%Y-%m-%d %h:%i:%s') check_date,e.score,
+            case when state = 3 then 1 else 0 end as `status`
+            from work_event e
+            left join data_check_item ci on ci.id = e.check_itemid
+            left join quota_event_type et on et.id = ci.event_type_id
+            union
+            select e.id, 1 event_source, e.cycle check_name, c.number check_value, e.region_name, ct.`name` type_name, cp.name point_name, e.check_item_id check_itemid, e.event_title check_item, et.name event_type_name, e.content, e.dept_names, DATE_FORMAT(e.report_time, '%Y-%m-%d %h:%i:%s') check_date, e.score, case when `status` = 60 then 1 else 0 end as `status`
+            from wf_event_report e
+            left join quota_event_type et on et.id = e.event_type
+            left join data_check_points_type ct on ct.id = e.check_points_type_id
+            left join data_check_points cp on cp.id = e.check_points_id
+            left join quota_assess_cycle c on c.id = e.cycle_id
+        ) data
+        where check_name = #{checkName}
+    </select>
+
+</mapper>

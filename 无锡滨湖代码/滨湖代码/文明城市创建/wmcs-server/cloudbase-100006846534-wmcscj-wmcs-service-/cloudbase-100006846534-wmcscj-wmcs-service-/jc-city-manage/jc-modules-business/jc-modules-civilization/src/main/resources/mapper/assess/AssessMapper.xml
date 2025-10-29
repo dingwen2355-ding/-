@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.civilization.assess.mapper.AssessMapper">
+
+    <select id="month" resultType="cn.wxgis.jc.civilization.assess.vo.AssessVo">
+        select *, IFNULL(count(1), 0) count, IFNULL(sum(`status`), 0) handleCount, IFNULL(sum(score), 0) scoreTotal from (
+        select SUBSTRING_INDEX(SUBSTRING_INDEX(e.depart_name, ',', ht.help_topic_id+1), ',', -1) dept_name, e.region_name, e.type_name, e.point_name, DATE_FORMAT(e.check_date, '%Y-%m-%d %h:%i:%s') check_date, e.score,
+        case when state = 3 then 1 else 0 end as `status`
+        from work_event e
+        join mysql.help_topic ht on ht.help_topic_id <![CDATA[ < ]]> (LENGTH(e.depart_name) - LENGTH(REPLACE(e.depart_name,',','')) + 1)
+        union
+        select SUBSTRING_INDEX(SUBSTRING_INDEX(e.dept_names, ',', ht.help_topic_id+1), ',', -1) dept_name, e.region_name, ct.`name` type_name, cp.name point_name, DATE_FORMAT(e.report_time, '%Y-%m-%d %h:%i:%s') check_date, e.score,
+        case when `status` = 60 then 1 else 0 end as `status`
+        from wf_event_report e
+        left join data_check_points_type ct on ct.id = e.check_points_type_id
+        left join data_check_points cp on cp.id = e.check_points_id
+        join mysql.help_topic ht on ht.help_topic_id <![CDATA[ < ]]> (LENGTH(e.dept_names) - LENGTH(REPLACE(e.dept_names,',','')) + 1)
+        where e.event_source = 1
+        ) data
+        where DATE_FORMAT(check_date, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')
+        <if test="param.pointsName != null and param.pointsName != ''">
+            and point_name like concat('%', #{param.pointsName},'%')
+        </if>
+        <if test="param.deptName != null and param.deptName != ''">
+            and dept_name like concat('%', #{param.deptName}, '%')
+        </if>
+        group by dept_name, point_name
+    </select>
+
+    <select id="evaluating" resultType="cn.wxgis.jc.civilization.assess.vo.AssessVo">
+        select *, IFNULL(count(1), 0) count, IFNULL(sum(`status`), 0) handleCount, IFNULL(sum(score), 0) scoreTotal from (
+            select SUBSTRING_INDEX(SUBSTRING_INDEX(e.depart_name, ',', ht.help_topic_id+1), ',', -1) dept_name, e.region_name, e.type_name, e.point_name, DATE_FORMAT(e.check_date, '%Y-%m-%d %h:%i:%s') check_date, e.score,
+            case when state = 3 then 1 else 0 end as `status`
+            from work_event e
+            join mysql.help_topic ht on ht.help_topic_id <![CDATA[ < ]]> (LENGTH(e.depart_name) - LENGTH(REPLACE(e.depart_name,',','')) + 1)
+            union
+            select SUBSTRING_INDEX(SUBSTRING_INDEX(e.dept_names, ',', ht.help_topic_id+1), ',', -1) dept_name, e.region_name, ct.`name` type_name, cp.name point_name, DATE_FORMAT(e.report_time, '%Y-%m-%d %h:%i:%s') check_date, e.score,
+            case when `status` = 60 then 1 else 0 end as `status`
+            from wf_event_report e
+            left join data_check_points_type ct on ct.id = e.check_points_type_id
+            left join data_check_points cp on cp.id = e.check_points_id
+            join mysql.help_topic ht on ht.help_topic_id <![CDATA[ < ]]> (LENGTH(e.dept_names) - LENGTH(REPLACE(e.dept_names,',','')) + 1)
+            where e.event_source = 1
+            ) data
+        where QUARTER(DATE_FORMAT(check_date, '%Y%m%s')) = #{param.evaluating}
+        and YEAR(DATE_FORMAT(check_date, '%Y%m%s')) = #{param.year}
+        <if test="param.pointsName != null and param.pointsName != ''">
+            and point_name like concat('%', #{param.pointsName},'%')
+        </if>
+        <if test="param.deptName != null and param.deptName != ''">
+            and dept_name like concat('%', #{param.deptName}, '%')
+        </if>
+        group by dept_name, point_name
+    </select>
+
+    <select id="year" resultType="cn.wxgis.jc.civilization.assess.vo.AssessVo">
+        select *, IFNULL(count(1), 0) count, IFNULL(sum(`status`), 0) handleCount, IFNULL(sum(score), 0) scoreTotal from (
+        select SUBSTRING_INDEX(SUBSTRING_INDEX(e.depart_name, ',', ht.help_topic_id+1), ',', -1) dept_name, e.region_name, e.type_name, e.point_name, DATE_FORMAT(e.check_date, '%Y-%m-%d %h:%i:%s') check_date, e.score,
+        case when state = 3 then 1 else 0 end as `status`
+        from work_event e
+        join mysql.help_topic ht on ht.help_topic_id  <![CDATA[ < ]]>  (LENGTH(e.depart_name) - LENGTH(REPLACE(e.depart_name,',','')) + 1)
+        union
+        select SUBSTRING_INDEX(SUBSTRING_INDEX(e.dept_names, ',', ht.help_topic_id+1), ',', -1) dept_name, e.region_name, ct.`name` type_name, cp.name point_name, DATE_FORMAT(e.report_time, '%Y-%m-%d %h:%i:%s') check_date, e.score,
+        case when `status` = 60 then 1 else 0 end as `status`
+        from wf_event_report e
+        left join data_check_points_type ct on ct.id = e.check_points_type_id
+        left join data_check_points cp on cp.id = e.check_points_id
+        join mysql.help_topic ht on ht.help_topic_id  <![CDATA[ < ]]>  (LENGTH(e.dept_names) - LENGTH(REPLACE(e.dept_names,',','')) + 1)
+        where e.event_source = 1
+        ) data
+        where YEAR(DATE_FORMAT(check_date, '%Y%m%s')) = #{param.year}
+        <if test="param.pointsName != null and param.pointsName != ''">
+            and point_name like concat('%', #{param.pointsName},'%')
+        </if>
+        <if test="param.deptName != null and param.deptName != ''">
+            and dept_name like concat('%', #{param.deptName}, '%')
+        </if>
+        group by dept_name, point_name
+    </select>
+
+</mapper>

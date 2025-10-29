@@ -1,0 +1,152 @@
+<template>
+  <j-modal
+    :title="title"
+    :width="1000"
+    :visible="visible"
+    :confirmLoading="confirmLoading"
+    switchFullscreen
+    @ok="handleOk"
+    @cancel="handleCancel"
+    cancelText="关闭"
+    :footer="null"
+  >
+    <a-spin :spinning="confirmLoading">
+      <!-- <div class="table-page-search-wrapper">
+        <a-form layout="inline" @keyup.enter.native="searchQuery">
+          <a-row :gutter="24">
+            <a-col :md="6" :sm="8">
+              <a-form-item label="门禁点">
+                <j-dict-select-tag placeholder="请选择" v-model="queryParam.indexName" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="8">
+              <a-form-item label="身份">
+                <a-select v-model="queryParam.identity" placeholder="请选择" allowClear>
+                  <a-select-option value="内部人员">内部人员</a-select-option>
+                  <a-select-option value="陌生人">陌生人</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :md="4" :sm="8">
+              <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
+                <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+                <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              </span>
+            </a-col>
+          </a-row>
+        </a-form>
+      </div> -->
+      <div>
+        <a-list v-if="data.length > 0" :grid="{ gutter: 16, column: 4 }" :pagination="pagination" :data-source="data">
+          <a-list-item slot="renderItem" slot-scope="item, index">
+            <a-card hoverable>
+              <!-- <img v-if="item.photo && item.photo !== 'no-picuri'" slot="cover" alt="example" :src="item.photo" /> -->
+              <a-card-meta :title="item.temp ? item.temp + '°C' : '暂无体温'">
+                <a-avatar shape="square" :size="64" slot="avatar" :src="item.photo" />
+                <template slot="description"> {{ item.indexName }} </template>
+              </a-card-meta>
+              <div style="margin-top: 10px; font-size: 16px">{{ item.happenTime }}</div>
+            </a-card>
+          </a-list-item>
+        </a-list>
+        <el-empty v-else description="暂无轨迹"></el-empty>
+      </div>
+      <!-- <a-card>
+            <div>111111</div>
+        </a-card> -->
+      <!-- <a-form-model ref="form" :model="model" v-bind="layout" :rules="validatorRules">
+        <a-form-model-item label="姓名" required prop="realname">
+          <a-input placeholder="请输入姓名" v-model="model.realname" />
+        </a-form-model-item>
+        <a-form-model-item label="单位" required prop="realname">
+          <j-dict-select-tag placeholder="请选择单位" dictCode="repair_dict_unit,name,code" v-model="model.orgCode" />
+        </a-form-model-item>
+        <a-form-model-item label="内容" required prop="content">
+          <a-input placeholder="请输入内容" type="textarea" v-model="model.content" />
+        </a-form-model-item>
+      </a-form-model> -->
+    </a-spin>
+  </j-modal>
+</template>
+
+<script>
+import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+import { httpAction, getAction } from '@/api/manage'
+
+export default {
+  name: 'PersonalTrack',
+  props: {
+    type: String,
+    default: '',
+  },
+  //   mixins: [JeecgListMixin],
+  data() {
+    return {
+      title: '操作',
+      visible: false,
+      model: {},
+      layout: {
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 5 },
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 16 },
+        },
+      },
+      confirmLoading: false,
+      validatorRules: {},
+      queryParam: {},
+      //   url: {
+      //     list: '/sys/role/list',
+      //   },
+      data: [],
+      pagination: {
+        onChange: (page) => {
+        },
+        pageSize: 20,
+      },
+    }
+  },
+  created() {},
+  methods: {
+    async getTracksByPersonId(record) {
+      const res = await getAction('/alarm/doorRecord/by/personId', {
+        personId: record.personId,
+      })
+      this.data = res.result
+      this.$nextTick(() => {
+        window.dispatchEvent(new Event('resize'))
+      })
+      this.visible = true
+    },
+    async getTracksByCaptureId(record) {
+      const res = await getAction('/alarm/doorRecord/by/captureId', {
+        captureId: record.id,
+      })
+      this.data = res.result
+      this.$nextTick(() => {
+        window.dispatchEvent(new Event('resize'))
+      })
+      this.visible = true
+    },
+    edit(record) {
+      this.model = Object.assign({}, record)
+      this.visible = true
+    },
+    close() {
+      this.$emit('close')
+      this.visible = false
+    },
+    handleOk() {},
+    handleCancel() {
+      this.close()
+    },
+    searchQuery() {},
+    searchReset() {},
+  },
+}
+</script>
+
+<style lang="less" scoped></style>

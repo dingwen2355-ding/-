@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.civilization.work.mapper.ThresholdMapper">
+
+    <select id="selectPageCustom" resultType="cn.wxgis.jc.civilization.work.resp.ThresholdResponse">
+        select * from (
+            select data.*, jdata.`name` time_config_name, et.name event_type_name
+            from work_threshold data
+            left join work_time_config jdata on jdata.id = data.time_config_id
+        left join quota_event_type et on et.id = data.event_type
+        ) t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="findResponseById" resultType="cn.wxgis.jc.civilization.work.resp.ThresholdResponse">
+        select data.*, jdata.`name` time_config_name
+        from work_threshold data
+        left join work_time_config jdata on jdata.id = data.time_config_id
+        where data.id = #{id}
+    </select>
+
+</mapper>

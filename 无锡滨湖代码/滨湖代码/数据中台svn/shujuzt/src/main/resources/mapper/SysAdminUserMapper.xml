@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.SysAdminUserMapper">
+
+    <select id="list" resultType="com.grandlynn.spa.catalogue.dto.SysAdminUserDTO">
+        SELECT
+            t1.*,
+            array_to_string(array_agg(t2.role_id),',') AS roleId
+        FROM
+            sys_admin_user t1
+        LEFT JOIN sys_admin_user_role t2 ON t1.id = t2.user_id
+        WHERE t1.is_deleted = 0 and t2.is_deleted = 0
+            <if test="searchQuery.name != null and searchQuery.name !='' ">
+                and t1.NAME like concat('%',#{searchQuery.name},'%')
+            </if>
+            <if test="searchQuery.roleId != null">
+                and t2.role_id = #{searchQuery.roleId}
+            </if>
+        <if test="searchQuery.login != null and searchQuery.login !='' ">
+            and t1.login like concat('%',#{searchQuery.login},'%')
+        </if>
+        GROUP BY t1.id
+        ORDER BY t1.updated_time DESC
+    </select>
+
+    <select id="getUserOrgIdByRecursion" parameterType="java.lang.Long" resultType="java.lang.Long">
+        WITH  RECURSIVE  r  AS (
+            SELECT * FROM catalogue_org WHERE id = #{orgId}
+            UNION ALL
+            SELECT catalogue_org.* FROM catalogue_org, r WHERE catalogue_org.parent_id = r.id
+        )
+        SELECT id FROM r where r.parent_id != 0 ORDER BY id
+    </select>
+    <select id="findMenuAuthority" resultType="com.grandlynn.spa.catalogue.dto.UserInfoDTO">
+        select sau.id,
+               sau."name"   userName,
+               sr."name"    roleName,
+               sau.tel      mobile
+        from sys_admin_user sau
+        inner join sys_admin_user_role saur on saur.user_id = sau.id and saur.is_deleted = 0
+        inner join sys_role sr on sr.id = saur.role_id and sr.is_deleted = 0
+        inner join sys_role_menu srm on srm.role_id = sr.id and srm .is_deleted = 0
+        inner join sys_menu sm on srm.menu_id = sm.id and sm.is_deleted = 0
+        where sau.is_deleted = 0 and sm.id = #{menuId}
+        <if test="userId != null" >
+            and sau.id = #{userId}
+        </if>
+    </select>
+</mapper>

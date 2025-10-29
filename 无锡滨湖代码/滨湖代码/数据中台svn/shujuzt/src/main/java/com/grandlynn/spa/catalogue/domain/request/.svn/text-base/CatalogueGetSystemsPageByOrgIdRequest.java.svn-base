@@ -1,0 +1,22 @@
+package com.grandlynn.spa.catalogue.domain.request;
+
+import com.grandlynn.spa.catalogue.base.PageRequest;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+@Data
+@ApiModel
+public class CatalogueGetSystemsPageByOrgIdRequest extends PageRequest {
+   @ApiModelProperty("组织节点主键id")
+   private Long orgId;
+   @ApiModelProperty("系统名字")
+   private String sysName;
+   @ApiModelProperty("使用状态")
+   private String sysStatus;
+   @ApiModelProperty("系统类型")
+   private String sysType;
+   @ApiModelProperty("接入网络类型")
+   private String netType;
+
+}

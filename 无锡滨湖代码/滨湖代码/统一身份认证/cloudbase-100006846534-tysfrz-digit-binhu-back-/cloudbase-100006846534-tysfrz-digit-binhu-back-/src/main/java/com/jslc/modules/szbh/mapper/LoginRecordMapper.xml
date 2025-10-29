@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.LoginRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="loginRecordResultMap" type="com.jslc.modules.szbh.entity.LoginRecord">
+        <result column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="username" property="username"/>
+        <result column="client_ip" property="clientIp"/>
+    </resultMap>
+
+
+    <resultMap id="loginRecordVOResultMap" type="com.jslc.modules.szbh.vo.LoginRecordVO" extends="loginRecordResultMap">
+
+    </resultMap>
+
+
+    <select id="selectLoginRecordPage" resultMap="loginRecordResultMap">
+        select * from bh_login_record where is_deleted = 0
+    </select>
+    <select id="getOnlineRecord" resultType="com.jslc.modules.szbh.vo.UserOnlineVO">
+        select  baur.id , bu.avatar ,bu.name as userName,bu.account as userAccount,bu.major_position as positionName ,bu.id as userId ,
+        bd.dept_id as deptId , bd.name as bhDeptName  ,bam.id as appId,bam.name as appName ,baur.client_ip as ip,baur.token ,baur.browser ,baur.create_time as createTime
+        from bh_app_use_record baur
+        left join bh_application_management bam on bam.app_id  =  baur.client_id
+        inner join bh_user bu on  baur.username = bu.account
+        left join bh_dept bd on bd.dept_id = bu.major_dept and bd.is_deleted = 0
+        where baur.create_time between #{startTime} and #{endTime}
+
+
+    </select>
+
+    <select id="getUserRecord" resultMap="loginRecordVOResultMap">
+        select blr.id, blr.username , blr.create_time , blr.client_ip,bd.dept_id as deptId
+        from bh_user bu
+        inner join bh_dept bd on bd.dept_id = bu.major_dept and bd.is_deleted = 0
+        inner join bh_login_record blr on blr.username = bu.account
+        where bu.is_deleted = 0
+        <if test="startTime != null and endTime != null">
+            and blr.create_time between #{startTime} and #{endTime}
+        </if>
+        order by blr.create_time desc
+    </select>
+    <select id="getUserSum" resultType="java.lang.Integer">
+        select count(1) from bh_user
+        where is_deleted = 0
+        and create_time &lt;= #{time}
+    </select>
+    <select id="getCreateUserSum" resultType="java.lang.Integer">
+        select count(1) from bh_user
+        where is_deleted = 0
+        and create_time  between #{start} and #{end}
+    </select>
+    <select id="getList" resultMap="loginRecordVOResultMap">
+        select blr.*,bu.major_dept as deptId from bh_login_record blr
+        inner join bh_user bu on blr.username = bu.account
+        where bu.is_deleted = 0
+    </select>
+    <select id="getBhUserRecord" resultMap="loginRecordResultMap">
+        select blr.* from bh_login_record blr
+        inner join bh_user bu on blr.username = bu.account
+        where bu.is_deleted = 0
+        <if test="startTime != null and endTime != null">
+            and blr.create_time between #{startTime} and #{endTime}
+        </if>
+    </select>
+
+    <select id="getLastLoginRecord" resultMap="loginRecordResultMap">
+        select * from bh_login_record where username = #{userAccount} order by create_time desc limit 1
+    </select>
+
+</mapper>

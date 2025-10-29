@@ -1,0 +1,229 @@
+{
+  "msg": "操作成功",
+  "code": 200,
+  "data": [
+    {
+      "name": "System",
+      "path": "/system",
+      "hidden": false,
+      "redirect": "noRedirect",
+      "component": "routerv",
+      "alwaysShow": true,
+      "meta": {
+        "title": "数据管理",
+        "icon": "system"
+      },
+      "children": [
+        {
+          "name": "BuidingInfo",
+          "path": "/system/BuidingInfo",
+          "hidden": false,
+          "component": "page/BuidingInfo/BuidingInfo",
+          "meta": {
+            "title": "建筑信息",
+            "icon": ""
+          }
+        },
+        {
+          "name": "HouseholdChart",
+          "path": "/system/HouseholdChart",
+          "hidden": true,
+          "component": "page/HouseholdChart/HouseholdChart",
+          "meta": {
+            "title": "建筑信息／户况图",
+            "icon": ""
+          }
+        },
+        {
+          "name": "RealHousing",
+          "path": "/system/RealHousing",
+          "hidden": false,
+          "component": "page/RealHousing/RealHousing",
+          "meta": {
+            "title": "实有房屋",
+            "icon": ""
+          }
+        },
+        {
+          "name": "RentalRoom",
+          "path": "/system/RentalRoom",
+          "hidden": false,
+          "component": "page/RentalRoom/RentalRoom",
+          "meta": {
+            "title": "出租房",
+            "icon": ""
+          }
+        },
+        {
+          "name": "RealUnit",
+          "path": "/system/RealUnit",
+          "hidden": false,
+          "component": "page/RealUnit/RealUnit",
+          "meta": {
+            "title": "实有单位",
+            "icon": ""
+          }
+        },
+        {
+          "name": "ActualPopulation",
+          "path": "/system/ActualPopulation",
+          "redirect": "noRedirect",
+          "hidden": false,
+          "component": "routerv",
+          "meta": {
+            "title": "实有人口",
+            "icon": ""
+          },
+          "children": [
+            {
+              "name": "HouseholdPopulation",
+              "path": "/system/AP/HouseholdPopulation",
+              "hidden": false,
+              "component": "page/ActualPopulation/HouseholdPopulation/HouseholdPopulation",
+              "meta": {
+                "title": "户籍人口",
+                "icon": ""
+              }
+            },
+            {
+              "name": "FloatingPopulation",
+              "path": "/system/AP/FloatingPopulation",
+              "hidden": false,
+              "component": "page/ActualPopulation/FloatingPopulation/FloatingPopulation",
+              "meta": {
+                "title": "流动人口",
+                "icon": ""
+              }
+            },
+            {
+              "name": "ForeignPopulation",
+              "path": "/system/AP/ForeignPopulation",
+              "hidden": false,
+              "component": "page/ActualPopulation/ForeignPopulation/ForeignPopulation",
+              "meta": {
+                "title": "境外人口",
+                "icon": ""
+              }
+            }
+          ]
+        },
+        {
+          "name": "CaringForPeople",
+          "path": "/system/CaringForPeople",
+          "redirect": "noRedirect",
+          "hidden": false,
+          "component": "routerv",
+          "meta": {
+            "title": "关爱人群",
+            "icon": "dict"
+          },
+          "children": [
+            {
+              "name": "ElderlyLivingAlone",
+              "path": "/system/CFP/ElderlyLivingAlone",
+              "hidden": false,
+              "component": "page/CaringForPeople/ElderlyLivingAlone/ElderlyLivingAlone",
+              "meta": {
+                "title": "独居老人",
+                "icon": ""
+              }
+            },
+            {
+              "name": "Handicapped",
+              "path": "/system/CFP/Handicapped",
+              "hidden": false,
+              "component": "page/CaringForPeople/Handicapped/Handicapped",
+              "meta": {
+                "title": "残疾人员",
+                "icon": ""
+              }
+            },
+            {
+              "name": "Unemployed",
+              "path": "/system/CFP/Unemployed",
+              "hidden": false,
+              "component": "page/CaringForPeople/Unemployed/Unemployed",
+              "meta": {
+                "title": "失业人员",
+                "icon": ""
+              }
+            },
+            {
+              "name": "LeftBehind",
+              "path": "/system/CFP/LeftBehind",
+              "hidden": false,
+              "component": "page/CaringForPeople/LeftBehind/LeftBehind",
+              "meta": {
+                "title": "留守妇女儿童",
+                "icon": ""
+              }
+            }
+          ]
+        },
+        {
+          "name": "FocusGroups",
+          "path": "/system/FocusGroups",
+          "redirect": "noRedirect",
+          "hidden": false,
+          "component": "routerv",
+          "meta": {
+            "title": "重点人群",
+            "icon": ""
+          },
+          "children": [
+            {
+              "name": "HIVpeople",
+              "path": "/system/FG/HIVpeople",
+              "hidden": false,
+              "component": "page/FocusGroups/HIVpeople/HIVpeople",
+              "meta": {
+                "title": "艾滋人员",
+                "icon": ""
+              }
+            },
+            {
+              "name": "ReleasePersonnel",
+              "path": "/system/FG/ReleasePersonnel",
+              "hidden": false,
+              "component": "page/FocusGroups/ReleasePersonnel/ReleasePersonnel",
+              "meta": {
+                "title": "刑满释放人员",
+                "icon": ""
+              }
+            },
+            {
+              "name": "CommunityCorrectionsStaff",
+              "path": "/system/FG/CommunityCorrectionsStaff",
+              "hidden": false,
+              "component": "page/FocusGroups/CommunityCorrectionsStaff/CommunityCorrectionsStaff",
+              "meta": {
+                "title": "社区矫正人员",
+                "icon": ""
+              }
+            },
+            {
+              "name": "DisabledPatients",
+              "path": "/system/FG/DisabledPatients",
+              "hidden": false,
+              "component": "page/FocusGroups/DisabledPatients/DisabledPatients",
+              "meta": {
+                "title": "精神障碍患者",
+                "icon": ""
+              }
+            },
+            {
+              "name": "DrugAddict",
+              "path": "/system/FG/DrugAddict",
+              "hidden": false,
+              "component": "page/FocusGroups/DrugAddict/DrugAddict",
+              "meta": {
+                "title": "吸毒人员",
+                "icon": ""
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

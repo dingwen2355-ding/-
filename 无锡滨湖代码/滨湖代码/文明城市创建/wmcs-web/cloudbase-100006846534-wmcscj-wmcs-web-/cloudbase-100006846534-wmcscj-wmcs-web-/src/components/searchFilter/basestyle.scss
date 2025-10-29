@@ -1,0 +1,41 @@
+.search-item-td{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 30px;
+    min-height: 44px;
+    &.search-form{
+        // 表单内使用
+        margin-right: 0px;
+        align-items: flex-start;
+        min-height: 32px;
+    }
+    .label-title{
+        position:relative;
+        display: inline-block;
+        padding:0 0 0 0px;
+        height: 44px;
+        line-height: 44px;
+        white-space: nowrap;
+        color: rgba(0, 0, 0, 0.9);
+        overflow: hidden;
+        text-align: left;
+    }
+    .search-wapper{
+        flex:1;
+        width: 0;
+        display: flex;
+    }
+    ::v-deep .el-input{
+        width: 100%;
+    }
+    ::v-deep .el-cascader{
+        width: 100%;
+    }
+    ::v-deep .el-select{
+        width: 100%;
+    }
+    ::v-deep .el-date-editor{
+        width: 100%;
+    }
+}

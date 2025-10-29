@@ -1,0 +1,15 @@
+let clientWidth = window.innerWidth
+export const colors = ["#0085FF", "#00F0FF", "#FFB966", "#F86E42", "#FFCC15"]
+export const lineStyleColor = "#ffffff20"
+export const lineStyleColor90 = "#ffffff90"
+export const lineStyleWidth = "1"
+export const labelStyleColor = "#ffffff"
+export const labelStyleSizeS = 12 * (clientWidth / 3840)
+export const labelStyleSize = 16 * (clientWidth / 3840)
+export const labelStyleSizeM = 20 * (clientWidth / 3840)
+export const labelStyleWeight = 700
+export const legendStyleColor = "#ffffff"
+export const legendStyleSize = 16 * (clientWidth / 3840)
+export const legendStyleWeight = 700
+export const elineSymbol = "emptyCircle" ////'circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow', 'none'
+export const elineSymbolSize = 8 * (clientWidth / 3840)

@@ -1,0 +1,23 @@
+// 定义全局颜色--在二次封装后各模块引用这里的颜色，现在不实装
+// th-theme G-global :为全局定义几种类型
+$thGThemeH: #6fadac; // 主题色深色
+$thGThemeM: #8ac1b7; // 主题色中色
+$thGThemeL: #dfecec; // 主题色浅色
+// 信息类型色
+$thGInfoW: #fff; // 深色背景下的反白色
+$thGInfo: #7d8594; // 普通信息色
+$thGInfoH: #303133; // 普通深色 -1级
+$thGInfoH2: #606266; // 普通深色 -2级
+$thGSuccess: #1a8586; // 信息高亮色
+$thGDanger: #f56c6c; // 危险提示色
+$thGWarning: #E6A23C; // 警告色
+$thGBorder: #EBEEF5; // 边框色
+$thGInfoLinkH: #66b1ff; // 链接色-蓝
+$thGInfoLinkI: #6fadac; // 链接色-绿
+$thGInfoLinkD: #f56c6c; // 链接色-红
+// 表格颜色
+$thGTableBH: #F5F7FA; // 表格背景深色
+
+:export {
+    thGTableBH: $thGTableBH;
+}

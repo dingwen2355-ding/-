@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.civilization.quota.mapper.IndicatorMapper">
+
+    <select id="selectPageCustom" resultType="cn.wxgis.jc.civilization.quota.resp.QuotaIndicatorResponse">
+        select * from (
+            select data.*, jdata.name indicatorTypeName, jdata.type
+            from quota_indicator data
+            left join quota_indicator_type jdata on jdata.id = data.indicator_type_id
+        ) t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="findResponseById" resultType="cn.wxgis.jc.civilization.quota.resp.QuotaIndicatorResponse">
+        select data.*, jdata.name indicatorTypeName, jdata.type
+        from quota_indicator data
+        left join quota_indicator_type jdata on jdata.id = data.indicator_type_id
+        where data.id = #{id}
+    </select>
+
+    <select id="getValByTypeId" resultType="cn.wxgis.jc.civilization.quota.vo.ValVo">
+        select min_val, max_val from quota_indicator
+        where indicator_type_id = #{typeId}
+        <if test="id != null and id != ''">
+            and max_val &lt; (select max_val from quota_indicator where id = #{id})
+        </if>
+        order by max_val desc  LIMIT 0,1
+    </select>
+</mapper>

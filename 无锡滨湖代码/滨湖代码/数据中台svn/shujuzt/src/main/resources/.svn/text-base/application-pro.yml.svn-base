@@ -1,0 +1,87 @@
+server:
+  port: 16891
+  token:
+    timeoutInseconds: 7200
+
+# spring jdbc #
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-request-size: 100MB
+      max-file-size: 100MB
+      file-size-threshold: 100MB
+  datasource:
+    url: jdbc:postgresql:aoe://192.170.13.12:5432/data_catalogue?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: wxbh
+    password: jHHs!Wrf7mK
+    test-while-idle: true
+    validation-query: SELECT 1
+    driverClassName: com.ciphergateway.aoe.plugin.engine.AOEDriver
+  # redis #
+  redis:
+    database: 1
+    host: 192.170.13.12
+    password: wxBh@2023
+    port: 6379
+    timeout: 5000       # 连接超时时间 单位 ms（毫秒）
+    lettuce:
+      pool:
+        max-active: 8  # 连接池最大连接数（使用负值表示没有限制） 默认 CatalogueSysManageController
+        max-wait: -1  # 连接池最大阻塞等待时间（使用负值表示没有限制） 默认 -1
+        max-idle: 8  # 连接池中的最大空闲连接 默认 8
+        min-idle: 0  # 连接池中的最小空闲连接 默认 0
+
+swagger:
+  host: 116.63.130.67:30098/data-catalogue-api
+
+rocketmq:
+  name-server: 192.170.13.12:9876
+  producer:
+    group: deepexi-data-catalogue-group
+
+fdfs:
+  so-timeout: 15000
+  connect-timeout: 600
+  pool:
+    jmx-enabled: true
+    max-total: 200
+    max-total-per-key: 50
+    max-wait-millis: 5000
+  tracker-list: 192.170.13.11:22122
+
+shunde:
+  #sso: http://newoa.shunde.gov.cn/negp/OAXSERVICE?ACTION=CommonChannel.CommonAction.getUserInfo
+  sso: https://oa.shunde.gov.cn/egp/OAXSERVICE?ACTION=CommonChannel.CommonAction.getUserInfo
+  code: 0606
+
+binhu:
+  sso:
+    sso_url: http://2.22.51.26:30002
+    client_id: aKzRzTZN
+    client_secret: bfb3cd540cc2d53d9f72019af85a9b8a0bcf242f
+    redirect_uri: https://2.21.138.89:8090/data-catalogue-api/auth/login
+    scope: all
+    home_url: https://2.21.138.89:8090
+    grant_type: authorization_code
+    app_url: http://2.21.137.200
+    #资源门户登录跳转
+    logout: https://2.21.138.89:8090/login
+    #统一认证退出地址
+    logout_url: http://2.22.51.26:30002/logout?logoutUrl=
+    #统一认证用户是否允许全部同步 true是 false否
+    user_sync_allow: false
+
+wuxi:
+  city_platform:
+    url: http://2.20.208.72:8080/epoint-gateway/basic/wxcascade
+    appkey: 1aafe40e-009b-4a45-b117-862829b3a7dc
+    appSecret: e44033a9-af18-4b0e-8891-118c2bd43ace
+    ssoUrl: http://2.20.208.72:8080/epoint-gateway/basic/oauth2/token
+    enable-report: false
+
+#网关ip
+SPA_GATEWAY_URI: http://127.0.0.1:18803/
+
+#资源项目根路径
+SOL_OR_API: sol-or

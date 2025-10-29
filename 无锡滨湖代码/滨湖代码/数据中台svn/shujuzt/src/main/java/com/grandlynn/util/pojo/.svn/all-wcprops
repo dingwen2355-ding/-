@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/util/pojo
+END
+BeanCopierUtils.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/util/pojo/BeanCopierUtils.java
+END
+PageBaseDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/util/pojo/PageBaseDTO.java
+END
+DomainType.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/util/pojo/DomainType.java
+END
+AbstractBaseDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/util/pojo/AbstractBaseDTO.java
+END
+AbstractBaseVO.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/util/pojo/AbstractBaseVO.java
+END
+ObjectCloneUtils.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/util/pojo/ObjectCloneUtils.java
+END
+CloneDirection.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/util/pojo/CloneDirection.java
+END
+AbstractObject.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/util/pojo/AbstractObject.java
+END

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.CatalogueVersionLogMapper">
+
+    <resultMap id="BaseResultMap" type="com.grandlynn.spa.catalogue.entity.CatalogueVersionLogDO">
+        <!--@Table catalogue_version_log-->
+        <result property="id" column="id" />
+        <result property="tenantId" column="tenant_id" />
+        <result property="version" column="version" />
+        <result property="appId" column="app_id" />
+        <result property="remark" column="remark" />
+        <result property="deleted" column="is_deleted" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdTime" column="created_time" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedTime" column="updated_time" />
+        <result property="versionNo" column="version_no" />
+        <result property="versionSort" column="version_sort" />
+        <result property="orgData" column="org_data" />
+        <result property="versionContentData" column="version_content_data" />
+        <result property="versionState" column="version_state" />
+        <result property="versionUrl" column="version_url" />
+    </resultMap>
+    <select id="findAllOrgPublish" resultType="com.grandlynn.spa.catalogue.dto.CatalogueVersionLogTableDTO">
+        select task.org_id      orgId,
+               count(1)         tableCount
+        from (
+             select cstv.org_id,cstv.old_id
+             from catalogue_version_log cvl
+                      left join catalogue_sys_table_version cstv on cvl.version_no = cstv.version_no
+             where cvl.created_time between #{beginTime} and #{endTime}
+               and cstv.org_id is not null
+             group by cstv.org_id,cstv.old_id ) task
+        group by task.org_id;
+    </select>
+
+</mapper>

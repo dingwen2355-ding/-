@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.civilization.data.mapper.CheckPointsTypeMapper">
+
+    <select id="selectPageCustom" resultType="cn.wxgis.jc.civilization.data.resp.DataCheckPointsTypeResponse">
+        select * from (
+            select data.*,
+            (select count(1) from data_check_item where type_id = data.id) check_item_count
+            from data_check_points_type data
+        ) t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+</mapper>

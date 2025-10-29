@@ -1,0 +1,216 @@
+<template>
+  <div>
+    <a-card :bordered="false" style="margin-top: 10px">
+      <!-- 查询区域 -->
+      <div class="table-page-search-wrapper">
+        <a-form layout="inline" @keyup.enter.native="searchQuery">
+          <a-row :gutter="24">
+            <a-col :md="4" :sm="12">
+              <a-form-item label="访客姓名">
+                <j-input placeholder="请输入访客姓名" v-model="queryParam.visitorName"></j-input>
+              </a-form-item>
+            </a-col>
+            <a-col :md="4" :sm="8">
+              <a-form-item label="访客手机号">
+                <j-input placeholder="请输入访客手机号" v-model="queryParam.telephone"></j-input>
+              </a-form-item>
+            </a-col>
+            <a-col :md="4" :sm="12">
+              <a-form-item label="被访者姓名">
+                <j-input placeholder="请输入被访者姓名" v-model="queryParam.receptionistName"></j-input>
+              </a-form-item>
+            </a-col>
+            <a-col :md="10" :sm="12">
+              <a-form-item label="预约日期">
+                <a-range-picker
+                  :value="[queryParam.createTime_begin || null, queryParam.createTime_end]"
+                  value-format="YYYY-MM-DD HH:mm:ss"
+                  format="YYYY-MM-DD"
+                  :show-time="{
+                    defaultValue: arrayMoment,
+                  }"
+                  @change="
+                    (e) => {
+                      $set(queryParam, 'createTime_begin', e[0])
+                      $set(queryParam, 'createTime_end', e[1])
+                    }
+                  "
+                />
+              </a-form-item>
+            </a-col>
+            <a-col :md="4" :sm="8">
+              <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
+                <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+                <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              </span>
+            </a-col>
+          </a-row>
+        </a-form>
+      </div>
+
+      <!-- table区域-begin -->
+      <div>
+        <!-- <div class="ant-alert ant-alert-info" style="margin-bottom: 16px">
+          <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择
+          <a style="font-weight: 600">{{ selectedRowKeys.length }}</a
+          >项
+          <a style="margin-left: 24px" @click="onClearSelected">清空</a>
+        </div> -->
+
+        <a-table
+          ref="table"
+          size="middle"
+          bordered
+          rowKey="id"
+          :columns="columns"
+          :dataSource="dataSource"
+          :pagination="ipagination"
+          :loading="loading"
+          @change="handleTableChange"
+        >
+          <!-- 字符串超长截取省略号显示-->
+          <!-- <span slot="esContent" slot-scope="text">
+          <j-ellipsis :value="text" :length="10" />
+        </span> -->
+          <!-- <span slot="action" slot-scope="text, record">
+            <a href="javascript:;" @click="handleBooking(record)">预约记录</a>
+          </span> -->
+        </a-table>
+      </div>
+      <!-- table区域-end -->
+
+      <!-- 进出记录抽屉区域 -->
+      <!-- <booking-list-drawer :username="username" :show-drawer="showDrawer" @close="onCloseDrawer"></booking-list-drawer> -->
+    </a-card>
+  </div>
+</template>
+
+<script>
+// import BookingListDrawer from './modules/BookingListDrawer'
+import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+import JDictSelectTag from '@/components/dict/JDictSelectTag'
+import JInput from '@/components/jeecg/JInput'
+import JDate from '@/components/jeecg/JDate'
+// import JEllipsis from '@/components/jeecg/JEllipsis'
+import moment from 'moment'
+
+export default {
+  name: 'ImageAnalysisAlarm',
+  mixins: [JeecgListMixin],
+  components: {
+    // JEllipsis,
+    JDictSelectTag,
+    JInput,
+    JDate,
+    // BookingListDrawer,
+  },
+  data() {
+    return {
+      description: '访客预约记录页面',
+      // 表头
+      columns: [
+        // {
+        //   title: '#',
+        //   dataIndex: 'id',
+        //   key: 'id',
+        //   align: 'center',
+        // },
+        {
+          title: '访客姓名',
+          align: 'center',
+          dataIndex: 'visitorName',
+        },
+        {
+          title: '访客性别',
+          align: 'center',
+          dataIndex: 'gender_dictText',
+        },
+        {
+          title: '访客手机号',
+          align: 'center',
+          dataIndex: 'telephone',
+        },
+        {
+          title: '被访人姓名',
+          align: 'center',
+          dataIndex: 'receptionistName',
+        },
+        {
+          title: '来访时间',
+          align: 'center',
+          dataIndex: 'visitStartTime',
+        },
+        {
+          title: '离开时间',
+          align: 'center',
+          dataIndex: 'visitEndTime',
+        },
+        {
+          title: '证件类型',
+          align: 'center',
+          dataIndex: 'certificateType_dictText',
+        },
+        {
+          title: '证件号码',
+          align: 'center',
+          dataIndex: 'certificate_no',
+        },
+        // {
+        //   title: '证件地',
+        //   align: 'center',
+        //   dataIndex: 'certAddr',
+        // },
+        {
+          title: '来访单位',
+          align: 'center',
+          dataIndex: 'workUnit',
+        },
+        // {
+        //   title: '操作',
+        //   dataIndex: 'action',
+        //   align: 'center',
+        //   scopedSlots: { customRender: 'action' },
+        // },
+      ],
+      url: {
+        list: '/booking/record/page',
+      },
+      // queryParam: {
+      //   thirdType: '1',
+      // },
+      showDrawer: false,
+      // username: '',
+      arrayMoment: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+    }
+  },
+  methods: {
+    moment,
+    // handleBooking(record) {
+    //   // this.$refs.modalForm.edit(record)
+    //   // this.$refs.modalForm.title = '详情'
+    //   this.username = record.username
+    //   this.showDrawer = true
+    // },
+    onCloseDrawer() {
+      this.showDrawer = false
+    },
+  },
+}
+</script>
+<style lang="less" scoped>
+@import '~@assets/less/common.less';
+
+.meta-card-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+
+  > div {
+    display: flex;
+    align-items: center;
+    // font-size: 18px;
+    font-weight: 600;
+    margin-left: 20px;
+  }
+}
+</style>

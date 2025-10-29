@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.civilization.data.mapper.CheckPointsMapper">
+
+    <select id="selectPageCustom" resultType="cn.wxgis.jc.civilization.data.resp.DataCheckPointsResponse">
+        select * from (
+            select data.*, data.region_code dept_id, jdata.name typeName,
+                   (select count(1) from data_check_points_device pd where pd.points_id = data.id) device_count
+            from data_check_points data
+            left join data_check_points_type jdata on jdata.id = data.type_id
+        ) t
+        <where>
+            ${ew.sqlSegment}
+            ${params.dataScope}
+        </where>
+    </select>
+
+</mapper>

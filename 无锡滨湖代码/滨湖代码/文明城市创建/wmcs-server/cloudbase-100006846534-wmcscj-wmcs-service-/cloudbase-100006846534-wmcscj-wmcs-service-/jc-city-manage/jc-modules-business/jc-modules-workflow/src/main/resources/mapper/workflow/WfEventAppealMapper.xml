@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.workflow.web.mapper.WfEventAppealMapper">
+
+    <select id="selectPageCustom" resultType="cn.wxgis.jc.workflow.resp.WfEventAppealResponse">
+        select * from (
+            select data.*, rdata.id eventId, rdata.code, rdata.cycle, rdata.score, rdata.timelimit, rdata.event_source,
+            rdata.`status` eventStatus, rdata.content, rdata.report_time reportTime,  i.`name` checkItem, rdata.dept_ids,
+            de.handle_dept, de.`status` handle_status, de.timelimit handle_timelimit,
+            (select GROUP_CONCAT(name SEPARATOR ',') from sys_dept where FIND_IN_SET(id, (select dept_ids from wf_event_report r where r.id = rdata.id))) deptNames,
+            r.name regionName,
+            et.`name` eventTypeName, etT.`name` eventTypeTwoName, etO.`name` eventTypeOneName,
+            pt.`name` checkPointsType, p.`name` checkPoints
+            from wf_event_appeal data
+            left join wf_dept_event de on de.handle_deptid = data.apply_dept_id and de.flowinstanceid = data.flowinstanceid
+            left join wf_event_report rdata on rdata.flowinstanceid = data.flowinstanceid
+            left join sys_dept r on r.id = rdata.region_code
+            left join quota_event_type et on et.id = rdata.event_type
+            left join quota_event_type etT on etT.id = et.parent_id
+            left join quota_event_type etO on etO.id = etT.parent_id
+            left join data_check_points_type pt on pt.id = rdata.check_points_type_id
+            left join data_check_points p on p.id = rdata.check_points_id
+            left join data_check_item i on i.id = rdata.check_item_id
+        ) t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,973 @@
+<template>
+  <!-- 应用详情 -->
+  <div>
+    <!-- <div class="home-banner">
+        <div class="search-wrap">
+            <div class="search-title">应用详情</div>
+        </div>
+    </div> -->
+
+    <div class="box">
+      <div class="box-con _flex" @click="$router.go(-1)">
+        <div class="page-icon"></div>
+        返回
+      </div>
+    </div>
+
+    <div class="appdetails-box">
+      <div class="appdetails-box-con block">
+        <div class="appdetails-box-top ">
+          <!-- <img v-if="oAppDetails.icon" :src="item.icon" alt="" class="userinfo-item-image" /> -->
+          <img :src="sImage" class="userinfo-item-image" alt="">
+          <div class="userinfo-item-con">
+
+            <div class="userinfo-item-title">
+              {{ oAppDetails.name || oAppDetails.title || oAppDetails.appName }}
+
+            </div>
+            <div class="item-con-box">
+              <div class="con-box-item"><span>联系人：</span>{{
+                  oAppDetails.contacts || oAppDetails.principalName
+                }}
+              </div>
+              <div class="con-box-item"><span>联系方式：</span>{{
+                  oAppDetails.telephone ||
+                  oAppDetails.principalPhone
+                }}
+              </div>
+              <div class="con-box-item"><span>应用分类：</span>
+                {{ fSetLabel(aAppModule, oAppDetails.appModule) }}
+
+              </div>
+              <div class="con-box-item"><span>应用场景：</span>
+                {{ fSetLabel(aAppType, oAppDetails.appType) }}
+              </div>
+              <div class="con-box-item"><span>应用来源：</span>
+                {{ fSetLabel(aAppSource, oAppDetails.source) }}
+              </div>
+            </div>
+            <template v-if="oAppDetails.appLink != null && oAppDetails.appLink.length>0 ">
+              <template v-if="oAppDetails.casAppId!==null &&oAppDetails.casAppId!=='' ">
+                <el-button type="success" v-if="sBtnType ==='having'"
+                           @click="fGoToAdmin(oAppDetails,true)">系统入口
+                </el-button>
+                <el-button type="success" v-if="sBtnType === 'applying'">申请试用中</el-button>
+                <el-button type="primary" v-if="sBtnType==null || sBtnType==='' || sBtnType==='reject'"
+                           @click="fCliclSq(oAppDetails)">
+                  申请试用
+                </el-button>
+              </template>
+
+              <template v-else>
+                <el-button type="success" @click="fGoToAdmin(oAppDetails, false)">系统入口</el-button>
+              </template>
+
+
+              <el-button type="success" @click="fGoToNengli(oAppDetails)">能力申请</el-button>
+              <a href="#download" name="download" style="margin-left: 10px;">
+                <el-button type="info" @click="fGoToDownload('#download')">附件下载</el-button>
+              </a>
+            </template>
+            <template v-else>
+              <el-button type="success" @click="fGoToNengli(oAppDetails)">能力申请</el-button>
+              <a href="#download" name="download" style="margin-left: 10px;">
+                <el-button type="info" @click="fGoToDownload('#download')">附件下载</el-button>
+              </a>
+            </template>
+            <!-- <div class="userinfo-item-detail">
+
+            </div> -->
+          </div>
+        </div>
+
+        <!-- 应用介绍 -->
+        <div class="block details-block">
+          <div class="block-title">应用介绍</div>
+          <div class="block-box">
+            <div class="block-box-item  _details _wid1">
+              {{ oAppDetails.description || oAppDetails.remark }}
+            </div>
+            <div class="block-box-item _wid2">
+              <el-carousel indicator-position="none" :autoplay="false" :loop="true" :interval="5000"
+                           height="380px" class="appdetails-box-image">
+                <el-carousel-item v-for="(item, idx) in JSON.parse(oAppDetails.appScreenshot)"
+                                  :key="'1' + idx">
+                  <img :src="item" class="appdetails-box-image" alt="">
+                </el-carousel-item>
+              </el-carousel>
+              <!-- <div class="swiper-container">
+                  <div class="swiper-wrapper">
+                      <div class="swiper-slide swiper-slide1"
+                          v-for="(item, idx) in JSON.parse(oAppDetails.appScreenshot)"
+                          :key="'appScreenshot' + idx">
+                          <img class="swiper-slide-img" :src="item" />
+                      </div>
+                  </div>
+                  <div class="swiper-pagination"></div>
+              </div> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 特色亮点 -->
+        <div class="block details-block" v-if="oAppDetails.liangdian || oAppDetails.liangdianpic">
+          <div class="block-title">特色亮点</div>
+          <div class="block-box">
+            <div class="block-box-item _wid2">
+              <el-carousel indicator-position="none" :autoplay="false" :loop="true" :interval="5000"
+                           height="380px" class="appdetails-box-image">
+                <el-carousel-item v-for="(item, idx) in JSON.parse(oAppDetails.liangdianpic)"
+                                  :key="'1' + idx">
+                  <img :src="item" class="appdetails-box-image" alt="">
+                </el-carousel-item>
+              </el-carousel>
+              <!-- <div class="swiper-container">
+                  <div class="swiper-wrapper">
+                      <div class="swiper-slide swiper-slide1"
+                          v-for="(item, idx) in JSON.parse(oAppDetails.liangdianpic)"
+                          :key="'liangdianpic' + idx">
+                          <img class="swiper-slide-img" :src="item" />
+                      </div>
+                  </div>
+                  <div class="swiper-pagination"></div>
+              </div> -->
+            </div>
+            <div class="block-box-item _details _flex _wid1">
+              <template v-if="fSetLiangdian(oAppDetails.liangdian).indexOf(';') >= 0">
+                <div class="" v-for="(text, idx) in fSetLiangdian(oAppDetails.liangdian).split(';')">
+                  {{ idx + 1 }}:{{ text }}
+                </div>
+              </template>
+              <template v-else>
+                {{ oAppDetails.liangdian || '--' }}
+              </template>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- 附件下载 -->
+        <div class="block details-block" id="download" name="download" data-anchor="download">
+          <div class="block-title">附件下载</div>
+          <div class="block-box">
+            <el-table border stripe :data="fSetTable(null, oAppDetails.upload)">
+              <el-table-column align="center" type="index" width="70px" label="编号"></el-table-column>
+              <el-table-column align="center" prop="originalFilename" label="文件名">
+                <template slot-scope="{row}">
+                  {{ row.originalFilename.split('.')[0] }}
+                </template>
+              </el-table-column>
+              <el-table-column align="center" prop="originalFilename" label="文件类型">
+                <template slot-scope="{row}">
+                  {{ row.originalFilename.split('.')[1] }}
+                </template>
+              </el-table-column>
+              <el-table-column align="center" width="100px" label="操作">
+                <template slot-scope="scope">
+                  <el-button type="primary" @click="fDownloadFile(scope.row)">下载</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </div>
+
+      </div>
+      <el-dialog title="申请试用" :visible.sync="bQxsqLayer" width="40%" :append-to-body="true">
+        <el-form ref="oFromData" label-width="100px" :model="oFromData" :rules="oFromRules">
+          <el-form-item label="联系人" prop="name">
+            <el-input v-model="oFromData.name" placeholder="请输入联系人"></el-input>
+          </el-form-item>
+          <el-form-item label="联系人电话" prop="phone">
+            <el-input v-model="oFromData.phone" placeholder="请输入联系人电话"></el-input>
+          </el-form-item>
+          <el-form-item label="申请单位" prop="dept">
+            <el-input v-model="oFromData.dept" placeholder="请输入单位名称"></el-input>
+          </el-form-item>
+          <el-form-item label="单位类型" prop="deptType">
+            <el-radio-group v-model="oFromData.deptType">
+              <el-radio v-for="(item, idx) in aUnitType" :key="'aUnitType' + idx" :label="item.dictValue">{{
+                  item.dictLabel
+                }}
+              </el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="申请理由" prop="reason">
+            <el-input type="textarea" :rows="5" v-model="oFromData.reason" placeholder="请输入申请理由"></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+                    <el-button @click="bQxsqLayer = false">取 消</el-button>
+                    <el-button type="primary" @click="fQxsqLayer()">确 定</el-button>
+                </span>
+      </el-dialog>
+    </div>
+
+  </div>
+</template>
+
+<script>
+import {URLS_USERINFO, URLS_SZDZ, URLS_APPMARKET, URLS_APPAPPLY} from '@/api/url.js';
+import fGetAppListAsync from '@/api/setAppList.js'
+import axios from "axios";
+import Swiper from 'swiper'; // 注意引入的是Swiper
+import 'swiper/css/swiper.min.css' // 注意这里的引入
+
+export default {
+  name: '',
+  components: {},
+  props: [''],
+  data() {
+    return {
+      // sImage: JSON.parse(this.$route.query.data).logo || require('../../assets/image/home/appmarket/szzw_img.png'),
+      // oAppDetails: JSON.parse(this.$route.query.data),
+      aAllAppComUtil: [],
+      sBtnType: '',// 按钮的类型
+      bQxsqLayer: false,
+      sReason: '',
+      oFromData: {
+        name: '', // 联系人
+        phone: '', // 联系人电话
+        dept: '', // 申请单位
+        deptType: '', // 单位类型
+        reason: '',// 申请理由
+      },
+      oFromRules: {
+        name: [
+          {required: true, message: '请输入联系人', trigger: 'blur'},
+        ],
+        phone: [
+          {required: true, message: '请输入联系人电话', trigger: 'blur'},
+          {
+            required: true,
+            pattern: /^[1][3,5,8]\d{9}$|^\d{7,8}$|^(\d{4}|\d{3})-(\d{7,8}$)|^\d{3,5}$|^(\d{4}|\d{3})-(\d{7,8})-(\d{4})$/,
+            message: '请输入正确的联系方式',
+            trigger: 'blur',
+          },
+        ],
+        dept: [
+          {required: true, message: '请选择申请单位', trigger: 'blur,change'},
+        ],
+        deptType: [
+          {required: true, message: '请选择单位类型', trigger: 'blur,change'},
+        ],
+        reason: [
+          {required: true, message: '请输入申请理由', trigger: 'blur'},
+        ],
+      },
+      nFlag: 0,
+      aBmData: [],
+      aAllDept: [],
+      aUnitType: [],
+      aAppModule: [],
+      aAppSource: [],
+      aAppType: [],
+    }
+  },
+  computed: {
+    oUserInfo() {
+      if (this.$store.state.oUserInfo.account) {
+        this.oFromData.name = this.$store.state.oUserInfo.name
+        this.oFromData.phone = this.$store.state.oUserInfo.phone
+        return this.$store.state.oUserInfo;
+      } else {
+        this.oFromData.name = JSON.parse(localStorage.getItem('userInfo')).name
+        this.oFromData.phone = JSON.parse(localStorage.getItem('userInfo')).phone
+        return JSON.parse(localStorage.getItem('userInfo'))
+      }
+    },
+    oAppDetails() {
+      console.log(JSON.parse(localStorage.getItem('appDeatils')))
+      this.$nextTick(() => {
+        this.fSeiperInit();
+      })
+      return JSON.parse(localStorage.getItem('appDeatils'));
+    },
+    sImage() {
+      return JSON.parse(localStorage.getItem('appDeatils')).appPic || require('../../assets/image/home/appmarket/szzw_img.png');
+    },
+  },
+  watch: {
+    $route: {
+      handler(newVal, oldVal) {
+        // console.log(newVal)
+      },
+      // 深度观察监听
+      immediate: true,
+      deep: true
+    },
+  },
+  created() {
+    this.fRequestApplicationDept()
+  },
+  mounted() {
+    // this.fRequestAllpp();
+    this.fRequestAuthorityApplyForList();
+    this.fGetUnitType();
+    this.fSeiperInit();
+    this.fGetAppModule();
+    this.fGetAppSource();
+    this.fGetAppType();
+  },
+  beforeDestroy() {
+
+  },
+  methods: {
+    fSetLiangdian(str) {
+      if (str) {
+        return str.replace(/[；]/g, ";");
+      } else {
+        return '--'
+      }
+    },
+    fSetLabel(data, value) {
+      if (data.length > 0) {
+        let filter = data.filter(item => item.dictValue == value);
+        return (filter.length>0) ? filter[0].dictLabel : '--'
+      } else {
+        return '--'
+      }
+    },
+    // 请求字典 应用分类
+    fGetAppType() {
+      this.$fRequest({
+        url: this.$ip.server_ocn + 'system/dict/data/type/app_type'
+      }).then(res => {
+        this.aAppType = res.data || []
+      })
+    },
+    // 请求字典 应用来源
+    fGetAppSource() {
+      this.$fRequest({
+        url: this.$ip.server_ocn + 'system/dict/data/type/app_source'
+      }).then(res => {
+        this.aAppSource = res.data || []
+      })
+    },
+    // 请求字典 应用模块
+    fGetAppModule() {
+      this.$fRequest({
+        url: this.$ip.server_ocn + 'system/dict/data/type/app_module'
+      }).then(res => {
+        this.aAppModule = res.data || []
+      })
+    },
+    fSeiperInit() {
+      new Swiper(".swiper-container", {
+        loop: true,
+        mousewheel: true,
+        autoplay: true,
+        keyboard: true,
+        observer: true,
+        observeParents: true,
+        delay: 1000,
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+      });
+    },
+    fSetTable(arr1, arr2) {
+      if (arr1 && arr1.length > 0 & arr2 && arr2.length > 0) {
+        return [...arr1, ...arr2]
+      } else if (arr1 && arr1.length > 0) {
+        return arr1
+      } else if (arr2 && arr2.length > 0) {
+        return arr2
+      }
+    },
+    // 请求字典 单位类型
+    fGetUnitType() {
+      this.$fRequest({
+        url: this.$ip.server_ocn + 'system/dict/data/type/unit_type'
+      }).then(res => {
+        this.aUnitType = res.data || []
+      })
+    },
+    // 请求所属部门
+    fRequestApplicationDept() {
+      //
+      this.$fRequest({
+        url: URLS_APPAPPLY.u_addApplicationDept
+      }).then(res => {
+        // console.log(res, '请求所属部门');
+        this.aBmData = res.data
+        this.aAllDept = []
+        // this.aBmData = [...res.data[0].children, ...res.data[1].children,]
+        this.findNode(this.aBmData)
+      })
+    },
+    findNode(arr) {
+      arr.forEach(item => {
+        this.aAllDept.push(item)
+        item.children && item.children.length > 0 ? this.findNode(item.children) : ""
+        item.children = ''
+      })
+    },
+    fSetSsbm(id) {
+      let aData = this.aAllDept.filter(item => item.id == id)
+      if (this.oAppDetails.deptName || this.oAppDetails.manageDeptName) {
+        return this.oAppDetails.deptName || this.oAppDetails.manageDeptName
+      } else {
+        return aData.length > 0 ? aData[0].title : '--'
+      }
+    },
+    downloadFile(blob, fileName) {
+      let blobUrl = window.URL.createObjectURL(new Blob([blob], {type: 'application/force-download'}))
+      let a = document.createElement('a')
+      a.style.display = 'none'
+      a.setAttribute("href", blobUrl)
+      a.setAttribute('download', `${fileName}`);
+      document.body.appendChild(a)
+      a.click() //执行下载
+      window.URL.revokeObjectURL(blobUrl)
+      document.body.removeChild(a)
+    },
+    // 下载附件
+    fDownloadFile(item) {
+      this.$fRequest({
+        url: this.$ip.server_ocn + 'cmMobanDownload/save',
+        method: 'post',
+        data: {
+          appId: this.oAppDetails.id,
+        }
+      }).then(res => {
+        axios.get('https://2.21.138.89:11511/common/download/resource?resource=' + item.url, {
+          headers: {
+            'Authorization': JSON.parse(window.localStorage.getItem('userInfo')).apiToken,
+            'ApiToken': JSON.parse(window.localStorage.getItem('userInfo')).apiToken,
+          },
+          responseType: "blob"
+        }).then(result => {
+          console.log(result)
+          this.downloadFile(result.data, item.newFileName)
+        }).catch(err => {
+          console.log(err)
+        })
+      })
+
+    },
+    // 根据申请人查询权限申请
+    fRequestAuthorityApplyForList() {
+      debugger
+      this.nFlag++;
+      this.$fRequest({
+        url: URLS_USERINFO.u_authorityApplyForList,
+        data: {
+          applicant: this.oUserInfo.account,
+          // keyword: this.sMyAppKeyWord,
+          current: 1,// 当前页
+          size: 999999999 || 10,// 每页数量
+        }
+      }).then(res => {
+        // console.log(res, '根据申请人查询权限申请')
+        let aData = res.data.records.filter(
+            item => item.applicationManagementId === this.oAppDetails.casAppId
+        );
+        if (aData && aData.length > 0) {
+          let tmp = aData[0];
+          console.info("根据申请人查询权限申请...")
+          if (parseInt(tmp.reviewStatus) === 0) {
+            // 待审核
+            this.sBtnType = "applying";
+          } else if (parseInt(tmp.reviewStatus) === 2) {
+            // 驳回
+            this.sBtnType = "reject";
+          }
+          this.fRequestMyApp();// 请求我的应用
+        } else {
+          this.sBtnType = null;
+        }
+        debugger
+        this.$fRequest({
+          url: URLS_USERINFO.u_userApplication,
+          data: {
+            account: this.oUserInfo.account,
+            keyword: '',
+            current: 1,// 当前页
+            size: 9999999,// 每页数量
+          }
+        }).then(res => {
+          try {
+            let aData = res.data[0].appList.records.filter(
+                item => item.id === this.oAppDetails.casAppId
+            );
+            if (aData && aData.length > 0) {
+              this.sBtnType = "having";
+            }
+          } catch (e) {
+            console.info(e);
+          }
+        });
+
+      })
+    },
+    // 权限申请按钮
+    fCliclSq(data) {
+      // console.log("权限申请")
+      this.bQxsqLayer = true;
+    },
+    fQxsqLayer() {
+      // if (!this.sReason) {
+      //     this.$message.error('请先输入申请理由');
+      //     return
+      // }
+
+      this.$nextTick(() => {
+        this.$refs['oFromData'].validate((valid) => {
+          if (valid) {
+            this.fRequestAddUserAuthority(this.oFromData);
+          } else {
+            console.log('error submit!!');
+            this.bDialogVisible = false;
+            return false;
+          }
+        });
+      })
+
+    },
+    /**
+     *  没有统一身份认证认证的应用点击系统入口进入 统一身份认证登录界面
+     * @param data
+     * @param hasLink
+     */
+    fGoToAdmin(data, hasLink) {
+      window.open(hasLink ? data.appLink : "http://2.22.51.26:30002/login");
+    },
+    // 去能力申请的页面
+    fGoToNengli() {
+      this.$router.push({
+        path: "/appNengLiApply",
+        // query: { data: JSON.stringify(oObj) }
+      })
+    },
+    fGoToDownload(id) {
+
+    },
+    // 权限申请
+    fRequestAddUserAuthority(oFromData) {
+      $.ajax({
+        url: URLS_USERINFO.u_addUserAuthority,
+        method: 'post',
+        headers: {
+          'Authorization': JSON.parse(window.localStorage.getItem('userInfo')).apiToken,
+          'ApiToken': JSON.parse(window.localStorage.getItem('userInfo')).apiToken,
+        },
+        dataType: 'json',
+        contentType: 'application/json;charset=utf-8',
+        data: JSON.stringify({
+          account: JSON.parse(window.localStorage.getItem('userInfo')).account,
+          applicant: JSON.parse(window.localStorage.getItem('userInfo')).account,
+          reason: oFromData.reason,
+          applicationManagementId: this.oAppDetails.casAppId,
+          param: {
+            appName: this.oAppDetails.appName
+          }
+        })
+      }).then(res => {
+        // console.log(res, '权限申请')
+        this.$message({
+          message: '申请成功！',
+          type: 'success'
+        });
+        setTimeout(() => {
+          this.sBtnType = 'applying';
+          this.bQxsqLayer = false;
+        }, 1000);
+      })
+    },
+    async fRequestAllpp() {
+      const res = await fGetAppListAsync();
+      let aData = res.filter(item => item.sTypeName == '组件');
+      let aAllData = res
+      this.$store.commit('fSetAllAppDataRes', res.filter(item => item.sTypeName == '应用'));
+      this.$store.commit('fSetComUtilsData', [...res.filter(item => item.sTypeName == '组件'), ...res.filter(item => item.sTypeName == '工具')]);
+
+      this.$store.commit('fSetAllAppData', aData);// 请求全部应用
+      this.$store.commit('fSetAllApp', aData);// 请求全部应用
+    },
+    // 请求当前登录用户的应用
+    fRequestMyApp(len) {
+      this.$fRequest({
+        url: URLS_USERINFO.u_userApplication,
+        data: {
+          account: this.oUserInfo.account,
+          keyword: '',
+          current: 1,// 当前页
+          size: 9999999,// 每页数量
+        }
+      }).then(res => {
+        // console.log(res.data[0].appList.records)
+        let aData = []
+        res.data.forEach(item => {
+          aData.push(...item.appList.records)
+        })
+        var obj = {}
+        var newArr = aData.reduce((pre, cur) => {
+          if (!obj[cur.id]) { // obj没有cur的id则放入数组
+            obj[cur.id] = true
+            return [...pre, cur]
+          } else {
+            return pre
+          }
+        }, [])
+        console.log(newArr, this.oAppDetails.casAppId)
+        this.aAllAppComUtil = newArr
+        let arr = this.aAllAppComUtil.filter(item => item.id == this.oAppDetails.casAppId)
+        // arr.length > 0 ? this.sBtnType = 'admin' : this.sBtnType = ''
+        this.$store.commit('fSetAllAppComUtil', newArr)
+        this.$store.commit('fSetUserAppData', newArr.sort(this.fSetDataSort('loginNumber', false)))
+      })
+    },
+    // 设置所有组件应用工会的集合
+    fSetStoreAllApp(data) {
+      let aData = []
+      data.children.forEach(item => {
+        if (item.children && item.children.length > 0) {
+          aData.push(...item.children)
+        }
+      })
+      return aData;
+    },
+    // 数组排序
+    fSetDataSort(attr, rev) {
+      //第二个参数没有传递 默认升序排列
+      if (rev == undefined) {
+        rev = 1;
+      } else {
+        rev = (rev) ? 1 : -1;
+      }
+      return function (a, b) {
+        a = a[attr];
+        b = b[attr];
+        if (a < b) {
+          return rev * -1;
+        }
+        if (a > b) {
+          return rev * 1;
+        }
+        return 0;
+      }
+    },
+  }
+}
+</script>
+<style lang='less' scoped>
+.swiper-container {
+  width: 100%;
+  height: 380px;
+
+}
+
+.swiper-pagination {
+  margin-bottom: 50px;
+}
+
+/deep/ .swiper-pagination-bullet {
+  width: 30px;
+  height: 8px;
+  border-radius: 0%;
+}
+
+.swiper-wrapper,
+.swiper-slide {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #2490FC;
+}
+
+.swiper-slide-img {
+  width: 100%;
+  height: 100%;
+  background-size: 100%;
+}
+
+.home-banner {
+  position: relative;
+  width: 100%;
+  height: 617px;
+  margin-bottom: 100px;
+  background: url('../../assets/image/home/yyscbg.png') no-repeat center / 100% 617px;
+}
+
+.search-wrap {
+  display: flex;
+  align-items: center;
+  // justify-content: center;
+  flex-direction: column;
+  padding-top: 102px;
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  height: 100%;
+  width: 100%;
+  z-index: 999;
+  font-weight: bold;
+}
+
+.search-title {
+  color: #FFFFFF;
+  font-size: 40px;
+}
+
+.details-block {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.block-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 20px;
+}
+
+.block-box {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.block-box-item {
+  font-size: 18px;
+  text-indent: 2rem;
+  height: 380px;
+
+  &._details {
+    display: flex;
+    align-items: center;
+    line-height: 26px;
+    font-size: 18px;
+
+    &._flex {
+      flex-direction: column;
+      justify-content: center;
+      align-items: start !important;
+    }
+  }
+
+  &._wid1 {
+    width: 38%;
+  }
+
+  &._wid2 {
+    width: 58%;
+  }
+}
+
+.appdetails-box {
+  padding: 20px 100px 0;
+  margin-bottom: 25px;
+
+  &._flex {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &._flexc {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &._flexw {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+}
+
+.appdetails-box-router {
+  cursor: pointer;
+  user-select: none;
+  color: #000000;
+
+  &:hover {
+    opacity: .75;
+  }
+
+  &._color {
+    color: #266FE8;
+
+  }
+}
+
+.appdetails-box-con {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 20px;
+}
+
+.appdetails-box-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 50px;
+}
+
+.userinfo-item-image {
+  width: 150px;
+  height: 150px;
+  //background: url('../../assets/image/appmarket/image.png') no-repeat center / 180px;
+}
+
+.userinfo-item-con {
+  width: calc(100% - 200px);
+}
+
+.userinfo-item-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #000000;
+}
+
+.userinfo-item-detail {
+  margin: 15px 0;
+  font-size: 20px;
+  color: #000000;
+  text-indent: 2rem;
+}
+
+.userinfo-item-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.item-con-box {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 30px;
+  font-size: 14px;
+
+  // justify-content: space-around;
+  .con-box-item {
+    width: 33%;
+
+    span {
+      font-weight: bold;
+    }
+  }
+}
+
+.item-box-unit {
+  margin-bottom: 10px;
+  font-size: 20px;
+  color: #000000;
+}
+
+.appmarket-more {
+  font-size: 14px;
+  color: #266FE8;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    opacity: .75;
+  }
+
+  &._cen {
+    text-align: center;
+  }
+}
+
+.appdetails-box-details {
+  width: 1530px;
+  margin: 30px 0;
+}
+
+.appdetails-box-image {
+  width: 100%;
+  height: 100%;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  // background: url('../../assets/image/appmarket/image.png') no-repeat center;
+  background-size: cover;
+}
+
+/deep/ .el-carousel__arrow {
+  background-color: rgba(31, 45, 61, .71);
+  font-size: 20px !important;
+}
+
+.box-con {
+  display: flex;
+  align-items: center;
+
+  &._flex {
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    font-size: 16px;
+    font-weight: 500;
+    color: #1A1B1F;
+  }
+
+  &._flexs {
+    // align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+    // margin-bottom: 25px;
+    background: #F3F3F3;
+    height: 56px;
+  }
+}
+
+.page-icon {
+  width: 20px;
+  height: 40px;
+  margin-right: 10px;
+  background: url('../../assets/image/appmarket/position.svg') no-repeat center / 120%;
+}
+
+.file-wrap {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 30px;
+}
+
+.file-item {
+  margin: 20px 2%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    color: #266FE8;
+  }
+}
+
+.file-item-image {
+  width: 32px;
+  height: 32px;
+}
+
+.file-item-box {
+  width: calc(100% - 100px);
+}
+
+.item-box {
+  line-height: 32px;
+}
+
+/deep/ .el-table__row {
+  font-size: 18px;
+  color: #000000;
+  border-bottom: 2px solid #000000;
+}
+
+.block {
+  opacity: 1;
+}
+</style>

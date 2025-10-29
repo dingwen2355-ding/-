@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        <mapper namespace="com.grandlynn.spa.catalogue.mapper.DataSharingAccountMapper">
+
+    <resultMap id="BaseResultMap" type="com.grandlynn.spa.catalogue.entity.DataSharingAccount">
+            <id property="accountId" column="account_id" jdbcType="INTEGER"/>
+            <result property="account" column="account" jdbcType="VARCHAR"/>
+            <result property="accountPwd" column="account_pwd" jdbcType="VARCHAR"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="SMALLINT"/>
+            <result property="createdBy" column="created_by" jdbcType="VARCHAR"/>
+            <result property="updatedBy" column="updated_by" jdbcType="VARCHAR"/>
+            <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+            <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
+            <result property="status" column="status" jdbcType="SMALLINT"/>
+            <result property="useType" column="use_type" jdbcType="SMALLINT"/>
+            <result property="orgId" column="org_id" jdbcType="INTEGER"/>
+            <result property="accountName" column="account_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        account_id,account,account_pwd,
+        is_deleted,created_by,updated_by,
+        created_time,updated_time,status,
+        use_type,org_id,account_name
+    </sql>
+
+    <select id="selectByPage" resultType="com.grandlynn.spa.catalogue.dto.DataSharingAccountPageDTO">
+    SELECT
+        da.account_id accountId,
+        da.account account,
+        da.account_pwd accountPwd,
+        da.status status,
+        da.use_type useType,
+        co.node_name_simplify orgNameSimplify,
+        co.node_name orgName,
+        da.org_id orgId,
+        da.created_time createdTime,
+        da.updated_time updatedTime
+    FROM
+        data_sharing_account da
+    LEFT JOIN catalogue_org co ON co.ID = da.org_id
+    <where>
+        da.is_deleted = 0
+        <if test="con.account !=null and con.account !=''">
+           and da.account like concat('%',#{con.account},'%')
+        </if>
+        <if test="con.useType !=null">
+           and da.use_type = #{con.useType}
+        </if>
+        <if test="con.status !=null">
+           and da.status = #{con.status}
+        </if>
+        <if test="con.orgId !=null">
+          and da.org_id = #{con.orgId}
+        </if>
+    </where>
+    order by da.created_time desc
+    </select>
+
+</mapper>

@@ -1,0 +1,31 @@
+<template>
+  <div style="height:250px; margin-top:10px; border: 2px solid green;">
+    <div style="width:2000px;height:1400px;zoom:15%; border: 2px solid red; cursor:pointer;" v-html="data.content" @click="show">
+
+    </div>
+    <div style="height:30px;border: 2px solid black;">
+        <span>{{ data.modelName }}</span>
+        <span>{{ data.createTime }}</span>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "ModelCard",
+  props: ['data'],
+  data() {
+    return {
+      description: '信息发布模板卡片',
+    }
+  },
+  methods: {
+    show() {
+      this.$emit('show')
+    }
+  }
+}
+</script>
+<style lang="less" scoped>
+  
+</style>

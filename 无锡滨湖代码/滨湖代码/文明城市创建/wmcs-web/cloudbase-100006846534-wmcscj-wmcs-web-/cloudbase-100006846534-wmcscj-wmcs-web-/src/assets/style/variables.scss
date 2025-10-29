@@ -1,0 +1,15 @@
+// 选择主题
+@import './theme/pxd/index.scss';
+
+// 行高函数-height=line-height
+@mixin h-lh($height:20px){
+    height: $height !important;
+    line-height: $height !important;
+}
+
+// label标题字体混合
+@mixin label-title-font(){
+    color: $thGTInfo;
+    font-size: 14px;
+    font-weight: bold;
+}

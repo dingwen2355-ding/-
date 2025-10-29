@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.data.mapper.SysDeptMapper">
+
+    <select id="findWechatDeptIdById" resultType="java.lang.String">
+        select wechat_dept_id from sys_dept where id = #{id}
+    </select>
+
+    <select id="findRegionByDeptId" resultType="cn.wxgis.jc.system.po.SysRegion">
+        select * from sys_region where dept_id = #{deptId}
+    </select>
+
+</mapper>

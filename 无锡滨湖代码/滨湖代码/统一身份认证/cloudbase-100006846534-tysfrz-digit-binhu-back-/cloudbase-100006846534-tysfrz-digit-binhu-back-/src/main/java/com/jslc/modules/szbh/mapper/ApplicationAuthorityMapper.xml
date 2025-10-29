@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.ApplicationAuthorityMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="applicationAuthorityResultMap" type="com.jslc.modules.szbh.entity.ApplicationAuthority">
+        <result column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="application_id" property="applicationId"/>
+        <result column="biz_id" property="bizId"/>
+        <result column="type" property="type"/>
+        <result column="user_group_post_type" property="userGroupPostType"/>
+    </resultMap>
+
+    <resultMap id="applicationAuthorityVOResultMap" type="com.jslc.modules.szbh.vo.ApplicationAuthorityVO" extends="applicationAuthorityResultMap">
+
+    </resultMap>
+
+
+    <select id="selectApplicationAuthorityPage" resultMap="applicationAuthorityResultMap">
+        select * from bh_application_authority where is_deleted = 0
+    </select>
+    <select id="getApplication"  resultMap="applicationAuthorityVOResultMap">
+        select * from bh_application_authority where is_deleted = 0
+        <if test="type != null and type !=''">
+            and type = #{type}
+        </if>
+    </select>
+    <select id="getUserAppList" resultType="com.jslc.modules.szbh.vo.UserAppVO">
+        select bu.account,bu.name,bd.name as deptName ,bu.major_position as positionName, '允许登录' isEnableLoginName  ,
+        bam.name as appName,buam.create_time as createTime, buam.type
+        from bh_user bu
+        inner join bh_user_application_management buam on buam.user_id = bu.id
+        inner join bh_application_management bam on bam.id = buam.application_management_id
+        inner join bh_dept bd on bd.dept_id = bu.major_dept and bd.is_deleted = 0
+        where bu.is_deleted = 0
+        <if test="account !=null and account !=''">
+            and bu.account like concat('%',#{account},'%')
+        </if>
+        <if test="name !=null and name !=''">
+            and bu.name like concat('%',#{name},'%')
+        </if>
+
+        <if test="dept != null">
+            and bd.id in
+            <foreach collection="dept" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+
+        </if>
+
+        <if test="appId != null">
+            and bam.id in
+            <foreach collection="appId" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        order by buam.create_time desc
+
+    </select>
+    <select id="getAuthorityByType" resultMap="applicationAuthorityResultMap">
+        select * from bh_application_authority where type = type  and POSITION(#{bizId} IN biz_id) and is_deleted = 0
+    </select>
+
+</mapper>

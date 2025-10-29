@@ -1,0 +1,246 @@
+<template>
+  <a-card :bordered="false">
+    <!-- 查询区域 -->
+    <!-- <div class="table-page-search-wrapper">
+      <a-form layout="inline" @keyup.enter.native="searchQuery">
+        <a-row :gutter="24">
+          <a-col :md="4" :sm="8">
+            <a-form-item label="设备类型">
+              <a-input placeholder="请输入设备类型" v-model="queryParam.esTitle"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :md="4" :sm="8">
+            <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+            </span>
+          </a-col>
+        </a-row>
+      </a-form>
+    </div> -->
+
+    <!-- 操作按钮区域 -->
+    <!--    <div class="table-operator">-->
+    <!--      <a-button @click="handleAdd" v-show="show" type="primary" icon="plus">新增</a-button>-->
+    <!--      <a-button type="primary" v-show="show" icon="download" @click="handleExportXls('消息')">导出</a-button>-->
+    <!--      <a-upload v-show="show" name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl"-->
+    <!--                @change="handleImportExcel">-->
+    <!--        <a-button type="primary" icon="import">导入</a-button>-->
+    <!--      </a-upload>-->
+    <!--      <a-dropdown v-if="selectedRowKeys.length > 0">-->
+    <!--        <a-menu slot="overlay">-->
+    <!--          <a-menu-item key="1" @click="batchDel">-->
+    <!--            <a-icon type="delete"/>-->
+    <!--            删除-->
+    <!--          </a-menu-item>-->
+    <!--        </a-menu>-->
+    <!--        <a-button style="margin-left: 8px"> 批量操作-->
+    <!--          <a-icon type="down"/>-->
+    <!--        </a-button>-->
+    <!--      </a-dropdown>-->
+    <!--    </div>-->
+
+    <!-- table区域-begin -->
+    <div>
+      <!-- <div class="ant-alert ant-alert-info" style="margin-bottom: 16px">
+        <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择
+        <a style="font-weight: 600">{{ selectedRowKeys.length }}</a
+        >项
+        <a style="margin-left: 24px" @click="onClearSelected">清空</a>
+      </div> -->
+
+      <a-table
+        ref="table"
+        size="middle"
+        bordered
+        rowKey="id"
+        :columns="columns"
+        :dataSource="dataSource"
+        :loading="loading"
+        @change="handleTableChange"
+      >
+        <!-- 字符串超长截取省略号显示-->
+        <!-- <span slot="types" slot-scope="text">
+          <j-ellipsis :value="text" :length="10" />
+        </span> -->
+
+        <span slot="action" slot-scope="text, record">
+          <a href="javascript:;" @click="handleDetail(text, record)">详情</a>
+          <!--          <a-divider type="vertical"/>-->
+          <!--          <a-dropdown>-->
+          <!--            <a class="ant-dropdown-link">更多<a-icon type="down"/></a>-->
+          <!--            <a-menu slot="overlay">-->
+          <!--               <a-menu-item v-show="show">-->
+          <!--                <a  @click="handleEdit(record)">编辑</a>-->
+          <!--              </a-menu-item>-->
+          <!--              <a-menu-item>-->
+          <!--                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">-->
+          <!--                  <a>删除</a>-->
+          <!--                </a-popconfirm>-->
+          <!--              </a-menu-item>-->
+          <!--            </a-menu>-->
+          <!--          </a-dropdown>-->
+        </span>
+      </a-table>
+    </div>
+    <!-- table区域-end -->
+
+    <!-- 表单区域 -->
+    <!--    <sysMessage-modal ref="modalForm" @ok="modalFormOk"></sysMessage-modal>-->
+  </a-card>
+</template>
+
+<script>
+import { getAction } from '@/api/manage'
+// import SysMessageModal from './modules/SysMessageModal'
+import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+import JEllipsis from '@/components/jeecg/JEllipsis'
+
+export default {
+  name: 'AccessSystemList',
+  mixins: [JeecgListMixin],
+  components: {
+    JEllipsis,
+    // SysMessageModal
+  },
+  created() {},
+  mounted() {},
+  data() {
+    return {
+      description: '接入系统页面',
+      // 表头
+      columns: [
+        {
+          title: '#',
+          dataIndex: 'id',
+          // key: 'rowIndex',
+          width: 60,
+          align: 'center',
+          customRender: function (text, r, index) {
+            return text !== '合计' ? parseInt(index) + 1 : text
+          },
+        },
+        {
+          title: '系统名称',
+          dataIndex: 'name',
+          align: 'center',
+        },
+        {
+          title: '设备类型',
+          align: 'center',
+          dataIndex: 'types',
+          // scopedSlots: { customRender: 'types' },
+        },
+        {
+          title: '办公27层',
+          align: 'center',
+          dataIndex: 'f27',
+        },
+        {
+          title: '办公28层',
+          align: 'center',
+          dataIndex: 'f28',
+        },
+        {
+          title: '餐厅',
+          align: 'center',
+          dataIndex: 'canteen',
+        },
+        {
+          title: '冷库',
+          align: 'center',
+          dataIndex: 'refrigerator',
+        },
+        {
+          title: '天台',
+          align: 'center',
+          dataIndex: 'roof',
+        }
+        // {
+        //   title: '操作',
+        //   dataIndex: 'action',
+        //   align: 'center',
+        //   scopedSlots: { customRender: 'action' },
+        // },
+      ],
+      url: {
+        list: '/device/system/statistic',
+        // delete: "/message/sysMessage/delete",
+        // deleteBatch: "/message/sysMessage/deleteBatch",
+        // exportXlsUrl: "message/sysMessage/exportXls",
+        // importExcelUrl: "message/sysMessage/importExcel",
+      },
+    }
+  },
+  methods: {
+    handleDetail(text, record) {
+      console.log(record)
+    },
+    loadData() {
+      this.loading = true
+      getAction(this.url.list).then((res) => {
+        if (res.success) {
+          this.dataSource = res.result
+          this.tableAddTotalRow(this.columns, this.dataSource)
+        }
+        if (res.code === 510) {
+          this.$message.warning(res.message)
+        }
+        this.loading = false
+      })
+    },
+    /** 表格增加合计行 */
+    tableAddTotalRow(columns, dataSource) {
+      let numKey = 'id'
+      let totalRow = { [numKey]: '合计' }
+      columns.forEach((column) => {
+        let { key, dataIndex } = column
+        if (![key, dataIndex].includes(numKey)) {
+          let total = 0
+          dataSource.forEach((data) => {
+            total += /^\d+\.?\d?$/.test(data[dataIndex]) ? Number.parseInt(data[dataIndex]) : Number.NaN
+          })
+          if (Number.isNaN(total)) {
+            total = '-'
+          }
+          totalRow[dataIndex] = total
+        }
+      })
+      dataSource.push(totalRow)
+    },
+  },
+}
+</script>
+<style lang="less" scoped>
+/** Button按钮间距 */
+.ant-btn {
+  margin-left: 3px;
+}
+
+.ant-table-tbody .ant-table-row td {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.anty-row-operator button {
+  margin: 0 5px;
+}
+
+.ant-btn-danger {
+  background-color: #ffffff;
+}
+
+.ant-modal-cust-warp {
+  height: 100%;
+}
+
+.ant-modal-cust-warp .ant-modal-body {
+  height: calc(100% - 110px) !important;
+  overflow-y: auto;
+}
+
+.ant-modal-cust-warp .ant-modal-content {
+  height: 90% !important;
+  overflow-y: hidden;
+}
+</style>

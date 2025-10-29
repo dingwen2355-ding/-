@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.BhApplicationCategoryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="bhApplicationCategoryResultMap" type="com.jslc.modules.szbh.entity.BhApplicationCategory">
+        <result column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="name" property="name"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="description" property="description"/>
+        <result column="is_enable" property="isEnable"/>
+        <result column="sort" property="sort"/>
+    </resultMap>
+    <resultMap id="bhApplicationCategoryVOResultMap" type="com.jslc.modules.szbh.vo.BhApplicationCategoryVO" extends="bhApplicationCategoryResultMap">
+
+    </resultMap>
+
+    <resultMap id="treeNodeResultMap" type="com.jslc.modules.szbh.vo.SystemTreeNode">
+        <id column="id" property="id"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="title" property="title"/>
+        <result column="value" property="value"/>
+        <result column="key" property="key"/>
+        <result column="has_children" property="hasChildren"/>
+        <result column="nodeType" property="nodeType"/>
+        <result column="parentKey" property="parentKey"/>
+        <result column="parentTitle" property="parentTitle"/>
+        <result column="deptType" property="deptType"/>
+        <result column="tenant_id" property="tenantId"/>
+    </resultMap>
+
+    <resultMap id="bhAppCtgManageVO" type="com.jslc.modules.szbh.vo.BhApplicationCategoryManagementTreeVO">
+        <id column="id" property="id"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="title" property="title"/>
+        <result column="has_children" property="hasChildren"/>
+        <result column="nodeType" property="nodeType"/>
+        <result column="url" property="url"/>
+        <result column="is_ground" property="isGround"/>
+        <result column="is_recommend" property="isRecommend"/>
+        <result column="intro" property="intro"/>
+        <result column="description" property="description"/>
+        <result column="deptId" property="deptId"/>
+        <result column="deptName" property="deptName"/>
+        <result column="contacts" property="contacts"/>
+        <result column="telephone" property="telephone"/>
+        <result column="protocol" property="protocol"/>
+        <result column="userColumn" property="userColumn"/>
+        <result column="createTime" property="createTime"/>
+        <result column="icon" property="icon"/>
+        <result column="viewNum" property="viewNum"/>
+        <result column="applyForNum" property="applyForNum"/>
+
+    </resultMap>
+
+
+    <select id="selectBhApplicationCategoryPage" resultMap="bhApplicationCategoryResultMap">
+        select * from bh_application_category where is_deleted = 0
+    </select>
+    <select id="getDetail" resultMap="bhApplicationCategoryVOResultMap">
+        select * from bh_application_category where  is_deleted = 0 and id = #{id}
+    </select>
+    <select id="getAppCategoryList" resultMap="bhApplicationCategoryVOResultMap">
+        SELECT
+        bac.*,(CASE WHEN bac.is_enable = 1 THEN '启用' ELSE '停用' END) as  isEnableName,
+        ( SELECT CASE WHEN count( 1 ) > 0 THEN 1 ELSE 0 END FROM bh_application_category WHERE parent_id = bac.id AND is_deleted = 0 ) AS "has_child"
+        FROM
+        bh_application_category bac
+        WHERE bac.is_deleted = 0
+        <if test="parentId != null and parentId !=''">
+            and bac.parent_id = #{parentId}
+        </if>
+
+        <if test="name!=null and name!=''">
+            and bac.name like concat(concat('%', #{name}),'%')
+        </if>
+
+        <if test="isEnable!=null">
+            and bac.is_enable = #{isEnable}
+        </if>
+
+        <if test="type!=null">
+            and bac.type = #{type}
+        </if>
+        order by sort
+    </select>
+    <select id="getOrgTree" resultMap="treeNodeResultMap">
+	    SELECT DISTINCT bac.id, bac.parent_id, bac.name title, bac.id "key", bac.id "value",bac.sort "deptType", 1 nodeType, "" parentKey, "" parentTitl
+        from bh_application_category bac
+        where  bac.is_deleted = 0
+        <if test="type != null">
+            and bac.type = #{type}
+        </if>
+        <if test="treeType == 2 ">
+            union all
+            select distinct bam.id ,bac.id parent_id,bam.name title,bam.id "key",bam.id "value",bam.sort "deptType",2 nodeType,"" parentKey,"" parentTitle
+            from bh_application_category bac
+            inner join bh_application_management bam on bam.category_id = bac.id
+            where bam.is_deleted = 0 and bam.is_enable = 1
+            <if test="name != null and name != ''">
+                and bam.name like concat(concat('%', #{name}),'%')
+            </if>
+            <if test="type != null">
+                and bac.type = #{type}
+            </if>
+        </if>
+
+    </select>
+
+    <select id="getUserAppCategoryTree" resultMap="treeNodeResultMap">
+        SELECT DISTINCT bac.id, bac.parent_id, bac.name title, bac.id "key", bac.id "value",bac.sort "deptType", 1 nodeType, "" parentKey, "" parentTitl
+        from bh_application_category bac
+        where bac.is_deleted = 0 and bac.is_enable = 1
+        and bac.name = '应用' and bac.type = 1
+        union all
+        SELECT DISTINCT bac.id, bac.parent_id, bac.name title, bac.id "key", bac.id "value",bac.sort "deptType", 1 nodeType, "" parentKey, "" parentTitl
+        from bh_application_category bac
+        inner join bh_application_category bac1 on bac1.id = bac.parent_id and bac1.is_deleted = 0
+        where bac.is_deleted = 0 and bac.is_enable = 1
+        and bac1.name = '应用' and bac.type = 1 and bac1.type = 1
+        <if test="treeType == 2 ">
+            union all
+            select distinct bam.id ,bac.id parent_id,bam.name title,bam.id "key",bam.id "value",bam.sort "deptType",2 nodeType,"" parentKey,"" parentTitle
+            from bh_application_category bac
+            inner join bh_application_category bac1 on bac1.id = bac.parent_id and bac1.is_deleted = 0
+            inner join bh_application_management bam on bam.category_id = bac.id
+            where bam.is_deleted = 0 and bam.is_enable = 1 and bac.is_deleted = 0 and bac.is_enable = 1
+            and bac1.name = '应用' and bac.type = 1 and bac1.type = 1
+            <if test="name != null and name != ''">
+                and bam.name like concat(concat('%', #{name}),'%')
+            </if>
+        </if>
+
+    </select>
+
+    <select id="getAppCategoryManagementTree" resultMap="bhAppCtgManageVO">
+        SELECT DISTINCT bac.id, bac.parent_id, bac.name title, 1 nodeType,'' url,'' is_ground,'' is_recommend, '' intro, description, '' deptId, '' deptName, '' logo,'' contacts,'' telephone,'' protocol,'' userColumn,'' createTime,'' icon,
+        0 viewNum, 0 applyForNum
+        from bh_application_category bac
+        where bac.is_deleted = 0 and bac.is_enable = 1 and bac.type = 1
+        union all
+        select distinct bam.id ,bac.id parent_id,bam.name title,2 nodeType,bam.url,bam.is_ground,bam.is_recommend,bam.intro,bam.description,bam.dept_id,bd.name deptName,bam.logo,bam.contacts,bam.telephone,bam.protocol,bam.user_column,bam.create_time createTime,bam.icon,
+        (select count(1) from bh_app_use_record where client_id = bam.app_id and create_time between #{start} and #{end}) viewNum,
+        (select count(1) from bh_authority_apply_for where application_management_id = bam.id and create_time between #{start} and #{end}) applyForNum
+        from bh_application_category bac
+        inner join bh_application_management bam on bam.category_id = bac.id and bam.is_deleted = 0
+        left join bh_dept bd on bd.dept_id = bam.dept_id and bd.is_deleted = 0
+        where bam.is_deleted = 0 and bam.is_enable = 1 and bac.type = 1 and bam.app_id &lt;&gt; 'ZmVLiSl0' and bam.app_id &lt;&gt; 'CdZLrF07' and bam.app_id &lt;&gt; 'c3piaGdldHRva2Vu'
+    </select>
+
+    <select id="applicationClassification" resultMap="bhApplicationCategoryVOResultMap">
+        select * from bh_application_category bac
+        inner join bh_application_category bac1 on bac1.id = bac.parent_id and bac1.is_deleted = 0
+        where bac.is_deleted = 0 and bac.is_enable = 1
+        and bac1.name = '应用' and bac.type = 1 and bac1.type = 1
+    </select>
+
+    <select id="getAppProductCategoryManagementTree" resultMap="bhAppCtgManageVO">
+        SELECT DISTINCT bac.id, bac.parent_id, bac.name title, 1 nodeType,'' url,'' is_ground,'' is_recommend, '' intro, description, '' deptId, '' deptName, '' logo,'' contacts,'' telephone,'' protocol,'' userColumn,'' createTime
+        from bh_application_category bac
+        where bac.is_deleted = 0 and bac.is_enable = 1 and bac.type = 2
+        union all
+        select distinct bam.id ,bac.id parent_id,bam.name title,2 nodeType,bam.url,bam.is_ground,bam.is_recommend,bam.intro,bam.description,bam.ent_id,be.ent_name deptName,bam.logo,bam.contacts,bam.telephone,bam.protocol,bam.user_column,bam.create_time createTime
+        from bh_application_category bac
+        inner join bh_application_management bam on bam.category_id = bac.id and bam.is_deleted = 0
+        left join bh_ent be on be.id = bam.ent_id and be.is_deleted = 0
+        where bam.is_deleted = 0 and bam.is_enable = 1 and bac.type = 2
+    </select>
+    <select id="getApplicationList" resultType="com.jslc.modules.szbh.vo.ApplicationDSQVO">
+        select distinct bam.app_secret as appSecret,bam.id,
+        (select count(1) from bh_app_use_record where client_id = bam.app_id) viewNum,
+        (select count(1) from bh_authority_apply_for where application_management_id = bam.id ) applyForNum
+        from bh_application_category bac
+        inner join bh_application_management bam on bam.category_id = bac.id and bam.is_deleted = 0
+        left join bh_dept bd on bd.dept_id = bam.dept_id and bd.is_deleted = 0
+        where bam.is_deleted = 0 and bam.is_enable = 1 and bac.type = 1 and bam.app_id &lt;&gt; 'ZmVLiSl0' and bam.app_id &lt;&gt; 'CdZLrF07' and bam.app_id &lt;&gt; 'c3piaGdldHRva2Vu'
+    </select>
+</mapper>

@@ -1,0 +1,185 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper
+END
+TotalCompareTableLogMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/TotalCompareTableLogMapper.xml
+END
+CatalogueTableBaseConfigMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueTableBaseConfigMapper.xml
+END
+CatalogueOrgContentRelationMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueOrgContentRelationMapper.xml
+END
+CatalogueOrgMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueOrgMapper.xml
+END
+DataSharingAccountMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/DataSharingAccountMapper.xml
+END
+AnalysisMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/AnalysisMapper.xml
+END
+CatalogueOrgVersionMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueOrgVersionMapper.xml
+END
+ForeignOaOrg.xml
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/ForeignOaOrg.xml
+END
+CatalogueOrgContentRelationVersionMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueOrgContentRelationVersionMapper.xml
+END
+CatalogueSysOrgMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueSysOrgMapper.xml
+END
+CatalogueFileOperationLogMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueFileOperationLogMapper.xml
+END
+CataloguePublishCheckMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CataloguePublishCheckMapper.xml
+END
+SysRoleMenuMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/SysRoleMenuMapper.xml
+END
+CatalogueTableFieldVersionMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueTableFieldVersionMapper.xml
+END
+SysAdminUserRoleMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/SysAdminUserRoleMapper.xml
+END
+SysRoleMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/SysRoleMapper.xml
+END
+CatalogueFieldBaseConfigMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueFieldBaseConfigMapper.xml
+END
+CatalogueHelpDocumentMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueHelpDocumentMapper.xml
+END
+CatalogueOrgSysVersionMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueOrgSysVersionMapper.xml
+END
+CatalogueDataSourceDatabaseMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueDataSourceDatabaseMapper.xml
+END
+CatalogueSysTableMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueSysTableMapper.xml
+END
+CatalogueDataSourceApiMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueDataSourceApiMapper.xml
+END
+SysMenuMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/SysMenuMapper.xml
+END
+SysAdminUserMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/SysAdminUserMapper.xml
+END
+CatalogueDataSourceMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueDataSourceMapper.xml
+END
+CatalogueSysTableVersionMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueSysTableVersionMapper.xml
+END
+CatalogueOrgSysMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueOrgSysMapper.xml
+END
+CatalogueOrgTypeMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueOrgTypeMapper.xml
+END
+CatalogueTableFieldMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueTableFieldMapper.xml
+END
+CatalogueVersionLogMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/resources/mapper/CatalogueVersionLogMapper.xml
+END

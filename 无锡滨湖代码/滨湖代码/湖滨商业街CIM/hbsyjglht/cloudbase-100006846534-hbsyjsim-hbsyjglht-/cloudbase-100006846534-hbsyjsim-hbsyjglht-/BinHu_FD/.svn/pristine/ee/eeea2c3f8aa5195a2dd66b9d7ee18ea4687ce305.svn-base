@@ -1,0 +1,131 @@
+<template>
+  <a-space>
+    <a-dropdown :trigger="['click']">
+      <a-tooltip>
+        <template slot="title">密度</template>
+        <a-icon type="column-height" style="cursor: pointer" />
+      </a-tooltip>
+      <a-menu slot="overlay" @click="handelClickMd" v-model="selectedKey">
+        <a-menu-item key="1">
+          <span>默认</span>
+        </a-menu-item>
+        <a-menu-item key="2">
+          <span>中等</span>
+        </a-menu-item>
+        <a-menu-item key="3">
+          <span>紧凑</span>
+        </a-menu-item>
+      </a-menu>
+    </a-dropdown>
+    <a-popover title="自定义列" trigger="click" placement="leftBottom">
+      <template slot="content">
+        <a-checkbox-group @change="onColSettingsChange" v-model="settingColumns" :defaultValue="settingColumns">
+          <a-row style="width: 300px">
+            <template v-for="item in defColumns">
+              <template v-if="item.key != 'rowIndex' && item.dataIndex != 'action'">
+                <a-col :span="12" :key="item.id">
+                  <a-checkbox :value="item.dataIndex">
+                    <j-ellipsis :value="item.title" :length="10"></j-ellipsis>
+                  </a-checkbox>
+                </a-col>
+              </template>
+            </template>
+          </a-row>
+        </a-checkbox-group>
+      </template>
+      <a-tooltip>
+        <template slot="title">自定义列</template>
+        <a-icon type="setting" style="cursor: pointer" />
+      </a-tooltip>
+    </a-popover>
+  </a-space>
+</template>
+<script>
+import Vue from 'vue'
+import JEllipsis from '@/components/jeecg/JEllipsis'
+export default {
+  props: {
+    defColumns: {
+      type: Array,
+      default: [],
+    },
+  },
+  components: {
+    JEllipsis,
+  },
+  data() {
+    return {
+      selectedKey: ['3'],
+      settingColumns: [],
+      debleSize: '',
+    }
+  },
+  methods: {
+    handelClickMd(data) {
+      let { key } = data
+      let debleSize = ''
+      if (key === '1') {
+        debleSize = 'default'
+      } else if (key === '2') {
+        debleSize = 'middle'
+      } else if (key === '3') {
+        debleSize = 'small'
+      }
+      this.selectedKey = [key]
+      this.debleSize = debleSize
+      this.$emit('handelChange', { debleSize })
+    },
+    //列设置更改事件
+    onColSettingsChange(checkedValues) {
+      var key = this.$route.name + ':colsettings'
+      Vue.ls.set(key, checkedValues, 7 * 24 * 60 * 60 * 1000)
+      this.settingColumns = checkedValues
+      const cols = this.defColumns.filter((item) => {
+        if (item.key == 'rowIndex' || item.dataIndex == 'action') {
+          return true
+        }
+        if (this.settingColumns.includes(item.dataIndex)) {
+          return true
+        }
+        return false
+      })
+      this.$emit('handelChange', { cols })
+    },
+    initColumns() {
+      //权限过滤（列权限控制时打开，修改第二个参数为授权码前缀）
+      //this.defColumns = colAuthFilter(this.defColumns,'testdemo:');
+
+      var key = this.$route.name + ':colsettings'
+      let colSettings = Vue.ls.get(key)
+      if (colSettings == null || colSettings == undefined) {
+        let allSettingColumns = []
+        this.defColumns.forEach(function (item, i, array) {
+          allSettingColumns.push(item.dataIndex)
+        })
+        this.settingColumns = allSettingColumns
+        // this.columns = this.defColumns
+        this.$emit('handelChange', { cols: this.defColumns })
+      } else {
+        this.settingColumns = colSettings
+        const cols = this.defColumns.filter((item) => {
+          if (item.key == 'rowIndex' || item.dataIndex == 'action') {
+            return true
+          }
+          if (colSettings.includes(item.dataIndex)) {
+            return true
+          }
+          return false
+        })
+        this.$emit('handelChange', { cols })
+      }
+    },
+  },
+  mounted() {
+    this.initColumns()
+  },
+}
+</script>
+<style lang="less" scoped>
+</style>
+
+

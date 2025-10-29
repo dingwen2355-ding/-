@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/controller/sso
+END
+AuthAppUserController.java
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/controller/sso/AuthAppUserController.java
+END
+SsoAuthLoginController.java
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/controller/sso/SsoAuthLoginController.java
+END
+SsoLoginController.java
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/controller/sso/SsoLoginController.java
+END

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.BhDeptMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="bhDeptResultMap" type="com.jslc.modules.szbh.entity.BhDept">
+        <result column="id" property="id"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="name" property="name"/>
+        <result column="type" property="type"/>
+        <result column="description" property="description"/>
+        <result column="sort" property="sort"/>
+        <result column="is_enable" property="isEnable"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="ancestors" property="ancestors"/>
+        <result column="party_user_limit" property="partyUserLimit"/>
+        <result column="full_name" property="fullName"/>
+        <result column="short_name" property="shortName"/>
+        <result column="brief_introduction" property="briefIntroduction"/>
+        <result column="domain_name" property="domainName"/>
+        <result column="address" property="address"/>
+        <result column="telephone" property="telephone"/>
+        <result column="organization_code" property="organizationCode"/>
+        <result column="is_updated" property="isUpdated"/>
+        <result column="data_source" property="dataSource"/>
+    </resultMap>
+    <resultMap id="bhDeptVOResultMap" type="com.jslc.modules.szbh.vo.BhDeptVO" extends="bhDeptResultMap">
+        <result column="has_children" property="hasChildren"/>
+    </resultMap>
+
+
+    <resultMap id="treeNodeResultMap" type="com.jslc.modules.szbh.vo.SystemTreeNode">
+        <id column="id" property="id"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="title" property="title"/>
+        <result column="value" property="value"/>
+        <result column="key" property="key"/>
+        <result column="has_children" property="hasChildren"/>
+        <result column="nodeType" property="nodeType"/>
+        <result column="parentKey" property="parentKey"/>
+        <result column="parentTitle" property="parentTitle"/>
+        <result column="deptType" property="deptType"/>
+        <result column="tenant_id" property="tenantId"/>
+    </resultMap>
+
+
+
+
+
+
+
+
+    <select id="selectBhDeptPage" resultMap="bhDeptResultMap">
+        select * from bh_dept where is_deleted = 0
+    </select>
+    <select id="getDeptList" resultMap="bhDeptVOResultMap">
+        SELECT
+        bd.dept_id as id,bd.id as bhDeptId ,bd.name,bd.type,bd.description,bd.sort,bd.is_enable,bd.parent_id,bd.ancestors,bd.party_user_limit,bd.full_name,bd.short_name,
+        bd.brief_introduction,bd.domain_name,bd.address,bd.telephone,bd.organization_code,bd.create_user,bd.create_time,bd.update_user,bd.create_time,
+        bd.update_time,bd.is_deleted,bd.is_updated,bd.data_source,
+        (CASE WHEN bd.is_enable = 1 THEN '启用' ELSE '停用' END) as  isEnableName,bdt.dict_value as typeName,
+        ( SELECT CASE WHEN count( 1 ) > 0 THEN 1 ELSE 0 END FROM bh_dept
+            WHERE parent_id = bd.dept_id AND is_deleted = 0
+            <if test="type!=null">
+                and type = #{type}
+            </if>
+
+            <if test="isEnable !=null">
+                and is_enable = #{isEnable}
+            </if>
+            <if test="name!=null and name!=''">
+                and name like concat(concat('%', #{name}),'%')
+            </if>
+
+        ) AS "has_children"
+        FROM
+        bh_dept bd
+        left join blade_dict bdt on bdt.dict_key =bd.type and  bdt.code = 'dept_type'
+        WHERE bd.is_deleted = 0
+        <if test="parentId != null and parentId !=''">
+            and bd.parent_id = #{parentId}
+        </if>
+
+        <if test="name!=null and name!=''">
+            and bd.name like concat(concat('%', #{name}),'%')
+        </if>
+
+        <if test="type!=null">
+            and bd.type = #{type}
+        </if>
+
+        <if test="isEnable !=null">
+            and bd.is_enable = #{isEnable}
+        </if>
+
+        <if test="ids !=null">
+            and bd.dept_id in
+            <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        order by sort desc,dept_id asc
+    </select>
+    <select id="getOrgTree2" resultMap="treeNodeResultMap">
+        SELECT DISTINCT bd.dept_id as id, bd.parent_id, bd.name title, bd.id "key", bd.id "value", 1 nodeType, "" parentKey, "" parentTitl,bd.sort
+        from bh_dept bd
+        where  bd.is_deleted = 0
+        <if test="id != null">
+            and bd.parent_id = #{id}
+        </if>
+        order by bd.sort desc,bd.dept_id asc
+    </select>
+    <select id="getDetail" resultMap="bhDeptVOResultMap">
+        SELECT
+        bd.*,(CASE WHEN bd.is_enable = 1 THEN '启用' ELSE '停用' END) as  isEnableName,bdt.dict_value as typeName
+        FROM
+        bh_dept bd
+        left join blade_dict bdt on bdt.dict_key =bd.type and  bdt.code = 'dept_type'
+        WHERE bd.is_deleted = 0 and bd.dept_id = #{id}
+    </select>
+    <select id="getDeptList2" resultMap="bhDeptVOResultMap">
+        SELECT
+        bd.dept_id as id,bd.id as bhDeptId ,bd.name,bd.type,bd.description,bd.sort,bd.is_enable,bd.parent_id,bd.ancestors,bd.party_user_limit,bd.full_name,bd.short_name,
+        bd.brief_introduction,bd.domain_name,bd.address,bd.telephone,bd.organization_code,bd.create_user,bd.create_time,bd.update_user,bd.create_time,
+        bd.update_time,bd.is_deleted,bd.is_updated,bd.data_source,
+        (CASE WHEN bd.is_enable = 1 THEN '启用' ELSE '停用' END) as  isEnableName,bdt.dict_value as typeName,
+        ( SELECT CASE WHEN count( 1 ) > 0 THEN 1 ELSE 0 END FROM bh_dept
+        WHERE parent_id = bd.dept_id AND is_deleted = 0
+        <if test="type!=null">
+            and type = #{type}
+        </if>
+
+        <if test="isEnable !=null">
+            and is_enable = #{isEnable}
+        </if>
+        <if test="name!=null and name!=''">
+            and name like concat(concat('%', #{name}),'%')
+        </if>
+
+        ) AS "has_children"
+        FROM
+        bh_dept bd
+        left join blade_dict bdt on bdt.dict_key =bd.type and  bdt.code = 'dept_type'
+        WHERE bd.is_deleted = 0 and bd.parent_id = 1
+        <if test="parentId != null and parentId !=''">
+            and bd.parent_id = #{parentId}
+        </if>
+
+        <if test="name!=null and name!=''">
+            and bd.name like concat(concat('%', #{name}),'%')
+        </if>
+
+        <if test="type!=null">
+            and bd.type = #{type}
+        </if>
+
+        <if test="isEnable !=null">
+            and bd.is_enable = #{isEnable}
+        </if>
+
+        <if test="ids !=null">
+            and bd.dept_id in
+            <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        order by sort
+    </select>
+
+    <select id="getDeptListBySyncDeptAndField" resultMap="bhDeptResultMap">
+        select
+        ${syncFields}
+        from bh_dept
+        where is_deleted = 0
+        <if test="syncDepts !=null">
+            and dept_id in
+            <foreach collection="syncDepts" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        order by sort desc
+    </select>
+    <select id="getRootList" resultType="com.jslc.modules.szbh.vo.BhDeptVO">
+        SELECT
+        bd.dept_id as id,bd.dept_id,bd.id as bhDeptId ,bd.name,bd.type,bd.description,bd.sort,bd.is_enable,bd.parent_id,bd.ancestors,bd.party_user_limit,bd.full_name,bd.short_name,
+        bd.brief_introduction,bd.domain_name,bd.address,bd.telephone,bd.organization_code,bd.create_user,bd.create_time,bd.update_user,bd.create_time,
+        bd.update_time,bd.is_deleted,bd.is_updated,bd.data_source,
+        (CASE WHEN bd.is_enable = 1 THEN '启用' ELSE '停用' END) as  isEnableName,bdt.dict_value as typeName,
+        ( SELECT CASE WHEN count( 1 ) > 0 THEN 1 ELSE 0 END FROM bh_dept
+        WHERE parent_id = bd.dept_id AND is_deleted = 0
+        ) AS "has_children"
+        FROM
+        bh_dept bd
+        left join blade_dict bdt on bdt.dict_key =bd.type and  bdt.code = 'dept_type'
+        WHERE bd.is_deleted = 0
+        order by sort desc,dept_id asc
+    </select>
+</mapper>

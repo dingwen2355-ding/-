@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.data.mapper.DataDeviceChannelMapper">
+
+    <select id="findDeptIdByRegionCode" resultType="cn.wxgis.jc.system.po.SysDept">
+        select d.id from sys_region r
+            left join sys_dept d on d.name = r.region_name
+        where r.region_code = #{regionCode}
+    </select>
+
+    <select id="findResponseByChannelId"
+            resultType="cn.wxgis.jc.civilization.data.resp.DataDeviceChannelResponse">
+        select d.*, t.`name` tree_name
+        from data_device_channel d
+
+            left join data_device_tree t on d.org_code = t.id
+        where d.id = #{channelId}
+    </select>
+
+</mapper>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.civilization.assess.mapper.AnalysisMapper">
+
+
+    <select id="specialList" resultType="cn.wxgis.jc.civilization.assess.vo.AssessVo">
+        select * from (
+            select e.id, 5 event_source, e.check_name, e.check_value, e.region_name, e.type_name, e.point_name, e.check_itemid, e.check_item_name, et.`name` event_type_name, check_info content, depart_name dept_name,
+            DATE_FORMAT(e.check_date, '%Y-%m-%d %h:%i:%s') check_date,e.score,
+            case when state = 3 then 1 else 0 end as `status`
+            from work_event e
+            left join data_check_item ci on ci.id = e.check_itemid
+            left join quota_event_type et on et.id = ci.event_type_id
+            union
+            select e.id, 1 event_source, e.cycle check_name, c.number check_value, e.region_name, ct.`name` type_name, cp.name point_name, e.check_item_id check_itemid, e.event_title check_item, et.name event_type_name, e.content, e.dept_names, DATE_FORMAT(e.report_time, '%Y-%m-%d %h:%i:%s') check_date, e.score, case when `status` = 60 then 1 else 0 end as `status`
+            from wf_event_report e
+            left join quota_event_type et on et.id = e.event_type
+            left join data_check_points_type ct on ct.id = e.check_points_type_id
+            left join data_check_points cp on cp.id = e.check_points_id
+            left join quota_assess_cycle c on c.id = e.cycle_id
+        ) data
+        <where>
+            <if test="param.eventTypeName != null and param.eventTypeName != ''">
+                and event_type_name = #{param.eventTypeName}
+            </if>
+            <if test="param.typeName != null and param.typeName != ''">
+                and type_name = #{param.typeName}
+            </if>
+        </where>
+    </select>
+
+    <select id="specialSroceTotal" resultType="java.math.BigDecimal">
+        select IFNULL(sum(score), 0) scoreTotal  from (
+            select e.id, 5 event_source, e.check_name, e.check_value, e.region_name, e.type_name, e.point_name, e.check_itemid, e.check_item_name, et.`name` event_type_name, check_info content, depart_name dept_name,
+            DATE_FORMAT(e.check_date, '%Y-%m-%d %h:%i:%s') check_date,e.score,
+            case when state = 3 then 1 else 0 end as `status`
+            from work_event e
+            left join data_check_item ci on ci.id = e.check_itemid
+            left join quota_event_type et on et.id = ci.event_type_id
+            union
+            select e.id, 1 event_source, e.cycle check_name, c.number check_value, e.region_name, ct.`name` type_name, cp.name point_name, e.check_item_id check_itemid, e.event_title check_item, et.name event_type_name, e.content, e.dept_names, DATE_FORMAT(e.report_time, '%Y-%m-%d %h:%i:%s') check_date, e.score, case when `status` = 60 then 1 else 0 end as `status`
+            from wf_event_report e
+            left join quota_event_type et on et.id = e.event_type
+            left join data_check_points_type ct on ct.id = e.check_points_type_id
+            left join data_check_points cp on cp.id = e.check_points_id
+            left join quota_assess_cycle c on c.id = e.cycle_id
+        ) data
+        <where>
+            <if test="eventTypeName != null and eventTypeName != ''">
+                and event_type_name = #{eventTypeName}
+            </if>
+            <if test="typeName != null and typeName != ''">
+                and type_name = #{typeName}
+            </if>
+        </where>
+    </select>
+
+    <select id="mainEventList" resultType="cn.wxgis.jc.civilization.assess.vo.AssessVo">
+        select *,IFNULL(count(1), 0) count, IFNULL(sum(`status`), 0) handleCount, IFNULL(sum(score), 0) scoreTotal  from (
+            select e.id, 5 event_source, e.check_name, e.check_value, e.region_name, e.type_name, e.point_name, e.check_itemid, e.check_item_name, et.`name` event_type_name, check_info content, depart_name dept_name,
+            DATE_FORMAT(e.check_date, '%Y-%m-%d %h:%i:%s') check_date,e.score,
+            case when state = 3 then 1 else 0 end as `status`
+            from work_event e
+            left join data_check_item ci on ci.id = e.check_itemid
+            left join quota_event_type et on et.id = ci.event_type_id
+            union
+            select e.id, 1 event_source, e.cycle check_name, c.number check_value, e.region_name, ct.`name` type_name, cp.name point_name, e.check_item_id check_itemid, e.event_title check_item, et.name event_type_name, e.content, e.dept_names, DATE_FORMAT(e.report_time, '%Y-%m-%d %h:%i:%s') check_date, e.score, case when `status` = 60 then 1 else 0 end as `status`
+            from wf_event_report e
+            left join quota_event_type et on et.id = e.event_type
+            left join data_check_points_type ct on ct.id = e.check_points_type_id
+            left join data_check_points cp on cp.id = e.check_points_id
+            left join quota_assess_cycle c on c.id = e.cycle_id
+        ) data
+        <where>
+            <if test="param.regionName != null and param.regionName != ''">
+                and region_name = #{param.regionName}
+            </if>
+            <if test="param.eventTypeName != null and param.eventTypeName != ''">
+                and event_type_name = #{param.eventTypeName}
+            </if>
+            <if test="param.beginTime != null and param.beginTime != '' and param.endTime != null and param.endTime != ''">
+                and check_date <![CDATA[ >= ]]> DATE_FORMAT(#{param.beginTime}, '%Y-%m-%d %h:%i:%s')
+                and check_date <![CDATA[ <= ]]> DATE_FORMAT(#{param.endTime}, '%Y-%m-%d %h:%i:%s')
+            </if>
+        </where>
+        group by event_type_name
+    </select>
+
+    <select id="mainPointList" resultType="cn.wxgis.jc.civilization.assess.vo.AssessVo">
+        select *,IFNULL(count(1), 0) count, IFNULL(sum(`status`), 0) handleCount, IFNULL(sum(score), 0) scoreTotal  from (
+            select e.id, 5 event_source, e.check_name, e.check_value, e.region_name, e.type_name, e.point_name, e.check_itemid, e.check_item_name, et.`name` event_type_name, check_info content, depart_name dept_name,
+            DATE_FORMAT(e.check_date, '%Y-%m-%d %h:%i:%s') check_date,e.score,
+            case when state = 3 then 1 else 0 end as `status`
+            from work_event e
+            left join data_check_item ci on ci.id = e.check_itemid
+            left join quota_event_type et on et.id = ci.event_type_id
+            union
+            select e.id, 1 event_source, e.cycle check_name, c.number check_value, e.region_name, ct.`name` type_name, cp.name point_name, e.check_item_id check_itemid, e.event_title check_item, et.name event_type_name, e.content, e.dept_names, DATE_FORMAT(e.report_time, '%Y-%m-%d %h:%i:%s') check_date, e.score, case when `status` = 60 then 1 else 0 end as `status`
+            from wf_event_report e
+            left join quota_event_type et on et.id = e.event_type
+            left join data_check_points_type ct on ct.id = e.check_points_type_id
+            left join data_check_points cp on cp.id = e.check_points_id
+            left join quota_assess_cycle c on c.id = e.cycle_id
+        ) data
+        <where>
+            <if test="param.regionName != null and param.regionName != ''">
+                and region_name = #{param.regionName}
+            </if>
+            <if test="param.pointsName != null and param.pointsName != ''">
+                and point_name like concat ('%', #{param.pointsName} ,'%')
+            </if>
+            <if test="param.beginTime != null and param.beginTime != '' and param.endTime != null and param.endTime != ''">
+                and check_date <![CDATA[ >= ]]> DATE_FORMAT(#{param.beginTime}, '%Y-%m-%d %h:%i:%s')
+                and check_date <![CDATA[ <= ]]> DATE_FORMAT(#{param.endTime}, '%Y-%m-%d %h:%i:%s')
+            </if>
+        </where>
+        group by point_name
+    </select>
+
+    <select id="keyPointsByJz" resultType="cn.wxgis.jc.civilization.assess.vo.AssessVo">
+        select *,IFNULL(count(1), 0) count, IFNULL(sum(`status`), 0) handleCount, IFNULL(sum(score), 0) scoreTotal  from (
+            select e.id, 5 event_source, e.check_name, e.check_value, e.region_name, e.type_name, e.point_name, e.check_itemid, e.check_item_name, et.`name` event_type_name, check_info content, depart_name dept_name,
+            DATE_FORMAT(e.check_date, '%Y-%m-%d %h:%i:%s') check_date,e.score,
+            case when state = 3 then 1 else 0 end as `status`
+            from work_event e
+            left join data_check_item ci on ci.id = e.check_itemid
+            left join quota_event_type et on et.id = ci.event_type_id
+            union
+            select e.id, 1 event_source, e.cycle check_name, c.number check_value, e.region_name, ct.`name` type_name, cp.name point_name, e.check_item_id check_itemid, e.event_title check_item, et.name event_type_name, e.content, e.dept_names, DATE_FORMAT(e.report_time, '%Y-%m-%d %h:%i:%s') check_date, e.score, case when `status` = 60 then 1 else 0 end as `status`
+            from wf_event_report e
+            left join quota_event_type et on et.id = e.event_type
+            left join data_check_points_type ct on ct.id = e.check_points_type_id
+            left join data_check_points cp on cp.id = e.check_points_id
+            left join quota_assess_cycle c on c.id = e.cycle_id
+        ) data
+        <where>
+            <if test="param.checkName != null and param.checkName != ''">
+                and check_name = #{param.checkName}
+            </if>
+            <if test="param.eventTypeName != null and param.eventTypeName != ''">
+                and event_type_name = #{param.eventTypeName}
+            </if>
+            <if test="param.beginTime != null and param.beginTime != '' and param.endTime != null and param.endTime != ''">
+                and check_date <![CDATA[ >= ]]> DATE_FORMAT(#{param.beginTime}, '%Y-%m-%d %h:%i:%s')
+                and check_date <![CDATA[ <= ]]> DATE_FORMAT(#{param.endTime}, '%Y-%m-%d %h:%i:%s')
+            </if>
+        </where>
+        group by event_type_name, point_name
+        order by cast(check_value as SIGNED) desc, count desc
+    </select>
+
+    <select id="keyPointsByGf" resultType="cn.wxgis.jc.civilization.assess.vo.AssessVo">
+        select *,IFNULL(count(1), 0) count, IFNULL(sum(`status`), 0) handleCount, IFNULL(sum(score), 0) scoreTotal  from (
+            select e.id, 5 event_source, e.check_name, e.check_value, e.region_name, e.type_name, e.point_name, e.check_itemid, e.check_item_name, et.`name` event_type_name, check_info content, depart_name dept_name,
+            DATE_FORMAT(e.check_date, '%Y-%m-%d %h:%i:%s') check_date,e.score,
+            case when state = 3 then 1 else 0 end as `status`
+            from work_event e
+            left join data_check_item ci on ci.id = e.check_itemid
+            left join quota_event_type et on et.id = ci.event_type_id
+            union
+            select e.id, 1 event_source, e.cycle check_name, c.number check_value, e.region_name, ct.`name` type_name, cp.name point_name, e.check_item_id check_itemid, e.event_title check_item, et.name event_type_name, e.content, e.dept_names, DATE_FORMAT(e.report_time, '%Y-%m-%d %h:%i:%s') check_date, e.score, case when `status` = 60 then 1 else 0 end as `status`
+            from wf_event_report e
+            left join quota_event_type et on et.id = e.event_type
+            left join data_check_points_type ct on ct.id = e.check_points_type_id
+            left join data_check_points cp on cp.id = e.check_points_id
+            left join quota_assess_cycle c on c.id = e.cycle_id
+        ) data
+        <where>
+            <if test="param.checkName != null and param.checkName != ''">
+                and check_name = #{param.checkName}
+            </if>
+            <if test="param.typeName != null and param.typeName != ''">
+                and type_name = #{param.typeName}
+            </if>
+            <if test="param.beginTime != null and param.beginTime != '' and param.endTime != null and param.endTime != ''">
+                and check_date <![CDATA[ >= ]]> DATE_FORMAT(#{param.beginTime}, '%Y-%m-%d %h:%i:%s')
+                and check_date <![CDATA[ <= ]]> DATE_FORMAT(#{param.endTime}, '%Y-%m-%d %h:%i:%s')
+            </if>
+        </where>
+        group by type_name, point_name, event_type_name
+        order by cast(check_value as SIGNED) desc, count desc
+
+    </select>
+
+</mapper>

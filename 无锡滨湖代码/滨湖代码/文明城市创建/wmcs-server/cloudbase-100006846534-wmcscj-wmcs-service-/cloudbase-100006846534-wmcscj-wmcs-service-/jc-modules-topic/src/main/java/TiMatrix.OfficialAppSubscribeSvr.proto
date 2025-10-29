@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package TiMatrix.OfficialAppSubscribeSvr;
+option java_package = "com.wxgis.topic";
+
+message Msg {
+  string UserName = 1;
+  string SecretId = 2;
+  string Signature = 3;
+  string Timestamp = 4;
+  repeated string Topics = 5;
+  bytes Buffer = 6;
+  string GroupId = 7;
+  repeated Filter Filters = 8;
+  bool ReadHistory = 9;
+}
+
+message Filter {
+  string Key = 1;
+  repeated string Value = 2;
+}
+
+service ReadMsg {
+  rpc ReadTopic(Msg) returns (stream Msg) {}
+}

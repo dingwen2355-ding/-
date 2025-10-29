@@ -1,0 +1,86 @@
+<template>
+  <j-modal
+    :title="title"
+    :width="800"
+    :visible="visible"
+    :confirmLoading="confirmLoading"
+    switchFullscreen
+    @ok="handleOk"
+    @cancel="handleCancel"
+    cancelText="关闭"
+    :ok-button-props="{ props: { disabled: true } }"
+  >
+    <a-spin :spinning="confirmLoading">
+      <a-form-model ref="form" :model="model" v-bind="layout" :rules="validatorRules">
+        <a-form-model-item label="设备名称" required prop="name">
+          <a-input disabled v-model="model.name" />
+        </a-form-model-item>
+        <a-form-model-item label="设备系统" required prop="systemType_dictText">
+          <a-input disabled v-model="model.systemType_dictText" />
+        </a-form-model-item>
+        <a-form-model-item label="设备位置" required prop="position">
+          <a-input disabled v-model="model.position" />
+        </a-form-model-item>
+
+
+        <a-form-model-item label="设备状态" required prop="online">
+          <!-- <a-input disabled  v-model="model.online" /> -->
+          <a-input disabled  :value="model.online=='1'?'在线':'离线'" />
+        </a-form-model-item>
+        <a-form-model-item label="是否入侵预警" required prop="alertState">
+          <a-input disabled v-model="model.alertState" />
+        </a-form-model-item>
+        
+       
+       
+      </a-form-model>
+    </a-spin>
+  </j-modal>
+</template>
+
+<script>
+import { httpAction } from '@/api/manage'
+
+export default {
+  name: 'securityModal',
+  data() {
+    return {
+      title: '操作',
+      visible: false,
+      model: {},
+      layout: {
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 5 },
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 16 },
+        },
+      },
+      confirmLoading: false,
+      validatorRules: {},
+    }
+  },
+  created() {},
+  methods: {
+    add() {
+      this.edit({})
+    },
+    edit(record) {
+      this.model = Object.assign({}, record)
+      this.visible = true
+    },
+    close() {
+      this.$emit('close')
+      this.visible = false
+    },
+    handleOk() {},
+    handleCancel() {
+      this.close()
+    },
+  },
+}
+</script>
+
+<style lang="less" scoped></style>

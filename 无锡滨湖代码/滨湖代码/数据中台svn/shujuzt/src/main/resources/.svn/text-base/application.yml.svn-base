@@ -1,0 +1,42 @@
+spring:
+  aop: true
+  application:
+    name: data-catalogue
+  profiles:
+    active: pro
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 20MB
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+# 防止XSS攻击
+xss:
+  # 过滤开关
+  enabled: false
+  # 排除链接（多个用逗号分隔）
+  excludes:
+  # 匹配链接
+  urlPatterns: /controller/*
+
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  type-handlers-package: com.grandlynn.spa.catalogue.common.utils
+  global-config:
+      db-config:
+        id-type: auto
+        logic-delete-value: 1
+        logic-not-delete-value: 0
+
+#AES和DES加密解密定义密钥
+encode: eH1e7PNOye45XOq35XpnMA
+
+random:
+  type: 'SHA1PRNG'
+
+AOE_CONFIG_PATH: /data/toumingjiam

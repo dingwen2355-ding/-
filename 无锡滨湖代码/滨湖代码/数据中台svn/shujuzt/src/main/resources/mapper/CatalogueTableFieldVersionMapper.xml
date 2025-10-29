@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.CatalogueTableFieldVersionMapper">
+
+    <resultMap id="BaseResultMap" type="com.grandlynn.spa.catalogue.entity.CatalogueTableFieldVersionDO">
+        <!--@Table catalogue_table_field-->
+        <result property="id" column="id" />
+        <result property="tenantId" column="tenant_id" />
+        <result property="version" column="version" />
+        <result property="appId" column="app_id" />
+        <result property="remark" column="remark" />
+        <result property="deleted" column="is_deleted" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdTime" column="created_time" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedTime" column="updated_time" />
+        <result property="sysTableId" column="sys_table_id" />
+        <result property="fieldName" column="field_name" />
+        <result property="fieldAlias" column="field_alias" />
+        <result property="fieldType" column="field_type" />
+        <result property="fieldLength" column="field_length" />
+        <result property="fieldVersion" column="field_version" />
+        <result property="fieldState" column="field_state" />
+        <result property="fieldEncoded" column="field_encoded" />
+        <result property="fieldObtuse" column="field_obtuse" />
+        <result property="fieldPrimaryKey" column="field_primary_key" />
+        <result property="fieldPosition" column="field_position" />
+        <result property="fieldDesc" column="field_desc" />
+        <result property="fieldTotalLog" column="field_total_log" />
+        <result property="fieldTotalMemory" column="field_total_memory" />
+        <result column="intermediate" property="intermediate" />
+        <result column="version_no" property="versionNo" />
+        <result column="field_name_ch" property="fieldNameCh" />
+        <result column="dict_state" property="dictState" />
+        <result column="dict_table" property="dictTable" />
+        <result column="dict_standard" property="dictStandard" />
+        <result column="share_type" property="shareType" />
+        <result column="share_condition" property="shareCondition" />
+        <result column="law_dependency" property="lawDependency" />
+        <result column="allow_null" property="allowNull" />
+        <result column="allow_index" property="allowIndex" />
+        <result column="old_id" property="oldId" />
+        <result column="law_dependency_attach" property="lawDependencyAttach" />
+    </resultMap>
+
+    <!-- 根据系统id查找目录编制的表和字段内容   -->
+    <sql id="findCatalogueListBySysIdsColumn">
+        ov.node_name nodeName,
+        T.sysName, T.dataResourceName, T.dataResourceAbstract, T.dataResourceSaveType, T.databaseType,
+        T.tableName, T.dataDomain, T.tableShareType , T.lawDependency , T.shareStatus , T.openType , T.updatePeriod ,
+        T.openCondition , T.openDepency , T.tableShareDesc , T.position, T.resourceCode,
+        T.tableCreateTime,T.tableUpdateTime,T.resourceType,
+        s.fieldName, s.fieldNameCh, s.fieldType, s.fieldLength, s.fieldEncoded, s.fieldObtuse,
+        s.fieldPrimaryKey, s.fieldPosition, s.fieldDesc, s.fieldTotalLog, s.fieldTotalMemory,
+        s.dictState, s.allowNull, s.allowIndex, s.shareType, s.dictTable, s.dictStandard, s.shareCondition,
+        t.category_id,t.item_id,t.catalogue_id,t.databaseName,t.resourceFormatType,t.tableShareTypeDesc,t.resourceFormatTypeDesc,
+        crc.name categoryName,cri.name itemName,crca.name catalogueName,
+        T.sourceType,T.resourceFormatCategory,T.dataRange,
+        T.catalogueLevel,T.simplify,T.matter,T.matterCode,
+        T.matterBasicCode,T.activityListCode,T.businessForCode,
+        T.deliverChannel,T.isElectronicCertificate,T.applicationScene,
+        T.isMountResource,T.registerPlatform,T.approveResult,
+        T.shareWayCategory,T.shareWayType,
+        crd.name		domainCode,
+        cric.name		industryCategoryCode,
+        cras.name		applicationSceneCode,
+        T.basicCategory,T.serviceObjectCategory,
+        T.categoryTag,T.manageWay,
+        T.sourceDeptName,T.nodeCode,T.resourceFormat,T.matterDomain,
+        T.applicationSceneDesc,T.matterDomainDesc,T.updatePeriodDesc,
+        T.dataSize,T.subjectCategory,T.morphologyCategory,
+        T.service_org_name  serviceOrgName,
+        T.service_org_code  serviceOrgCode
+    </sql>
+    <sql id="tableVersion">
+        SELECT
+            v.ID ID, v.old_id oldId, v.version_no versionno, v.is_deleted isdeleted, v.sys_name sysName,
+            v.data_resource_name dataResourceName, v.data_resource_abstract dataResourceAbstract, v.data_resource_save_type
+            dataResourceSaveType, v.database_type databaseType, v."table_name" tableName, v.org_sys_id orgSysId,
+            v.data_domain dataDomain, v.table_share_type tableShareType , v.law_depency lawDependency , v.share_status
+            shareStatus , v.open_type openType , v.update_period updatePeriod , v.open_condition openCondition ,
+            v.open_depency openDepency , v.table_share_desc tableShareDesc , v."position" "position", v.resource_code
+            resourceCode, v.table_create_time tableCreateTime, v.table_update_time tableUpdateTime, v.can_export canExport,
+            v.resource_type resourceType,v.category_id,v.item_id,v.catalogue_id,v.database_name databaseName,v.resource_format_type resourceFormatType,
+            v.table_share_type_desc tableShareTypeDesc,v.resource_format_type_desc resourceFormatTypeDesc,v.org_id,
+        v.source_type     sourceType,
+        v.resource_format_category		resourceFormatCategory,
+        v.data_range		dataRange,
+        v.catalogue_level		catalogueLevel,
+        v.simplify		simplify,
+        v.matter		matter,
+        v.matter_code		matterCode,
+        v.matter_basic_code		matterBasicCode,
+        v.activity_list_code		activityListCode,
+        v.business_for_code		businessForCode,
+        v.deliver_channel		deliverChannel,
+        v.is_electronic_certificate		isElectronicCertificate,
+        v.application_scene		applicationScene,
+        v.is_mount_resource		isMountResource,
+        v.register_platform		registerPlatform,
+        v.approve_result		approveResult,
+        v.share_way_category		shareWayCategory,
+        v.share_way_type		shareWayType,
+        v.domain_code		domainCode,
+        v.industry_category_code		industryCategoryCode,
+        v.application_scene_code		applicationSceneCode,
+        v.basic_category		basicCategory,
+        v.service_object_category		serviceObjectCategory,
+        v.category_tag		categoryTag,
+        v.manage_way		manageWay,
+        v.source_dept_name		sourceDeptName,
+        v.node_code		nodeCode,
+        v.resource_format		resourceFormat,
+        v.matter_domain		matterDomain,
+        v.application_scene_desc		applicationSceneDesc,
+        v.matter_domain_desc		matterDomainDesc,
+        v.update_period_desc		updatePeriodDesc,
+        v.data_size		dataSize,
+        v.subject_category 		subjectCategory,
+        v.morphology_category   morphologyCategory,
+        v.service_org_name,v.service_org_code
+        FROM (
+                SELECT MAX ( r.version_no ) versionNo, r.old_id
+                FROM    catalogue_sys_table_version r
+                WHERE   r.is_deleted = 0
+                <if test="request.versionNo != null">
+                    AND r.version_no &lt;= #{request.versionNo}
+                </if>
+                GROUP BY r.old_id
+            ) b
+        INNER JOIN  catalogue_sys_table_version v
+        ON          b.versionNo = v.version_no
+        AND         b.old_id = v.old_id
+        AND         v.is_deleted = 0
+    </sql>
+    <sql id="fieldVersion">
+        SELECT
+            v.ID ID, v.old_id oldId, v.version_no versionno, v.is_deleted isdeleted, v.sys_table_id sysTableId,
+            v.field_name fieldName, v.field_name_ch fieldNameCh, v.field_alias fieldAlias, v.field_type fieldType,
+            v.field_length fieldLength, v.field_encoded fieldEncoded, v.field_obtuse fieldObtuse, v.field_primary_key
+            fieldPrimaryKey, v.field_position fieldPosition, v.field_desc fieldDesc, v.field_total_log fieldTotalLog,
+            v.field_total_memory fieldTotalMemory, v.dict_state dictState, v.allow_null allowNull, v.allow_index allowIndex,
+            v.share_type shareType, v.dict_table dictTable, v.dict_standard dictStandard, v.share_condition shareCondition
+        FROM (
+            SELECT MAX ( r.version_no ) versionNo, r.old_id
+            FROM catalogue_table_field_version r
+            WHERE r.is_deleted = 0
+            <if test="request.versionNo != null">
+                AND r.version_no &lt;= #{request.versionNo}
+            </if>
+            GROUP BY r.old_id
+        ) b
+        INNER JOIN catalogue_table_field_version v ON b.versionNo = v.version_no
+        AND     b.old_id = v.old_id
+        AND     v.is_deleted = 0
+    </sql>
+    <sql id="contentRelationVersion">
+        SELECT rv.*
+        FROM (
+            SELECT MAX ( temp.version_no ) version_no, temp.old_id
+            FROM catalogue_org_content_relation_version temp
+            WHERE temp.is_deleted = 0
+            GROUP BY temp.old_id
+        ) r
+        INNER JOIN catalogue_org_content_relation_version rv ON r.version_no = rv.version_no AND r.old_id = rv.old_id
+        WHERE rv.is_deleted = 0
+        <if test="request.versionNo != null">
+            AND rv.version_no &lt;= #{request.versionNo}
+        </if>
+    </sql>
+    <select id="findCatalogueListBySysIds" resultType="com.grandlynn.spa.catalogue.dto.ExportSysCatalogueTemplateDTO">
+        SELECT
+            <include refid="findCatalogueListBySysIdsColumn"/>
+        FROM (
+            <include refid="tableVersion"/>
+            ) T
+        LEFT JOIN (
+            <include refid="fieldVersion"/>
+            ) s
+        ON  T.oldId = s.sysTableId AND s.versionno = T.versionno
+        LEFT JOIN (
+            <include refid="contentRelationVersion"/>
+            ) r
+        ON T.orgSysId = r.content_id AND content_type = 1 AND r.is_deleted = 0
+        INNER JOIN
+            catalogue_org_version ov
+        ON ( r.org_id = ov.old_id AND T.org_id = ov.old_id )
+        LEFT JOIN catalogue_resource_category crc ON crc.id=t.category_id
+        LEFT JOIN catalogue_resource_item cri ON cri.id=t.item_id
+        LEFT JOIN catalogue_resource_catalogue crca ON crca.id=t.catalogue_id
+
+        LEFT JOIN catalogue_resource_domain crd ON crd.code=t.domainCode
+        LEFT JOIN catalogue_resource_industry_category cric ON cric.code=t.industryCategoryCode
+        LEFT JOIN catalogue_resource_application_scene cras ON cras.code=t.applicationSceneCode
+        WHERE   ov.is_deleted = 0 AND ov.version_no = #{request.versionNo}
+        <if test="request.sysIds != null and request.sysIds.size() > 0">
+            AND T.orgSysId in
+            <foreach collection="request.sysIds" item = "sysId" index="index" open="(" close=")" separator=",">
+                #{sysId}
+            </foreach>
+        </if>
+        <if test="request.orgIds != null and request.orgIds.size() > 0">
+            and t.org_id in
+            <foreach collection="request.orgIds" item = "orgId" index="index" open="(" close=")" separator=",">
+                #{orgId}
+            </foreach>
+        </if>
+    </select>
+
+
+
+    <select id="getTableFieldsVersionByTaleId" resultMap="BaseResultMap">
+        SELECT
+            v.*
+        FROM
+        ( SELECT MAX ( r.version_no ) versionNo, r.old_id FROM catalogue_table_field_version r WHERE r.is_deleted = 0 GROUP BY r.old_id ) b
+        INNER JOIN catalogue_table_field_version v ON b.versionNo = v.version_no
+        AND b.old_id = v.old_id
+        WHERE
+        v.is_deleted = 0
+        <if test="request.tenantId != null">
+            AND v.tenant_id = #{request.tenantId}
+        </if>
+        <if test="request.appId != null">
+            AND v.app_id = #{request.appId}
+        </if>
+        <if test="request.versionNo != null">
+            AND v.version_no &lt;= #{request.versionNo}
+        </if>
+        <if test="request.sysTableId != null">
+            AND v.sys_table_id = #{request.sysTableId}
+        </if>
+        <if test="request.fieldName != null and request.fieldName !=''">
+            AND v.field_name like concat('%', #{request.fieldName},'%')
+        </if>
+        <if test="request.fieldNameCh != null and request.fieldNameCh !=''">
+            AND v.field_name_ch like concat('%', #{request.fieldNameCh},'%')
+        </if>
+        <if test="request.fieldState != null">
+            AND v.field_state = #{request.fieldState}
+        </if>
+        ORDER BY
+        v.old_id
+    </select>
+
+
+    <insert id="insertFromOld">
+    INSERT INTO catalogue_table_field_version (
+        old_id,
+        tenant_id,
+        app_id,
+        VERSION,
+        remark,
+        is_deleted,
+        created_by,
+        updated_by,
+        created_time,
+        updated_time,
+        sys_table_id,
+        field_name,
+        field_alias,
+        field_type,
+        field_length,
+        field_version,
+        field_state,
+        field_encoded,
+        field_obtuse,
+        field_primary_key,
+        field_position,
+        field_desc,
+        field_total_log,
+        field_total_memory,
+        intermediate,
+        version_no,
+        field_name_ch,
+        dict_state,
+        dict_table,
+        dict_standard,
+        share_type,
+        share_condition,
+        law_dependency,
+        allow_null,
+        allow_index,
+        law_dependency_attach,
+          field_precision,
+          data_level,
+          is_norm
+    ) SELECT id,
+        tenant_id,
+        app_id,
+        VERSION,
+        remark,
+        is_deleted,
+        created_by,
+        updated_by,
+        created_time,
+        updated_time,
+        sys_table_id,
+        field_name,
+        field_alias,
+        field_type,
+        field_length,
+        field_version,
+        field_state,
+        field_encoded,
+        field_obtuse,
+        field_primary_key,
+        field_position,
+        field_desc,
+        field_total_log,
+        field_total_memory,
+        0,
+        version_no,
+        field_name_ch,
+        dict_state,
+        dict_table,
+        dict_standard,
+        share_type,
+        share_condition,
+        law_dependency,
+        allow_null,
+        allow_index,
+        law_dependency_attach,
+          field_precision,
+          data_level,
+          is_norm
+    FROM
+        catalogue_table_field
+    where
+        tenant_id = #{oldDO.tenantId} and
+        app_id = #{oldDO.appId} and
+        intermediate = 1 and
+        version_no = #{oldDO.versionNo}
+    </insert>
+</mapper>

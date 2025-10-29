@@ -1,0 +1,244 @@
+<template>
+  <div>
+    <a-card :bordered="false" style="margin-top: 10px">
+     <!--  <div class="meta-card-info">
+        <a-icon type="warning" style="margin-bottom: 2px" />
+        <div style="margin-left: 10px">今日预警：200次</div>
+        <div style="margin-left: 20px">累计预警：3200次</div>
+      </div> -->
+      <!-- 查询区域 -->
+      <div class="table-page-search-wrapper">
+        <a-form layout="inline" @keyup.enter.native="searchQuery">
+          <a-row :gutter="24">
+            <!-- <a-col :md="4" :sm="8">
+            <a-form-item label="提交时间">、
+              <a-date-picker
+                v-model="queryParam.createTime"
+                placeholder="请选择日期"
+                format="YYYY-MM-DD HH:mm:ss"
+                valueFormat="YYYY-MM-DD HH:mm:ss"
+                :show-time="{ defaultValue: moment('00:00:00', 'HH:mm:ss') }"
+              ></a-date-picker>
+            </a-form-item>
+          </a-col> -->
+           <a-col :md="4" :sm="8">
+            <a-form-item label="时间">
+              <a-range-picker
+                  :value="[queryParam.StartTime?moment(queryParam.StartTime,'x').format('YYYY-MM-DD'): null, queryParam.StartTime?moment(queryParam.EndTime,'x').format('YYYY-MM-DD'):null]"
+                  value-format="YYYY-MM-DD"
+                  format="YYYY-MM-DD"
+                 
+                  @change="
+                    (e) => {
+                      $set(queryParam, 'StartTime', moment(e[0]+' 00:00:00','YYYY-MM-DD HH:mm:ss').format('x'))
+                      $set(queryParam, 'EndTime', moment(e[1]+' 23:59:59','YYYY-MM-DD HH:mm:ss').format('x'))
+                    }
+                  "
+                />
+            </a-form-item>
+          </a-col>
+            <a-col :md="4" :sm="8">
+              <a-form-item label="设备名称">
+                <j-dict-select-tag placeholder="请选择" v-model="queryParam.orgCode" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="4" :sm="8">
+              <a-form-item label="设备位置">
+                <j-dict-select-tag placeholder="请选择" v-model="queryParam.orgCode" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="4" :sm="8">
+              <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
+                <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+                <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              </span>
+            </a-col>
+          </a-row>
+        </a-form>
+      </div>
+
+      <!-- table区域-begin -->
+      <div>
+        <!-- <div class="ant-alert ant-alert-info" style="margin-bottom: 16px">
+          <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择
+          <a style="font-weight: 600">{{ selectedRowKeys.length }}</a
+          >项
+          <a style="margin-left: 24px" @click="onClearSelected">清空</a>
+        </div> -->
+
+        <a-table
+          ref="table"
+          size="middle"
+          bordered
+          rowKey="id"
+          :columns="columns"
+          :dataSource="dataSource"
+          :pagination="ipagination"
+          :loading="loading"
+          @change="handleTableChange"
+        >
+        <span slot="action" slot-scope="text, record">
+          <a @click="handleVideoShow(record)">调阅视频</a>
+
+        </span>
+        </a-table>
+      </div>
+      <!-- table区域-end -->
+
+      <!-- 表单区域 -->
+      <!-- <repair-complaint-modal ref="modalForm" @ok="modalFormOk"></repair-complaint-modal> -->
+    </a-card>
+    <video-flv ref="videoFlvModal" ></video-flv>
+  </div>
+</template>
+
+<script>
+// import RepairComplaintModal from './modules/RepairComplaintModal'
+import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+import JDictSelectTag from '@/components/dict/JDictSelectTag'
+import moment from 'moment'
+import { postAction } from '../../api/manage'
+import VideoFlv from '../modules/generalMonitoring/videoFlv.vue'
+export default {
+  name: 'DataAnalysisAlarm',
+  mixins: [JeecgListMixin],
+  components: {
+    JDictSelectTag,
+    VideoFlv,
+    // JDate,
+    // RepairComplaintModal,
+  },
+  data() {
+    return {
+      description: '数据分析告警页面',
+      // 表头
+      columns: [
+        {
+          title: '#',
+          dataIndex: 'index',
+          key: 'index',
+          align: 'center',
+          customRender: function (t, r, index) {
+            return parseInt(index) + 1
+          },
+        },
+        {
+          title: '摄像头ID',
+          align: 'center',
+          dataIndex: 'CameraID',
+        },
+        {
+          title: '告警抓拍ID',
+          align: 'center',
+          dataIndex: 'CaptureID',
+        },
+        {
+          title: '人群数量',
+          align: 'center',
+          dataIndex: 'CrowdNum',
+        },
+        {
+          title: '警告阈值',
+          align: 'center',
+          dataIndex: 'CrowdThreshol',
+        },
+        {
+          title: '全景图',
+          align: 'center',
+          dataIndex: 'PanoramicUrl',
+        },
+        {
+          title: '坐标',
+          align: 'center',
+          customRender: function (t, r, index) {
+            return <div domPropsInnerHTML={r.periodList.reduce((prev,cur,index,arr)=>{
+                  return prev+cur.X+','+cur.Y +'<br/>'
+              },'')}></div> 
+          },
+        },
+        {
+          title: '状态',
+          align: 'center',
+          dataIndex: 'Status',
+        },
+
+        {
+          title: '操作',
+          dataIndex: 'action',
+          align: 'center',
+          scopedSlots: { customRender: 'action' },
+        },
+      ],
+
+      url: {
+        list: '/alarm/dataAnalysis/getCrowdGatheringAlarmList',
+      },
+    }
+  },
+  methods: {   
+    moment,
+    loadData(arg) {
+      if(!this.url.list){
+        this.$message.error("请设置url.list属性!")
+        return
+      }
+      //加载数据 若传入参数1则加载第一页的内容
+      if (arg === 1) {
+        this.ipagination.current = 1;
+      }
+      var params = this.getQueryParams();//查询条件
+      this.loading = true;
+      postAction(this.url.list, params).then((res) => {
+        if (res.success) {
+          let result=JSON.parse(res.message||'{}')
+          this.dataSource = result.CrowdGatheringAIarmList;
+          this.ipagination.total = result.Total;
+        }
+        if(res.code===510){
+          this.$message.warning(res.message)
+        }
+        this.loading = false;
+      })
+    },
+    handleVideoShow(record){
+        this.$refs.videoFlvModal.show(record)
+      },
+    handleProcess(record) {
+      // this.$refs.modalForm.edit(record)
+      // this.$refs.modalForm.title = '详情'
+    },
+    // onRangeDateChange(value) {
+    //   console.log(value)
+    //   console.log(this.queryParam)
+    //   this.queryParam = value
+    //     ? {
+    //         ...this.queryParam,
+    //         createTime_begin: value[0],
+    //         createTime_end: value[1],
+    //       }
+    //     : {
+    //         ...this.queryParam,
+    //         createTime_begin: null,
+    //         createTime_end: null,
+    //       }
+    // },
+  },
+}
+</script>
+<style lang="less" scoped>
+@import '~@assets/less/common.less';
+
+.meta-card-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+
+  > div {
+    display: flex;
+    align-items: center;
+    // font-size: 18px;
+    font-weight: 600;
+    margin-left: 20px;
+  }
+}
+</style>

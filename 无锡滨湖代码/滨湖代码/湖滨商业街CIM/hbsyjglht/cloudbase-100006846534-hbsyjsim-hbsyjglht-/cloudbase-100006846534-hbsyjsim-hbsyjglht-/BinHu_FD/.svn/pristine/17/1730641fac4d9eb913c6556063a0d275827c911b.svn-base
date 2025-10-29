@@ -1,0 +1,280 @@
+<template>
+  <a-card :bordered="false">
+
+    <!-- 查询区域 -->
+    <div class="table-page-search-wrapper">
+      <a-form layout="inline" @keyup.enter.native="searchQuery">
+        <a-row :gutter="24">
+
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="设备名称">
+              <a-input placeholder="请输入关键字" v-model="queryParam.channelName"></a-input>
+            </a-form-item>
+          </a-col>
+<!--          <a-col :xl="6" :lg="7" :md="8" :sm="24">-->
+<!--            <a-form-item label="系统">-->
+<!--              &lt;!&ndash; <j-dict-select-tag v-model="queryParam.systemType" dictCode="SYSTEM_TYPE"></j-dict-select-tag>    &ndash;&gt;    -->
+<!--              <a-select v-model="queryParam.systemType" :options="dict.systemCode"></a-select>     -->
+<!--            </a-form-item>-->
+<!--          </a-col>-->
+<!--        <template v-if="toggleSearchStatus">-->
+<!--          <a-col :xl="6" :lg="7" :md="8" :sm="24">-->
+<!--            <a-form-item label="编号">-->
+<!--              <a-input placeholder="请输入编号" v-model="queryParam.indexCode"></a-input>-->
+<!--            </a-form-item>-->
+<!--          </a-col>-->
+<!--          &lt;!&ndash; <a-col :xl="6" :lg="7" :md="8" :sm="24">-->
+<!--            <a-form-item label="区域">-->
+<!--           -->
+<!--             <a-select v-model="queryParam.position" :options="dict.areaCode"></a-select>     -->
+<!--            </a-form-item>-->
+<!--          </a-col> &ndash;&gt;-->
+<!--          </template>-->
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a-button type="primary" @click="handleAdd"   icon="plus" style="margin-left: 8px">添加</a-button>
+<!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
+<!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
+<!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
+<!--              </a>-->
+            </span>
+          </a-col>
+
+        </a-row>
+      </a-form>
+    </div>
+
+    <!-- 操作按钮区域 -->
+<!--     <div class="table-operator">-->
+<!--      -->
+<!--&lt;!&ndash;      <a-button type="primary" icon="download" @click="handleExportXls('视频流信息')">导出</a-button>&ndash;&gt;-->
+<!--&lt;!&ndash;      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">&ndash;&gt;-->
+<!--&lt;!&ndash;        <a-button type="primary" icon="import">导入</a-button>&ndash;&gt;-->
+<!--&lt;!&ndash;      </a-upload>&ndash;&gt;-->
+<!--    </div>-->
+
+    <!-- table区域-begin -->
+    <div>
+      <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
+        <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{ selectedRowKeys.length }}</a>项
+        <a style="margin-left: 24px" @click="onClearSelected">清空</a>
+      </div>
+
+      <a-table
+        ref="table"
+        size="middle"
+        bordered
+        rowKey="id"
+        :columns="columns"
+        :dataSource="dataSource"
+        :pagination="ipagination"
+        :loading="loading"
+        class="j-table-force-nowrap"
+        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+        @change="handleTableChange">
+
+        <span slot="action" slot-scope="text, record">
+          <a @click="handleEdit(record)" >编辑</a>
+          <a-divider type="vertical" />
+           <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+                  <a>删除</a>
+           </a-popconfirm>
+
+        </span>
+
+      </a-table>
+    </div>
+    <!-- table区域-end -->
+   <!--  <div class="chart-button">
+      <div class="list">
+        <div   v-for="item in dict.areaCode" @click="handleChartAreaCode(item)" :class="'item '+(selectedAreaCode==item.value?'selected':'')" :key="item.value">
+        {{item.text}}
+        </div>
+      </div>
+      <camera-chart :data="chartData"/>
+    </div> -->
+    
+    <video-flv ref="videoFlvModal"></video-flv>
+    <!-- 表单区域 -->
+     <camera-modal ref="modalForm" @ok="modalFormOk"></camera-modal>
+  </a-card>
+</template>
+
+<script>
+  import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import '@/assets/less/TableExpand.less'
+  import CameraModal from "./modules/CameraModal"
+  import { getAction,postAction,deleteAction } from '../../../api/manage'
+
+  export default {
+    name: "VideoList",
+    mixins:[JeecgListMixin],
+    components: {
+      CameraModal
+},
+    data () {
+      return {
+        description: '视频流信息管理页面',
+        // 表头
+        
+        selectedAreaCode:'',
+        chartData:[],
+        dict:{systemCode:[],areaCode:[]},
+        columns: [
+          {
+            title: '#',
+            dataIndex: '',
+            key:'rowIndex',
+            width:60,
+            align:"center",
+            customRender:function (t,r,index) {
+              return parseInt(index)+1;
+            }
+           },
+		   {
+            title: '设备名称',
+            align:"center",
+            dataIndex: 'channelName'
+           },
+      {
+            title: '编码',
+            align:"center",
+            dataIndex: 'id'
+          },
+		   {
+            title: '经度',
+            align:"center",
+            dataIndex: 'gpsx'
+           },
+		   {
+            title: '纬度',
+            align:"center",
+            dataIndex: 'gpsy'
+           },
+		   // {
+       //      title: '位置',
+       //      align:"center",
+       //      dataIndex: 'position'
+       //     },
+		   // {
+       //      title: '业态区域',
+       //      align:"center",
+       //      dataIndex: 'regionIndexCode'
+       //     },
+		   {
+            title: '是否在线',
+            align:"center",
+            /* dataIndex: 'online' */
+            customRender:function (t,r,index) {
+              switch(r.status){
+                case 1: return '在线'
+                case 0: return '离线'
+
+              }
+
+
+            }
+           },
+          {
+            title: '操作',
+            dataIndex: 'action',
+            align:"center",
+            scopedSlots: { customRender: 'action' },
+          }
+        ],
+		url: {
+          list: "/monitor/video/list",
+          delete:'/monitor/video/delete',
+          exportXlsUrl: "monitor/video/exportXls",
+          importExcelUrl: "monitor/video/importExcel",
+       },
+    }
+  },
+  computed: {
+    importExcelUrl: function(){
+      return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`;
+    }
+  },
+  created(){
+   /*  this.loadVideoStatistic() */
+  },
+    methods: {
+      handleDelete: function (id) {
+        var that = this;
+        deleteAction(that.url.delete, {id: id}).then((res) => {
+          if (res.success) {
+            that.$message.success(res.message);
+            that.loadData();
+          } else {
+            that.$message.warning(res.message);
+          }
+        });
+      },
+      loadVideoStatistic(position){
+        postAction(this.url.videoStatistic,{position}).then(res=>{
+          if(res.success){
+            this.chartData=res.result.map(item=>{
+              return {type:item.type,value:Number(item.value)}
+            })
+           // this.selectedAreaCode=this.areaCode[0].value
+          }
+        })
+      },
+      handleVideoShow(record){
+        this.$refs.videoFlvModal.show(record)
+      },
+      handleChartAreaCode(record){       
+        this.selectedAreaCode=(this.selectedAreaCode==record.value?null:record.value)
+        //这里触发查询
+        this.loadVideoStatistic(record.value)
+      },
+      initDictConfig(){
+       
+        //type：1  系统字典
+        getAction('/monitor/video/typeDict',{type:1}).then(res=>{
+          if(res.success){
+            this.dict.systemCode=res.result
+           // this.selectedAreaCode=this.areaCode[0].value
+          }
+        })
+        getAction(this.url.positionDict).then(res=>{
+          if(res.success){
+            this.dict.areaCode=res.result.map(item=>{
+              return {label:item.value,value:item.value,text:item.value}
+            })
+           // this.selectedAreaCode=this.areaCode[0].value
+          }
+        })
+        /* initDictOptions('AREA_CODE').then(res=>{
+          console.log(res);
+          if(res.success){
+            this.areaCode=res.result
+           // this.selectedAreaCode=this.areaCode[0].value
+          }
+        }) */
+      }
+    }
+  }
+</script>
+<style lang="less" scoped>
+  @import '~@assets/less/common.less';
+
+  .chart-button{
+    background-color: rgb(0, 0, 88);
+    .list{
+    display: flex;
+    justify-content: flex-end;
+    padding: 5px 5px 0 0;
+    .item{
+      color: #fff;
+      padding: 5px 25px;
+    border: 1px solid #fff;
+    }
+    .selected{
+      background-color: rgb(65, 199, 219);
+    }
+  }
+}
+</style>

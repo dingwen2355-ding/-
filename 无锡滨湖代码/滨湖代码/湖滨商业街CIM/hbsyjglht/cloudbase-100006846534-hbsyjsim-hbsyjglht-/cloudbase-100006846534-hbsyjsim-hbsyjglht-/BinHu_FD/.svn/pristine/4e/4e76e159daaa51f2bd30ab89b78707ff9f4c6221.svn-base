@@ -1,0 +1,95 @@
+<template>
+  <j-modal
+    :title="title"
+    :width="800"
+    :visible="visible"
+    :confirmLoading="confirmLoading"
+    switchFullscreen
+    @ok="handleOk"
+    @cancel="handleCancel"
+    cancelText="关闭"
+    :ok-button-props="{ props: { disabled: true } }"
+  >
+    <a-spin :spinning="confirmLoading">
+      <a-form-model ref="form" :model="model" v-bind="layout" :rules="validatorRules">
+        <a-form-model-item label="一氧化碳" required prop="CO">
+          <a-input disabled v-model="model.CO" />
+        </a-form-model-item>
+        <a-form-model-item label="二氧化碳" required prop="CO2">
+          <a-input disabled v-model="model.CO2" />
+        </a-form-model-item>
+        <a-form-model-item label="臭氧" required prop="O3">
+          <a-input disabled v-model="model.O3" />
+        </a-form-model-item>
+        <a-form-model-item label="甲醛" required prop="HCHO">
+          <a-input disabled v-model="model.HCHO" />
+        </a-form-model-item>
+        <a-form-model-item label="pm1" required prop="PM1">
+          <a-input disabled v-model="model.PM1" />
+        </a-form-model-item>
+        <a-form-model-item label="pm10" required prop="PM10">
+          <a-input disabled v-model="model.PM10" />
+        </a-form-model-item>
+        <a-form-model-item label="pm2.5" required prop="PM25">
+          <a-input disabled v-model="model.PM25" />
+        </a-form-model-item>
+        <a-form-model-item label="温度" required prop="TEMP">
+          <a-input disabled v-model="model.TEMP" />
+        </a-form-model-item>
+        <a-form-model-item label="湿度" required prop="HUMI">
+          <a-input disabled v-model="model.HUMI" />
+        </a-form-model-item>
+        <a-form-model-item label="总挥发性有机化合物" required prop="TVOC">
+          <a-input disabled v-model="model.TVOC" />
+        </a-form-model-item>
+      </a-form-model>
+    </a-spin>
+  </j-modal>
+</template>
+
+<script>
+import { httpAction } from '@/api/manage'
+
+export default {
+  name: 'EnvironmentModal',
+  data() {
+    return {
+      title: '操作',
+      visible: false,
+      model: {},
+      layout: {
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 5 },
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 16 },
+        },
+      },
+      confirmLoading: false,
+      validatorRules: {},
+    }
+  },
+  created() {},
+  methods: {
+    add() {
+      this.edit({})
+    },
+    edit(record) {
+      this.model = Object.assign({}, record)
+      this.visible = true
+    },
+    close() {
+      this.$emit('close')
+      this.visible = false
+    },
+    handleOk() {},
+    handleCancel() {
+      this.close()
+    },
+  },
+}
+</script>
+
+<style lang="less" scoped></style>

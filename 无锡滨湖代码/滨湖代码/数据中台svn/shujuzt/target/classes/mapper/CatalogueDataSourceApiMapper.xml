@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.CatalogueDataSourceApiMapper">
+
+    <resultMap id="BaseResultMap" type="com.grandlynn.spa.catalogue.entity.CatalogueDataSourceApiDO">
+        <result property="id" column="id" />
+        <result property="tenantId" column="tenant_id" />
+        <result property="version" column="version" />
+        <result property="appId" column="app_id" />
+        <result property="remark" column="remark" />
+        <result property="deleted" column="is_deleted" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdTime" column="created_time" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedTime" column="updated_time" />
+
+        <result property="dataSourceId" column="data_source_id" />
+        <result property="apiAlias" column="api_alias" />
+        <result property="apiUrl" column="api_url" />
+        <result property="apiType" column="api_type" />
+        <result property="apiBody" column="api_body"  typeHandler="com.grandlynn.spa.catalogue.common.utils.PgJson2ObjTypeHandler"/>
+        <result property="apiHeader" column="api_header" />
+        <result property="apiResponse" column="api_response"  typeHandler="com.grandlynn.spa.catalogue.common.utils.PgJson2ObjTypeHandler"/>
+    </resultMap>
+
+    <select id="selectByTableId" resultType="com.grandlynn.spa.catalogue.entity.CatalogueDataSourceApiDO">
+        select
+            sa.id id,
+            sa.api_alias apiAlias,
+            sa.api_url apiUrl,
+            sa.api_type apiType,
+            sa.api_body apiBody,
+            sa.api_header apiHeader,
+            sa.api_response apiResponse,
+            sa.remark remark
+        from catalogue_data_source_api sa
+        left join  catalogue_data_source s on s.id = sa.data_source_id
+        where sa.is_deleted = 0
+        and s.is_deleted = 0
+        and s.table_id = #{tableId}
+    </select>
+</mapper>

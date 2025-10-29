@@ -1,0 +1,254 @@
+<template>
+  <div>
+    <a-drawer title="预约记录" closable :width="1100" :visible="visible" @close="onClose">
+      <!-- 查询区域 -->
+      <div class="table-page-search-wrapper">
+        <a-form layout="inline" @keyup.enter.native="searchQuery">
+          <a-row :gutter="24">
+            <!-- <a-col :md="4" :sm="8">
+            <a-form-item label="提交时间">、
+              <a-date-picker
+                v-model="queryParam.createTime"
+                placeholder="请选择日期"
+                format="YYYY-MM-DD HH:mm:ss"
+                valueFormat="YYYY-MM-DD HH:mm:ss"
+                :show-time="{ defaultValue: moment('00:00:00', 'HH:mm:ss') }"
+              ></a-date-picker>
+            </a-form-item>
+          </a-col> -->
+            <a-col :md="4" :sm="8">
+              <a-form-item label="监控点">
+                <j-dict-select-tag placeholder="请选择" v-model="queryParam.orgCode" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="4" :sm="8">
+              <a-form-item label="身份">
+                <j-dict-select-tag placeholder="请选择" v-model="queryParam.orgCode" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="4" :sm="8">
+              <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
+                <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+                <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              </span>
+            </a-col>
+          </a-row>
+        </a-form>
+      </div>
+
+      <!-- table区域-begin -->
+      <div>
+        <div class="ant-alert ant-alert-info" style="margin-bottom: 16px">
+          <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择
+          <a style="font-weight: 600">{{ selectedRowKeys.length }}</a
+          >项
+          <a style="margin-left: 24px" @click="onClearSelected">清空</a>
+        </div>
+
+        <a-table
+          ref="table"
+          size="middle"
+          bordered
+          rowKey="id"
+          :columns="columns"
+          :dataSource="data"
+          :pagination="ipagination"
+          :loading="loading"
+          :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+          @change="handleTableChange"
+        >
+          <!-- 字符串超长截取省略号显示-->
+          <!-- <span slot="esContent" slot-scope="text">
+          <j-ellipsis :value="text" :length="10" />
+        </span> -->
+
+          <span slot="image" slot-scope="text, record">
+            <a-avatar :src="record.captureImage" shape="square" :size="64" />
+          </span>
+          <span slot="action" slot-scope="text, record">
+            <a href="javascript:;" @click="handleTrack(record)">查看轨迹</a>
+            <!-- <a-divider type="vertical" /> -->
+            <!-- <a href="javascript:;" @click="handleProcess(record)">进出记录</a> -->
+          </span>
+        </a-table>
+      </div>
+      <!-- table区域-end -->
+
+      <!-- 表单区域 -->
+      <!-- <repair-complaint-modal ref="modalForm" @ok="modalFormOk"></repair-complaint-modal> -->
+    </a-drawer>
+    <!-- <a-card :bordered="false">
+      
+    </a-card> -->
+  </div>
+</template>
+
+<script>
+// import RepairComplaintModal from './modules/RepairComplaintModal'
+import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+import JDictSelectTag from '@/components/dict/JDictSelectTag'
+// import JEllipsis from '@/components/jeecg/JEllipsis'
+import moment from 'moment'
+
+export default {
+  name: 'BookingListDrawer',
+  mixins: [JeecgListMixin],
+  components: {
+    // JEllipsis,
+    JDictSelectTag,
+    // JDate,
+    // RepairComplaintModal,
+  },
+  props: {
+    showDrawer: Boolean,
+    username: String
+  },
+  // watch: {
+  //   showDrawer(newVal) {
+  //     console.log(newVal)
+  //   },
+  // },
+  computed: {
+    visible: {
+      get() {
+        return this.showDrawer
+      },
+      set() {},
+    },
+  },
+  data() {
+    return {
+      description: '访客预约记录页面',
+      // 表头
+      columns: [
+        {
+          title: '#',
+          dataIndex: 'index',
+          key: 'index',
+          align: 'center',
+          customRender: function (t, r, index) {
+            return parseInt(index) + 1
+          },
+        },
+        {
+          title: '抓拍照片',
+          align: 'center',
+          dataIndex: 'captureImage',
+          scopedSlots: { customRender: 'image' },
+        },
+        {
+          title: '监控点',
+          align: 'center',
+          dataIndex: 'monitoryPoint',
+        },
+        {
+          title: '抓拍时间',
+          align: 'center',
+          dataIndex: 'captureTime',
+        },
+        {
+          title: '姓名',
+          align: 'center',
+          dataIndex: 'name',
+        },
+        {
+          title: '身份',
+          align: 'center',
+          dataIndex: 'identity',
+        },
+        {
+          title: '体温',
+          align: 'center',
+          dataIndex: 'temperature',
+        },
+        {
+          title: '操作',
+          dataIndex: 'action',
+          align: 'center',
+          scopedSlots: { customRender: 'action' },
+        },
+      ],
+      // 模拟数据
+      data: [
+        {
+          id: '001',
+          captureImage: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
+          monitoryPoint: '东风出口',
+          captureTime: '2022-08-25 12:00',
+          name: '张三',
+          identity: '办公人员',
+          temperature: '38.5°C',
+        },
+        {
+          id: '002',
+          captureImage: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
+          monitoryPoint: '东风出口',
+          captureTime: '2022-08-25 12:00',
+          name: '李四',
+          identity: '办公人员',
+          temperature: '38.5°C',
+        },
+        {
+          id: '003',
+          captureImage: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png',
+          monitoryPoint: '东风出口',
+          captureTime: '2022-08-25 12:00',
+          name: '未知',
+          identity: '办公人员',
+          temperature: '38.5°C',
+        },
+      ],
+      url: {
+        list: '/booking/record/page',
+      },
+      queryParam: {
+        username: this.username,
+      },
+      // visible: false,
+    }
+  },
+  methods: {
+    moment,
+    handleTrack(record) {
+      // this.$refs.modalForm.edit(record)
+      // this.$refs.modalForm.title = '详情'
+    },
+    onClose() {
+      // this.visible = false
+      this.$emit('close')
+    },
+    // onRangeDateChange(value) {
+    //   console.log(value)
+    //   console.log(this.queryParam)
+    //   this.queryParam = value
+    //     ? {
+    //         ...this.queryParam,
+    //         createTime_begin: value[0],
+    //         createTime_end: value[1],
+    //       }
+    //     : {
+    //         ...this.queryParam,
+    //         createTime_begin: null,
+    //         createTime_end: null,
+    //       }
+    // },
+  },
+}
+</script>
+<style lang="less" scoped>
+@import '~@assets/less/common.less';
+
+// .meta-card-info {
+//   display: flex;
+//   align-items: center;
+//   margin-bottom: 20px;
+
+//   > div {
+//     display: flex;
+//     align-items: center;
+//     // font-size: 18px;
+//     font-weight: 600;
+//     margin-left: 20px;
+//   }
+// }
+</style>

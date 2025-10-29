@@ -1,0 +1,13 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: 1024MB
+
+# Minio配置
+minio:
+  url: http://1.94.18.135:9001
+  accessKey: 001g6ARE1D5XymEqt7XB
+  secretKey: j1fZgZELaxlhFtfWMUt1fyeEMuzDE3q78a7cflui
+  bucketName: wmcs
+  bucketNameText: wmcstext

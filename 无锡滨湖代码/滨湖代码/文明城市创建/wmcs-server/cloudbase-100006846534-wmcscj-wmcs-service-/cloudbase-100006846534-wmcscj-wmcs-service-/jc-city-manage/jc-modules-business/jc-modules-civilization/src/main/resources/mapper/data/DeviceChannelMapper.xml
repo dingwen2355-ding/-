@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.civilization.data.mapper.DeviceChannelMapper">
+
+    <delete id="deleteAll">
+        delete from data_device_channel
+    </delete>
+
+
+    <select id="selectPageCustom" resultType="cn.wxgis.jc.civilization.data.resp.DataDeviceChannelResponse">
+        select * from (
+            select dc.*, dt.name org_name, dt.region_code, dt.region_all_name, pd.id check_channel
+            from data_device_channel dc
+            left join data_device_tree dt on dt.id = dc.org_code
+            left join data_check_points_device pd on pd.channel_id = dc.channel_id
+        ) t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+
+    <select id="selectPageCustomByRegionCode"
+            resultType="cn.wxgis.jc.civilization.data.resp.DataDeviceChannelResponse">
+        select * from (
+            select concat(p1.name, ' -> ', p2.name) org_parent_name, dc.*, dt.name org_name, dt.region_code, dt.region_all_name, pd.id check_channel, dt.region_code dept_id, dd.parent_id dept_parent_id
+            from data_device_channel dc
+            left join data_device_tree dt on dt.id = dc.org_code
+            left join data_device_tree p2 on p2.id = dt.parent_id
+            left join data_device_tree p1 on p1.id = p2.parent_id
+            left join data_check_points_device pd on pd.channel_id = dc.channel_id
+            left join sys_dept dd on dd.id = dt.region_code
+        ) t
+        <where>
+            ${ew.sqlSegment}
+            ${params.dataScope}
+        </where>
+    </select>
+
+    <select id="listByChannelIdIds" resultType="cn.wxgis.jc.civilization.data.vo.ChannelVo">
+        select c.id channel_id, c.name channel_name, p.id point_id, p.`name` point_name,
+               pt.id point_type_id, pt.name point_type_name,  t.id tree_id, t.`name` tree_name
+        from data_device_channel c
+        left join data_device_tree t on t.id = c.org_code
+        left join data_check_points_device pd on pd.channel_id = c.channel_id
+        left join data_check_points p on p.id = pd.points_id
+        left join data_check_points_type pt on pt.id = p.type_id
+        where c.id in
+        <foreach collection="channelIds" item="channelId" index="index" open="(" close=")" separator=",">
+            #{channelId}
+        </foreach>
+    </select>
+
+</mapper>

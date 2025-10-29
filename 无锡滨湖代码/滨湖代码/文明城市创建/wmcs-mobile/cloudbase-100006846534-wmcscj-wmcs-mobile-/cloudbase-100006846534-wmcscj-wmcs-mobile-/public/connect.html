@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>
+    </title>
+</head>
+
+<body>
+    <div id="app"></div>
+</body>
+<script>
+    let appid = "ww29a8dfb1be6173c1";
+    let redirect_uri = "http%3A%2F%2F2.21.137.224%3A8080%2Fwechat%2F";
+    let agentid = "1000428";
+    let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base&agentid=${agentid}&state=#wechat_redirect`
+    window.location.href = url
+</script>
+
+</html>

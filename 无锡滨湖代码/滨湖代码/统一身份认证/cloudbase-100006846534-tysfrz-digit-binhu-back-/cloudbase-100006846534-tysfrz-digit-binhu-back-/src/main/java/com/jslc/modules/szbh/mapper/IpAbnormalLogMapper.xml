@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.IpAbnormalLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="ipAbnormalLogResultMap" type="com.jslc.modules.szbh.entity.IpAbnormalLog">
+        <result column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="request_ip" property="requestIp"/>
+        <result column="request_interface" property="requestInterface"/>
+        <result column="interface_type" property="interfaceType"/>
+        <result column="request_time" property="requestTime"/>
+        <result column="result" property="result"/>
+        <result column="app_id" property="appId"/>
+    </resultMap>
+
+
+    <select id="selectIpAbnormalLogPage" resultMap="ipAbnormalLogResultMap">
+        select * from bh_ip_abnormal_log where is_deleted = 0
+    </select>
+
+</mapper>

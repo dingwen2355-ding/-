@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.BhDeptSyncMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="bhDeptSyncResultMap" type="com.jslc.modules.szbh.entity.BhDeptSync">
+        <result column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="name" property="name"/>
+        <result column="type" property="type"/>
+        <result column="sort" property="sort"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="party_user_limit" property="partyUserLimit"/>
+        <result column="full_name" property="fullName"/>
+        <result column="short_name" property="shortName"/>
+        <result column="brief_introduction" property="briefIntroduction"/>
+        <result column="domain_name" property="domainName"/>
+        <result column="address" property="address"/>
+        <result column="telephone" property="telephone"/>
+        <result column="organization_code" property="organizationCode"/>
+    </resultMap>
+
+
+    <resultMap id="treeNodeResultMap" type="com.jslc.modules.szbh.vo.SystemTreeNode">
+        <id column="id" property="id"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="title" property="title"/>
+        <result column="value" property="value"/>
+        <result column="key" property="key"/>
+        <result column="has_children" property="hasChildren"/>
+        <result column="nodeType" property="nodeType"/>
+        <result column="parentKey" property="parentKey"/>
+        <result column="parentTitle" property="parentTitle"/>
+        <result column="deptType" property="deptType"/>
+        <result column="tenant_id" property="tenantId"/>
+    </resultMap>
+
+    <update id="updateAccessToken" >
+        update bh_system_param set value = #{token}, time = #{time} where name = #{key}
+    </update>
+
+    <select id="getAccessToken" resultType="java.util.HashMap">
+        select * from bh_system_param where name = #{key}
+    </select>
+    <select id="getBhDeptSynTree" resultMap="treeNodeResultMap">
+        select distinct bds.id,bds.parent_id,bds.name title,bds.id "key",bds.id "value",bds.sort "deptType",1 nodeType,"" parentKey,"" parentTitle
+        from bh_dept_sync bds
+        order by sort desc,id asc
+    </select>
+
+    <update id="removeAllDeptSync" >
+        delete from bh_dept_sync
+    </update>
+
+    <select id="getMissDeptIds" resultType="java.lang.Long">
+        select distinct major_dept from bh_user where major_dept not in (select dept_id from bh_dept) and is_deleted = 0
+    </select>
+</mapper>

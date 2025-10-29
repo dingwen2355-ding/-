@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.BhSmsSendMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="bhSmsSendResultMap" type="com.jslc.modules.szbh.entity.BhSmsSend">
+        <result column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="notice_person" property="noticePerson"/>
+        <result column="mobile" property="mobile"/>
+        <result column="notice_time" property="noticeTime"/>
+        <result column="event_type" property="eventType"/>
+        <result column="application" property="application"/>
+        <result column="content" property="content"/>
+        <result column="result" property="result"/>
+        <result column="app_id" property="appId"/>
+    </resultMap>
+
+    <resultMap id="bhSmsSendVOResultMap" type="com.jslc.modules.szbh.vo.BhSmsSendVO" extends="bhSmsSendResultMap">
+
+    </resultMap>
+
+
+    <select id="getList" resultMap="bhSmsSendVOResultMap">
+        select bss.* ,bam.name as appName from bh_sms_send bss
+        left join bh_application_management bam on bam.app_id = bss.app_id
+        where 1 = 1
+        <if test="start != null">
+            and bss.notice_time >= #{start}
+        </if>
+        <if test="end != null">
+            and bss.notice_time &lt;= #{end}
+        </if>
+        <if test="param != null and param !=''">
+            and (
+            bss.notice_person like concat('%',#{param},'%') or
+            bss.mobile like concat('%',#{param},'%') or
+            bss.content like concat('%',#{param},'%') or
+            bss.event_type like concat('%',#{param},'%') or
+            bss.application like concat('%',#{param},'%')
+            )
+        </if>
+        <if test="result != null ">
+            and bss.result = #{result}
+        </if>
+        order by bss.notice_time desc
+    </select>
+
+
+    <select id="getRecordDate" resultMap="bhSmsSendVOResultMap">
+        select bam.id as appId ,bam.name as appName, bss.*
+        from bh_sms_send bss
+        inner join bh_application_management bam on bam.app_id = bss.app_id and bam.is_deleted = 0
+        inner join bh_dept bd on (cast(bam.dept_id as char)  =  bd.dept_id)
+        where bd.is_deleted = 0
+        <if test="startTime != null and endTime != null">
+            and bss.create_time between #{startTime} and #{endTime}
+        </if>
+        <if test="resultType != null">
+            and bss.result = #{resultType}
+        </if>
+        <if test="deptId != null">
+            and bd.id in
+            <foreach collection="deptId" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+
+        </if>
+
+        <if test="appId != null">
+            and bam.id in
+            <foreach collection="appId" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+    <select id="getAppIds" resultType="com.jslc.modules.szbh.vo.HeadAppInfoVO">
+        select bam.app_id as appId ,bam.name as appName
+        from bh_sms_send bss
+        inner join bh_application_management bam on bam.app_id = bss.app_id
+        inner join bh_dept bd on (cast(bam.dept_id as char)  =  bd.dept_id)
+        where bd.is_deleted = 0
+        <if test="startTime != null and endTime != null">
+            and bss.create_time between #{startTime} and #{endTime}
+        </if>
+        <if test="resultType != null">
+            and bss.result = #{resultType}
+        </if>
+        <if test="deptId != null">
+            and bd.id in
+            <foreach collection="deptId" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+
+        </if>
+
+        <if test="appId != null">
+            and bam.id in
+            <foreach collection="appId" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getAppId" resultType="com.jslc.modules.szbh.vo.HeadAppInfoVO">
+        select distinct app_id as appId , name as appName
+        from bh_application_management
+        where is_deleted = 0
+        <if test="appId != null">
+            and id in
+            <foreach collection="appId" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+    <select id="getApp" resultType="com.jslc.modules.szbh.vo.HeadAppInfoVO">
+        select  distinct bam.app_id as appId , bam.name as appName
+        from  bh_application_management bam
+        where bam.is_deleted = 0
+        <if test="appId != null">
+            and bam.id in
+            <foreach collection="appId" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getUserSmsList" resultMap="bhSmsSendVOResultMap">
+        select bss.* from bh_sms_send bss
+        inner join bh_user bu on bu.major_mobile = bss.mobile
+        where 1 = 1
+        <if test="account!=null and account !=''">
+            and bu.account = #{account}
+        </if>
+        <if test="start!=null">
+            and bss.notice_time >= #{start}
+        </if>
+        <if test="end!=null">
+            and bss.notice_time &lt;= #{end}
+        </if>
+        order by bss.notice_time desc
+    </select>
+    <select id="getAllSendEchars" resultMap="bhSmsSendVOResultMap">
+        select bam.app_id as appId ,bam.name as appName,bss.*
+        from bh_sms_send bss
+        inner join bh_application_management bam on bam.app_id = bss.app_id
+        where bam.is_deleted = 0
+        <if test="start != null and end != null">
+            and bss.create_time between #{start} and #{end}
+        </if>
+    </select>
+    <select id="getSMSRecord" resultMap="bhSmsSendVOResultMap">
+        select bss.*   from  bh_sms_send bss
+        inner join bh_application_management bam on bam.app_id = bss.app_id
+        where bam.is_deleted = 0
+        <if test="start != null and end != null">
+            and bss.create_time between #{start} and #{end}
+        </if>
+    </select>
+</mapper>

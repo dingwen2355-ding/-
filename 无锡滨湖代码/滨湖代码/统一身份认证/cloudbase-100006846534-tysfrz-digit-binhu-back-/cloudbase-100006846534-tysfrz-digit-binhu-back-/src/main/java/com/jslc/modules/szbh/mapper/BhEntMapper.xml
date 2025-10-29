@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.BhEntMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="bhEntResultMap" type="com.jslc.modules.szbh.entity.BhEnt">
+        <result column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="ent_name" property="entName"/>
+        <result column="industry" property="industry"/>
+        <result column="is_local" property="isLocal"/>
+        <result column="contacts" property="contacts"/>
+        <result column="mobile" property="mobile"/>
+        <result column="intro" property="intro"/>
+    </resultMap>
+
+
+    <resultMap id="bhEntVOResultMap" type="com.jslc.modules.szbh.vo.BhEntVO" extends="bhEntResultMap">
+
+    </resultMap>
+
+
+    <select id="selectBhEntPage" resultMap="bhEntVOResultMap">
+        select be.*,bdt.dict_value as industryName   from bh_ent be
+        left join blade_dict bdt on bdt.dict_key = be.industry and bdt.code = 'industry' and bdt.is_deleted = 0
+        where be.is_deleted = 0
+        <if test="key != null and key !=''">
+            and be.ent_name like concat('%',#{key},'%')
+        </if>
+
+    </select>
+    <select id="getDetail" resultMap="bhEntVOResultMap">
+        select be.*,bdt.dict_value as industryName   from bh_ent be
+        left join blade_dict bdt on bdt.dict_key = be.industry and bdt.code = 'industry' and bdt.is_deleted = 0
+        where be.is_deleted = 0 and be.id = #{id}
+
+    </select>
+
+</mapper>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.ForeignOaOrgMapper">
+
+    <select id="recursionTop" parameterType="java.lang.Long" resultType="com.grandlynn.spa.catalogue.entity.ForeignOaOrg">
+        WITH  RECURSIVE  r  AS (
+        SELECT * FROM foreign_oa_org WHERE code = #{orgid}
+        union ALL
+        SELECT foreign_oa_org.* FROM foreign_oa_org, r WHERE foreign_oa_org.code = r.parent_code
+        )
+        SELECT * FROM r where r.parent_code is null ORDER BY id limit 1;
+    </select>
+
+</mapper>

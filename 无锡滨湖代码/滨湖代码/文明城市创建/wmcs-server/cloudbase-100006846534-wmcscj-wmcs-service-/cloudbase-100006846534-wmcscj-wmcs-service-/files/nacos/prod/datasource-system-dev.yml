@@ -1,0 +1,71 @@
+spring:
+  influx:
+    url: http://192.170.13.96:8086
+    # 用户名
+    user: wmcs
+    # 密码
+    password: QW12er34%^
+    # 数据库名称
+    database: warndata
+  autoconfigure:
+    exclude:
+      - com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  datasource:
+    druid:
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: /druid/*
+        session-stat-enable: true
+        session-stat-max-count: 100
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        reset-enable: true
+        login-username: admin
+        login-password: admin
+      filter:
+        stat:
+          enabled: true
+          log-slow-sql: true
+          slow-sql-millis: 100
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
+    dynamic:    ## 多数据源配置
+      druid:
+        ## 初始连接数
+        initial-size: 5
+        ## 最小连接池
+        min-idle: 10
+        ## 最大连接池
+        max-active: 20
+        ## 连接等待超时时间
+        max-wait: 60000
+        ## 检测间隔时间，毫秒
+        time-between-eviction-runs-millis: 60000
+        ## 连接池最小生存时间，毫秒
+        min-evictable-idle-time-millis: 300000
+        ## 连接池最大生存时间，毫秒
+        max-evictable-idle-time-millis: 900000
+        ## 连接检测
+        validation-query: SELECT 1 FROM DUAL
+      primary: master
+      datasource:
+        # 主库数据源
+        master:
+#          driver-class-name: com.mysql.cj.jdbc.Driver
+#          url: jdbc:mysql://192.170.13.96:3306/civilization?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
+#          username: root
+#          password: QW12er34%^
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://192.250.161.174:4006/civilization?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
+          username: tdsqlsys_normal
+          password: Gjpc#e404ClayK9dU4^l
+        # 从库数据源
+        slave:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://192.250.161.173:4006/civilization?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&autoReconnect=true&useSSL=false&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
+          username: tdsqlsys_normal
+          password: Gjpc#e404ClayK9dU4^l

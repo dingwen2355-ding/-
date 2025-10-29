@@ -1,0 +1,234 @@
+<template>
+  <a-card :bordered="false">
+    <!-- 查询区域 -->
+    <div class="table-page-search-wrapper">
+      <a-form layout="inline" @keyup.enter.native="searchQuery">
+        <a-row :gutter="24">
+          <a-col :md="4" :sm="8">
+            <a-form-item label="设备类型">
+              <j-dict-select-tag
+                placeholder="请选择"
+                dictCode="td_type,name,id,type='2'"
+                v-model="queryParam.deviceType"
+              />
+            </a-form-item>
+          </a-col>
+          
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="楼层">
+              <a-input placeholder="请输入编号" v-model="queryParam.indexCode"></a-input>
+            </a-form-item>
+          </a-col>      
+          <a-col :md="4" :sm="8">
+            <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+            </span>
+          </a-col>
+        </a-row>
+      </a-form>
+    </div>
+
+
+    <div>
+      <div class="ant-alert ant-alert-info" style="margin-bottom: 16px">
+        <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择
+        <a style="font-weight: 600">{{ selectedRowKeys.length }}</a
+        >项
+        <a style="margin-left: 24px" @click="onClearSelected">清空</a>
+      </div>
+
+      <a-table
+        ref="table"
+        size="middle"
+        bordered
+        rowKey="indexCode"
+        :columns="columns"
+        :dataSource="dataSource"
+        :pagination="ipagination"
+        :loading="loading"
+        :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+        @change="handleTableChange"
+      >
+        <span slot="online" slot-scope="text, record">
+          <a-tag :color="record.online === '1' ? 'red' : 'grey'">{{ record.online | online }}</a-tag>
+        </span>
+        <span slot="action" slot-scope="text, record">
+          <a-button type="primary" size="small" @click="handleDetail(record)">详情</a-button>
+          
+         
+        </span>
+      </a-table>
+    </div>
+    <!-- table区域-end -->
+
+    <!-- 进出记录抽屉区域 -->
+  
+    <!-- 表单区域 -->
+    <energy-modal ref="energyModalForm"></energy-modal>
+  </a-card>
+</template>
+
+<script>
+import { getAction } from '@/api/manage'
+import energyModal from './modules/energyModal'
+import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+import JDictSelectTag from '@/components/dict/JDictSelectTag'
+import JEllipsis from '@/components/jeecg/JEllipsis'
+
+export default {
+  name: 'energy',
+  mixins: [JeecgListMixin],
+  components: {
+    JEllipsis,
+    JDictSelectTag,
+    energyModal,
+  },
+  created() {},
+  mounted() {},
+  watch: {
+    // $route(to, from) {
+    //   //监听路由是否变化
+    //   if (to.params.deviceType != from.params.deviceType) {
+    //     //变化后的操作
+    //     this.queryParam.deviceType = to.params.deviceType
+    //     //重新加载数据
+    //     this.loadData()
+    //   }
+    // },
+  },
+  activated() {
+    if (this.$route.params.deviceType) {
+      this.queryParam.deviceType = this.$route.params.deviceType
+      this.loadData()
+    }
+  },
+  filters: {
+    online(val) {
+      if (val === '1') {
+        return '在线'
+      }
+      if (val === '0') {
+        return '离线'
+      }
+      if (val === '-1') {
+        return '未检测'
+      }
+      return '无状态'
+    },
+  },
+  data() {
+    return {
+      description: '设备列表页面',
+      // 表头
+      columns: [     
+        {
+          title: '系统名称',
+          align: 'center',         
+          dataIndex: 'systemType_dictText',
+        },
+       /*  {
+          title: '设备编号',
+          align: 'center',
+          
+          dataIndex: 'indexCode',
+        }, */
+        {
+          title: '设备类型',
+          dataIndex: 'deviceType_dictText',
+          align: 'center',
+        },
+        {
+          title: '设备名称',
+          dataIndex: 'name',
+          align: 'center',
+        },
+        {
+          title: '楼层',
+          align: 'center',
+          dataIndex: 'position',
+        },
+       
+        {
+          title: '本日用量',
+          align: 'center',
+          dataIndex: 'dayUsed',        
+        },
+        {
+          title: '作日用量',
+          dataIndex: 'yesterdayUsed',
+          align: 'center',
+        },
+        {
+          title: '本月用量',
+          align: 'center',
+          dataIndex: 'monthUsed',        
+        },
+        
+        {
+          title: '操作',
+          dataIndex: 'action',
+          align: 'center',
+          scopedSlots: { customRender: 'action' },
+        },
+      ],
+      url: {
+        list: '/monitor/video/listEnergy',
+        // delete: "/message/sysMessage/delete",
+        // deleteBatch: "/message/sysMessage/deleteBatch",
+        // exportXlsUrl: "message/sysMessage/exportXls",
+        // importExcelUrl: "message/sysMessage/importExcel",
+      },
+      queryParam: {
+        deviceType: '',
+      },
+      showDrawer: false,
+    }
+  },
+  methods: {
+    handleDetail(record) {
+      this.$refs.energyModalForm.edit(record)
+      this.$refs.energyModalForm.title = '设备详情'
+    },
+   
+  
+    handleVideo(record) {},
+    onCloseDrawer() {
+      this.showDrawer = false
+    },
+  },
+}
+</script>
+<style lang="less" scoped>
+/** Button按钮间距 */
+.ant-btn {
+  margin-left: 3px;
+}
+
+.ant-table-tbody .ant-table-row td {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.anty-row-operator button {
+  margin: 0 5px;
+}
+
+.ant-btn-danger {
+  background-color: #ffffff;
+}
+
+.ant-modal-cust-warp {
+  height: 100%;
+}
+
+.ant-modal-cust-warp .ant-modal-body {
+  height: calc(100% - 110px) !important;
+  overflow-y: auto;
+}
+
+.ant-modal-cust-warp .ant-modal-content {
+  height: 90% !important;
+  overflow-y: hidden;
+}
+</style>

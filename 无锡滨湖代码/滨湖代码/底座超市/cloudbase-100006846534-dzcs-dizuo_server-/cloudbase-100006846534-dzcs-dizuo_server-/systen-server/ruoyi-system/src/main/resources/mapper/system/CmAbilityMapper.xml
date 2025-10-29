@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.customer.mapper.CmAbilityMapper">
+
+	<resultMap type="cmAbility" id="cmAbilityinfo">
+		<id     property="id"        column="id"           />
+		<result property="delFlag"        column="del_flag"            />
+		<result property="createBy"        column="create_by"            />
+		<result property="createTime"  column="create_time"    />
+		<result property="updateBy"       column="update_by"           />
+		<result property="updateTime"            column="update_time"                />
+		<result property="remark"           column="remark"               />
+		<result property="status"      column="status"         />
+		<result property="applicationReason"        column="application_reason"            />
+		<result property="principalName"        column="principal_name"            />
+		<result property="principalPhone" column="principal_phone"    />
+		<result property="moban"       column="moban"     javaType="java.sql.Blob" typeHandler="com.ruoyi.system.customer.domain.ListToStringHandler"      />
+		<result property="danwei"            column="danwei"                />
+		<result property="danweiType"           column="danwei_type"               />
+		<result property="abilityList"     column="ability_list"        />
+		<result property="reason"     column="reason"        />
+		<result property="rowid"     column="rowid"        />
+	</resultMap>
+
+	<insert id="insertAbility" parameterType="cmAbility">
+		insert into cm_ability(
+		<if test="id != null and id != 0">id,</if>
+		<if test="delFlag != null and delFlag != 0">del_flag,</if>
+		<if test="createBy != null and createBy != ''">create_by,</if>
+		<if test="updateBy != null and updateBy != ''">update_by,</if>
+		update_time,
+		<if test="remark != null and remark != ''">remark,</if>
+		<if test="status != null and status != ''">status,</if>
+		<if test="applicationReason != null and applicationReason != ''">application_reason,</if>
+		<if test="principalName != null and principalName != ''" >principal_name,</if>
+		<if test="principalPhone != null and principalPhone != ''">principal_phone,</if>
+		<if test="moban != null and moban != ''">moban,</if>
+		<if test="danwei != null and danwei != ''">danwei,</if>
+		<if test="danweiType != null and danweiType != ''">danwei_type,</if>
+		<if test="abilityList != null and abilityList != ''">ability_list,</if>
+		create_time
+		)values(
+		<if test="id != null and id != 0">#{id},</if>
+		<if test="delFlag != null and delFlag != 0">#{delFlag},</if>
+		<if test="createBy != null and createBy != ''">#{createBy},</if>
+		<if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+		sysdate(),
+		<if test="remark != null and remark != ''">#{remark},</if>
+		<if test="status != null and status != ''">#{status},</if>
+		<if test="applicationReason != null and applicationReason != ''">#{applicationReason},</if>
+		<if test="principalName != null and principalName != ''">#{principalName},</if>
+		<if test="principalPhone != null and principalPhone != ''">#{principalPhone},</if>
+		<if test="moban != null and moban != ''">#{moban},</if>
+		<if test="danwei != null and danwei != ''">#{danwei},</if>
+		<if test="danweiType != null and danweiType != ''">#{danweiType},</if>
+		<if test="abilityList != null and abilityList != ''">#{abilityList},</if>
+		sysdate()
+		)
+	</insert>
+	<update id="update">
+		update cm_ability
+		<set>
+			<if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+			<if test="remark != null and remark != ''">remark = #{remark},</if>
+			<if test="status != null and status != ''">status = #{status},</if>
+			<if test="applicationReason != null and applicationReason != ''">application_reason = #{applicationReason},</if>
+			<if test="principalName != null and principalName != ''">principal_name = #{principalName},</if>
+			<if test="principalPhone != null and principalPhone != ''">principal_phone = #{principalPhone},</if>
+			<if test="moban != null and moban != ''">moban = #{moban},</if>
+			<if test="danwei != null and danwei != ''">danwei = #{danwei},</if>
+			<if test="danweiType != null and danweiType != ''">danwei_type = #{danweiType},</if>
+			<if test="abilityList != null and abilityList != ''">ability_list = #{abilityList},</if>
+			update_time = sysdate()
+		</set>
+		where id = #{id}
+	</update>
+	<update id="save">
+		insert into cm_ability(
+		<if test="id != null and id != 0">id,</if>
+		<if test="delFlag != null and delFlag != 0">del_flag,</if>
+		<if test="createBy != null and createBy != ''">create_by,</if>
+		<if test="updateBy != null and updateBy != ''">update_by,</if>
+		update_time,
+		<if test="reason != null and reason != ''">reason,</if>
+		<if test="cmAbilityId != null and cmAbilityId != ''">cm_ability_id,</if>
+		<if test="examineType != null and examineType != ''">examine_type,</if>
+		create_time
+		)values(
+		<if test="id != null and id != 0">#{id},</if>
+		<if test="delFlag != null and delFlag != 0">#{delFlag},</if>
+		<if test="createBy != null and createBy != ''">#{createBy},</if>
+		<if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+		sysdate(),
+		<if test="reason != null and reason != ''">#{reason},</if>
+		<if test="cmAbilityId != null and cmAbilityId != ''">#{cmAbilityId},</if>
+		<if test="examineType != null and examineType != ''">#{examineType},</if>
+		sysdate()
+		)
+	</update>
+	<update id="updateStatusById">
+		update cm_ability set status=#{status} where id=#{id}
+	</update>
+	<select id="getAbilityById" resultMap="cmAbilityinfo">
+		select * from cm_ability where id=#{id}
+	</select>
+	<select id="centerAbility" resultType="com.ruoyi.system.customer.domain.CmAbility">
+		SELECT
+			*
+		FROM
+			(
+				SELECT ROW_NUMBER
+						   ( ) OVER ( PARTITION BY A.ID ORDER BY A.update_time DESC ) rowid,
+						A.*,
+				       e.reason
+				FROM
+					cm_ability
+						A LEFT JOIN cm_ability_examine e ON A.ID = e.cm_ability_id
+				WHERE
+					A.del_flag = '0'
+				<if test="s != null and s != ''">
+					and a.create_by  =#{s}
+				</if>
+			) aaa
+		WHERE
+			rowid =1
+		order by update_time desc
+		LIMIT #{size} OFFSET #{currentpage}-1
+	</select>
+
+	<select id="centerAbilitytotal" resultType="com.ruoyi.system.customer.domain.CmAbility">
+		SELECT
+		*
+		FROM
+		(
+		SELECT ROW_NUMBER
+		( ) OVER ( PARTITION BY A.ID ORDER BY A.update_time DESC ) rowid,
+		A.*,
+		e.reason
+		FROM
+		cm_ability
+		A LEFT JOIN cm_ability_examine e ON A.ID = e.cm_ability_id
+		WHERE
+		A.del_flag = '0'
+		<if test="s != null and s != ''">
+			and a.create_by  =#{s}
+		</if>
+		) aaa
+		WHERE
+		rowid =1
+		order by update_time desc
+
+	</select>
+	<select id="getAllAbility" resultType="com.ruoyi.system.customer.domain.CmAbility">
+		SELECT
+		*
+		FROM
+		(
+		SELECT ROW_NUMBER
+		( ) OVER ( PARTITION BY A.ID ORDER BY A.update_time DESC ) rowid,
+		A.*,
+		e.reason
+		FROM
+		cm_ability
+		A LEFT JOIN cm_ability_examine e ON A.ID = e.cm_ability_id
+		WHERE
+		A.del_flag = '0'
+		<if test="status != null and status != ''">
+			AND status = #{status}
+		</if>
+		<if test="principalName != null and principalName != ''">
+			AND principal_name = #{principalName}
+		</if>
+		<if test="danweiType != null and danweiType != ''">
+			AND danwei_type = #{danweiType}
+		</if>
+		<if test="danwei != null and danwei != ''">
+			AND danwei = #{danwei}
+		</if>
+
+		) aaa
+		WHERE
+		rowid =1
+		order by update_time desc
+
+	</select>
+	<select id="getAllAbilityForPage" resultMap="cmAbilityinfo">
+		SELECT
+		*
+		FROM
+		(
+		SELECT ROW_NUMBER
+		( ) OVER ( PARTITION BY A.ID ORDER BY A.update_time DESC ) rowid,
+		A.*,
+		e.reason
+		FROM
+		cm_ability
+		A LEFT JOIN cm_ability_examine e ON A.ID = e.cm_ability_id
+		WHERE
+		A.del_flag = '0'
+		<if test="cmAbility.status != null and cmAbility.status != ''">
+			AND status = #{cmAbility.status}
+		</if>
+		<if test="cmAbility.principalName != null and cmAbility.principalName != ''">
+			AND principal_name = #{cmAbility.principalName}
+		</if>
+		<if test="cmAbility.danweiType != null and cmAbility.danweiType != ''">
+			AND danwei_type = #{cmAbility.danweiType}
+		</if>
+		<if test="cmAbility.danwei != null and cmAbility.danwei != ''">
+			AND danwei = #{cmAbility.danwei}
+		</if>
+
+		) aaa
+		WHERE
+		rowid =1
+		order by update_time desc
+		LIMIT #{size} OFFSET #{currentpage}-1
+	</select>
+    <select id="getShouYeShenpiCount" resultType="java.util.Map">
+		select (SELECT count(1) nengli FROM cm_ability where del_flag='0'),(SELECT count(1) ruzhu FROM cm_app where del_flag='0')
+	</select>
+    <select id="getAppfenleiCount" resultType="java.util.Map">
+		select ifnull(app_module, '无') module,count(1) counts from cm_app where del_flag='0' GROUP BY app_module
+	</select>
+	<select id="getRuZhulaiyuanZhanBi" resultType="java.util.Map">
+		select ifnull(source, '无') source,count(1) counts from cm_app where del_flag='0' GROUP BY source
+	</select>
+	<select id="getRuZhuDeptZhanBi" resultType="java.util.Map">
+		select ifnull(dept, '无') dept,count(1) counts from cm_app where del_flag='0' GROUP BY dept
+	</select>
+
+
+</mapper>

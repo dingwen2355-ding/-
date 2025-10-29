@@ -1,0 +1,110 @@
+{
+  "dev": {
+    "jobUrl": "http://localhost:9912",
+    "serverUrl": "http://localhost:9913",
+    "systemWebUrl": "http://localhost:8080/system/#/",
+    "page": [
+      {
+        "pageId": "1397758446544818177",
+        "name": "数据管理",
+        "url": "http://localhost:9904/data/#/"
+      },
+      {
+        "pageId": "1400702300491288577",
+        "name": "事件管理",
+        "url": "http://localhost:9905/addressbase/#/"
+      },
+      {
+        "pageId": "1414859935763337218",
+        "name": "网格管理",
+        "url": "http://localhost:9905/addressbase/#/"
+      },
+      {
+        "pageId": "1455435896370241538",
+        "name": "绩效考核",
+        "url": "http://localhost:9905/addressbase/#/"
+      },
+      {
+        "pageId": "1455435930180526082",
+        "name": "统计分析",
+        "url": "http://localhost:9905/addressbase/#/"
+      }
+    ]
+  },
+  "test": {
+    "jobUrl": "http://pro.jchgis.cn:9912",
+    "serverUrl": "http://pro.jchgis.cn:9913",
+    "systemWebUrl": "http://pro.jchgis.cn:9911/system-web/#/",
+    "page": [
+
+      {
+        "pageId": "1397758446544818177",
+        "name": "数据管理",
+        "url": "http://pro.jchgis.cn:9911/data-web/#/"
+      },
+      {
+        "pageId": "1400702300491288577",
+        "name": "业务协同",
+        "url": "http://pro.jchgis.cn:9911/event-web/#/"
+      },
+      {
+        "pageId": "1414859935763337218",
+        "name": "网格管理",
+        "url": "http://pro.jchgis.cn:9911/grid-web/#/"
+      },
+      {
+        "pageId": "1414859935763337228",
+        "name": "定标定点巡查",
+        "url": "http://pro.jchgis.cn:9911/check-web/#/"
+      },
+      {
+        "pageId": "1455435896370241538",
+        "name": "监督考核",
+        "url": "http://pro.jchgis.cn:9911/assess-web/#/"
+      },
+      {
+        "pageId": "1455435930180526082",
+        "name": "统计分析",
+        "url": "http://pro.jchgis.cn:9911/statis-web/#/"
+      }
+    ]
+  },
+  "prod": {
+    "jobUrl": "http://pro.jchgis.cn:9912",
+    "serverUrl": "http://pro.jchgis.cn:9913",
+    "systemWebUrl": "http://pro.jchgis.cn:9911/system-web/#/",
+    "page": [
+
+      {
+        "pageId": "1397758446544818177",
+        "name": "数据管理",
+        "url": "http://pro.jchgis.cn:9911/data-web/#/"
+      },
+      {
+        "pageId": "1400702300491288577",
+        "name": "业务协同",
+        "url": "http://pro.jchgis.cn:9911/event-web/#/"
+      },
+      {
+        "pageId": "1414859935763337218",
+        "name": "网格管理",
+        "url": "http://pro.jchgis.cn:9911/grid-web/#/"
+      },
+      {
+        "pageId": "1414859935763337228",
+        "name": "定标定点巡查",
+        "url": "http://pro.jchgis.cn:9911/check-web/#/"
+      },
+      {
+        "pageId": "1455435896370241538",
+        "name": "监督考核",
+        "url": "http://pro.jchgis.cn:9911/assess-web/#/"
+      },
+      {
+        "pageId": "1455435930180526082",
+        "name": "统计分析",
+        "url": "http://pro.jchgis.cn:9911/statis-web/#/"
+      }
+    ]
+  }
+}

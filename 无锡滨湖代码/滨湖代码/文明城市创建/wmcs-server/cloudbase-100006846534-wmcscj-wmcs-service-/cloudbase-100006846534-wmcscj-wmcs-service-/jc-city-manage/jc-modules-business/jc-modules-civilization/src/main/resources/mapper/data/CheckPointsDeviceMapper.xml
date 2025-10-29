@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.civilization.data.mapper.CheckPointsDeviceMapper">
+
+    <select id="selectPageCustom"
+            resultType="cn.wxgis.jc.civilization.data.resp.DataCheckPointsDeviceResponse">
+        select * from (
+            select pd.*, d.name region_name, p.name points_name, pt.id type_id, pt.name type_name,
+            c.name channel_name, c.gps_x, c.gps_y, t.org_code, t.name org_name
+            from data_check_points_device pd
+            left join data_check_points p on p.id = pd.points_id
+            left join data_check_points_type pt on pt.id = p.type_id
+            left join data_device_channel c on c.id = pd.channel_id
+            left join data_device_tree t on t.id = c.org_code
+            left join sys_dept d on d.id = pd.region_code
+        ) t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+    <select id="getChannelInfo" resultType="cn.wxgis.jc.civilization.data.vo.ChannelVo">
+        select p.name point_name, p.id point_id, pt.id point_type_id, pt.name point_type_name, p.region_name, p.region_code
+        from data_check_points_device pd
+        left join data_check_points p on p.id = pd.points_id
+        left join data_check_points_type pt on pt.id = p.type_id
+    </select>
+
+    <select id="getChannelByChannelId" resultType="cn.wxgis.jc.civilization.data.vo.ChannelVo">
+        select pd.channel_id, dc.name channel_name, p.name point_name
+        from data_check_points_device pd
+                 left join data_check_points p on p.id = pd.points_id
+                 left join data_device_channel dc on dc.id = pd.channel_id
+        where pd.channel_id = #{channelId}
+    </select>
+
+    <select id="findById" resultType="cn.wxgis.jc.civilization.data.vo.ChannelVo">
+        select pd.channel_id, t.name type_name, dc.name channel_name, p.name point_name
+        from data_check_points_device pd
+                 left join data_check_points p on p.id = pd.points_id
+                 left join data_device_channel dc on dc.id = pd.channel_id
+                 left join data_check_points_type t on t.id = p.type_id
+        where pd.id = #{id}
+    </select>
+</mapper>

@@ -1,0 +1,163 @@
+#数据源配置
+spring:
+  redis:
+    ##redis 单机环境配置
+    host: 172.16.1.123
+    port: 6379
+    password: 123456
+    database: 10
+    ssl: false
+    ##redis 集群环境配置
+    #cluster:
+    #  nodes: 127.0.0.1:7001,127.0.0.1:7002,127.0.0.1:7003
+    #  commandTimeout: 5000
+  datasource:
+    # MySql
+    url: jdbc:mysql://172.16.2.24:3306/szbh-dev?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+    #url: jdbc:mysql://127.0.0.1:3306/szbh?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+#  datasource:
+#    # MySql
+#    url: jdbc:mysql://2.21.137.202:3306/szbh?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+#    username: root
+#    password: Lc123456!
+    # PostgreSQL
+    #url: jdbc:postgresql://127.0.0.1:5432/bladex_boot
+    #username: postgres
+    #password: 123456
+    # Oracle
+    #url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
+    #username: BLADEX_BOOT
+    #password: BLADEX_BOOT
+    # SqlServer
+    #url: jdbc:sqlserver://127.0.0.1:1433;DatabaseName=bladex_boot
+    #username: bladex_boot
+    #password: bladex_boot
+    # DaMeng
+    #url: jdbc:dm://127.0.0.1:5236/BLADEX_BOOT?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8
+    #username: BLADEX_BOOT
+    #password: BLADEX_BOOT
+
+#第三方登陆
+social:
+  enabled: true
+  domain: http://127.0.0.1:1888
+
+#blade配置
+blade:
+  #分布式锁配置
+  lock:
+    ##是否启用分布式锁
+    enabled: false
+    ##redis服务地址
+    address: redis://127.0.0.1:6379
+  #本地文件上传
+  file:
+    remote-mode: true
+    upload-domain: http://localhost:8999
+    remote-path: /usr/share/nginx/html
+
+
+# 政务微信
+zwwx:
+  tokenUrl: https://wx.bigdata.wuxi.gov.cn:10443/cgi-bin/gettoken
+  corpId: ww29a8dfb1be6173c1
+  corpSecret: aUABPtxgLu6s5ITEFmGz4-GqSrYhAaBV4K0D993c690
+  deptUrl: https://wx.bigdata.wuxi.gov.cn:10443/cgi-bin/department/list
+  userUrl: https://wx.bigdata.wuxi.gov.cn:10443/cgi-bin/user/list
+  deptId: 373
+
+
+# 短信账号密钥
+sms:
+  address: http://2.22.67.1:88/SmsService
+  # 短信账号
+  #  appId: wxnldzcs
+  appId: wxszbhrjpt
+  # 短信秘钥
+  #  secret: GIgkKyRCUVDcTrSw
+  secret: cvvdVqdTYm2bJiuh
+#  localUrl: http://2.21.137.200:8080/squirrel-service/sms/sendSMS
+  localUrl: http://127.0.0.1:8080/squirrel-service/sms/sendSMS
+
+# 都市圈应用配置
+systemApp:
+  appId: c3piaGdldHRva2Vu
+  appSecret: b933b14b5fe60b1cf3b4cb347eae831c
+#单点登录配置
+sso:
+  serverUrl: http://172.20.0.133:8081
+  clientUrl: http://172.20.0.133:1888
+  oauth2:
+    client:
+      back:
+        #分配给第三方系统id
+        client-id: digit-binhu-dev
+        #分配给第三方系统秘钥
+        client-secret: 10470c3b4b1fed12c3baac014be15fac67c6e815
+        #获取tocken信息地址
+        access-token-uri: ${sso.serverUrl}/oauth/token
+        #获取用户认证信息
+        user-authorization-uri: ${sso.serverUrl}/oauth/authorize
+        #根据token获取用户信息
+        user-token-url: ${sso.serverUrl}/user/token
+        #获取token成功后重定向页面
+        home-page: ${sso.clientUrl}/#/sso/login
+        #重定向地址
+        redirect-uri: ${sso.clientUrl}/api/sso/login
+      front:
+        #分配给第三方系统id
+        client-id: digit-binhu-dev-front
+        #分配给第三方系统秘钥
+        client-secret: 10470c3b4b1fed12c3baac014be15fac67c6e815
+        #获取tocken信息地址
+        access-token-uri: ${sso.serverUrl}/oauth/token
+        #获取用户认证信息
+        user-authorization-uri: ${sso.serverUrl}/oauth/authorize
+        #根据token获取用户信息
+        user-token-url: ${sso.serverUrl}/user/token
+        #获取token成功后重定向页面
+        home-page: ${sso.clientUrl}/#/sso/loginFront
+        #重定向地址
+        redirect-uri: ${sso.clientUrl}/api/frontLogin
+    #调用单点登录退出回调地址，单点登录退出后重定向到logoutUrl
+  loginOutUri: '${sso.serverUrl}/logout?logoutUrl=${sso.oauth2.client.front.redirect-uri}'
+# 上传图片地址
+file:
+  uploadUrl: https://jc.vivi666.top/file/upload
+  downloadUrl: http://106.14.27.198:9001
+  http:
+    multipart:
+      location: /data/file_upload_tmp
+#平台名称
+serverName: 统一身份认证平台(133)
+#ip相同动作异常地址
+ipAbnormalUrl: 58.215.28.118:58808/abnor_function
+#ip相同动作异常通知管理员
+ipAbnormalNoticeMobile: 13333333333
+
+
+# minio对象存储
+minio:
+  server: http://172.16.1.123:9000
+  accessKey: admin
+  secretKey: admin123456
+  bucket: szbh
+  prefix: http://172.16.1.123:7082/static/minio/szbh/
+#SM加密
+hsm:
+  openEncrypt: false  #开启加密验证
+  host: 124.127.49.181:17080
+  url: 'http://${hsm.host}'
+  ak: AKCACEAFBBBFAHFCLREX
+  sk: VjlSTVUyMzU5VTlPQlE4Sg==
+  keyId: 3b015c85-060b-4bdc-b859-d3405ea89a3c
+
+#都市圈更改申请权限状态
+DSQ:
+#  authorityUrl: http://127.0.0.1:8080/apiCallBack/authorityForExamineCallBack
+  authorityUrl: http://2.21.137.206:11511/apiCallBack/authorityForExamineCallBack
+  getToken: http://2.21.137.206:11511/system_server/login
+  dsqUserName: admin
+  dsqPassword: O.cnwx123

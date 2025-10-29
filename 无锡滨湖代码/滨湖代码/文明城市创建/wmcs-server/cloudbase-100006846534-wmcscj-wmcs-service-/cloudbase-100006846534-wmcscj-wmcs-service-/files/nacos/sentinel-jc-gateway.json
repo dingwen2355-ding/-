@@ -1,0 +1,50 @@
+[
+  {
+    "resource": "jc-auth",
+    "count": 500,
+    "grade": 1,
+    "limitApp": "default",
+    "strategy": 0,
+    "controlBehavior": 0
+  },
+  {
+    "resource": "jc-file",
+    "count": 1000,
+    "grade": 1,
+    "limitApp": "default",
+    "strategy": 0,
+    "controlBehavior": 0
+  },
+  {
+    "resource": "jc-system",
+    "count": 1000,
+    "grade": 1,
+    "limitApp": "default",
+    "strategy": 0,
+    "controlBehavior": 0
+  },
+  {
+    "resource": "jc-civilization",
+    "count": 1000,
+    "grade": 1,
+    "limitApp": "default",
+    "strategy": 0,
+    "controlBehavior": 0
+  },
+  {
+    "resource": "jc-workflow",
+    "count": 1000,
+    "grade": 1,
+    "limitApp": "default",
+    "strategy": 0,
+    "controlBehavior": 0
+  },
+  {
+    "resource": "jc-screen",
+    "count": 1000,
+    "grade": 1,
+    "limitApp": "default",
+    "strategy": 0,
+    "controlBehavior": 0
+  }
+]

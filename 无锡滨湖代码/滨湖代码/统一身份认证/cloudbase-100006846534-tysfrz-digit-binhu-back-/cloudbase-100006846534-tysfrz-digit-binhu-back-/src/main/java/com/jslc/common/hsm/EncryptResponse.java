@@ -1,0 +1,93 @@
+/*
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.jslc.common.hsm;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+public class EncryptResponse {
+
+    /**
+    * 加密后的密文，base64编码。注意：本字段中打包了密文和密钥的相关信息，不是对明文的直接加密结果，只有将该字段作为Decrypt接口的输入参数，才可以解密出原文。
+    */
+    @SerializedName("CiphertextBlob")
+    @Expose
+    private String CiphertextBlob;
+
+    /**
+    * 加密使用的CMK的全局唯一标识
+    */
+    @SerializedName("KeyId")
+    @Expose
+    private String KeyId;
+
+    /**
+    * 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+    */
+    @SerializedName("RequestId")
+    @Expose
+    private String RequestId;
+
+    /**
+     * 获取加密后的密文，base64编码。注意：本字段中打包了密文和密钥的相关信息，不是对明文的直接加密结果，只有将该字段作为Decrypt接口的输入参数，才可以解密出原文。
+     * @return CiphertextBlob 加密后的密文，base64编码。注意：本字段中打包了密文和密钥的相关信息，不是对明文的直接加密结果，只有将该字段作为Decrypt接口的输入参数，才可以解密出原文。
+     */
+    public String getCiphertextBlob() {
+        return this.CiphertextBlob;
+    }
+
+    /**
+     * 设置加密后的密文，base64编码。注意：本字段中打包了密文和密钥的相关信息，不是对明文的直接加密结果，只有将该字段作为Decrypt接口的输入参数，才可以解密出原文。
+     * @param CiphertextBlob 加密后的密文，base64编码。注意：本字段中打包了密文和密钥的相关信息，不是对明文的直接加密结果，只有将该字段作为Decrypt接口的输入参数，才可以解密出原文。
+     */
+    public void setCiphertextBlob(String CiphertextBlob) {
+        this.CiphertextBlob = CiphertextBlob;
+    }
+
+    /**
+     * 获取加密使用的CMK的全局唯一标识
+     * @return KeyId 加密使用的CMK的全局唯一标识
+     */
+    public String getKeyId() {
+        return this.KeyId;
+    }
+
+    /**
+     * 设置加密使用的CMK的全局唯一标识
+     * @param KeyId 加密使用的CMK的全局唯一标识
+     */
+    public void setKeyId(String KeyId) {
+        this.KeyId = KeyId;
+    }
+
+    /**
+     * 获取唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+     * @return RequestId 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+     */
+    public String getRequestId() {
+        return this.RequestId;
+    }
+
+    /**
+     * 设置唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+     * @param RequestId 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+     */
+    public void setRequestId(String RequestId) {
+        this.RequestId = RequestId;
+    }
+
+
+}
+

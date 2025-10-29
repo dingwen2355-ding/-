@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.CatalogueSysTableMapper">
+
+    <resultMap id="BaseResultMap" type="com.grandlynn.spa.catalogue.entity.CatalogueSysTableDO">
+        <!--@Table catalogue_sys_table-->
+        <id column="id" property="id" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="app_id" property="appId" />
+        <result column="version" property="version" />
+        <result column="remark" property="remark" />
+        <result column="is_deleted" property="deleted" />
+        <result column="created_by" property="createdBy" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="created_time" property="createdTime" />
+        <result column="updated_time" property="updatedTime" />
+        <result column="org_sys_id" property="orgSysId" />
+        <result column="table_share_type" property="tableShareType" />
+        <result column="enable" property="enable" />
+        <result column="table_code" property="tableCode" />
+        <result column="table_state" property="tableState" />
+        <result column="sys_name" property="sysName" />
+        <result column="data_resource_name" property="dataResourceName" />
+        <result column="data_resource_abstract" property="dataResourceAbstract" />
+        <result column="data_resource_save_type" property="dataResourceSaveType" />
+        <result column="table_name" property="tableName" />
+        <result column="table_share_desc" property="tableShareDesc" />
+        <result column="law_depency" property="lawDepency" />
+        <result column="share_status" property="shareStatus" />
+        <result column="open_type" property="openType" />
+        <result column="open_condition" property="openCondition" />
+        <result column="open_depency" property="openDepency" />
+        <result column="position" property="position" />
+        <result column="table_remark" property="tableRemark" />
+        <result column="update_period" property="updatePeriod" />
+        <result column="database_type" property="databaseType" />
+        <result column="intermediate" property="intermediate" />
+        <result column="version_no" property="versionNo" />
+        <result column="administration_name" property="administrationName" />
+
+        <result column="resource_code" property="resourceCode" />
+        <result column="data_domain" property="dataDomain" />
+        <result column="table_create_time" property="tableCreateTime" />
+        <result column="table_update_time" property="tableUpdateTime" />
+
+        <result column="law_depency_attach" property="lawDepencyAttach" />
+        <result column="open_depency_attach" property="openDepencyAttach" />
+    </resultMap>
+
+    <!-- 根据状态查询目录(区分委办局) -->
+    <select id="getTablesByStates" resultType="com.grandlynn.spa.catalogue.entity.CatalogueSysTableDO">
+        SELECT  t.*
+        FROM    catalogue_sys_table t
+        JOIN    catalogue_org_content_relation r ON r.content_id = t.org_sys_id AND r.content_type = 1
+        WHERE   t.is_deleted = 0 AND r.is_deleted = 0
+        <if test="request.tenantId != null">
+            AND t.tenant_id = #{request.tenantId} AND r.tenant_id = #{request.tenantId}
+        </if>
+        <if test="request.appId != null">
+            AND t.app_id = #{request.appId} AND r.app_id = #{request.appId}
+        </if>
+        <if test="request.approveState != null and  request.approveState.size() != 0">
+            AND t.table_state in
+            <foreach collection="request.approveState" item="state" index="index" open="(" close=")" separator=",">
+                #{state}
+            </foreach>
+        </if>
+        <if test="request.oaState != null and  request.oaState.size() != 0">
+            <if test="request.approveState != null and request.approveState.size() != 0">
+                OR (
+            </if>
+            <if test="request.approveState == null or request.approveState.size() == 0">
+                AND (
+            </if>
+                t.table_state in
+                <foreach collection="request.oaState" item="state" index="index" open="(" close=")" separator=",">
+                    #{state}
+                </foreach>
+                AND t.publisher = #{request.publisher}
+            )
+        </if>
+        <if test="request.orgIds != null and request.orgIds.length != 0">
+            AND r.org_id in
+            <foreach collection="request.orgIds" item="org" index="index" open="(" close=")" separator=",">
+                #{org}
+            </foreach>
+        </if>
+        ORDER BY t.updated_time DESC
+
+    </select>
+
+    <!-- 根据系统ids查询表和字段列表信息  -->
+    <select id="getTablesAndFieldsBySysIds" resultType="com.grandlynn.spa.catalogue.dto.TablesAndFieldsDTO">
+        SELECT
+            f.field_name_ch fieldNameCh,
+            f.field_name fieldName,
+            f.field_type fieldType,
+            f.field_length fieldLength,
+            T.resource_code resourceCode,
+            T.data_resource_name dataResourceName,
+            T.table_share_type tableShareType,
+            T.share_status shareStatus,
+            T.open_type openType,
+            T.table_share_desc tableShareDesc,
+            T.update_period updatePeriod,
+            T.administration_name administrationName,
+            T.sys_name sysName,
+            T.table_remark tableRemark,
+            T.ID tableId
+        FROM
+            catalogue_sys_table T
+            LEFT JOIN catalogue_table_field f ON f.sys_table_id = T.ID
+        WHERE
+            f.is_deleted = 0 AND T.is_deleted = 0 AND T.table_state = 5 AND T.intermediate = 1
+        <if test="request.tenantId != null">
+            AND T.tenant_id = #{request.tenantId} AND f.tenant_id = #{request.tenantId}
+        </if>
+        <if test="request.appId != null">
+            AND T.app_id = #{request.appId} AND f.app_id = #{request.appId}
+        </if>
+        <if test="request.canExport != null">
+            AND T.can_export = #{request.canExport}
+        </if>
+        <if test="request.tableIds != null">
+            AND f.sys_table_id in
+            <foreach collection="request.tableIds" item = "tableId" index="index" open="(" close=")" separator=",">
+                #{tableId}
+            </foreach>
+        </if>
+            ORDER BY f.id
+    </select>
+
+    <!-- 根据系统id一次查询当前系统下的所有表和字段信息  -->
+    <select id="getTablesAndFieldsBySysId" resultType="com.grandlynn.spa.catalogue.dto.TablesAndFieldsDTO">
+        SELECT
+        T.org_sys_id as sysId,
+        T.sys_name sysName,
+        T.resource_code resourceCode,
+        T.data_resource_name dataResourceName,
+        T.table_share_type tableShareType,
+        T.share_status shareStatus,
+        T.open_type openType,
+        T.table_share_desc tableShareDesc,
+        T.update_period updatePeriod,
+        T.administration_name administrationName,
+        T.table_remark tableRemark,
+        T.ID tableId,
+        f.field_name_ch fieldNameCh,
+        f.field_name fieldName,
+        f.field_type fieldType,
+        f.field_length fieldLength
+        FROM
+        catalogue_sys_table T
+        LEFT JOIN catalogue_table_field f ON f.sys_table_id = T.ID
+        WHERE
+            T.is_deleted = 0 AND T.intermediate = 1
+        <if test="request.tenantId != null">
+            AND T.tenant_id = #{request.tenantId}
+        </if>
+        <if test="request.appId != null">
+            AND T.app_id = #{request.appId}
+        </if>
+        <if test="request.sysId != null">
+            AND T.org_sys_id = #{request.sysId}
+        </if>
+        <if test="request.canExport != null">
+            AND T.can_export = #{request.canExport}
+        </if>
+    </select>
+
+
+    <!-- 根据系统ids查询表信息  -->
+    <select id="getTablesBySysIds" resultType="com.grandlynn.spa.catalogue.dto.TablesDTO">
+        SELECT
+            s.id sysId,
+            T.resource_code resourceCode,
+            T.data_resource_name dataResourceName,
+            T.table_share_type tableShareType,
+            T.share_status shareStatus,
+            T.open_type openType,
+            T.table_share_desc tableShareDesc,
+            T.update_period updatePeriod,
+            T.administration_name administrationName,
+            T.sys_name sysName,
+            T.table_remark tableRemark,
+            T.ID tableId
+        FROM
+            catalogue_org_sys s
+        LEFT JOIN catalogue_sys_table T ON s.id = T.org_sys_id
+        WHERE
+        s.is_deleted = 0 AND T.is_deleted = 0
+        <if test="request.tenantId != null">
+            AND T.tenant_id = #{request.tenantId} AND s.tenant_id = #{request.tenantId}
+        </if>
+        <if test="request.appId != null">
+            AND T.app_id = #{request.appId} AND s.app_id = #{request.appId}
+        </if>
+        <if test="request.orgSysIds != null">
+            AND T.org_sys_id in
+            <foreach collection="request.orgSysIds" item = "orgSysId" index="index" open="(" close=")" separator=",">
+                #{orgSysId}
+            </foreach>
+        </if>
+        ORDER BY s.id
+    </select>
+
+    <select id="getTableCount" resultType="com.grandlynn.spa.catalogue.dto.TableCountDTO" >
+        SELECT
+            org_sys_id as sysId,
+            COUNT(*)  as tableCount
+        FROM
+            catalogue_sys_table
+        WHERE
+            is_deleted = 0
+            <if test="tenantId != null">
+                AND tenant_id = #{tenantId}
+            </if>
+            <if test="appId != null">
+                AND app_id = #{appId}
+            </if>
+            group by org_sys_id ORDER BY org_sys_id asc
+    </select>
+
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.CatalogueTableBaseConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.grandlynn.spa.catalogue.entity.CatalogueTableBaseConfigDO">
+        <!--@Table catalogue_table_base_config-->
+        <result property="id" column="id" />
+        <result property="tenantId" column="tenant_id" />
+        <result property="version" column="version" />
+        <result property="appId" column="app_id" />
+        <result property="remark" column="remark" />
+        <result property="deleted" column="is_deleted" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdTime" column="created_time" />
+        <result property="updatedBy" column="updated_by" />
+        <result property="updatedTime" column="updated_time" />
+        <result property="sysOrgId" column="sys_org_id" />
+        <result property="configName" column="config_name" />
+        <result property="configType" column="config_type" />
+        <result property="required" column="required" />
+        <result property="columnWidth" column="column_width" />
+        <result property="enabled" column="enabled" />
+    </resultMap>
+
+
+</mapper>

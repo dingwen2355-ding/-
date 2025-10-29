@@ -1,0 +1,235 @@
+<template>
+  <a-card :bordered="false">
+    <!-- <div class="meta-card-info">
+        <a-icon type="warning" style="margin-bottom: 2px" />
+        <div style="margin-left: 10px">今日预警：200次</div>
+        <div style="margin-left: 20px">累计预警：3200次</div>
+      </div> -->
+    <!-- 查询区域 -->
+    <div class="table-page-search-wrapper">
+      <a-form layout="inline" @keyup.enter.native="searchQuery">
+        <a-row :gutter="24">
+          <!-- <a-col :md="4" :sm="8">
+            <a-form-item label="提交时间">、
+              <a-date-picker
+                v-model="queryParam.createTime"
+                placeholder="请选择日期"
+                format="YYYY-MM-DD HH:mm:ss"
+                valueFormat="YYYY-MM-DD HH:mm:ss"
+                :show-time="{ defaultValue: moment('00:00:00', 'HH:mm:ss') }"
+              ></a-date-picker>
+            </a-form-item>
+          </a-col> -->
+          <a-col :md="4" :sm="8">
+            <a-form-item label="门禁点">
+              <a-select v-model="queryParam.indexName" placeholder="请选择" allowClear :options="doorOptions">
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :md="4" :sm="8">
+            <a-form-item label="身份">
+              <a-select v-model="queryParam.identity" placeholder="请选择" allowClear>
+                <a-select-option value="内部人员">内部人员</a-select-option>
+                <a-select-option value="陌生人">陌生人</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :md="4" :sm="8">
+            <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+            </span>
+          </a-col>
+        </a-row>
+      </a-form>
+    </div>
+
+    <!-- table区域-begin -->
+    <div>
+      <div class="ant-alert ant-alert-info" style="margin-bottom: 16px">
+        <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择
+        <a style="font-weight: 600">{{ selectedRowKeys.length }}</a
+        >项
+        <a style="margin-left: 24px" @click="onClearSelected">清空</a>
+      </div>
+
+      <a-table
+        ref="table"
+        size="middle"
+        bordered
+        rowKey="id"
+        :columns="columns"
+        :dataSource="dataSource"
+        :pagination="ipagination"
+        :loading="loading"
+        :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+        @change="handleTableChange"
+      >
+        <!-- 字符串超长截取省略号显示-->
+        <!-- <span slot="esContent" slot-scope="text">
+          <j-ellipsis :value="text" :length="10" />
+        </span> -->
+
+        <span slot="image" slot-scope="text, record">
+          <a-avatar :src="record.photo" shape="square" :size="64" />
+        </span>
+        <span slot="action" slot-scope="text, record">
+          <a href="javascript:;" @click="handleTrack(record)">查看轨迹</a>
+          <!-- <a-divider type="vertical" /> -->
+          <!-- <a href="javascript:;" @click="handleProcess(record)">进出记录</a> -->
+        </span>
+      </a-table>
+    </div>
+    <!-- table区域-end -->
+
+    <!-- 表单区域 -->
+    <!-- <repair-complaint-modal ref="modalForm" @ok="modalFormOk"></repair-complaint-modal> -->
+    <!-- 轨迹弹窗区域 -->
+    <personal-track ref="trackModal"></personal-track>
+  </a-card>
+</template>
+
+<script>
+import PersonalTrack from './modules/PersonalTrack'
+// import RepairComplaintModal from './modules/RepairComplaintModal'
+import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+import JDictSelectTag from '@/components/dict/JDictSelectTag'
+// import JEllipsis from '@/components/jeecg/JEllipsis'
+import moment from 'moment'
+import { getAction } from '@/api/manage'
+
+export default {
+  name: 'AccessListDrawer',
+  mixins: [JeecgListMixin],
+  components: {
+    // JEllipsis,
+    JDictSelectTag,
+    // JDate,
+    // RepairComplaintModal,
+    PersonalTrack,
+  },
+  props: {
+    showDrawer: Boolean,
+  },
+  // watch: {
+  //   showDrawer(newVal) {
+  //     console.log(newVal)
+  //   },
+  // },
+  computed: {
+    visible: {
+      get() {
+        return this.showDrawer
+      },
+      set() {},
+    },
+  },
+  data() {
+    return {
+      description: '进出记录页面',
+      // 表头
+      columns: [
+        // {
+        //   title: '#',
+        //   dataIndex: 'index',
+        //   key: 'index',
+        //   align: 'center',
+        //   customRender: function (t, r, index) {
+        //     return parseInt(index) + 1
+        //   },
+        // },
+        {
+          title: '抓拍照片',
+          align: 'center',
+          dataIndex: 'photo',
+          scopedSlots: { customRender: 'image' },
+        },
+        {
+          title: '姓名',
+          align: 'center',
+          dataIndex: 'name',
+        },
+        {
+          title: '身份',
+          align: 'center',
+          dataIndex: 'identity',
+        },
+        {
+          title: '体温',
+          align: 'center',
+          dataIndex: 'temp',
+          customRender: function (t, r, index) {
+            return t ? t + '°C' : null
+          },
+        },
+        {
+          title: '门禁点',
+          align: 'center',
+          dataIndex: 'indexName',
+        },
+        {
+          title: '抓拍时间',
+          align: 'center',
+          dataIndex: 'happenTime',
+        },
+        {
+          title: '操作',
+          dataIndex: 'action',
+          align: 'center',
+          scopedSlots: { customRender: 'action' },
+        },
+      ],
+      url: {
+        list: '/alarm/doorRecord/list',
+      },
+      queryParam: {
+        photo: '!no-picuri',
+        isdoor: '1',
+      },
+      doorOptions: [],
+    }
+  },
+  async created() {
+    await this.initDoorOptions()
+  },
+  methods: {
+    moment,
+    async initDoorOptions() {
+      const res = await getAction(`/alarm/doorRecord/door/list`)
+      if (res.success) {
+        this.doorOptions = res.result.map((item) => {
+          return {
+            key: item,
+            title: item,
+            value: item,
+          }
+        })
+      }
+    },
+    handleTrack(record) {
+      this.$refs.trackModal.getTracksByPersonId(record)
+      this.$refs.trackModal.title = '个人轨迹'
+    },
+    onClose() {
+      this.$emit('close')
+    },
+  },
+}
+</script>
+<style lang="less" scoped>
+@import '~@assets/less/common.less';
+
+// .meta-card-info {
+//   display: flex;
+//   align-items: center;
+//   margin-bottom: 20px;
+
+//   > div {
+//     display: flex;
+//     align-items: center;
+//     // font-size: 18px;
+//     font-weight: 600;
+//     margin-left: 20px;
+//   }
+// }
+</style>

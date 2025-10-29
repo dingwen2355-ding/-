@@ -1,0 +1,20 @@
+// 引入头
+@import './header.scss';
+// 引入侧边栏
+@import './sidebar.scss';
+// 按钮组
+@import './button.scss';
+// 控件组
+@import './control.scss';
+// 文字
+@import './text.scss';
+
+/******************** 颜色 ********************/
+// 主题
+$thTitleSuccessBack: #6fadac; // 需要用到的小块的标题的背景色-主题色
+$thBackColor: #eceef5; // 整体背景色
+$thBackColorL: #f7f8f9; // 背景色-浅色
+
+// 分割线
+$thGLineF: #e6e6e6; // 行分割线颜色
+

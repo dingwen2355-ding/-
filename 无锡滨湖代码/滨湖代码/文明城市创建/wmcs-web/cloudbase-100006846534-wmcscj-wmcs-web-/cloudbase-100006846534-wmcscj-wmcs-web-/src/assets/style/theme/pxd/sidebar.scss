@@ -1,0 +1,18 @@
+/*** 侧边栏 ***/
+@import './theme.scss';
+// 一级
+$thSideBarBack: rgba(63, 63, 63, 1); // 大背景
+$thSideBarMFBack: rgba(63, 63, 63, 1); // 一级按钮背景色
+$thSideBarMIBack: #909399; // 菜单ICON默认颜色
+$thSideBarMText: #fff; // 按钮字体颜色
+$thSideBarMHover:#6fadac; // 按钮滑过的背景色
+$thSideBarMHoverText: #fff; // 按钮滑过时的字体颜色
+$thSideBarMActiveBack: #12908d; // 按钮选中时的背景色
+$thSideBarMActiveText: #fff; // 按钮选中时字体颜色
+// 子集
+$thSideBarChBack: rgb(50, 50, 50); // 下拉选项菜单的背景色
+
+:export {
+    menuBg: $thSideBarMFBack;
+    menuText: $thSideBarMText;
+}

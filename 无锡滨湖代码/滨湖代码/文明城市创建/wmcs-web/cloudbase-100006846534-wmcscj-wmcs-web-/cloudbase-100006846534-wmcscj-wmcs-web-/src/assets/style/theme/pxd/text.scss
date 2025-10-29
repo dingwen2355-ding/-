@@ -1,0 +1,23 @@
+@import './theme.scss';
+// 文字颜色 gt-global-text
+$thGTInfoW: $thGInfoW; // 在深色背景下的反白色
+$thGTInfo: $thGInfo; // 普通文字颜色-略灰
+$thGTInfoH: $thGInfoH; // 普通文字颜色-略黑
+$thGTInfoH2: $thGInfoH2;
+$thGTSuccess: $thGSuccess; // 略高亮的主题色
+$thGTDanger: $thGDanger; // 略高亮的主题色
+$thGTLinkH: $thGInfoLinkH; // 链接文字颜色-信息-蓝
+$thGTLinkI: $thGInfoLinkI; // 链接文字颜色-信息-绿
+$thGTLinkD: $thGInfoLinkD; // 链接文字颜色-信息-红
+
+:export {
+    thGTInfoW: $thGTInfoW;
+    thGTInfo: $thGTInfo;
+    thGTInfoH: $thGTInfoH;
+    thGTInfoH2: $thGTInfoH2;
+    thGTSuccess: $thGTSuccess;
+    thGTDanger: $thGTDanger;
+    thGTLinkH: $thGTLinkH;
+    thGTLinkI: $thGInfoLinkI;
+    thGTLinkD: $thGInfoLinkD;
+}

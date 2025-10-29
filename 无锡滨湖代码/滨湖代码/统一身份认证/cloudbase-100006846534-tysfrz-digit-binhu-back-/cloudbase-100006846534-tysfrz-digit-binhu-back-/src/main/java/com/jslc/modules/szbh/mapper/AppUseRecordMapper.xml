@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.AppUseRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="appUseRecordResultMap" type="com.jslc.modules.szbh.entity.AppUseRecord">
+        <result column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="client_id" property="clientId"/>
+        <result column="username" property="username"/>
+    </resultMap>
+
+    <resultMap id="appUseRecordVOResultMap" type="com.jslc.modules.szbh.vo.AppUseRecordVO" extends="appUseRecordResultMap">
+
+    </resultMap>
+
+
+
+    <select id="selectAppUseRecordPage" resultMap="appUseRecordResultMap">
+        select * from bh_app_use_record where is_deleted = 0
+    </select>
+    <select id="getAppUseRecordData" resultType="com.jslc.modules.szbh.vo.UserOnlineVO">
+        select  baur.id ,baur.username as userAccount ,bam.id as appId,bam.name as appName ,baur.client_ip as ip,baur.token ,baur.browser ,baur.device,baur.create_time as createTime,bd.dept_id as deptId , bd.name as bhDeptName
+        from bh_app_use_record baur
+        inner join bh_application_management bam on bam.app_id  =  baur.client_id
+        inner join bh_dept bd on bd.dept_id = bam.dept_id
+        where bd.is_deleted = 0
+
+        <if test="startTime != null ">
+            and baur.create_time >= #{startTime}
+        </if>
+        <if test="endTime != null ">
+            and baur.create_time &lt;= #{endTime}
+        </if>
+
+        <if test="key != null">
+            and baur.username like concat('%',#{key},'%')
+        </if>
+        <if test="deptId != null">
+            and bd.dept_id in
+            <foreach collection="deptId" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        <if test="appId != null">
+            and bam.id in
+            <foreach collection="appId" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        order by baur.create_time desc
+    </select>
+
+    <select id="getRecordDate" resultMap="appUseRecordVOResultMap">
+        select  bam.dept_id as deptId ,bam.id as appId , bam.name as appName ,baur.*
+        from bh_app_use_record baur
+        inner join bh_application_management bam on bam.app_id  =  baur.client_id
+        where bam.is_deleted = 0
+        <if test="startTime != null and endTime != null">
+            and baur.create_time between  #{startTime} and #{endTime}
+        </if>
+
+        <if test="appId != null">
+            and bam.id in
+            <foreach collection="appId" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+
+    </select>
+    <select id="getAppIds" resultType="com.jslc.modules.szbh.vo.HeadAppInfoVO">
+        select  distinct bam.id as appId , bam.name as appName
+        from bh_app_use_record baur
+        inner join bh_application_management bam on bam.app_id  =  baur.client_id
+        where bam.is_deleted = 0
+    </select>
+
+    <select id="getAppId" resultType="com.jslc.modules.szbh.vo.HeadAppInfoVO">
+        select distinct id as appId , name as appName
+        from bh_application_management
+        where is_deleted = 0
+        <if test="appId != null">
+            and id in
+            <foreach collection="appId" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+    <select id="getAppRecord" resultMap="appUseRecordVOResultMap">
+        select  bam.id as appId , bam.name as appName ,baur.*
+        from bh_app_use_record baur
+        inner join bh_application_management bam on bam.app_id  =  baur.client_id and bam.is_deleted = 0
+        where  bam.is_deleted = 0
+        <if test="start != null and end != null">
+            and baur.create_time between #{start} and #{end}
+        </if>
+    </select>
+    <select id="getAppsId" resultType="java.lang.Long">
+        select distinct id
+        from bh_application_management
+        where is_deleted = 0
+    </select>
+    <select id="getUserInfo" resultType="com.jslc.modules.szbh.vo.UserOnlineVO">
+        select distinct bd.dept_id as deptId , bd.name as bhDeptName, bu.avatar ,bu.name as userName,bu.account as userAccount,bu.major_position as positionName ,bu.id as userId
+        from bh_user bu
+        left join bh_dept bd on bd.dept_id = bu.major_dept
+        where bd.is_deleted = 0
+        and bu.account in
+        <foreach collection="accounts" item="account" index="index" open="(" close=")" separator=",">
+            #{account}
+        </foreach>
+    </select>
+    <select id="getUserAppRecord" resultMap="appUseRecordVOResultMap">
+        select  bam.id as appId , bam.name as appName ,baur.*
+        from bh_app_use_record baur
+        inner join bh_application_management bam on bam.app_id  =  baur.client_id and bam.is_deleted = 0
+        where  bam.is_deleted = 0 and baur.create_time between #{start} and #{end}
+        <if test="account != null">
+            and baur.username = #{account}
+        </if>
+
+    </select>
+    <select id="getAppUseRecord" resultMap="appUseRecordVOResultMap">
+        select  bam.id as appId , bam.name as appName ,baur.*
+        from bh_app_use_record baur
+        inner join bh_application_management bam on bam.app_id  =  baur.client_id and bam.is_deleted = 0
+        where  bam.is_deleted = 0
+        <if test="start != null and end != null">
+            and baur.create_time between #{start} and #{end}
+        </if>
+
+    </select>
+    <select id="getAppUseStatistics" resultMap="appUseRecordVOResultMap">
+        select baur.*,bam.name appName,bam.id as appId,bac.name categoryName
+        from bh_application_management bam
+        inner join bh_dept bd on bd.dept_id = bam.dept_id and bd.is_deleted = 0
+        inner join bh_application_category bac on bac.id = bam.category_id and bac.is_deleted = 0 and bac.type = 1
+        inner join bh_application_category bac1 on bac1.id = bac.parent_id and bac1.is_deleted = 0 and bac1.type = 1
+        inner join oauth_client_details ocd on ocd.client_id = bam.app_id
+		inner join bh_app_use_record baur on bam.app_id  =  baur.client_id
+        where bam.is_deleted = 0  and bac1.name = '应用'
+        <if test="start != null and end != null">
+            and baur.create_time between #{start} and #{end}
+        </if>
+
+
+    </select>
+    <select id="getAccessStatistics" resultMap="appUseRecordVOResultMap">
+        select baur.*,bam.name appName,bam.id as appId,bam.app_secret as appSecret
+        from bh_application_management bam
+        inner join bh_app_use_record baur on bam.app_id  =  baur.client_id
+        where bam.is_deleted = 0
+        <if test="start != null and end != null">
+            and baur.create_time between #{start} and #{end}
+        </if>
+    </select>
+
+</mapper>

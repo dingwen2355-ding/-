@@ -1,0 +1,14 @@
+# 开发环境配置
+server:
+  # 服务器的HTTP端口，默认为80
+  port: 9900
+  servlet:
+    # 应用的访问路径
+    context-path: /
+spring:
+  profiles:
+    active: prod
+management:
+  endpoint:
+    gateway:
+      enabled: false

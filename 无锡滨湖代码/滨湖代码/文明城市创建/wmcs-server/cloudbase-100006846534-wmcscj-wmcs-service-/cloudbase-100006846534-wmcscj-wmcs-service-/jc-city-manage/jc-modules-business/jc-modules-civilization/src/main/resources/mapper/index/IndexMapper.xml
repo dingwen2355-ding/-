@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.civilization.index.mapper.IndexMapper">
+
+    <select id="dataCount" resultType="cn.wxgis.jc.civilization.index.vo.CivilizationDataCountVO">
+        select
+            civilizationTown.countNum civilizationTownCount,
+            civilizationCompany.countNum civilizationCompanyCount,
+            civilizationFamily.countNum civilizationFamilyCount,
+            civilizationSchool.countNum civilizationSchoolCount,
+            civilizationAdvanced.countNum civilizationAdvancedCount,
+            checkUser.countNum checkUserCount,
+            checkPoints.countNum checkPointsCount,
+            dept.countNum deptCount,
+            deviceChannel.countNum deviceChannelCount
+        from (
+                  (select count(1) as countNum from data_civilization_town) civilizationTown,
+                 (select count(1) as countNum from data_civilization_company) civilizationCompany,
+                 (select count(1) as countNum from data_civilization_family) civilizationFamily,
+                 (select count(1) as countNum from data_civilization_school) civilizationSchool,
+                 (select count(1) as countNum from data_civilization_advanced) civilizationAdvanced,
+                 (select count(1) as countNum from data_check_user) checkUser,
+                 (select count(1) as countNum from data_check_points) checkPoints,
+                 (select count(1) as countNum from sys_dept) dept,
+                 (select count(1) as countNum from data_device_channel) deviceChannel
+                 )
+    </select>
+</mapper>

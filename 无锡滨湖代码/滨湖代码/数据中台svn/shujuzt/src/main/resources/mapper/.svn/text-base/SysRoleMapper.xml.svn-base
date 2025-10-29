@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.SysRoleMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tenant_id, version, app_id, remark, is_deleted, created_by, created_time, updated_by, updated_time, name
+    </sql>
+
+    <select id="listByUser" parameterType="java.lang.Long" resultType="com.grandlynn.spa.catalogue.entity.SysRole">
+        select <include refid="Base_Column_List"/>
+        from sys_role t,
+             sys_admin_user_role tt
+        where t.id = tt.role_id
+          and tt.user_id = #{userid}
+    </select>
+
+</mapper>

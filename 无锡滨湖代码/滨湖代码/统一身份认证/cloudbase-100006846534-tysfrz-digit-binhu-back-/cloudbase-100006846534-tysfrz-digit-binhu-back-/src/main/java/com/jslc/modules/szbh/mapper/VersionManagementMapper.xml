@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.VersionManagementMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="versionManagementResultMap" type="com.jslc.modules.szbh.entity.VersionManagement">
+        <result column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="version" property="version"/>
+        <result column="content" property="content"/>
+    </resultMap>
+
+    <resultMap id="versionManagementVOResultMap" type="com.jslc.modules.szbh.vo.VersionManagementVO" extends="versionManagementResultMap">
+
+    </resultMap>
+
+
+    <select id="selectVersionManagementPage" resultMap="versionManagementVOResultMap">
+        select * from bh_version_management where is_deleted = 0 order by create_time desc
+    </select>
+    <select id="getDetail" resultMap="versionManagementVOResultMap">
+        select * from bh_version_management where is_deleted = 0 and id = #{id}
+    </select>
+
+</mapper>

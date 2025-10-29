@@ -1,0 +1,209 @@
+<template>
+  <div>
+    <div class="back">
+      <div  :style="`zoom:${vboxZoom};backgroundColor:${backgroundCoolor};overflow: hidden;`" ref='vbox' class="box" v-html="info.content" @click="fullScreen">
+      
+    </div>
+  </div>
+    
+      <div style="margin-top:30px;width: 100%;min-height:500px;height: 520px;">
+        <info-editor v-model="info.content" :backgroundCoolor="backgroundCoolor" @selectBackground="selectBackground" @selectColor="selectColor" @ok="loadModel" ></info-editor>
+      </div>
+   
+      <a-card :loading="loading" >
+        <div style="display: flex;    flex-wrap: wrap;
+    justify-content: space-evenly;">
+        <div v-for="model in modelList" :key="model.id">
+          <a-card   :title="model.modelName"  size="small" style="margin-bottom:5px;cursor: pointer;">
+      <a slot="extra" @click="deleteModel(model.id)">删除</a>
+          <div @click="selectModel(model)" style=" height: 1728px;
+    width: 4224px;zoom:0.1;" v-html="model.content"></div>
+    
+    </a-card>
+  </div>
+         <!--  <model-card :data="model" @show="show(model)"></model-card> -->
+        </div>
+      </a-card>
+    <div v-html="modelHtml" ref='showDiv'>
+
+    </div>
+  </div>
+</template>
+
+
+<script>
+import InfoEditor from './InfoEditor.vue'
+import ModelCard from '@/views/modules/infoRelease/modelCard.vue'
+import { deleteAction, getAction } from '../../../api/manage'
+export default {
+  components: { InfoEditor,ModelCard },
+  name: "infoRelease",
+  data() {
+    return {
+      description: '信息发布平台',
+      isfullScreen:false,
+      loading:false,
+      backgroundCoolor:'antiquewhite',
+      info: {
+        content: '<p style="text-align: center;"><span style="font-size: 70pt;">欢迎各位领导莅临指导</span></p>'
+      },
+      mouseFlag: false,
+      modelHtml: '',
+        modelList: [      
+      ],
+      url:{
+        list:'/info/infoModel/list',
+      delete:'/info/infoModel/delete',
+
+    }
+    }
+  },
+  computed:{
+    vboxZoom(){
+      return this.isfullScreen?1:0.15
+    },
+    con(){}
+  },
+  created(){
+    this.loadModel()
+  },
+  methods: {
+    loadModel(){
+      this.loading=true
+      getAction(this.url.list,{}).then(res=>{
+        if(res.success){
+          this.modelList=res.result.records
+        }
+      }).finally(()=>{
+        this.loading=false
+      })
+    },
+    selectModel(record){
+      this.info.id=record.id
+      this.info.content=record.content
+    },
+    deleteModel(id,e){
+      deleteAction(this.url.delete,{id}).then(res=>{
+        if(res.success){
+          this.$message.success('删除成功')
+         this.loadModel()
+        }else{
+          this.$message.error(res.message)
+        }
+      })
+    },
+    print() {
+      console.log(this.info.content);
+      this.$refs.vbox.style.zoom = 0.1
+    },
+    show(model) {
+      console.log(model);
+      this.info.content = model.content
+      
+    },
+    selectBackground(base64){
+      //this.$refs.vbox.style.height='20px'
+      this.$refs.vbox.style.backgroundImage='url('+base64+')'
+    },
+    selectColor(color){
+      this.backgroundCoolor=color
+     // this.$refs.vbox.style.backgroundColor=color
+    },
+    fullScreen() {
+      let element = this.$refs.vbox;
+      if(this.isfullScreen){
+        if(document.exitFullScreen) {
+            document.exitFullScreen();
+        //兼容Firefox
+        } else if(document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        //兼容Chrome, Safari and Opera等
+        } else if(document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        //兼容IE/Edge
+        } else if(element.msExitFullscreen) {
+            element.msExitFullscreen();
+        }
+        this.$nextTick(()=>{
+         // this.$refs.vbox.style.zoom = 0.15
+          this.isfullScreen=false
+        })
+      }else{
+        if (element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if (element.webkitRequestFullScreen) {
+        element.webkitRequestFullScreen();
+      } else if (element.mozRequestFullScreen) {
+        element.mozRequestFullScreen();
+      } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+      }
+      this.$nextTick(()=>{
+       // this.$refs.vbox.style.zoom = 1
+          this.isfullScreen=true
+        })
+      }
+     
+     // this.$refs.vbox.style.zoom = 1
+      if (this.mouseFlag) {
+        element.style.cursor = "none"
+      } else {
+        element.style.cursor = "pointer"
+      }
+    //  this.isfullScreen = !this.isfullScreen
+    }
+  },
+/*   mounted: {
+    
+  } */
+}
+</script>
+<style lang="less" scoped>
+  .back{
+    padding:20px;
+    background-image:url(~@/assets/墙纸地板.png)
+  }
+  /** Button按钮间距 */
+  .ant-btn {
+    margin-left: 3px
+  }
+
+  .ant-card-body .table-operator {
+    margin-bottom: 18px;
+  }
+
+  .ant-table-tbody .ant-table-row td {
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  .anty-row-operator button {
+    margin: 0 5px
+  }
+
+  .ant-btn-danger {
+    background-color: #ffffff
+  }
+
+  .ant-modal-cust-warp {
+    height: 100%
+  }
+
+  .ant-modal-cust-warp .ant-modal-body {
+    height: calc(100% - 110px) !important;
+    overflow-y: auto
+  }
+
+  .ant-modal-cust-warp .ant-modal-content {
+    height: 90% !important;
+    overflow-y: hidden
+  }
+  .box {
+    //background-color: antiquewhite;
+    background-size: cover;
+    cursor: pointer;
+    height: 1728px;
+    width: 4224px;
+    margin: 0 auto;
+  }
+</style>

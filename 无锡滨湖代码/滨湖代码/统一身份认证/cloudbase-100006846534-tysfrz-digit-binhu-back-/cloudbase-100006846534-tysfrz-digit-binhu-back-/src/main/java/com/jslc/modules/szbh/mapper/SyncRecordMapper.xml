@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.SyncRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="syncRecordResultMap" type="com.jslc.modules.szbh.entity.SyncRecord">
+        <result column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="up_or_down" property="upOrDown"/>
+        <result column="app_name" property="appName"/>
+        <result column="data_type" property="dataType"/>
+        <result column="result" property="result"/>
+        <result column="cause" property="cause"/>
+        <result column="is_automatic" property="isAutomatic"/>
+    </resultMap>
+
+    <resultMap id="syncRecordVOResultMap" type="com.jslc.modules.szbh.vo.SyncRecordVO" extends="syncRecordResultMap">
+
+    </resultMap>
+
+
+    <select id="selectSyncRecordPage" resultMap="syncRecordVOResultMap">
+        select * from bh_sync_record where is_deleted = 0
+    </select>
+
+    <select id="getSyncRecordList" resultMap="syncRecordVOResultMap">
+        select * from bh_sync_record
+        where 1=1
+            <if test="key != null and key !=''">
+               and app_name like concat('%',#{key},'%')
+            </if>
+
+            <if test="startTime != null and endTime != null">
+                and create_time between #{startTime} and #{endTime}
+            </if>
+
+            <if test="type != null and type != ''">
+                and data_type like concat('%',#{type},'%') and up_or_down like '%上游%'
+            </if>
+        order by create_time desc
+
+    </select>
+
+
+    <select id="getDownList" resultMap="syncRecordVOResultMap">
+        select * from bh_sync_record
+        where up_or_down = '下游同步'
+        <if test="id != null">
+            and downstream_id =#{id}
+        </if>
+        <if test="key != null and key !=''">
+            and app_name like concat('%',#{key},'%')
+        </if>
+        order by create_time desc
+    </select>
+
+</mapper>

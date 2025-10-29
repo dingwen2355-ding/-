@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.monitor.mapper.MonitorJvmMapper">
+
+    <sql id="apiNames">("人员信息","部门信息")</sql>
+
+    <select id="getHourStatisticsApi" resultType="com.jslc.modules.monitor.vo.ApiVO">
+        select
+            sum(apiAmount) apiAmount,
+            DATE_FORMAT( create_time, '%Y-%m-%d %H' ) time
+        from (
+            SELECT
+                1 apiAmount ,
+                create_time
+            FROM
+                bh_sync_record
+            WHERE
+                up_or_down = '下游同步'
+                AND TIMESTAMPDIFF(HOUR,create_time,now()) &lt;= 24
+            UNION all
+            SELECT
+                1 apiAmount ,
+                create_time
+            FROM
+                bh_app_use_record
+            WHERE
+                TIMESTAMPDIFF(HOUR,create_time,now()) &lt;= 24
+        ) temp group by  DATE_FORMAT( create_time, '%Y-%m-%d %H' )
+    </select>
+
+    <select id="getDayStatisticsApi" resultType="com.jslc.modules.monitor.vo.ApiVO">
+        select
+             sum(apiAmount) apiAmount
+        from (
+             SELECT
+                 1 apiAmount
+             FROM
+                 bh_sync_record
+             WHERE
+                 up_or_down = '下游同步' and
+                 DATE_FORMAT( create_time, '%Y-%m-%d' ) = DATE_FORMAT( now(), '%Y-%m-%d' )
+             UNION all
+             SELECT
+                 1 apiAmount
+             FROM
+                 bh_app_use_record
+             WHERE
+                 DATE_FORMAT( create_time, '%Y-%m-%d' ) = DATE_FORMAT( now(), '%Y-%m-%d' )
+        ) temp
+    </select>
+
+    <select id="getApiAbnormaAmount" resultType="long">
+        select
+            count(1)
+        from
+            bh_ip_abnormal_log
+        where
+            result = 'true'
+    </select>
+
+</mapper>

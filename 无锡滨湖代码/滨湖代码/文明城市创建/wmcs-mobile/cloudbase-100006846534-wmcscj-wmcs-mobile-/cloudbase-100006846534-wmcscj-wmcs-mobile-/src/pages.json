@@ -1,0 +1,258 @@
+{
+  "pages": [
+    {
+      "path": "pages/gongdan/workDesk",
+      "style": {
+        "navigationBarTitleText": "工作台",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/login/login",
+      "style": {
+        "navigationBarTitleText": "登录",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/gongdan/shangbao",
+      "style": {
+        "navigationBarTitleText": "事件上报",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/gongdan/wodeshangbao",
+      "style": {
+        "navigationBarTitleText": "我的上报",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/gongdan/daifenbo",
+      "style": {
+        "navigationBarTitleText": "待分拨",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/gongdan/handle",
+      "style": {
+        "navigationBarTitleText": "处理",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/gongdan/daichuzhi",
+      "style": {
+        "navigationBarTitleText": "待处置",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/gongdan/daihecha",
+      "style": {
+        "navigationBarTitleText": "待核查",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/gongdan/yanqishijian",
+      "style": {
+        "navigationBarTitleText": "延期事件",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/gongdan/shijianxiangqing",
+      "style": {
+        "navigationBarTitleText": "事件详情",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/screen/shijianxiangqing",
+      "style": {
+        "navigationBarTitleText": "事件详情",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/gongdan/z12345",
+      "style": {
+        "navigationBarTitleText": "转12345工单",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/gongdan/zonglan",
+      "style": {
+        "navigationBarTitleText": "事件总览",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/gongdan/mygps",
+      "style": {
+        "navigationBarTitleText": "我的定位",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/gongdan/mypatrol",
+      "style": {
+        "navigationBarTitleText": "巡查点位",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/screen/home",
+      "style": {
+        "navigationBarTitleText": "文明城市创建领导驾驶舱",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/screen/gongdan",
+      "style": {
+        "navigationBarTitleText": "文明城市创建领导驾驶舱",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/screen/xiangqing",
+      "style": {
+        "navigationBarTitleText": "文明城市创建领导驾驶舱",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/screen/jixiaokaohe",
+      "style": {
+        "navigationBarTitleText": "文明城市创建领导驾驶舱",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/data/dianweileixing",
+      "style": {
+        "navigationBarTitleText": "点位类型"
+      }
+    },
+    {
+      "path": "pages/data/zerendanwei",
+      "style": {
+        "navigationBarTitleText": "责任单位"
+      }
+    },
+    {
+      "path": "pages/data/jianchaxiang",
+      "style": {
+        "navigationBarTitleText": "检查项"
+      }
+    },
+    {
+      "path": "pages/data/wenmingcunzhen",
+      "style": {
+        "navigationBarTitleText": "文明村镇",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/data/wenmingcunzhenDetail",
+      "style": {
+        "navigationBarTitleText": "文明村镇详情",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/data/wenmingdanwei",
+      "style": {
+        "navigationBarTitleText": "文明单位",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/data/wenmingdanweiDetail",
+      "style": {
+        "navigationBarTitleText": "文明单位详情",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/data/wenmingxiaoyuan",
+      "style": {
+        "navigationBarTitleText": "文明校园",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/data/wenmingxiaoyuanDetail",
+      "style": {
+        "navigationBarTitleText": "文明校园详情",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/data/wenmingjiating",
+      "style": {
+        "navigationBarTitleText": "文明家庭",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/data/wenmingjiatingDetail",
+      "style": {
+        "navigationBarTitleText": "文明家庭详情",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/data/dianxingxianjinrenwu",
+      "style": {
+        "navigationBarTitleText": "典型先进人物",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/data/dianxingxianjinrenwuDetail",
+      "style": {
+        "navigationBarTitleText": "典型先进人物详情",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/data/zhiyuanzhe",
+      "style": {
+        "navigationBarTitleText": "志愿者",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/data/zhiyuanzheDetail",
+      "style": {
+        "navigationBarTitleText": "志愿者详情",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/data/zhiyuanhuodong",
+      "style": {
+        "navigationBarTitleText": "志愿活动",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/data/zhiyuanhuodongDetail",
+      "style": {
+        "navigationBarTitleText": "志愿活动详情",
+        "navigationStyle": "custom"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "文明城市创建领导驾驶舱",
+    "navigationBarBackgroundColor": "#4770bf"
+  }
+}

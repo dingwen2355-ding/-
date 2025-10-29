@@ -1,0 +1,140 @@
+8
+
+dir
+2
+https://svn.coding.net/cloudbase-100006846534/sjzt/data_catalogue/src/main/java/com/grandlynn/util
+https://svn.coding.net/cloudbase-100006846534/sjzt/data_catalogue
+
+
+
+2024-08-19T03:35:20.140856Z
+2
+931038316@qq.com
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+a817826f-593a-42dc-8cd7-a1026e031525
+
+BeanHelper.java
+file
+
+
+
+
+2024-10-24T06:01:24.219000Z
+d49c43323b727749759a8f4873239329
+2024-08-19T03:35:20.140856Z
+2
+931038316@qq.com
+has-props
+
+BeanPowerHelper.java
+file
+
+
+
+
+2024-10-24T06:01:24.219000Z
+dd1e92c9810c910edb1b25c6f0042565
+2024-08-19T03:35:20.140856Z
+2
+931038316@qq.com
+has-props
+
+CollectionUtil.java
+file
+
+
+
+
+2024-10-24T06:01:24.219000Z
+f6f605b9659669d696e52fc2e615493f
+2024-08-19T03:35:20.140856Z
+2
+931038316@qq.com
+has-props
+
+DateUtils.java
+file
+
+
+
+
+2024-10-24T06:01:24.219000Z
+eeb06459095045305099bd0039ddcca9
+2024-08-19T03:35:20.140856Z
+2
+931038316@qq.com
+has-props
+
+JsonUtil.java
+file
+
+
+
+
+2024-10-24T06:01:24.219000Z
+f6fe1222c9dcbfd4a081090f958984b4
+2024-08-19T03:35:20.140856Z
+2
+931038316@qq.com
+has-props
+
+OkHttp3Utils.java
+file
+
+
+
+
+2024-10-24T06:01:24.219000Z
+68006335e6ca6d1589fd95b912481d87
+2024-08-19T03:35:20.140856Z
+2
+931038316@qq.com
+has-props
+
+StringUtil.java
+file
+
+
+
+
+2024-10-24T06:01:24.219000Z
+534a535590e74db68b6226f1a1f88564
+2024-08-19T03:35:20.140856Z
+2
+931038316@qq.com
+has-props
+
+config
+dir
+
+constant
+dir
+
+extension
+dir
+
+impl
+dir
+
+mapper
+dir
+
+pageHelper
+dir
+
+pojo
+dir
+

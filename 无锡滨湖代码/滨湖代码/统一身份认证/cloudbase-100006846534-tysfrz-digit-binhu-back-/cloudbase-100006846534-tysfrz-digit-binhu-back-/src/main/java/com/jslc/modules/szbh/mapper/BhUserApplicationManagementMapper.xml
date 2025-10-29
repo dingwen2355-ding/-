@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.BhUserApplicationManagementMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="bhUserApplicationManagementResultMap" type="com.jslc.modules.szbh.entity.BhUserApplicationManagement">
+        <result column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="application_management_id" property="applicationManagementId"/>
+    </resultMap>
+
+    <select id="selectBhUserApplicationManagementPage" resultMap="bhUserApplicationManagementResultMap">
+        select * from bh_user_application_management where is_deleted = 0
+    </select>
+
+    <select id="getUserApp" resultMap="bhUserApplicationManagementResultMap">
+        select buam.* from bh_user_application_management buam
+        inner join bh_user bu on bu.id = buam.user_id
+        where bu.is_deleted = 0
+        <if test="userAccount != null">
+            and bu.account = #{userAccount}
+        </if>
+        <if test=" id != null">
+            and buam.application_management_id = #{id}
+        </if>
+
+    </select>
+
+    <select id="getDzcsUserNum" resultType="java.lang.Integer">
+       select count(1) from bh_user bu
+        inner join bh_user_application_management buam on buam.user_id = bu.id
+        inner join bh_application_management bam on bam.id = buam.application_management_id
+        where bam.name = '底座超市'
+    </select>
+
+</mapper>

@@ -1,0 +1,311 @@
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service
+END
+CatalogueHelpDocumentService.java
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueHelpDocumentService.java
+END
+MessageService.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/MessageService.java
+END
+CatalogueDataSourceDatabaseService.java
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueDataSourceDatabaseService.java
+END
+CatalogueSysTableService.java
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueSysTableService.java
+END
+SysOperationLogService.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/SysOperationLogService.java
+END
+TotalCompareFieldLogService.java
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/TotalCompareFieldLogService.java
+END
+CatalogueDataSourceApiService.java
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueDataSourceApiService.java
+END
+CatalogueSysTableResourceSerialService.java
+K 25
+svn:wc:ra_dav:version-url
+V 148
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueSysTableResourceSerialService.java
+END
+SysMenuService.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/SysMenuService.java
+END
+ForeignTotalListService.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/ForeignTotalListService.java
+END
+KmsService.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/KmsService.java
+END
+CatalogueOrgSysService.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueOrgSysService.java
+END
+CatalogueOrgTypeService.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueOrgTypeService.java
+END
+CatalogueTableFieldService.java
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueTableFieldService.java
+END
+CatalogueVersionLogService.java
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueVersionLogService.java
+END
+ReportCatalogueService.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/ReportCatalogueService.java
+END
+ChuangshuService.java
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/ChuangshuService.java
+END
+CatalogueTableApproveRecordService.java
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueTableApproveRecordService.java
+END
+ForeignSysService.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/ForeignSysService.java
+END
+SmsService.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/SmsService.java
+END
+CatalogueOrgContentRelationService.java
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueOrgContentRelationService.java
+END
+FileOperateStrategy.java
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/FileOperateStrategy.java
+END
+AnalysisService.java
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/AnalysisService.java
+END
+CatalogueOrgVersionService.java
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueOrgVersionService.java
+END
+AbstractValidFile.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/AbstractValidFile.java
+END
+SysRoleMenuService.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/SysRoleMenuService.java
+END
+SysRoleService.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/SysRoleService.java
+END
+CatalogueFieldBaseConfigService.java
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueFieldBaseConfigService.java
+END
+CatalogueOrgSysVersionService.java
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueOrgSysVersionService.java
+END
+TodoBusinessService.java
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/TodoBusinessService.java
+END
+SysTemplateService.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/SysTemplateService.java
+END
+SysAdminUserService.java
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/SysAdminUserService.java
+END
+CatalogueDataSourceService.java
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueDataSourceService.java
+END
+CatalogueSysTableVersionService.java
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueSysTableVersionService.java
+END
+TableMatterService.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/TableMatterService.java
+END
+CatalogueCommonService.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueCommonService.java
+END
+SysAdminUserOrgService.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/SysAdminUserOrgService.java
+END
+TotalCompareTableLogService.java
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/TotalCompareTableLogService.java
+END
+CatalogueTableBaseConfigService.java
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueTableBaseConfigService.java
+END
+FastFileService.java
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/FastFileService.java
+END
+InterfaceService.java
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/InterfaceService.java
+END
+CatalogueOrgService.java
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueOrgService.java
+END
+DataSharingAccountService.java
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/DataSharingAccountService.java
+END
+CatalogueForeignBaseConfigService.java
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueForeignBaseConfigService.java
+END
+ForeignOaOrgService.java
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/ForeignOaOrgService.java
+END
+CatalogueFileOperationLogService.java
+K 25
+svn:wc:ra_dav:version-url
+V 142
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueFileOperationLogService.java
+END
+CataloguePublishCheckService.java
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CataloguePublishCheckService.java
+END
+TriggersJobService.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/TriggersJobService.java
+END
+CatalogueTableFieldVersionService.java
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/CatalogueTableFieldVersionService.java
+END
+SysAdminUserRoleService.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/SysAdminUserRoleService.java
+END
+AuthAppUserService.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/service/AuthAppUserService.java
+END

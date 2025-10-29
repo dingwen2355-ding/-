@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <script src="/static/utils/userinfo.js"></script>
+    <script src="/static/utils/ac_conf.js"></script>
+    <script src="/static/utils/ac.min.js"></script>
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+
+  <script>
+    /* 屏幕适配 */
+    var width =
+      document.documentElement.clientWidth || document.body.clientWidth;
+
+    var ratio = width / 1980; /* 当前的设配比率 / 设定的分辨率 */
+    var fontSize = 100 * ratio;
+    document.getElementsByTagName("html")[0].style["font-size"] =
+      fontSize + "px";
+  </script>
+
+  <body>
+    <noscript>
+      <strong
+        >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
+        properly without JavaScript enabled. Please enable it to
+        continue.</strong
+      >
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

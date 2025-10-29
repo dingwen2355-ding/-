@@ -1,0 +1,80 @@
+// 表格
+.el-table {
+    th {
+        color: rgba(0, 0, 0, 0.4);
+        font-weight: 400;
+    }
+    .cell-left{
+        .cell{
+            text-align: left;
+            padding-left: 10px !important;
+            .first-indent{
+                margin-left:24px;
+            }
+        }
+    }
+}
+
+// 输入框
+.el-input__inner:focus {
+    outline:none;
+    border: 1px solid var(--td-brand-color);
+}
+.el-cascader .el-input .el-input__inner:focus, .el-cascader .el-input.is-focus .el-input__inner{
+    border-color: var(--td-brand-color);
+}
+.el-select .el-input.is-focus .el-input__inner{
+    border-color: var(--td-brand-color);
+}
+
+// 单选框变色
+.el-radio__inner:hover{
+    border-color: var(--td-brand-color);
+}
+.el-cascader-node.in-active-path, .el-cascader-node.is-active, .el-cascader-node.is-selectable.in-checked-path{
+    color: var(--td-brand-color);
+}
+.el-radio__input.is-checked .el-radio__inner{
+    border-color: var(--td-brand-color);
+    background: var(--td-brand-color);
+}
+.el-radio.is-checked .el-radio__label{
+    color: var(--td-brand-color);
+}
+
+// 复选框颜色变更
+.el-checkbox__input.is-checked+.el-checkbox__label{
+    color: var(--td-brand-color);
+}
+.el-checkbox__input.is-checked .el-checkbox__inner{
+    background-color: var(--td-brand-color);
+    border-color: var(--td-brand-color);
+}
+.el-checkbox__inner:hover{
+    border-color: var(--td-brand-color);
+}
+.el-checkbox__input.is-focus .el-checkbox__inner{
+    border-color: var(--td-brand-color);
+}
+.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner{
+    background-color: var(--td-brand-color);
+    border-color: var(--td-brand-color);
+}
+
+// check切换框
+.el-switch.is-checked .el-switch__core{
+    border-color: var(--td-brand-color);
+    background: var(--td-brand-color);
+}
+
+// select下拉框
+.el-select-dropdown__item.selected{
+    color: var(--td-brand-color);
+}
+.el-select .el-input__inner:focus{
+    border-color: var(--td-brand-color);
+}
+
+.el-select-dropdown__item{
+    max-width: 600px;
+}

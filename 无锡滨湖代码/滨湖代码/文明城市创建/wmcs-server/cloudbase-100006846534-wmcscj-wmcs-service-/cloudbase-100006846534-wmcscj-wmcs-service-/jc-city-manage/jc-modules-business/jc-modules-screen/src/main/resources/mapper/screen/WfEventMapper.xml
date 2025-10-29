@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.screen.web.mapper.WfEventMapper">
+
+    <select id="sourceCount" resultType="cn.wxgis.jc.civilization.screen.EventSource">
+        select * from screen_event_source
+    </select>
+
+    <select id="getTodoCountByToday" resultType="java.lang.Integer">
+        select count(1) count from wf_event_report where TO_DAYS(report_time) = TO_DAYS(now()) and `status` != 60
+    </select>
+
+    <select id="getFinishCountByToday" resultType="java.lang.Integer">
+        select count(1) count from wf_event_report r
+            left join wf_instance i on i.id = r.flowinstanceid
+        where TO_DAYS(i.endtime) = TO_DAYS(now()) and `status` = 60
+    </select>
+
+    <select id="getEventPage" resultType="cn.wxgis.jc.screen.domain.vo.event.WfEventVo">
+        select * from (
+            select 1 eventSource, data.id, data.code, data.cycle, DATE_FORMAT(data.report_time, '%Y-%m-%d %H:%i:%s') checkDate, DATE_FORMAT(flow.endtime, '%Y-%m-%d %H:%i:%s') endTime,
+            data.extension_flag extensionFlag, DATE_FORMAT(data.timelimit, '%Y-%m-%d %H:%i:%s') planDate, et.name eventTypeName,
+            data.content, data.event_title checkItemName, data.check_points pointName,  data.check_points_type typeName, data.score, data.region_name regionName, data.latitude, data.longitude,
+            (select GROUP_CONCAT(name SEPARATOR ',') from sys_dept where FIND_IN_SET(id, (select dept_ids from wf_event_report r where r.id = data.id))) deptNames,
+            case data.status when 10 then '未整改' when 60 then '已整改' else '整改中' end as status
+            from wf_event_report data
+            left join quota_event_type et on et.id = data.event_type
+            left join wf_instance flow on flow.id = data.flowinstanceid
+            union
+            select 5 eventSource, data.id, '' code, data.check_name cycle, DATE_FORMAT(data.check_date, '%Y-%m-%d %H:%i:%s') checkDate, DATE_FORMAT(data.replydate2, '%Y-%m-%d %H:%i:%s') endTime,
+            case data.state when 2 then 1 else 0 end as extensionFlag, DATE_FORMAT(data.plan_date,'%Y-%m-%d %H:%i:%s') planDate,  et.name eventTypeName,
+            data.check_info content, data.check_item_name checkItemName, data.point_name pointName, data.type_name, data.cscore, data.region_name regionName, '' latitude, '' longitude, data.depart_name deptNames,
+            case data.state when 0 then '未整改' when 1 then '已整改' when 3 then '已整改' else '整改中' end as status
+            from work_event data
+            left join data_check_item ci on ci.name = data.check_item_name
+            left join quota_event_type et on et.id = ci.event_type_id
+        ) t
+        <where>
+            <if test="param.eventTypeName != null and param.eventTypeName != ''">
+                and t.eventTypeName = #{param.eventTypeName}
+            </if>
+            <if test="param.pointName != null and param.pointName != ''">
+                and t.pointName = #{param.pointName}
+            </if>
+            <if test="param.regionName != null and param.regionName != ''">
+                and t.regionName = #{param.regionName}
+            </if>
+            <if test="param.statusMark != null and param.statusMark != 0">
+                <choose>
+                    <when test="param.statusMark == 1">
+                        and t.status != '已整改'
+                    </when>
+                    <when test="param.statusMark == 2">
+                        and t.extensionFlag = 1
+                    </when>
+                    <when test="param.statusMark == 3">
+                        and t.status = '已整改'
+                    </when>
+                </choose>
+            </if>
+            <if test="param.todayStatus != null and param.todayStatus != 0">
+                <choose>
+                    <when test="param.todayStatus == 1">
+                        and TO_DAYS(checkDate) = TO_DAYS(now()) and t.status != '已整改'
+                    </when>
+                    <when test="param.todayStatus == 2">
+                        and TO_DAYS(endTime) = TO_DAYS(now()) and t.status = '已整改'
+                    </when>
+                </choose>
+            </if>
+        </where>
+        order by t.checkDate desc
+    </select>
+
+    <select id="getEventList" resultType="cn.wxgis.jc.screen.domain.vo.event.WfEventVo">
+        select * from (
+            select 1 eventSource, data.id, data.code, data.cycle, DATE_FORMAT(data.report_time, '%Y-%m-%d %H:%i:%s') checkDate, DATE_FORMAT(flow.endtime, '%Y-%m-%d %H:%i:%s') endTime,
+            data.extension_flag extensionFlag, DATE_FORMAT(data.timelimit, '%Y-%m-%d %H:%i:%s') planDate, et.name eventTypeName,
+            data.content, data.event_title checkItemName, data.check_points pointName,  data.check_points_type typeName, data.score, data.region_name regionName, data.latitude, data.longitude,
+            (select GROUP_CONCAT(name SEPARATOR ',') from sys_dept where FIND_IN_SET(id, (select dept_ids from wf_event_report r where r.id = data.id))) deptNames,
+            case data.status when 10 then '未整改' when 60 then '已整改' else '整改中' end as status
+            from wf_event_report data
+            left join quota_event_type et on et.id = data.event_type
+            left join wf_instance flow on flow.id = data.flowinstanceid
+            union
+            select 5 eventSource, data.id, '' code, data.check_name cycle, DATE_FORMAT(data.check_date, '%Y-%m-%d %H:%i:%s') checkDate, DATE_FORMAT(data.replydate2, '%Y-%m-%d %H:%i:%s') endTime,
+            case data.state when 2 then 1 else 0 end as extensionFlag, DATE_FORMAT(data.plan_date,'%Y-%m-%d %H:%i:%s') planDate, et.name eventTypeName,
+            data.check_info content, data.check_item_name checkItemName, data.point_name pointName, data.type_name, data.cscore, data.region_name regionName, '' latitude, '' longitude, data.depart_name deptNames,
+            case data.state when 0 then '未整改' when 1 then '已整改' when 3 then '已整改' else '整改中' end as status
+            from work_event data
+            left join data_check_item ci on ci.`name` = data.check_item_name
+            left join quota_event_type et on et.id = ci.event_type_id
+        ) t
+        <where>
+            <if test="pointName != null and pointName != ''">
+                and t.pointName = #{pointName}
+            </if>
+            <if test="regionName != null and regionName != ''">
+                and t.regionName = #{regionName}
+            </if>
+            <if test="statusMark != null and statusMark != 0">
+                <choose>
+                    <when test="statusMark == 1">
+                        and t.status != '已整改'
+                    </when>
+                    <when test="statusMark == 2">
+                        and t.extensionFlag = 1
+                    </when>
+                    <when test="statusMark == 3">
+                        and t.status = '已整改'
+                    </when>
+                </choose>
+            </if>
+            <if test="todayStatus != null and todayStatus != 0">
+                <choose>
+                    <when test="todayStatus == 1">
+                        and TO_DAYS(checkDate) = TO_DAYS(now()) and t.status != '已整改'
+                    </when>
+                    <when test="todayStatus == 2">
+                        and TO_DAYS(endTime) = TO_DAYS(now()) and t.status = '已整改'
+                    </when>
+                </choose>
+            </if>
+        </where>
+        order by t.checkDate desc
+    </select>
+
+    <select id="getEventInfoByReport" resultType="cn.wxgis.jc.screen.domain.vo.event.WfEventInfoVo">
+        select 1 eventSource, data.id, data.code, data.cycle, DATE_FORMAT(data.report_time, '%Y-%m-%d %H:%i:%s') checkDate, DATE_FORMAT(flow.endtime, '%Y-%m-%d %H:%i:%s') endTime,
+               data.extension_flag extensionFlag, DATE_FORMAT(data.timelimit, '%Y-%m-%d %H:%i:%s') planDate, et.name eventTypeName,
+               data.content, data.event_title checkItemName, data.check_points pointName,  data.check_points_type typeName, data.score, data.region_name regionName, data.latitude, data.longitude,
+               (select GROUP_CONCAT(name SEPARATOR ',') from sys_dept where FIND_IN_SET(id, (select dept_ids from wf_event_report r where r.id = data.id))) deptNames,
+               case data.status when 10 then '未整改' when 60 then '已整改' else '整改中' end as status,
+               data.flowinstanceid
+        from wf_event_report data
+        left join quota_event_type et on et.id = data.event_type
+        left join wf_instance flow on flow.id = data.flowinstanceid
+        where data.id = #{eventId}
+    </select>
+
+    <select id="getEventNodeByReport" resultType="cn.wxgis.jc.screen.domain.vo.event.WfEventNodeVo">
+        select 1 eventSource, h.id, h.flowid, h.flowname, h.handletime, h.handleopinion, h.nodeid, h.nodename, h.timelimit, h.handle_dept,
+               h.handlerid, u.user_name, u.nick_name, h.attchpath
+        from wf_node_history h
+                 left join sys_user u on u.id = h.handlerid
+        where flowinstanceid = #{flowinstanceid} order by handletime desc
+    </select>
+
+    <select id="getEventInfoByHistory" resultType="cn.wxgis.jc.screen.domain.vo.event.WfEventInfoVo">
+        select 5 eventSource, id, check_name cycle, DATE_FORMAT(check_date, '%Y-%m-%d %H:%i:%s') checkDate, DATE_FORMAT(replydate2, '%Y-%m-%d %H:%i:%s') endTime,
+               case state when 2 then 1 else 0 end as extensionFlag, DATE_FORMAT(plan_date,'%Y-%m-%d %H:%i:%s') planDate, '' code, '' eventTypeName,
+               check_info content, check_item_name checkItemName, point_name pointName, type_name, cscore, region_name regionName, '' latitude, '' longitude, depart_name deptNames,
+               case state when 0 then '未整改' when 1 then '已整改' when 3 then '已整改'  else '整改中' end as status
+               from work_event
+        where id = #{eventId}
+    </select>
+
+    <select id="getEventFilesByHistory" resultType="cn.wxgis.jc.synch.wmb.po.WorkEventFile">
+        select id, event_id, name, oss_name, uri_big, url, file
+        from work_event_file
+        where event_id = #{eventId}
+    </select>
+
+    <select id="getEventHeatMap" resultType="cn.wxgis.jc.screen.domain.vo.map.EventHeatMapVo">
+        select * from (
+                          select id, longitude, latitude from wf_event_report
+                          union
+                          select id, lng longitude, lat latitude from work_event
+                      ) t
+        where longitude != '' and longitude != 0 and latitude != '' and latitude != 0
+    </select>
+
+    <select id="getEventStatusCountVo" resultType="cn.wxgis.jc.screen.domain.vo.count.EventStatusCountVo">
+        select count(1) totalCount,
+            (select count(1) from wf_event_report where `status` != 60) todoCount,
+            (select count(1) from wf_event_report where extension_flag = 1) extensionCount,
+            (select count(1) from wf_event_report where `status` = 60) finishCount
+        from wf_event_report;
+    </select>
+
+    <select id="getEventSourceCount" resultType="cn.wxgis.jc.screen.domain.vo.count.EventSourceCountVo">
+        select count(1) totalCount,
+               (select count(1) reportCount from (
+                    select event_source, id from wf_event_report where event_source = 1
+                    union
+                    select 1 event_source, id from work_event
+                    ) t
+                ) reportCount,
+               (select count(1) from wf_event_report where event_source = 2) aiCount,
+               (select count(1) from wf_event_report where event_source = 3) specialCount,
+               (select count(1) from wf_event_report where event_source = 4) cityCount
+        from wf_event_report
+    </select>
+
+    <select id="aiEventList" resultType="cn.wxgis.jc.screen.domain.vo.event.WfEventVo">
+        select data.event_source, data.id, data.status, data.code, data.cycle, DATE_FORMAT(data.report_time, '%Y-%m-%d %H:%i:%s') checkDate, DATE_FORMAT(flow.endtime, '%Y-%m-%d %H:%i:%s') endTime,
+               data.extension_flag extensionFlag, DATE_FORMAT(data.timelimit, '%Y-%m-%d %H:%i:%s') planDate, et.name eventTypeName,
+               data.content, data.event_title checkItemName, data.check_points pointName,  data.check_points_type typeName, data.score, data.region_name regionName, data.latitude, data.longitude,
+               (select GROUP_CONCAT(name SEPARATOR ',') from sys_dept where FIND_IN_SET(id, (select dept_ids from wf_event_report r where r.id = data.id))) deptNames,
+               c.id channel_id, c.name deviceName
+        from wf_event_report data
+                 left join quota_event_type et on et.id = data.event_type
+                 left join wf_instance flow on flow.id = data.flowinstanceid
+                 left join data_device_channel c on c.id = data.channel_id
+        <where>
+            and data.event_source = 2
+            <if test="status != null">
+                and data.`status` = #{status}
+            </if>
+        </where>
+        order by data.create_time desc
+
+    </select>
+
+    <select id="getEventPointsAvg" resultType="cn.wxgis.jc.screen.domain.vo.EventPointsAvgVo">
+        select point_name point_name, region_name, count(1) count, sum(`status`) end_count, sum(`status`)/count(1) avg_count
+        from
+        (
+        select r.id, r.check_points point_name, r.region_name, r.cycle, case when r.`status` = 60 then 1 else 0 end as status from wf_event_report r
+        union
+        select e.id, e.point_name, region_name, e.check_name cycle, case when e.state = 3 then 1 else 0 end as status from work_event e
+        ) t
+        <where>
+            <if test="cycle != null and cycle != ''">
+                and t.cycle = #{cycle}
+            </if>
+            <if test="regionName != null and regionName !=''">
+                and t.region_name = #{regionName}
+            </if>
+        </where>
+        group by t.point_name, t.region_name
+        order by avg_count desc, count desc
+    </select>
+
+    <select id="getEventTypeAvg" resultType="cn.wxgis.jc.screen.domain.vo.EventTypeAvgVo">
+        select IFNULL(event_type, '未知') event_type, count(1)/(select SUM(count) avg from (select count(1) count from wf_event_report union select count(1) count from work_event) w)*100 avg
+        from
+            (
+            select r.id, t.name event_type, r.region_name, r.cycle
+            from wf_event_report r
+            left join quota_event_type t on t.id = r.event_type
+            union
+            select e.id, t.name event_type, region_name, e.check_name cycle
+            from work_event e
+            left join data_check_item c on c.id = e.check_itemid
+            left join quota_event_type t on t.id = c.event_type_id
+            ) t
+        <where>
+            <if test="cycle != null and cycle != ''">
+                and t.cycle = #{cycle}
+            </if>
+            <if test="regionName != null and regionName !=''">
+                and t.region_name = #{regionName}
+            </if>
+        </where>
+        group by t.event_type
+        order by avg desc
+    </select>
+
+    <select id="getWorkEvent" resultType="cn.wxgis.jc.screen.domain.vo.event.WorkEventVo">
+        select event_source, id, code, check_name, check_value, point_name, type_name, status
+        from (
+            select 5 event_source, id, id code, check_name, check_value, point_name, type_name, case when state = 3 then '已办结' else '整改中' end as `status`  from work_event
+            union
+            select 1 event_source, r.id, r.code code, r.cycle check_name, c.number check_value, r.check_points point_name, r.check_points_type type_name, case when r.`status` = 60 then '已办结' else '整改中' end as `status`
+            from wf_event_report r
+            left join quota_assess_cycle c on c.id = r.cycle_id
+        ) t
+        <where>
+            <if test="param.cycle != null and param.cycle != ''">
+                and t.check_name = #{param.cycle}
+            </if>
+            <if test="param.status != null and param.status != ''">
+                and t.status = #{param.status}
+            </if>
+            <if test="param.name != null and param.name != ''">
+                and
+                (t.point_name like concat('%', #{param.name}, '%')
+                or t.type_name like concat('%', #{param.name}, '%'))
+            </if>
+        </where>
+        order by check_value desc
+
+    </select>
+
+</mapper>

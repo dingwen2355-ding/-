@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.workflow.web.mapper.WfEventReportMapper">
+
+    <select id="findResponseById" resultType="cn.wxgis.jc.workflow.resp.WfEventReportResponse">
+        select data.*, data.event_title check_item, et.`name` eventTypeName, etT.`name` eventTypeTwoName, etO.`name` eventTypeOneName
+        from wf_event_report data
+        left join quota_event_type et on et.id = data.event_type
+        left join quota_event_type etT on etT.id = et.parent_id
+        left join quota_event_type etO on etO.id = etT.parent_id
+        where data.id = #{id}
+    </select>
+
+    <select id="findCheckPoints" resultType="cn.wxgis.jc.civilization.data.po.DataCheckPoints">
+        select * from data_check_points
+        where id = #{checkPointsId}
+    </select>
+
+    <select id="findCheckPointsResponse"
+            resultType="cn.wxgis.jc.civilization.data.resp.DataCheckPointsResponse">
+        select c.*, t.`name` type_name, r.name region_name
+        from data_check_points c
+        left join data_check_points_type t on t.id = c.type_id
+        left join sys_dept r on r.id = c.region_code
+        where c.id = #{checkPointsId}
+    </select>
+
+    <select id="findCheckItem" resultType="cn.wxgis.jc.civilization.data.po.DataCheckItem">
+        select * from data_check_item where id = #{checkItemId}
+    </select>
+
+    <select id="findByFlowinstanceid" resultType="cn.wxgis.jc.workflow.po.WfEventReport">
+        select * from wf_event_report where flowinstanceid = #{flowinstanceid}
+    </select>
+
+    <select id="getAutoGive" resultType="java.lang.Integer">
+        select auto_give from sys_base_config limit 0,1
+    </select>
+
+
+    <select id="info" resultType="cn.wxgis.jc.workflow.resp.WfEventReportResponse">
+        select * from (
+            select data.id, data.channel_id, data.channel_name, data.code, data.event_source, data.event_title, data.cycle, data.cycle_id, data.dept_ids, data.dept_names,
+                    data.flowinstanceid, data.flowname, data.longitude, data.latitude, data.content, data.region_code, data.region_name, data.report_person, data.report_time, data.score,
+                    data.nodeid, data.nodename, data.event_type, data.event_type_two, data.event_type_one, case when data.`status` = 60 then 1 else 0 end `status`,
+                    data.check_item_id, data.check_points_id, data.check_points, data.check_points_type_id, data.check_points_type, ci.name check_item_name,
+                    et.`name` eventTypeName, etT.`name` eventTypeTwoName, etO.`name` eventTypeOneName
+            from wf_event_report data
+                    left join quota_event_type et on et.id = data.event_type
+                    left join quota_event_type etT on etT.id = et.parent_id
+                    left join quota_event_type etO on etO.id = etT.parent_id
+                    left join wf_event_extension e on e.flowinstanceid = data.flowinstanceid and e.nodeid = data.nodeid
+                    left join wf_event_appeal a on a.flowinstanceid = data.flowinstanceid and e.nodeid = data.nodeid
+                    left join data_check_item ci on ci.id = data.check_item_id
+            union
+            select data.id, '' channel_id, '' channel_name, '' code, 5 event_source, '' event_title, data.check_name cycle, '' cycle_id, '' dept_ids, data.depart_name dept_names,
+                    '' flowinstanceid, '' flowname, '' longitude, '' latitude, data.check_info content, '' region_code, data.region_name, '' report_person, DATE_FORMAT(data.check_date, '%Y-%m-%d %h:%i:%s') report_time, data.score, '' nodeid, '' nodename, '' event_type, '' event_type_two, '' event_type_one, case when data.state = 3 then 1 else 0 end `status`, '' check_item_id, '' check_points_id, data.point_name check_points, '' check_points_type_id, data.type_name check_points_type, data.check_item_name,
+                    '' eventTypeName, '' eventTypeTwoName, '' eventTypeOneName
+            from work_event data
+        ) t
+        where t.id = #{id}
+    </select>
+
+</mapper>

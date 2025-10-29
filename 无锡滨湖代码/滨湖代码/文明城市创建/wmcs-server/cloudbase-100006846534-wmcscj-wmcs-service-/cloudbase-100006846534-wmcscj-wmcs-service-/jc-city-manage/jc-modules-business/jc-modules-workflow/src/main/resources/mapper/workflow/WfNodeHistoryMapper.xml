@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.workflow.web.mapper.WfNodeHistoryMapper">
+
+    <select id="listByFlowinstanceid" resultType="cn.wxgis.jc.workflow.po.WfNodeHistory">
+        select * from wf_node_history
+        <where>
+            and flowinstanceid = #{flowinstanceid}
+            <if test="deptEventId != '' and deptEventId != null">
+                <choose>
+                    <when test="null != scope and '' != scope and scope == 'all' and scope != 'undefined'">
+                        and 1=1
+                    </when>
+                    <otherwise>
+                        and ( dept_event_id is null or dept_event_id = #{deptEventId} )
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        order by handletime desc
+    </select>
+
+    <select id="listResponseByTaskId" resultType="cn.wxgis.jc.workflow.po.WfNodeHistory">
+        select * from wf_node_history
+        <where>
+            and flowinstanceid = #{flowinstanceid}
+            and ( dept_event_id is null or dept_event_id = #{deptEventId} )
+        </where>
+        order by handletime desc
+    </select>
+</mapper>

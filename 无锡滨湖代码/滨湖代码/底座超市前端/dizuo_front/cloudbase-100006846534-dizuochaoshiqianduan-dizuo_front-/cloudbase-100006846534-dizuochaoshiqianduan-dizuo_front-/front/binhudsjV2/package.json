@@ -1,0 +1,80 @@
+{
+  "name": "binhudsjV2",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve --mode dev",
+    "serve_": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve --mode dev",
+    "lint": "vue-cli-service lint",
+    "analyzer": "cross-env use_analyzer=true npm run serve",
+    "build": " vue-cli-service build",
+    "build_": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build",
+    "build:rep": "cross-env use_analyzer=true vue-cli-service build --mode prod",
+    "build:prod": "vue-cli-service build --mode prod",
+    "build:test": "vue-cli-service build --mode test",
+    "build:extranet": "vue-cli-service build --mode extranet",
+    "build:testzhen": "vue-cli-service build --mode testzhen"
+  },
+  "dependencies": {
+    "@turf/turf": "^6.3.0",
+    "axios": "^1.4.0",
+    "babel-polyfill": "^6.26.0",
+    "core-js": "^3.6.5",
+    "echarts": "^5.4.2",
+    "element-ui": "^2.15.13",
+    "jquery": "^3.6.1",
+    "lodash": "^4.17.21",
+    "mapbox-gl": "^2.2.0",
+    "proj4": "^2.7.2",
+    "script-loader": "^0.7.2",
+    "swiper": "5.4.5",
+    "vue": "^2.6.11",
+    "vue-router": "^3.2.0",
+    "vue-seamless-scroll": "^1.1.23",
+    "vuex": "^3.4.0",
+    "whatwg-fetch": "^3.6.17"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "babel-eslint": "^10.1.0",
+    "compression-webpack-plugin": "^6.1.1",
+    "cross-env": "^7.0.3",
+    "eslint": "^6.7.2",
+    "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-vue": "^6.2.2",
+    "less": "^3.0.4",
+    "less-loader": "^5.0.0",
+    "postcss-px-to-viewport": "^1.1.1",
+    "prettier": "^1.19.1",
+    "style-resources-loader": "^1.4.1",
+    "vue-cli-plugin-style-resources-loader": "^0.1.4",
+    "vue-template-compiler": "^2.6.11",
+    "webpack-bundle-analyzer": "^4.4.0"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended",
+      "@vue/prettier"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "maintained node versions",
+    "not ie < 11"
+  ]
+}

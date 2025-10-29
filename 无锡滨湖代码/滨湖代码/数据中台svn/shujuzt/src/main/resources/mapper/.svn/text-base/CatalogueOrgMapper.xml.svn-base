@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.CatalogueOrgMapper">
+
+    <resultMap id="BaseResultMap" type="com.grandlynn.spa.catalogue.entity.CatalogueOrgDO">
+        <!--@Table catalogue_org-->
+        <result property="id" column="id" />
+        <result property="tenantId" column="tenant_id" />
+        <result property="version" column="version" />
+        <result property="appId" column="app_id" />
+        <result property="remark" column="remark" />
+        <result property="deleted" column="is_deleted" />
+        <result property="createdBy" column="created_by" />
+        <result property="createdTime" column="created_time" />
+        <result property="updatedBy" column="updated_by"/>
+        <result property="updatedTime" column="updated_time" />
+        <result property="nodeName" column="node_name" />
+        <result property="nodeCode" column="node_code" />
+        <result property="nodeType" column="node_type" />
+        <result property="enable" column="enable" />
+        <result property="parentId" column="parent_id" />
+        <result property="leaf" column="leaf" />
+        <result property="contact" column="contact" />
+        <result property="phone" column="phone" />
+        <result property="nodeNameSimplify" column="node_name_simplify" />
+        <result property="nodeNo" column="node_no" />
+        <result property="oaId" column="oa_id" />
+        <result column="intermediate" property="intermediate" />
+    </resultMap>
+
+    <select id="resourceStatistics" resultType="com.grandlynn.spa.catalogue.dto.OrgStatisticsDTO">
+        SELECT
+            o.node_name_simplify,
+            o.node_name,
+            o.node_no,
+            o.id	orgId,
+            count(st.*) resourceNum,
+            o.node_type nodeType
+        FROM catalogue_sys_table st
+        LEFT JOIN catalogue_org o on o.id  = st.org_id  and o.is_deleted = 0
+        WHERE st.is_deleted = 0
+          AND o.parent_id = 0 AND st.enable = 1 AND st.resource_code is not null
+        GROUP BY o.node_no,o.node_name_simplify,o.node_name,o.id
+        order by resourceNum desc
+    </select>
+
+    <select id="queryOrgListAndTableCount" resultType="com.grandlynn.spa.catalogue.dto.OrgNode">
+        SELECT id,
+               node_name            nodeName,
+               node_no              nodeNo,
+               node_code            nodeCode,
+               node_name_simplify   nodeNameSimplify,
+               node_type            nodeType,
+               phone,
+               enable,
+               contact,
+               intermediate,
+               (SELECT count(tables.id) from catalogue_sys_table tables
+                where tables.is_deleted = 0 and tables.org_id = org.id AND tables.table_state != -1 AND tables.resource_code is not null) tableCount
+        from catalogue_org org
+        where org.is_deleted = 0 AND org.parent_id = 0
+        order by org.sort;
+    </select>
+
+</mapper>

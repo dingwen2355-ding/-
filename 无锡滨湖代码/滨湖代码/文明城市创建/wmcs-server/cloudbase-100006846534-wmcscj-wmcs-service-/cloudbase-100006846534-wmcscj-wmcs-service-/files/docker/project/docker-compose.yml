@@ -1,0 +1,107 @@
+version : '3.3'
+services:
+  gateway:
+    container_name: gateway
+    build:
+      context: ./gateway
+      dockerfile: dockerfile
+    ports:
+      - "9000:19000"
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /data/wmcs/logs/gateway:/home/lc/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500M"
+  modules-system:
+    container_name: modules-system
+    build:
+      context: ./modules/system
+      dockerfile: dockerfile
+    ports:
+      - "9100:9100"
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /data/wmcs/logs/system:/home/lc/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500M"
+  modules-file:
+    container_name: modules-file
+    build:
+      context: ./modules/file
+      dockerfile: dockerfile
+    ports:
+      - "9200:9200"
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /data/wmcs/logs/file:/home/lc/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500M"
+  modules-business:
+    container_name: modules-business
+    build:
+      context: ./modules/business
+      dockerfile: dockerfile
+    ports:
+      - "9300:9300"
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /data/wmcs/logs/business:/home/lc/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500M"
+  modules-workflow:
+    container_name: modules-workflow
+    build:
+      context: ./modules/workflow
+      dockerfile: dockerfile
+    ports:
+      - "9400:9400"
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /data/wmcs/logs/workflow:/home/lc/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500M"
+  modules-screen:
+    container_name: modules-screen
+    build:
+      context: ./modules/screen
+      dockerfile: dockerfile
+    ports:
+      - "9500:9500"
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /data/wmcs/logs/screen:/home/lc/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500M"
+  modules-task:
+    container_name: modules-task
+    build:
+      context: ./modules/task
+      dockerfile: dockerfile
+    ports:
+      - "9800:9800"
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /data/wmcs/logs/task:/home/lc/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500M"

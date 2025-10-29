@@ -1,0 +1,281 @@
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto
+END
+TableMatterDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/TableMatterDTO.java
+END
+ApproveTableVersionMessageDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/ApproveTableVersionMessageDTO.java
+END
+WordFirstModelData.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/WordFirstModelData.java
+END
+ExportDatasourceTemplateDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/ExportDatasourceTemplateDTO.java
+END
+WordModelData.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/WordModelData.java
+END
+CatalogueVersionLogTableDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/CatalogueVersionLogTableDTO.java
+END
+WordCoverModelData.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/WordCoverModelData.java
+END
+WordModelFieldData.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/WordModelFieldData.java
+END
+DataSharingAccountDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/DataSharingAccountDTO.java
+END
+DropDownDataDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/DropDownDataDTO.java
+END
+TotalCompareMessageDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/TotalCompareMessageDTO.java
+END
+MessageDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/MessageDTO.java
+END
+DropDownWuXiDataDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/DropDownWuXiDataDTO.java
+END
+ExportSysCatalogueTemplateDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/ExportSysCatalogueTemplateDTO.java
+END
+TablesAndFieldsDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/TablesAndFieldsDTO.java
+END
+TotalCompareUnmatchDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/TotalCompareUnmatchDto.java
+END
+SysMenuDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/SysMenuDTO.java
+END
+DataSharingAccountQueryDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/DataSharingAccountQueryDTO.java
+END
+DataSharingAccountStatusDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/DataSharingAccountStatusDTO.java
+END
+ExportOrgTemplateWarnDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/ExportOrgTemplateWarnDTO.java
+END
+EnumsDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/EnumsDTO.java
+END
+ExportSysTemplateDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/ExportSysTemplateDTO.java
+END
+WordFirstModelOrgData.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/WordFirstModelOrgData.java
+END
+CatalogueTableFieldDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/CatalogueTableFieldDTO.java
+END
+SysAdminUserUpdateDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/SysAdminUserUpdateDTO.java
+END
+ExcelFileIdMessageDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/ExcelFileIdMessageDTO.java
+END
+OrgNode.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/OrgNode.java
+END
+SmsDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/SmsDTO.java
+END
+UserInfoDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/UserInfoDTO.java
+END
+AnalysisListDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/AnalysisListDto.java
+END
+PasswordDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/PasswordDTO.java
+END
+AnalysisAccessDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/AnalysisAccessDTO.java
+END
+AnalysisTrendDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/AnalysisTrendDto.java
+END
+EnumsWuXiDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/EnumsWuXiDTO.java
+END
+TableCountDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/TableCountDTO.java
+END
+OrgDsServiceDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/OrgDsServiceDTO.java
+END
+LoginSourceDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/LoginSourceDTO.java
+END
+SystemsDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/SystemsDTO.java
+END
+TablesDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/TablesDTO.java
+END
+TodoBusinessDto.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/TodoBusinessDto.java
+END
+ForeignCityResourceTypeDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/ForeignCityResourceTypeDTO.java
+END
+OrgStatisticsDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/OrgStatisticsDTO.java
+END
+DataSharingAccountPageDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/DataSharingAccountPageDTO.java
+END
+ExportOrgTemplateDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/ExportOrgTemplateDTO.java
+END
+SysContentDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/SysContentDTO.java
+END
+SysAdminUserDTO.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/cloudbase-100006846534/sjzt/data_catalogue/!svn/ver/2/src/main/java/com/grandlynn/spa/catalogue/dto/SysAdminUserDTO.java
+END

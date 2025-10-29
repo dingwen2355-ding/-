@@ -1,0 +1,15 @@
+/****** 标题栏 ******/
+// 标题栏是个渐变色
+$thHeaderSide: var(--td-brand-color); // 两边的颜色
+$thHeaderMiddle: var(--td-brand-color); // 中间的颜色
+$thHeaderTitle: #fff; // 标题颜色
+$thHeaderUser: #fff; // 个人信息标题颜色
+$thHeaderTime: #fff; // 时间信息颜色
+// 个人信息下拉
+$thHeaderUserBack: #fff; // 下拉框背景色
+$thHeaderUserLineBack: #fff; // 下拉框行背景色
+$thHeaderUserShadow: rgba(0, 0, 0, 0.2); // 下拉框阴影
+$thHeaderUserLineText: #7d8594; // 下拉框文字颜色
+$thHeaderUserLineSp: #ebeef5; // 下拉框分隔线颜色
+$thHeaderUserLineTHoverBack:#6fadac; // 滑过的背景色
+$thHeaderUserLineTHover:#fff; // 滑过的文字颜色

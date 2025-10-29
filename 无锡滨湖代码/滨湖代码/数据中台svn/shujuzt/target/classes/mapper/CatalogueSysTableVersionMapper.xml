@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.CatalogueSysTableVersionMapper">
+
+    <resultMap id="BaseResultMap" type="com.grandlynn.spa.catalogue.entity.CatalogueSysTableVersionDO">
+        <!--@Table catalogue_sys_table-->
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+        <result property="appId" column="app_id" jdbcType="BIGINT"/>
+        <result property="version" column="version" jdbcType="SMALLINT"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="deleted" column="is_deleted" jdbcType="SMALLINT"/>
+        <result property="createdBy" column="created_by" jdbcType="VARCHAR"/>
+        <result property="updatedBy" column="updated_by" jdbcType="VARCHAR"/>
+        <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+        <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
+        <result property="orgSysId" column="org_sys_id" jdbcType="BIGINT"/>
+        <result property="tableShareType" column="table_share_type" jdbcType="VARCHAR"/>
+        <result property="enable" column="enable" jdbcType="SMALLINT"/>
+        <result property="tableCode" column="table_code" jdbcType="VARCHAR"/>
+        <result property="tableState" column="table_state" jdbcType="SMALLINT"/>
+        <result property="sysName" column="sys_name" jdbcType="VARCHAR"/>
+        <result property="dataResourceName" column="data_resource_name" jdbcType="VARCHAR"/>
+        <result property="dataResourceAbstract" column="data_resource_abstract" jdbcType="VARCHAR"/>
+        <result property="dataResourceSaveType" column="data_resource_save_type" jdbcType="VARCHAR"/>
+        <result property="tableName" column="table_name" jdbcType="VARCHAR"/>
+        <result property="tableShareDesc" column="table_share_desc" jdbcType="VARCHAR"/>
+        <result property="lawDepency" column="law_depency" jdbcType="VARCHAR"/>
+        <result property="shareStatus" column="share_status" jdbcType="VARCHAR"/>
+        <result property="openType" column="open_type" jdbcType="VARCHAR"/>
+        <result property="openCondition" column="open_condition" jdbcType="VARCHAR"/>
+        <result property="openDepency" column="open_depency" jdbcType="VARCHAR"/>
+        <result property="position" column="position" jdbcType="VARCHAR"/>
+        <result property="tableRemark" column="table_remark" jdbcType="VARCHAR"/>
+        <result property="updatePeriod" column="update_period" jdbcType="VARCHAR"/>
+        <result property="databaseType" column="database_type" jdbcType="VARCHAR"/>
+        <result property="intermediate" column="intermediate" jdbcType="SMALLINT"/>
+        <result property="versionNo" column="version_no" jdbcType="VARCHAR"/>
+        <result property="resourceCode" column="resource_code" jdbcType="VARCHAR"/>
+        <result property="dataDomain" column="data_domain" jdbcType="VARCHAR"/>
+        <result property="tableCreateTime" column="table_create_time" jdbcType="VARCHAR"/>
+        <result property="tableUpdateTime" column="table_update_time" jdbcType="VARCHAR"/>
+        <result property="administrationName" column="administration_name" jdbcType="VARCHAR"/>
+        <result property="oldId" column="old_id" jdbcType="INTEGER"/>
+        <result property="openDepencyAttach" column="open_depency_attach" jdbcType="VARCHAR"/>
+        <result property="lawDepencyAttach" column="law_depency_attach" jdbcType="VARCHAR"/>
+        <result property="resourceType" column="resource_type" jdbcType="VARCHAR"/>
+        <result property="canExport" column="can_export" jdbcType="SMALLINT"/>
+        <result property="tableFlag" column="table_flag" jdbcType="SMALLINT"/>
+        <result property="orgId" column="org_id" jdbcType="INTEGER"/>
+        <result property="categoryId" column="category_id" jdbcType="BIGINT"/>
+        <result property="itemId" column="item_id" jdbcType="BIGINT"/>
+        <result property="catalogueId" column="catalogue_id" jdbcType="BIGINT"/>
+        <result property="databaseName" column="database_name" jdbcType="VARCHAR"/>
+        <result property="resourceFormatType" column="resource_format_type" jdbcType="VARCHAR"/>
+        <result property="tableShareTypeDesc" column="table_share_type_desc" jdbcType="VARCHAR"/>
+        <result property="resourceFormatTypeDesc" column="resource_format_type_desc" jdbcType="VARCHAR"/>
+        <result property="sourceType" column="source_type" jdbcType="SMALLINT"/>
+        <result property="resourceFormatCategory" column="resource_format_category" jdbcType="VARCHAR"/>
+        <result property="dataRange" column="data_range" jdbcType="VARCHAR"/>
+        <result property="catalogueLevel" column="catalogue_level" jdbcType="VARCHAR"/>
+        <result property="resourceFormat" column="resource_format" jdbcType="VARCHAR"/>
+        <result property="matter" column="matter" jdbcType="VARCHAR"/>
+        <result property="matterCode" column="matter_code" jdbcType="VARCHAR"/>
+        <result property="matterBasicCode" column="matter_basic_code" jdbcType="VARCHAR"/>
+        <result property="activityListCode" column="activity_list_code" jdbcType="VARCHAR"/>
+        <result property="businessForCode" column="business_for_code" jdbcType="VARCHAR"/>
+        <result property="deliverChannel" column="deliver_channel" jdbcType="VARCHAR"/>
+        <result property="isElectronicCertificate" column="is_electronic_certificate" jdbcType="SMALLINT"/>
+        <result property="applicationScene" column="application_scene" jdbcType="VARCHAR"/>
+        <result property="isMountResource" column="is_mount_resource" jdbcType="SMALLINT"/>
+        <result property="registerPlatform" column="register_platform" jdbcType="VARCHAR"/>
+        <result property="approveResult" column="approve_result" jdbcType="VARCHAR"/>
+        <result property="shareWayCategory" column="share_way_category" jdbcType="VARCHAR"/>
+        <result property="shareWayType" column="share_way_type" jdbcType="VARCHAR"/>
+        <result property="domainCode" column="domain_code" jdbcType="VARCHAR"/>
+        <result property="industryCategoryCode" column="industry_category_code" jdbcType="VARCHAR"/>
+        <result property="applicationSceneCode" column="application_scene_code" jdbcType="VARCHAR"/>
+        <result property="basicCategory" column="basic_category" jdbcType="VARCHAR"/>
+        <result property="serviceObjectCategory" column="service_object_category" jdbcType="VARCHAR"/>
+        <result property="categoryTag" column="category_tag" jdbcType="SMALLINT"/>
+        <result property="manageWay" column="manage_way" jdbcType="SMALLINT"/>
+        <result property="morphologyCategory" column="morphology_category" jdbcType="SMALLINT"/>
+        <result property="sourceDeptName" column="source_dept_name" jdbcType="VARCHAR"/>
+        <result property="nodeCode" column="node_code" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="catalogue_sys_table_version_field">
+        t.id, t.tenant_id, t.app_id, t.version, t.remark, t.org_sys_id, t.table_share_type, t."enable", t.table_code,
+        t.table_state, t.sys_name, t.data_resource_name, t.data_resource_abstract, t.data_resource_save_type,
+        t.table_name, t.table_share_desc, t.law_depency, t.share_status, t.open_type, t.open_condition, t.open_depency,
+        t.position, t.table_remark, t.update_period, t.database_type, t.version_no, t.administration_name,
+        t.resource_code, t.data_domain, t.table_create_time, t.table_update_time, t.old_id, t.can_export,
+        t.category_id,t.item_id,t.catalogue_id,t.database_name,t.resource_format_type,t.table_share_type_desc,t.resource_format_type_desc,
+         t.source_type, t.resource_format_category, t.data_range,
+         t.catalogue_level, t.resource_format,t.matter, t.matter_code,
+         t.matter_basic_code, t.activity_list_code, t.business_for_code,
+         t.deliver_channel, t.is_electronic_certificate, t.application_scene,
+         t.is_mount_resource, t.register_platform, t.approve_result,
+         t.share_way_category, t.share_way_type, t.domain_code,
+         t.industry_category_code, t.application_scene_code, t.basic_category,
+         t.service_object_category, t.category_tag, t.manage_way,
+         t.morphology_category, t.source_dept_name, t.node_code,t.matter_domain
+    </sql>
+
+    <!-- 版本下查询表信息 -->
+    <sql id="catalogue_sys_table_version_temp">
+        SELECT v.*
+        FROM (
+                SELECT MAX ( temp.version_no ) version_no, temp.old_id
+                FROM catalogue_sys_table_version temp
+                WHERE temp.is_deleted = 0 and temp.enable = 1
+                <if test="request.versionNo != null">
+                    AND   temp.version_no &lt;= #{request.versionNo}
+                </if>
+                GROUP BY temp.old_id
+            ) t
+        INNER JOIN catalogue_sys_table_version v
+        ON t.version_no = v.version_no
+        AND t.old_id = v.old_id
+    </sql>
+    <!--版本下查询组织和系统关联信息-->
+    <sql id="catalogue_org_content_relation_version_temp">
+        SELECT rv.*
+        FROM (
+                SELECT MAX ( temp.version_no ) version_no, temp.old_id
+                FROM catalogue_org_content_relation_version temp
+                WHERE temp.is_deleted = 0
+                <if test="request.versionNo != null">
+                    AND   temp.version_no &lt;= #{request.versionNo}
+                </if>
+                GROUP BY temp.old_id
+            ) r
+        INNER JOIN catalogue_org_content_relation_version rv
+        ON  r.version_no = rv.version_no
+        AND r.old_id = rv.old_id
+    </sql>
+    <!--<select id="getTablesVersionBySysId" resultMap="BaseResultMap">
+        SELECT
+            <include refid="catalogue_sys_table_version_field"/>
+        FROM
+            ( <include refid="catalogue_sys_table_version_temp"/> ) t
+        INNER JOIN
+            ( <include refid="catalogue_org_content_relation_version_temp"/> ) r
+            ON      t.org_sys_id = r.content_id
+            AND     content_type = 1
+        INNER JOIN catalogue_org_version ov
+            ON r.org_id = ov.old_id
+        WHERE   t.is_deleted = 0
+        AND     r.is_deleted = 0
+        AND     ov.is_deleted = 0
+        <if test="request.versionNo != null">
+            AND ov.version_no = #{request.versionNo}
+        </if>
+        <if test="request.tenantId != null">
+            AND t.tenant_id = #{request.tenantId}
+        </if>
+        <if test="request.appId != null">
+            AND t.app_id = #{request.appId}
+        </if>
+        <if test="request.orgId != null">
+            AND ov.id = #{request.orgId}
+        </if>
+        <if test="request.limitOrgIds != null and request.limitOrgIds.length > 0">
+            AND ov.old_id in
+            <foreach collection="request.limitOrgIds" item="limitOrgId" index="index" open="(" close=")" separator=",">
+                #{limitOrgId}
+            </foreach>
+        </if>
+        <if test="request.orgSysId != null">
+            AND t.org_sys_id = #{request.orgSysId}
+        </if>
+        <if test="request.tableName != null">
+            AND t."table_name" LIKE concat('%',#{request.tableName},'%')
+        </if>
+        <if test="request.dataResourceName != null">
+            AND t.data_resource_name LIKE concat('%',#{request.dataResourceName},'%')
+        </if>
+        ORDER BY t.old_id
+    </select>-->
+
+
+    <select id="getTablesVersionBySysId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="catalogue_sys_table_version_field"/>
+        FROM
+        ( <include refid="catalogue_sys_table_version_temp"/> ) t
+        LEFT JOIN
+        ( <include refid="catalogue_org_content_relation_version_temp"/> ) r
+        ON      t.org_sys_id = r.content_id
+        AND     content_type = 1
+        AND     r.is_deleted = 0
+        INNER JOIN catalogue_org_version ov
+        ON (r.org_id = ov.old_id or  (r.id is NULL and t.org_id = ov.old_id))
+        WHERE   t.is_deleted = 0
+        AND     ov.is_deleted = 0
+        <if test="request.versionNo != null">
+            AND ov.version_no = #{request.versionNo}
+        </if>
+        <if test="request.tenantId != null">
+            AND t.tenant_id = #{request.tenantId}
+        </if>
+        <if test="request.appId != null">
+            AND t.app_id = #{request.appId}
+        </if>
+        <if test="request.orgId != null">
+            AND ov.id = #{request.orgId}
+        </if>
+        <if test="request.limitOrgIds != null and request.limitOrgIds.length > 0">
+            AND ov.old_id in
+            <foreach collection="request.limitOrgIds" item="limitOrgId" index="index" open="(" close=")" separator=",">
+                #{limitOrgId}
+            </foreach>
+        </if>
+        <if test="request.orgSysId != null">
+            AND t.org_sys_id = #{request.orgSysId}
+        </if>
+        <if test="request.tableName != null">
+            AND t."table_name" LIKE concat('%',#{request.tableName},'%')
+        </if>
+        <if test="request.dataResourceName != null">
+            AND t.data_resource_name LIKE concat('%',#{request.dataResourceName},'%')
+        </if>
+        ORDER BY t.old_id
+    </select>
+
+    <!-- 查询指定系统下的所有表和字段信息   -->
+    <sql id="getTablesAndFieldsBySysIdColumn">
+        T.SYSID, T.sysName, T.resourceCode, T.dataResourceName, T.tableShareType, T.shareStatus, T.openType,
+        T.tableShareDesc, T.updatePeriod, T.administrationName, T.tableRemark, T.tableId, s.fieldNameCh, s.fieldName,
+        s.fieldType, s.fieldLength
+    </sql>
+    <select id="getTablesAndFieldsBySysId" resultType="com.grandlynn.spa.catalogue.dto.TablesAndFieldsDTO">
+        SELECT
+            <include refid="getTablesAndFieldsBySysIdColumn"/>
+        FROM (
+            SELECT
+                v.ID ID,
+                v.old_id oldid,
+                v.version_no versionno,
+                v.is_deleted isdeleted,
+                v.org_sys_id AS SYSID,
+                v.sys_name sysName,
+                v.resource_code resourceCode,
+                v.data_resource_name dataResourceName,
+                v.table_share_type tableShareType,
+                v.share_status shareStatus,
+                v.open_type openType,
+                v.table_share_desc tableShareDesc,
+                v.update_period updatePeriod,
+                v.administration_name administrationName,
+                v.table_remark tableRemark,
+                v.old_id tableId
+            FROM (
+                    SELECT MAX( r.version_no ) versionNo, r.old_id
+                    FROM catalogue_sys_table_version r
+                    WHERE r.is_deleted = 0
+                    <if test="request.versionNo != null">
+                        AND r.version_no &lt;= #{request.versionNo}
+                    </if>
+                    <if test="request.sysId != null">
+                        AND r.org_sys_id = #{request.sysId}
+                    </if>
+                    GROUP BY r.old_id
+                ) b
+            INNER JOIN  catalogue_sys_table_version v
+            ON          b.versionNo = v.version_no AND b.old_id = v.old_id
+            <!-- 导出word开关 -->
+            AND v.can_export = 1
+        ) T
+        LEFT JOIN (
+            SELECT
+                v.ID sid,
+                v.old_id soldid,
+                v.version_no versionno,
+                v.is_deleted isdeleted,
+                v.sys_table_id sysTableId,
+                v.field_name_ch fieldNameCh,
+                v.field_name fieldName,
+                v.field_type fieldType,
+                v.field_length fieldLength
+            FROM (
+                    SELECT  MAX( r.version_no ) versionNo,r.old_id
+                    FROM    catalogue_table_field_version r
+                    WHERE   r.is_deleted = 0
+                    <if test="request.versionNo != null">
+                        AND r.version_no &lt;= #{request.versionNo}
+                    </if>
+                    GROUP BY r.old_id
+                ) b
+            INNER JOIN catalogue_table_field_version v ON b.versionNo = v.version_no AND b.old_id = v.old_id
+        ) s
+        ON s.sysTableId = T.oldid AND T.versionno = s.versionno
+        WHERE  T.isdeleted = 0
+    </select>
+
+    <select id="getTableCount" resultType="com.grandlynn.spa.catalogue.dto.TableCountDTO">
+        SELECT
+        COUNT(*) as tableCount,
+        v.org_sys_id as sysId
+        FROM
+        ( SELECT MAX ( r.version_no ) versionNo, r.old_id FROM catalogue_sys_table_version r WHERE r.is_deleted = 0
+        GROUP BY r.old_id ) b
+        INNER JOIN catalogue_sys_table_version v ON b.versionNo = v.version_no
+        AND b.old_id = v.old_id
+        WHERE
+        v.is_deleted = 0
+        <if test="tenantId != null">
+            AND v.tenant_id = #{tenantId}
+        </if>
+        <if test="appId != null">
+            AND v.app_id = #{appId}
+        </if>
+        <if test="versionNo != null">
+            AND v.version_no &lt;= #{versionNo}
+        </if>
+        GROUP BY v.org_sys_id
+        ORDER BY
+        v.org_sys_id asc
+    </select>
+
+    <!-- 根据系统id 和版本筛选 当前版本下的所有目录表数据  -->
+    <select id="getTablesBySysIdsAndVersionNo" resultType="com.grandlynn.spa.catalogue.dto.WordFirstModelOrgData">
+        SELECT
+            v.ID as tableId,
+            v.org_sys_id as sysId,
+            v.data_resource_name as tableName,
+            v.table_remark as desc,
+            to_char(v.updated_time, 'YYYY-MM-DD') as updateTime
+        FROM (
+                SELECT MAX ( r.version_no ) versionNo, r.old_id FROM catalogue_sys_table_version r WHERE r.is_deleted = 0
+                GROUP BY r.old_id
+            ) b
+        INNER JOIN  catalogue_sys_table_version v ON b.versionNo = v.version_no AND b.old_id = v.old_id
+        WHERE   v.is_deleted = 0
+        <!-- 导出word开关 -->
+        AND     v.can_export = 1
+        <if test="request.tenantId != null">
+            AND v.tenant_id = #{request.tenantId}
+        </if>
+        <if test="request.appId != null">
+            AND v.app_id = #{request.appId}
+        </if>
+        <if test="request.versionNo != null">
+            AND v.version_no &lt;= #{request.versionNo}
+        </if>
+        <if test="request.sysIds != null">
+            AND v.org_sys_id in
+            <foreach collection="request.sysIds" item="sysId" index="index" open="(" close=")" separator=",">
+                #{sysId}
+            </foreach>
+        </if>
+        ORDER BY
+        v.org_sys_id
+    </select>
+
+
+    <insert id="insertFromOld">
+    INSERT INTO catalogue_sys_table_version (
+        old_id,
+        tenant_id,
+        app_id,
+        VERSION,
+        remark,
+        is_deleted,
+        created_by,
+        updated_by,
+        created_time,
+        updated_time,
+        org_sys_id,
+        table_share_type,
+        ENABLE,
+        table_code,
+        table_state,
+        sys_name,
+        data_resource_name,
+        data_resource_abstract,
+        data_resource_save_type,
+        TABLE_NAME,
+        table_share_desc,
+        law_depency,
+        share_status,
+        open_type,
+        open_condition,
+        open_depency,
+        POSITION,
+        table_remark,
+        update_period,
+        database_type,
+        intermediate,
+        version_no,
+        resource_code,
+        data_domain,
+        table_create_time,
+        table_update_time,
+        administration_name,
+        open_depency_attach,
+        law_depency_attach,
+        resource_type,
+        can_export,
+        table_flag,
+        org_id,
+        category_id,
+        item_id,
+        catalogue_id,
+        database_name,
+        resource_format_type,
+        table_share_type_desc,
+        resource_format_type_desc,
+         source_type,
+         resource_format_category,
+         data_range,
+         catalogue_level,
+         resource_format,
+         matter,
+         matter_domain,
+         matter_code,
+         matter_basic_code,
+         activity_list_code,
+         business_for_code,
+         deliver_channel,
+         is_electronic_certificate,
+         application_scene,
+         is_mount_resource,
+         register_platform,
+         approve_result,
+         share_way_category,
+         share_way_type,
+         domain_code,
+         industry_category_code,
+         application_scene_code,
+         basic_category,
+         service_object_category,
+         category_tag,
+         manage_way,
+         morphology_category,
+         source_dept_name,
+         node_code,
+         data_size,
+         service_org_name,
+         service_org_code,
+         row_gu_id
+    ) SELECT id,
+        tenant_id,
+        app_id,
+        VERSION,
+        remark,
+        is_deleted,
+        created_by,
+        updated_by,
+        created_time,
+        updated_time,
+        org_sys_id,
+        table_share_type,
+        ENABLE,
+        table_code,
+        table_state,
+        sys_name,
+        data_resource_name,
+        data_resource_abstract,
+        data_resource_save_type,
+        TABLE_NAME,
+        table_share_desc,
+        law_depency,
+        share_status,
+        open_type,
+        open_condition,
+        open_depency,
+        POSITION,
+        table_remark,
+        update_period,
+        database_type,
+        0,
+        version_no,
+        resource_code,
+        data_domain,
+        table_create_time,
+        table_update_time,
+        administration_name,
+        open_depency_attach,
+        law_depency_attach,
+        resource_type,
+        can_export,
+        table_flag,
+        org_id,
+        category_id,
+        item_id,
+        catalogue_id,
+        database_name,
+        resource_format_type,
+        table_share_type_desc,
+        resource_format_type_desc,
+         source_type,
+         resource_format_category,
+         data_range,
+         catalogue_level,
+         resource_format,
+         matter,
+         matter_domain,
+         matter_code,
+         matter_basic_code,
+         activity_list_code,
+         business_for_code,
+         deliver_channel,
+         is_electronic_certificate,
+         application_scene,
+         is_mount_resource,
+         register_platform,
+         approve_result,
+         share_way_category,
+         share_way_type,
+         domain_code,
+         industry_category_code,
+         application_scene_code,
+         basic_category,
+         service_object_category,
+         category_tag,
+         manage_way,
+         morphology_category,
+         source_dept_name,
+         node_code,
+         data_size,
+         service_org_name,
+         service_org_code,
+         row_gu_id
+    FROM
+        catalogue_sys_table
+    where
+        tenant_id = #{oldDO.tenantId} and
+        app_id = #{oldDO.appId} and
+        intermediate = 1 and
+        version_no = #{oldDO.versionNo} and
+        is_deleted = 0
+    </insert>
+</mapper>

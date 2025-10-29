@@ -1,0 +1,439 @@
+@import './variables.scss';
+
+// 分页组件选中的文字颜色
+.el-pager{
+    li:not(.disabled){
+        &.active {
+            color: $thPGActive;
+        }
+        &:hover{
+            color: $thPGHover;
+        }
+    }
+}
+.el-input__inner {
+    border: 1px solid $thInputBorder !important;
+    &:hover{
+        border: 1px solid $thInputBorderHover !important;
+    }
+    &:focus{
+        border: 1px solid $thInputBorderFocus !important;
+    }
+}
+
+.el-menu--collapse {
+    width: 100%;
+    border: none;
+    li {
+        // div {
+        //     padding-left: 20px !important;
+        // }
+        span {
+            display: none;
+        }
+        .el-icon-arrow-right {
+            display: none;
+        }
+    }
+}
+
+// 下拉框改造
+.el-select-dropdown__item{
+    background: $thInpSelectLineBG !important;
+    color: $thInpSelectLineT !important;
+    &:hover{
+        background: $thInpSelectLineBGHover !important;
+        color: $thInpSelectLineTHover !important;
+    }
+    &.selected{
+        background: $thInpSelectLineBGSelect !important;
+        color: $thInpSelectLineTSelect !important;
+    }
+}
+
+.el-button {
+    +.el-button {
+        margin-left: 20px;
+    }
+}
+
+// 新增按钮的模式 - type="bi"
+.el-button--bi {
+    // min-width: 85px;
+    color: $thButtonSuccessT;
+    background-color: $thButtonSuccess;
+    border-color: $thButtonSuccess;
+    &:hover{
+        background: $thButtonSuccessHover;
+        border-color: $thButtonSuccessHover;
+        color: $thButtonSuccessHoverT;
+    }
+    &:focus{
+        background-color: $thButtonSuccessActive;
+        border-color: $thButtonSuccessActive;
+        color: $thButtonSuccessActiveT;
+    }
+}
+
+// 新增按钮的模式 - type="bi-plain"
+.el-button--bi-plain {
+    border: 1px solid $thButtonSuccess !important;
+    background-color: #fff;
+    color: $thButtonSuccess;
+    padding: 8px 10px;
+    &:hover {
+        background-color: $thButtonSuccess;
+        color: #fff;
+    }
+}
+
+// 新增按钮的模式 - type="bi-text"
+.el-button--bi-text {
+    border: none !important;
+    background-color: rgba(0, 0, 0, 0);
+    color: $thGTInfoH;
+    padding: 8px 10px;
+    &:hover {
+        background-color: rgba(0, 0, 0, 0);
+        color: $thGTInfoH;
+    }
+}
+
+// 新增tag--bi
+.el-tag--bi {
+    background-color: $thGThemeL;
+    border-color: $thGThemeM;
+    color: $thGThemeH;
+}
+// ********************************************************el-table 表格
+.el-table{
+    color: $thTableCo;
+}
+
+// 解决多层级表头多列固定样式问题
+::v-deep .el-table th.is-hidden>*, ::v-deep .el-table td.is-hidden>* {
+    visibility: visible
+}
+// 解决table列对不齐的问题
+body .el-table th.gutter{
+    display: table-cell!important;
+}
+// 总计栏
+.has-gutter{
+    td{
+        background: $thKBSTableTitle !important;
+        font-weight: bold;
+        color: $thGSuccess !important;
+        &:first-child{
+            color: $thGTInfo !important;
+        }
+    }
+}
+.el-table {
+    th {
+        background: $thTableThBG !important;
+        color: $thTableThCo !important;
+        // font-size: 15px;
+        // height: 54px;
+        &.gutter{
+            height: unset;
+        }
+    }
+    .cell{
+        text-align: center;
+        padding: 0 !important;
+        .normal {
+            color: #70B603;
+        }
+        .timeout {
+            color: #D9001B;
+        }
+    } 
+}
+.base-kanban-table-row{
+    td{
+        text-align: center;
+    }
+}
+// 表格下拉子表格如果不需要滚动条可以添加
+.expand-no-y-scroll{
+    .el-table__body-wrapper {
+        overflow-y: hidden;
+    }
+}
+// *****************************************************el-table 表格
+// 时间选择组件重写样式
+.mx-calendar-content .cell{
+    &:hover{
+        background: $thInpSelectLineBGHover !important;
+        color: $thInpSelectLineTHover !important;
+    }
+    &.active{
+        background: $thInpSelectLineBGSelect !important;
+        color: $thInpSelectLineTSelect !important;
+    }
+    &.today{
+        background: $thInpSelectLineBGSelect !important;
+        color: $thInpSelectLineTSelect !important;
+    }
+    &.in-range{
+        background: $thInpSelectLineBGRange !important;
+        color: $thInpSelectLineTRange !important;
+    }
+    &.disabled{
+        &:hover{
+            background: $thInpSelectLineBGDis !important;
+            color: $thInpSelectLineTDis !important;
+        }
+    }
+}
+.mx-calendar-week-mode .mx-date-row.mx-active-week{
+    background-color: $thInpSelectLineBGRange !important;
+    color: $thInpSelectLineTRange !important;
+}
+.mx-calendar-week-mode .mx-date-row:hover{
+    background-color: $thInpSelectLineBGRange !important;
+    color: $thInpSelectLineTRange !important;
+}
+.mx-calendar-header{
+    button, span{
+        &:hover{
+            color: $thInpSelectLineBGHover !important;
+        }
+    }
+}
+.el-card__header{
+    button, span{
+        color: $thGTInfo !important;
+        &:hover{
+            color: $thInpSelectLineBGHover !important;
+        }
+    }
+}
+.el-dialog {
+    .el-tag {
+        // display: inline-block;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        // background-color: $thGThemel;
+        // border-radius: 8px;
+        // padding: 5px 6px;
+        // border: 1px solid  $thGThemeH;
+    }
+}
+
+// 表格子表展开
+.el-table__expanded-cell {
+    padding: 0 !important;
+    .inTable {
+        td{
+            color:#666666;
+            font-size: 15px;
+        }
+        &.noTitle{
+            // 无标题
+            .el-table{
+                th {
+                    display: none;
+                }
+            }
+        }
+        // 普通信息
+        &.info{
+            .f-row{
+                background: #fbfdff;
+            };
+            .el-table{
+                tr {
+                    &:hover td {
+                        background-color: #F5F7FA !important;
+                    }
+                }
+            }
+        }
+        // 危险提示
+        &.danger{
+            .f-row{
+                background: #FEF0F0;
+            };
+            .el-table{
+                tr {
+                    &:hover td {
+                        background-color: #FEF0F0 !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// 表格排序箭头颜色
+.el-table .descending .sort-caret.descending{
+    border-top-color: $thPGActive;
+}
+.el-table .ascending .sort-caret.ascending{
+    border-bottom-color: $thPGActive;
+}
+// 表格分页箭头滑过颜色
+.el-pagination button{
+    &:hover{
+        &:disabled{
+            color: #C0C4CC;
+        }
+        color: $thPGActive;
+    }
+}
+
+// 级联菜单选中颜色
+// .el-cascader-node:not(.is-disabled):focus, .el-cascader-node:not(.is-disabled):hover{
+//     background: $thSideBarMHover;
+//     color: $thSideBarMHoverText;
+// }
+.el-radio__inner:hover{
+    border-color: $thSideBarMActiveBack;
+}
+.el-cascader-node.in-active-path, .el-cascader-node.is-active, .el-cascader-node.is-selectable.in-checked-path{
+    color: $thSideBarMActiveBack;
+    // background: $thSideBarMActiveBack;
+}
+.el-radio__input.is-checked .el-radio__inner{
+    border-color: $thSideBarMActiveBack;
+    background: $thSideBarMActiveBack;
+}
+
+// tab重写css
+.el-tabs__item.is-top.is-active{
+    background-color: $thSideBarMActiveBack;
+    color:$thGInfoW;
+    // color:$thSideBarMActiveBack;
+}
+.el-tabs__item:hover{
+    color:$thSideBarMActiveBack;
+}
+
+// // radio变色:正常
+// .el-radio-button .el-radio-button__inner{
+//     color: $thSideBarMActiveBack;
+//     border: 1px solid $thSideBarMActiveBack;
+//     border-left:0;
+// }
+// .el-radio-button:first-child .el-radio-button__inner{
+//     border-left: 1px solid $thSideBarMActiveBack;
+// }
+// // radio变色:选中
+// .el-radio-button.is-active .el-radio-button__inner{
+//     background-color: $thSideBarMActiveBack;
+// }
+// .el-radio-button__orig-radio:checked+.el-radio-button__inner{
+//     border-color: $thSideBarMActiveBack;
+//     box-shadow: -1px 0 0 0 $thSideBarMActiveBack;
+// }
+
+// 复选框颜色变更
+.el-checkbox__input.is-checked+.el-checkbox__label{
+    color:$thSideBarMActiveBack;
+}
+.el-checkbox__input.is-checked .el-checkbox__inner{
+    background-color: $thSideBarMActiveBack;
+    border-color: $thSideBarMActiveBack;
+}
+.el-checkbox__inner:hover{
+    border-color: $thSideBarMActiveBack;
+}
+.el-checkbox__input.is-focus .el-checkbox__inner{
+    border-color: $thSideBarMActiveBack;
+}
+.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner{
+    background-color: $thSideBarMActiveBack;
+    border-color: $thSideBarMActiveBack;
+}
+
+// 单选框颜色替换
+.el-radio__input.is-checked+.el-radio__label{
+    color: $thSideBarMActiveBack;
+}
+
+// dialog定制
+.el-dialog{
+    .el-dialog__header{
+        border-bottom: 1px solid $thHeaderUserLineSp;
+        .el-dialog__title{
+            font-family: Roboto;
+            color: $thGTSuccess;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .el-dialog__headerbtn{
+            &:hover{
+                .el-dialog__close{
+                    color:$thPGActive;
+                }
+            }
+        }
+    }
+    .el-dialog__body{
+        // padding: 10px 20px 20px 20px;
+        th{
+            text-align: center;
+            background-color: $thTableThBG;
+            font-weight: bold;
+        }
+        td{
+            text-align: center;
+        }
+    }
+}
+.zr-dia-body-nopadding .el-dialog__body{
+    padding: 0;
+}
+
+// textarea-disable字样颜色加深点
+.el-textarea.is-disabled .el-textarea__inner{
+    color:#919191;
+}
+
+// input-disable字样颜色加深点
+.el-input.is-disabled .el-input__inner{
+    color: #919191;
+}
+
+// 多选-disable字样加深点
+.el-checkbox__input.is-disabled+span.el-checkbox__label {
+    color: #919191;
+}
+
+// 单选-disable字样加深点
+.el-radio__input.is-disabled+span.el-radio__label {
+    color: #919191;
+}
+
+// 下拉框按钮
+.el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover{
+    color: #fff;
+    background-color: $thSideBarMActiveBack;
+}
+
+// 输入框文本框颜色
+.el-textarea__inner {
+    border: 1px solid $thSideBarMActiveBack;
+    &:hover{
+        border-color: $thSideBarMActiveBack;
+    }
+    &:focus{
+        border-color: $thSideBarMActiveBack;
+    }
+}
+
+// 还原警告红色
+.el-form-item.is-error .el-input__inner, .el-form-item.is-error .el-input__inner:focus, .el-form-item.is-error .el-textarea__inner, .el-form-item.is-error .el-textarea__inner:focus, .el-message-box__input input.invalid, .el-message-box__input input.invalid:focus{
+    border-color: #F56C6C !important;
+}
+
+// form下拉菜单的右侧图标样式修复
+.el-input__suffix-inner i.el-input__icon{
+    line-height: unset;
+}
+
+.el-select-dropdown__item{
+    max-width: 600px;
+}

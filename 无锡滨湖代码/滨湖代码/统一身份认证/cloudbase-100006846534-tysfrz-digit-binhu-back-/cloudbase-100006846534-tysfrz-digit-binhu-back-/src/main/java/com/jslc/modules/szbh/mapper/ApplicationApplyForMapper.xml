@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.ApplicationApplyForMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="applicationApplyForResultMap" type="com.jslc.modules.szbh.entity.ApplicationApplyFor">
+        <result column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="name" property="name"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="logo_id" property="logoId"/>
+        <result column="logo" property="logo"/>
+        <result column="description" property="description"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="contacts" property="contacts"/>
+        <result column="telephone" property="telephone"/>
+        <result column="url" property="url"/>
+        <result column="is_ground" property="isGround"/>
+        <result column="is_enable" property="isEnable"/>
+        <result column="is_recommend" property="isRecommend"/>
+        <result column="is_send_sms" property="isSendSms"/>
+        <result column="protocol" property="protocol"/>
+        <result column="data_source" property="dataSource"/>
+        <result column="intro" property="intro"/>
+        <result column="icon_id" property="iconId"/>
+        <result column="icon" property="icon"/>
+        <result column="reason" property="reason"/>
+        <result column="review_opinion" property="reviewOpinion"/>
+        <result column="review_status" property="reviewStatus"/>
+    </resultMap>
+
+
+    <resultMap id="applicationApplyForVOResultMap" type="com.jslc.modules.szbh.vo.ApplicationApplyForVO" extends="applicationApplyForResultMap">
+
+    </resultMap>
+
+
+    <select id="selectApplicationApplyForPage" resultMap="applicationApplyForVOResultMap">
+        select baaf.*,bd.name as deptName ,'都市圈' providerName ,bu.name as applicantName from bh_application_apply_for baaf
+        left join bh_dept bd on bd.dept_id = baaf.dept_id and bd.is_deleted = 0
+        left join bh_user bu on bu.account = baaf.applicant and bu.is_deleted = 0
+        where baaf.is_deleted = 0
+        order by baaf.create_time desc
+    </select>
+    <select id="getDetail" resultMap="applicationApplyForVOResultMap">
+        select baaf.*,bd.name as deptName ,'都市圈' providerName,bu.name as applicantName from bh_application_apply_for baaf
+        left join bh_dept bd on bd.dept_id = baaf.dept_id and bd.is_deleted = 0
+        left join bh_application_category bac on bac.id = baaf.category_id and bac.is_deleted = 0
+        left join bh_user bu on bu.account = baaf.applicant and bu.is_deleted = 0
+        where baaf.is_deleted = 0 and baaf.id = #{id}
+    </select>
+
+    <select id="applicationApplyForList" resultType="com.jslc.modules.szbh.vo.ApplicationApplyForRestVO">
+        select baaf.*,bd.name as deptName,bu.name as applicantName,
+        baaf.create_time applicationTime,baaf.update_time approveTime
+        from bh_application_apply_for baaf
+        left join bh_dept bd on bd.dept_id = baaf.dept_id and bd.is_deleted = 0
+        left join bh_user bu on bu.account = baaf.applicant and bu.is_deleted = 0
+        where baaf.is_deleted = 0 and baaf.applicant = #{applicant}
+        order by baaf.create_time desc
+    </select>
+
+</mapper>

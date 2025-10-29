@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IEedge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/jquery.min.js"></script>
+    <title>军马场集团网格化管理系统</title>
+</head>
+<style>
+    html, body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .main {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .main .header {
+        width: 100%;
+        height: 6vh;
+        background-color: #2a5db4;
+        line-height: 6vh;
+    }
+
+    .main .header .header-back {
+        position: absolute;
+        top: 0;
+        right: 2vh;
+    }
+
+    .main .header .header-back img {
+        width: 2vh;
+        height: 2vh;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+
+    .main .header .header-title img {
+        width: 2vw;
+        height: 2vw;
+        vertical-align: text-top;
+    }
+
+    .main .header .header-title {
+        color: #fff;
+        font-weight: bold;
+        padding-left: 40px;
+        font-size: 24px;
+        float: left;
+    }
+
+    .main .header .header-set {
+        color: #fff;
+        padding-right: 40px;
+        font-size: 12px;
+        float: right;
+    }
+
+    .main .header .header-set img {
+        width: 2vh;
+        height: 2vh;
+        vertical-align: middle;
+        cursor: pointer;
+        margin-left: 0.5vw;
+    }
+
+    iframe {
+        width: 100%;
+        height: 94vh;
+        border: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .menus {
+        float: left;
+        padding-left: 40px;
+
+    }
+
+    .menus .item {
+        width: 8vw;
+        text-align: center;
+        font-size: 16px;
+        color: #fff;
+        float: left;
+        height: 5vh;
+        line-height: 5vh;
+        margin-top: 1vh;
+        cursor: pointer;
+        color: #ffffffd9;
+        border-radius: 5px 5px 0 0;
+    }
+
+    .menus .check {
+        color: #faad14;
+        border-bottom: 3px solid #faad14;
+        box-sizing: border-box;
+    }
+</style>
+<body>
+<div class="main">
+    <div class="header">
+        <div class="header-title">
+<!--            <img src="./images/jh.png" alt="">-->
+            军马场集团网格化管理系统
+        </div>
+        <div class="menus">
+        </div>
+        <div class="header-set">
+            <span id="nickName"></span>
+            <img id="toSystem" onclick="toMenu('1000001')" src="images/setting.png" alt="">
+            <img id="toLogout" src="images/logout.png" alt="">
+        </div>
+    </div>
+    <iframe name="mainIframe" id="mainIframe" src="" frameborder="0"></iframe>
+</div>
+</body>
+<script type="text/javascript">
+    $(function () {
+        $.ajax({
+            url: "./config.json",
+            dataType: "json",
+            success: function (res) {
+                var result = {}
+                if (window.location.href.indexOf("localhost") != -1) {
+                    result = res.dev
+                } else if (window.location.href.indexOf("wxgis.cn") != -1) {
+                    result = res.test
+                } else {
+                    result = res.prod
+                }
+                window.result = result;
+                var token = window.sessionStorage.getItem("token");
+                $("#toLogout").click(function () {
+                    window.location.href = result.jobUrl + "/html/login.html"
+                    window.sessionStorage.removeItem("token");
+                });
+                if (token) {
+                    window.token = token
+                    $.ajax({
+                        url: result.serverUrl + "/system/menu/treeselect",
+                        type: "GET",
+                        dataType: "json",
+                        beforeSend: function (request) {
+                            request.setRequestHeader("Authorization", token);
+                        },
+                        success: function (r) {
+                            if (r.code == 401) {
+                                window.location.href = result.jobUrl + "/html/login.html"
+                                window.sessionStorage.removeItem("token");
+                            }
+                            window.menuIds = [];
+                            window.newPage = [];
+                            r.data.forEach(function a(s) {
+                                window.menuIds.push(s.id)
+                            })
+                            if (menuIds.indexOf("1000001") == -1) {
+                                $("#toSystem").css("display", "none")
+                            }
+                            let menuHtml = "";
+                            for (var i = 0; i < result.page.length; i++) {
+                                var obj = result.page[i];
+                                if (window.menuIds.indexOf(obj.pageId) != -1) {
+                                    menuHtml += ` <div class="item" data-id="${obj.pageId}" onclick="toMenu('${obj.pageId}')">
+                                            ${obj.name}
+                                    </div>`;
+                                    newPage.push(obj)
+                                }
+                            }
+                            $(".menus").append(menuHtml);
+                            if (newPage.length > 0) {
+                                $("#mainIframe").attr("src", newPage[0].url + "?token=" +
+                                    token + "&jobUrl=" + result.jobUrl + "&pageId=" + newPage[0].pageId);
+                                $(".item").each(function (e) {
+                                    if ($(this).attr("data-id") == newPage[0].pageId) {
+                                        $(this).addClass("check")
+                                    }
+                                })
+                            } else {
+                                alert("无菜单权限，请联系管理员！")
+                            }
+
+                        }
+                    })
+
+
+                    $("#header-back").click(function () {
+                        window.location.href = result.jobUrl + "/html/navigation.html"
+                    })
+                    $.ajax({
+                        url: result.serverUrl + "/getInfo",
+                        type: "GET",
+                        dataType: "json",
+                        beforeSend: function (request) {
+                            request.setRequestHeader("Authorization", token);
+                        },
+                        success: function (r) {
+                            var nickName = r.user.nickName;
+                            $("#nickName").text("欢迎您！ " + nickName)
+                        }
+                    })
+
+                } else {
+                    window.location.href = result.jobUrl + "/html/login.html"
+                }
+            }
+        })
+
+    })
+
+    function toMenu(index) {
+
+        if (index == "1000001") {
+            $("#mainIframe").attr("src", result.systemWebUrl + "?token=" +
+                token + "&jobUrl=" + result.jobUrl)
+            $(".item").each(function (e) {
+                $(this).removeClass("check");
+            })
+        } else {
+            $(".item").each(function (e) {
+                if ($(this).attr("data-id") == index) {
+                    $(this).addClass("check");
+                    var s = newPage.filter(function (e) {
+                        return e.pageId == index;
+                    })[0]
+                    $("#mainIframe").attr("src", "")
+                    setTimeout(() => {
+                        $("#mainIframe").attr("src", s.url + "?token=" +
+                            token + "&jobUrl=" + result.jobUrl + "&pageId=" + s.pageId)
+                    }, 50)
+
+                } else {
+                    $(this).removeClass("check");
+                }
+            })
+        }
+    }
+</script>
+</html>

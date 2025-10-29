@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.SmsSendSettingMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="smsSendSettingResultMap" type="com.jslc.modules.szbh.entity.SmsSendSetting">
+        <result column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="title" property="title"/>
+        <result column="mobile" property="mobile"/>
+        <result column="mobile_type" property="mobileType"/>
+        <result column="content" property="content"/>
+        <result column="is_regular_time" property="isRegularTime"/>
+        <result column="regular_time" property="regularTime"/>
+    </resultMap>
+
+    <resultMap id="smsSendSettingVOResultMap" type="com.jslc.modules.szbh.vo.SmsSendSettingVO" extends="smsSendSettingResultMap">
+
+    </resultMap>
+
+
+    <select id="selectSmsSendSettingPage" resultMap="smsSendSettingResultMap">
+        select * from bh_sms_send_setting where is_deleted = 0
+    </select>
+    <select id="getSmsSendSettingList" resultMap="smsSendSettingVOResultMap">
+		select bsss.id,bsss.title, bsss.mobile, bsss.mobile_type, bsss.content, bsss.is_regular_time,
+		bsss.regular_time, bsss.send_status, bsss.create_user, bsss.create_time, bsss.update_user,
+		bsss.update_time, bsss.is_deleted ,bu.name as userName
+		from bh_sms_send_setting bsss
+		left join blade_user bu  on bu.id = bsss.create_user
+		where bsss.is_deleted = 0
+		<if test="title !=null and title != ''">
+            and bsss.title like concat('%',#{title},'%')
+        </if>
+
+        <if test="startTime != null ">
+            and bsss.create_time >= #{startTime}
+        </if>
+        <if test="endTime != null ">
+            and bsss.create_time &lt;= #{endTime}
+        </if>
+
+        <if test="sendStatus !=null">
+            and bsss.send_status = #{sendStatus}
+        </if>
+
+        <if test="isRegularTime !=null">
+            and bsss.is_regular_time = #{isRegularTime}
+        </if>
+
+
+
+    </select>
+
+    <select id="getUserPhones" resultType="java.lang.String">
+        select phone from blade_user where is_deleted = 0 and phone is not null
+    </select>
+
+</mapper>

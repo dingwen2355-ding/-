@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.civilization.synch.mapper.UnifyUserMapper">
+
+    <select id="selectPageCustom" resultType="cn.wxgis.jc.synch.unify.resp.UnifyUserResponse">
+        select * from (
+            select data.*, jdata.`name` majorDeptName
+            from unify_user data
+            left join unify_dept jdata on jdata.id = data.major_dept
+        ) t
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+
+</mapper>

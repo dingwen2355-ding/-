@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.task.mapper.DataCheckPointsDeviceMapper">
+
+    <select id="findResponseByDeviceId"
+            resultType="cn.wxgis.jc.civilization.data.resp.DataCheckPointsResponse">
+        select p.*, pt.`name` type_name,  r.name region_name
+        from data_check_points_device pd
+                 left join data_check_points p on p.id = pd.points_id
+                 left join data_check_points_type pt on pt.id = p.type_id
+                 left join sys_dept r on r.id = p.region_code
+        where pd.channel_id = #{channelId}
+    </select>
+</mapper>

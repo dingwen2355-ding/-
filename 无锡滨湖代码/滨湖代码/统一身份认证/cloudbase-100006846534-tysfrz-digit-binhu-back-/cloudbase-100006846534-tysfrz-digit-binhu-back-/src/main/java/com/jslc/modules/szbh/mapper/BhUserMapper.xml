@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.BhUserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="bhUserResultMap" type="com.jslc.modules.szbh.entity.BhUser">
+        <result column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="name" property="name"/>
+        <result column="account" property="account"/>
+        <result column="password" property="password"/>
+        <result column="major_dept" property="majorDept"/>
+        <result column="is_leader_in_dept" property="isLeaderInDept"/>
+        <result column="major_position" property="majorPosition"/>
+        <result column="major_mobile" property="majorMobile"/>
+        <result column="is_send_sms" property="isSendSms"/>
+        <result column="is_enable" property="isEnable"/>
+        <result column="other_dept" property="otherDept"/>
+        <result column="is_leader_in_other_dept" property="isLeaderInOtherDept"/>
+        <result column="other_position" property="otherPosition"/>
+        <result column="gender" property="gender"/>
+        <result column="avatar" property="avatar"/>
+        <result column="english_name" property="englishName"/>
+        <result column="email" property="email"/>
+        <result column="telephone" property="telephone"/>
+        <result column="external_corp_name" property="externalCorpName"/>
+        <result column="sort" property="sort"/>
+        <result column="is_updated" property="isUpdated"/>
+        <result column="data_source" property="dataSource"/>
+        <result column="enable" property="enable"/>
+        <result column="last_login_time" property="lastLoginTime"/>
+        <result column="is_authorized" property="isAuthorized"/>
+        <result column="is_online" property="isOnline"/>
+        <result column="init_password" property="initPassword"/>
+        <result column="is_password_updated" property="isPasswordUpdated"/>
+        <result column="is_sendSms_initPassword" property="isSendSmsInitPassword"/>
+    </resultMap>
+
+
+    <resultMap id="bhUserVOResultMap" type="com.jslc.modules.szbh.vo.BhUserVO" extends="bhUserResultMap">
+        <result column="majorBhDeptName" property="majorBhDeptName"/>
+    </resultMap>
+
+
+    <select id="selectBhUserPage" resultMap="bhUserResultMap">
+        select * from bh_user where is_deleted = 0
+    </select>
+
+<!--    @ApiImplicitParam(name = "isOnline", value = "在线 / 离线", paramType = "query", dataType = "int"),-->
+<!--    @ApiImplicitParam(name = "isConfig", value = "配置 / 未配置", paramType = "query", dataType = "int"),-->
+<!--    @ApiImplicitParam(name = "start", value = "开始时间", paramType = "query", dataType = "string"),-->
+<!--    @ApiImplicitParam(name = "end",-->
+
+
+    <select id="getBhUserList" resultMap="bhUserVOResultMap">
+        select bu.*,bd.name as bhDeptName,
+        (CASE WHEN bu.is_enable = 1 THEN '启用' ELSE '停用' END) as  isEnableName,
+        (CASE WHEN bu.is_authorized = 1 THEN '授权' ELSE '未授权' END) as  isAuthorizedName,
+        (CASE WHEN bu.is_online = 1 THEN '在线' ELSE '离线' END) as  isOnlineName
+         from bh_user bu
+        left join bh_dept bd on bd.dept_id = bu.major_dept
+        where bu.is_deleted = 0
+        <if test="bhDeptIds != null and bhDeptIds !=''">
+            and (bu.major_dept in
+            <foreach collection="bhDeptIds" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+
+            <foreach collection="bhDeptIds" item="id" index="index">
+                or POSITION(#{id} IN bu.other_dept)
+            </foreach>
+            )
+        </if>
+
+        <if test="code != null and code !=''">
+            and (bu.name like concat('%',#{code},'%') or bu.account like concat('%',#{code},'%') or bu.major_mobile like concat('%',#{code},'%'))
+        </if>
+
+        <if test="isEnable != null">
+            and bu.is_enable = #{isEnable}
+        </if>
+
+        <if test="isOnline != null">
+            and bu.is_online = #{isOnline}
+        </if>
+
+        <if test="isAuthorized != null">
+            and bu.is_authorized = #{isAuthorized}
+        </if>
+
+        <if test="startTime != null ">
+            and bu.last_login_time >= #{startTime}
+        </if>
+        <if test="endTime != null ">
+            and bu.last_login_time &lt;= #{endTime}
+        </if>
+
+        <if test="ids != null">
+            and bu.id in
+            <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+
+    </select>
+    <select id="getUserGroupData" resultMap="bhUserResultMap">
+        select bu.* from bh_user bu
+        inner join bh_manage_user bmu on bmu.bh_user_id = bu.id
+        inner join bh_manage_user_group bmug on bmug.id = bmu.biz_id
+        where bmug.is_deleted = 0
+        <if test="ids != null">
+            and bmug.id in
+            <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+    <select id="getUserS" resultMap="bhUserResultMap">
+        select * from bh_user bu
+        where is_deleted = 0
+        <if test="ids != null">
+            and(
+            <foreach collection="ids" item="id" index="index" separator="or">
+                 (bu.major_dept = #{id} or POSITION(#{id} IN bu.other_dept))
+            </foreach>
+            )
+        </if>
+    </select>
+
+    <select id="getUserListBySyncUserAndField" resultMap="bhUserResultMap">
+        select
+        ${syncFields}
+        from bh_user
+        where is_deleted = 0
+        <if test="syncUsers !=null">
+            and account in
+            <foreach collection="syncUsers" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        order by sort desc
+    </select>
+    <select id="getRole" resultType="java.lang.String">
+        select br.role_alias from blade_user bu
+        inner join blade_role  br on (cast(br.id as char)  =  bu.role_id )  and bu.is_deleted = 0
+        where bu.id = #{userId}
+    </select>
+
+    <select id="getUserDetail" resultMap="bhUserVOResultMap">
+        select bu.*,bd.name majorBhDeptName
+        from bh_user bu
+        inner join bh_dept bd on bd.dept_id = bu.major_dept
+        where bu.account = #{account} and bu.is_deleted = 0
+    </select>
+    <select id="getUserList" resultType="com.jslc.modules.szbh.entity.BhUser">
+        select bu.*,bd.name as bhDeptName,
+        (CASE WHEN bu.is_enable = 1 THEN '启用' ELSE '停用' END) as  isEnableName,
+        (CASE WHEN bu.is_authorized = 1 THEN '授权' ELSE '未授权' END) as  isAuthorizedName,
+        (CASE WHEN bu.is_online = 1 THEN '在线' ELSE '离线' END) as  isOnlineName
+        from bh_user bu
+        left join bh_dept bd on bd.dept_id = bu.major_dept
+        where bu.is_deleted = 0
+        <if test="bhDeptIds != null and bhDeptIds !=''">
+            and (bu.major_dept in
+            <foreach collection="bhDeptIds" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+
+            <foreach collection="bhDeptIds" item="id" index="index">
+                or POSITION(#{id} IN bu.other_dept)
+            </foreach>
+            )
+        </if>
+    </select>
+    <select id="getLoginUserList" resultType="java.lang.String">
+        select major_mobile from bh_user where major_mobile is not null and last_login_time is not null
+    </select>
+
+    <select id="getAdminRole" resultType="java.lang.Integer">
+        select count(1) from blade_role where id = #{roleId} and role_alias like '%admin%'
+    </select>
+
+
+</mapper>

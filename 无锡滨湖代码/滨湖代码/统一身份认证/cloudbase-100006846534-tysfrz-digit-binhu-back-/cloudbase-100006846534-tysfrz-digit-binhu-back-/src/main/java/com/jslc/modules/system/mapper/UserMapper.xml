@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.system.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="userResultMap" type="com.jslc.modules.system.entity.User">
+        <result column="id" property="id"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="code" property="code"/>
+        <result column="user_type" property="userType"/>
+        <result column="account" property="account"/>
+        <result column="password" property="password"/>
+        <result column="name" property="name"/>
+        <result column="real_name" property="realName"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="birthday" property="birthday"/>
+        <result column="sex" property="sex"/>
+        <result column="role_id" property="roleId"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="post_id" property="postId"/>
+        <result column="management_id" property="managementId"/>
+
+    </resultMap>
+
+    <resultMap id="userVOResultMap" type="com.jslc.modules.system.vo.UserVO" extends="userResultMap">
+
+    </resultMap>
+
+
+    <select id="selectUserPage" resultMap="userVOResultMap">
+        select
+            bu.id,
+            bu.tenant_id,
+            bu.code,
+            bu.user_type,
+            bu.account,
+            bu.name,
+            bu.real_name,
+            bu.avatar,
+            bu.birthday,
+            bu.sex,
+            bu.role_id,
+            bu.dept_id,
+            bu.post_id,
+            bu.create_user,
+            bu.create_dept,
+            bu.create_time,
+            bu.update_user,
+            bu.update_time,
+            bu.status,
+            bu.is_deleted,
+            bu.management_id,
+            br.role_name roleName,
+            bd.dept_name deptName ,
+            bp.post_name as postName
+        from blade_user bu
+        left join blade_role br on br.id = bu.role_id and br.is_deleted = 0
+        left join blade_dept bd on bd.id = bu.dept_id and bd.is_deleted = 0
+        left join blade_post bp on bu.post_id = bp.id and bp.is_deleted = 0
+        where bu.is_deleted = 0
+        <if test="tenantId!=null and tenantId != ''">
+            and bu.tenant_id = #{tenantId}
+        </if>
+        <if test="user.tenantId!=null and user.tenantId != ''">
+            and bu.tenant_id = #{user.tenantId}
+        </if>
+        <if test="user.account!=null and user.account != ''">
+            and bu.account like concat('%',#{user.account},'%')
+        </if>
+        <if test="user.realName!=null and user.realName != ''">
+            and bu.real_name like concat('%',#{user.realName},'%')
+        </if>
+        <if test="user.userType!=null and user.userType != ''">
+            and bu.user_type = #{user.userType}
+        </if>
+        <if test="deptIdList!=null and deptIdList.size>0">
+            and bu.dept_id in
+            <foreach collection="deptIdList" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        and bu.account != 'admin'
+        ORDER BY id
+    </select>
+
+    <select id="seletePhoneById" parameterType="long" resultType="string">
+        select phone from blade_user where id = #{id}
+    </select>
+
+    <select id="seleteEmailById" parameterType="long" resultType="string">
+        select email from blade_user where id = #{id}
+    </select>
+
+    <select id="seletePwdById" parameterType="long" resultType="string">
+        select password from blade_user where id = #{id}
+    </select>
+
+    <select id="getUser" resultMap="userResultMap">
+        SELECT
+            *
+        FROM
+            blade_user
+        WHERE
+            tenant_id = #{param1} and account = #{param2} and password = #{param3} and is_deleted = 0
+    </select>
+
+    <select id="exportUser" resultType="com.jslc.modules.system.excel.UserExcel">
+        SELECT id, tenant_id, user_type, account, name, real_name, email, phone, birthday, role_id, dept_id, post_id FROM blade_user ${ew.customSqlSegment}
+    </select>
+
+    <select id="getUserRoleAlias" resultType="java.lang.String">
+        select br.role_alias from blade_user bu
+        inner join blade_role br on br.id = bu.role_id
+        where bu.account = #{account} and bu.is_deleted = 0
+    </select>
+    <select id="getUserByAppId" resultMap="userResultMap">
+        select * from blade_user where position(#{applicationManagementId} in management_id)
+    </select>
+    <select id="getDetail" resultMap="userVOResultMap">
+        select
+            bu.id,
+            bu.tenant_id,
+            bu.code,
+            bu.user_type,
+            bu.account,
+            bu.name,
+            bu.real_name,
+            bu.avatar,
+            bu.birthday,
+            bu.sex,
+            bu.role_id,
+            bu.dept_id,
+            bu.post_id,
+            bu.create_user,
+            bu.create_dept,
+            bu.create_time,
+            bu.update_user,
+            bu.update_time,
+            bu.status,
+            bu.is_deleted,
+            bu.management_id,
+            br.role_name roleName,
+            bd.dept_name deptName,
+            bp.post_name as postName
+        from blade_user bu
+        left join blade_role br on br.id = bu.role_id and br.is_deleted = 0
+        left join blade_dept bd on bd.id = bu.dept_id and bd.is_deleted = 0
+        left join blade_post bp on bu.post_id = bp.id and bp.is_deleted = 0
+        where bu.is_deleted = 0 and bu.id = #{id}
+    </select>
+
+</mapper>

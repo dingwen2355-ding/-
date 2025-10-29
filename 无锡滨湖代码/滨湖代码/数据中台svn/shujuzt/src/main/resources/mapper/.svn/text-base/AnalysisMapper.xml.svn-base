@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grandlynn.spa.catalogue.mapper.AnalysisMapper">
+
+    <select id="total" resultType="com.grandlynn.spa.catalogue.domain.response.AnalysisTotalResponse">
+        SELECT t1.org,
+               t2.sys,
+               t3.tb,
+               t4.field
+        FROM (SELECT COUNT(*) org FROM catalogue_org WHERE is_deleted = 0 and parent_id = 0 and node_type = '部门') t1,
+             (SELECT COUNT(1) sys FROM catalogue_org_sys WHERE is_deleted = 0
+                and EXISTS(SELECT cst.id FROM catalogue_sys_table cst where cst.is_deleted = 0 and cst.org_sys_id = catalogue_org_sys.id
+                and cst.table_state = 6)) t2,
+             (SELECT COUNT(1) tb FROM catalogue_sys_table WHERE is_deleted = 0) t3,
+             (SELECT COUNT(1) field FROM catalogue_table_field WHERE is_deleted = 0) t4
+    </select>
+
+    <select id="totalCount" resultType="com.grandlynn.spa.catalogue.domain.response.AnalysisTotalResponse">
+        SELECT t1.org,
+               t2.sys,
+               t3.field,
+               t4.street
+        FROM (SELECT COUNT(*) org FROM catalogue_org WHERE is_deleted = 0 and parent_id = 0 and node_type = '部门') t1,
+             (SELECT COUNT(1) sys FROM catalogue_org_sys WHERE is_deleted = 0 and sys_name != '无系统'
+                and EXISTS(SELECT cst.id FROM catalogue_sys_table cst where cst.is_deleted = 0 and cst.org_sys_id = catalogue_org_sys.id
+                and cst.table_state = 6)) t2,
+             (SELECT COUNT(1) field FROM catalogue_table_field WHERE is_deleted = 0) t3,
+             (SELECT COUNT(*) street FROM catalogue_org WHERE is_deleted = 0 and parent_id = 0 and node_type = '街道') t4
+    </select>
+
+
+    <select id="catalogRanking" resultType="com.grandlynn.spa.catalogue.domain.response.AnalysisCatalogueRankingResponse">
+        SELECT
+            org.id orgId, org.node_name orgName, COALESCE(sysNumber, 0) sysNumber, COALESCE(cataNumber, 0) cataNumber
+        FROM
+            catalogue_org org
+        LEFT JOIN (
+                    SELECT t1.org_id, count(1) sysNumber, sum(cata.cata_number) cataNumber
+                    FROM catalogue_org_content_relation t1,
+                        (
+                            SELECT t1.id sys_id,count(t2.id)cata_number from catalogue_org_sys t1
+                            LEFT JOIN catalogue_sys_table t2 on t2.org_sys_id = t1.id
+                            GROUP BY t1."id"
+                        ) cata
+                    WHERE
+                        cata.sys_id = t1.content_id AND content_type = 1
+                    GROUP BY t1.org_id
+                ) total ON org."id" = total.org_id
+        WHERE org.is_deleted = 0
+        ORDER BY ${field} ${order}
+        LIMIT 10
+    </select>
+
+    <select id="catalogByOrg" resultType="com.grandlynn.spa.catalogue.domain.response.AnalysisCatalogueStatisticsResponse">
+        SELECT COUNT(sys_id) sysNumber, COALESCE(SUM(tb_num), 0) tableNumber, COALESCE(SUM(fd_num), 0) fieldNumber
+        FROM (
+                 SELECT sys_id, count(tb_id) tb_num, sum(fd_num) fd_num
+                 FROM (
+                        SELECT  sys."id" sys_id, tb."id" tb_id, count(1) fd_num FROM catalogue_org_sys sys
+                        JOIN    catalogue_sys_table tb             ON sys."id" = tb.org_sys_id
+                        JOIN    catalogue_table_field fd           ON tb."id" = fd.sys_table_id
+                        JOIN    catalogue_org_content_relation re  ON re.content_id = sys."id"
+                        WHERE   re.org_id = ${orgId}
+                        AND     sys.is_deleted = 0
+                        AND     tb.is_deleted = 0
+                        AND     fd.is_deleted = 0
+                        AND     re.is_deleted = 0
+                        GROUP BY sys."id", tb."id"
+                      ) temp
+                 GROUP BY sys_id
+             ) temp
+    </select>
+
+    <select id="totalTableNumber" resultType="java.lang.Integer">
+        SELECT COALESCE(count(1),0) totalNumber
+        FROM foreign_total_list  t
+        INNER JOIN catalogue_org org ON org.node_no = t.node_no
+        WHERE   org.id = ${orgId}
+        AND     org.is_deleted = 0
+    </select>
+
+    <select id="catalogSystemItem" resultType="com.grandlynn.spa.catalogue.dto.AnalysisListDto">
+        SELECT
+            sys."id",sys.sys_name "name",sys.updated_time date,
+            (select count(1) from catalogue_sys_table tb where sys."id" = tb.org_sys_id ) number
+        FROM    catalogue_org_sys sys
+        JOIN    catalogue_org_content_relation re  ON re.content_id = sys."id"
+        WHERE   re.org_id = ${orgId}
+        AND     sys.is_deleted = 0
+    </select>
+
+    <select id="catalogTableItem" resultType="com.grandlynn.spa.catalogue.dto.AnalysisListDto">
+        SELECT
+            tb."id",tb."data_resource_name" "name",tb.updated_time date,
+            (select  count(1) from catalogue_table_field fd where fd.sys_table_id = tb."id") number
+        FROM catalogue_org_sys sys
+            JOIN catalogue_sys_table tb ON sys."id" = tb.org_sys_id
+            JOIN catalogue_org_content_relation re  ON re.content_id = sys."id"
+        WHERE   re.org_id = ${orgId}
+        AND     re.is_deleted = 0
+        AND     sys.is_deleted = 0
+        AND     tb.is_deleted = 0
+    </select>
+
+    <select id="catalogTableStatistics" resultType="com.grandlynn.spa.catalogue.domain.response.AnalysisCatalogueRankingResponse">
+        SELECT org.id orgId, org.node_name orgName, COALESCE(sysNumber, 0) sysNumber, COALESCE(cataNumber, 0) cataNumber
+        FROM catalogue_org org
+                 LEFT JOIN (
+            SELECT t1.org_id, count(1) sysNumber, sum(cata.cata_number) cataNumber
+            FROM catalogue_org_content_relation t1,
+                 (
+                     SELECT t2.id sys_id, t2."sys_name", count(1) cata_number
+                     FROM catalogue_org_sys t2
+                              LEFT JOIN catalogue_sys_table t3 ON t3.org_sys_id = t2."id"
+                     WHERE t2.is_deleted = 0 AND t3.is_deleted = 0
+                     GROUP BY t2.id, t2."sys_name"
+                 ) cata
+            WHERE cata.sys_id = t1.content_id AND content_type = 1
+            GROUP BY t1.org_id
+        ) total ON org."id" = total.org_id
+        WHERE org.is_deleted = 0
+        ORDER BY cataNumber desc,orgName desc
+    </select>
+
+    <select id="catalogAmountStatisByYear" resultType="com.grandlynn.spa.catalogue.dto.AnalysisTrendDto">
+        SELECT t.mm x,(
+                SELECT  count(1)nNum
+                FROM    catalogue_sys_table temp
+                WHERE   is_deleted = 0
+                AND     to_char( TEMP.created_time, 'yy-mm' ) &lt;= T.mm
+            ) y
+        FROM (
+            SELECT
+            to_char(date,'yy-mm')mm
+            FROM generate_series(now()-interval '1 year', now(),'1 month') date
+        ) t
+    </select>
+
+    <select id="catalogAmountStatisByMonth" resultType="com.grandlynn.spa.catalogue.dto.AnalysisTrendDto">
+        select t.dd x,
+               (
+                    select  count(1)nNum
+                    from    catalogue_sys_table temp
+                    where   is_deleted = 0
+                    and     to_char(temp.created_time,'yy-mm-dd') &lt;= t.dd
+                ) y
+        from (
+            select  to_char(date,'yy-mm-dd')dd
+            from    generate_series(now()-interval '1 month', now(),'1 day') date
+            ) t
+    </select>
+
+    <select id="catalogAmountStatisByWeek" resultType="com.grandlynn.spa.catalogue.dto.AnalysisTrendDto">
+        select t.dd x,
+               (
+                    select  count(1)nNum
+                    from    catalogue_sys_table temp
+                    where   is_deleted = 0
+                    and     to_char(temp.created_time,'yy-mm-dd') &lt;= t.dd
+                ) y
+        from (
+            select to_char(date,'yy-mm-dd')dd
+            from generate_series(now()- interval '7 day', now(), '1 day') date
+            ) t
+    </select>
+
+    <select id="catalogAmountStatisByRange" resultType="com.grandlynn.spa.catalogue.dto.AnalysisTrendDto">
+        select t.dd x,
+            (
+                select count(1)nNum from catalogue_sys_table temp where is_deleted = 0
+                and to_char(temp.created_time, 'yyyy-mm-dd') &lt;= dd
+            ) y
+        from (
+            select to_char(date,'yyyy-mm-dd') dd
+            from generate_series(#{beginTime,jdbcType=DATE}::date, #{endTime,jdbcType=DATE},'1 days') date
+        ) t
+    </select>
+
+</mapper>

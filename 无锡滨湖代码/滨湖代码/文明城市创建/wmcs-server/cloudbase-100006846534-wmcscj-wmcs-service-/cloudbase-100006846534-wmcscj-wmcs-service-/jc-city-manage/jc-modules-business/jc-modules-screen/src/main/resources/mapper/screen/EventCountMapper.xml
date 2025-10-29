@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.screen.web.mapper.EventCountMapper">
+
+    <select id="getEventStatus" resultType="cn.wxgis.jc.screen.domain.vo.count.EventCountVo">
+        select region_name, type, count(1) count from
+        (
+            select id, region_name, 1 type from wf_event_report where del_flag = 0 and `status` != 60
+            union all
+            select id, region_name, 1 type from work_event where del_flag = 0 and state != 3 and state != 1
+            union all
+            select id, region_name, 2 type from wf_event_report where del_flag = 0 and `status` = 60
+            union all
+            select id, region_name, 2 type from work_event where del_flag = 0 and (state = 3 or state = 1)
+            union all
+            select id, region_name, 3 type from wf_event_report where del_flag = 0 and extension_flag = 1
+            union all
+            select id, region_name, 3 type from work_event where del_flag = 0 and state = 2
+        ) data
+        <where>
+            <if test="regionName != null and regionName != ''">
+                and region_name = #{regionName}
+            </if>
+        </where>
+        group by type
+    </select>
+
+    <select id="getEventSource" resultType="cn.wxgis.jc.screen.domain.vo.count.EventCountVo">
+        select region_name, type, sum(count) count from
+        (
+            select region_name, type, count(1) count from (
+                select id, region_name, 1 type from work_event where del_flag = 0
+                union all
+                select id, region_name, event_source type from wf_event_report where del_flag = 0
+            ) t
+            group by region_name, type
+        ) data
+        <where>
+            <if test="regionName != null and regionName != ''">
+                and region_name = #{regionName}
+            </if>
+        </where>
+        group by type
+    </select>
+
+    <select id="getHighType" resultType="cn.wxgis.jc.screen.domain.vo.count.EventCountVo">
+        select region_name, type, sum(count) count from
+        (
+            select region_name, type, count(1) count from (
+                select e.region_name, i.event_type_id eventType, t.name type from work_event e
+                left join data_check_item i on i.name = e.check_item_name left join quota_event_type t on t.id = i.event_type_id where e.del_flag = 0
+                union all
+                select e.region_name, e.event_type eventType, q.name type from wf_event_report e left join quota_event_type q on q.id = e.event_type where e.del_flag = 0
+            ) t
+            group by region_name, type
+        ) data
+        <where>
+            and type != '其他' and type is not null
+            <if test="regionName != null and regionName != ''">
+                and region_name = #{regionName}
+            </if>
+        </where>
+        group by type
+        order by count desc
+        limit 0, 5
+    </select>
+
+    <select id="getEventTrend" resultType="cn.wxgis.jc.screen.domain.vo.count.EventNameCountVo">
+        select region_name, type, name, sum(count) count from
+        (
+            select region_name, type, name,  count(1) count from (
+                select region_name, check_name type, '工单总数' name from work_event where del_flag = 0
+                union all
+                select region_name, check_name type, '办结总数' name from work_event where del_flag = 0 and state = 3
+                union all
+                select region_name, cycle, '工单总数' name from wf_event_report where del_flag = 0
+                union all
+                select region_name, cycle, '办结总数' name from wf_event_report where del_flag = 0 and `status` = 60
+            ) t group by region_name, type, name
+        ) data
+        <where>
+            <if test="regionName != null and regionName != ''">
+                and region_name = #{regionName}
+            </if>
+            and type in
+            <foreach collection="cycle" open="(" close=")" separator="," item = "item" index="index">
+                #{item}
+            </foreach>
+        </where>
+        group by type, name
+    </select>
+
+    <select id="getEventEndList" resultType="cn.wxgis.jc.screen.domain.vo.count.EventNameCountVo">
+        select region_name, type, name, sum(count) count from
+        (
+            select region_name, type, name, count(1) count from (
+                select region_name, check_name type, '人工办结' name from work_event where del_flag = 0 and state = 3
+                union all
+                select region_name, cycle type, '人工办结' name from wf_event_report where del_flag = 0 and `status` = 60
+            ) t group by region_name, type, name
+        ) data
+        <where>
+            <if test="regionName != null and regionName != ''">
+                and region_name = #{regionName}
+            </if>
+            and type in
+            <foreach collection="cycle" open="(" close=")" separator="," item = "item" index="index">
+                #{item}
+            </foreach>
+        </where>
+        group by type, name
+    </select>
+
+    <select id="getHighPoint" resultType="cn.wxgis.jc.screen.domain.vo.count.EventCountVo">
+        select region_name, type, count(1) count, sum(`status`) handle_count,
+            (select count(1) from
+                (select region_name, point_name type, case when state = 3 then 1 else 0 end status from work_event where del_flag = 0
+                union all
+                select region_name, check_points type, case when status = 70 then 1 else 0 end `status` from wf_event_report where del_flag = 0) data
+                where data.region_name = t.region_name) total_count
+        from (
+        select region_name, point_name type, case when state = 3 then 1 else 0 end status from work_event where del_flag = 0
+        union all
+        select region_name, check_points type, case when status = 70 then 1 else 0 end `status` from wf_event_report where del_flag = 0
+        ) t
+        <where>
+            <if test="regionName != null and regionName != ''">
+                and region_name = #{regionName}
+            </if>
+        </where>
+        group by type order by count desc
+        limit 0, 5
+    </select>
+
+    <select id="getEventRegionListByRegion" resultType="cn.wxgis.jc.screen.domain.vo.count.EventRegionCountVo">
+        select region_name, type, count from
+        (
+            select region_name, type, count(1) count from (
+                select region_name, DATE_FORMAT(check_date, '%Y-%m') type from work_event where del_flag = 0
+                union all
+                select region_name, DATE_FORMAT(report_time, '%Y-%m') type from wf_event_report where del_flag = 0
+            ) t group by region_name, type
+        ) data
+        <where>
+            and type in
+            <foreach collection="monthList" open="(" close=")" separator="," item = "item" index="index">
+                #{item}
+            </foreach>
+        </where>
+        order by type desc
+    </select>
+
+    <select id="getEventRegionListByDept" resultType="cn.wxgis.jc.screen.domain.vo.count.EventRegionCountVo">
+        select shareholder regionName, type, count(1) as count from (
+            select * from (
+            SELECT
+            a.id, date_format(str_to_date(a.check_date, '%Y/%m'), '%Y-%m') as type, a.state,
+            substring_index(substring_index(a.depart_name, ',', b.help_topic_id + 1),',' ,- 1) AS shareholder
+            FROM work_event a
+            JOIN mysql.help_topic b ON b.help_topic_id <![CDATA[ < ]]> (
+            length(a.depart_name) - length(REPLACE (a.depart_name, ',', '')) + 1)
+            ) cc where shareholder not in ('蠡园街道','蠡湖街道','马山街道','荣巷街道','胡埭镇','雪浪街道','河埒街道')
+        ) dd  where shareholder is not null and shareholder != ''
+            and type in
+            <foreach collection="monthList" open="(" close=")" separator="," item = "item" index="index">
+                #{item}
+            </foreach>
+        GROUP BY shareholder, type order by count desc, type, shareholder desc
+    </select>
+
+    <select id="getEventRegionEndList" resultType="cn.wxgis.jc.screen.domain.vo.count.EventRegionEndCountVo">
+        select region_name, type, name, sum(count) count from (
+            select region_name, type, name, count(1) count from (
+                select region_name, check_name type, '工单总数' name from work_event where del_flag = 0
+                union all
+                select region_name, check_name type, '办结总数' name from work_event where del_flag = 0 and state = 3
+                union all
+                select region_name, cycle type, '工单总数' name from wf_event_report where del_flag = 0
+                union all
+                select region_name, cycle type, '工单总数' name from wf_event_report where del_flag = 0 and `status` = 60
+            ) t group by region_name, type, name
+        ) data
+        <where>
+            <if test="cycle != null and cycle != ''">
+                and type = #{cycle}
+            </if>
+        </where>
+        group by region_name, name
+    </select>
+
+    <select id="getEventDeptEndList" resultType="cn.wxgis.jc.screen.domain.vo.count.EventRegionEndCountVo">
+        select region_name, name, type, sum(count) count from (
+            select region_name, type, name, count(1) count from (
+                SELECT '工单总数' name, a.id, a.check_name type, substring_index(substring_index(a.depart_name,',',b.help_topic_id + 1),',' ,- 1) AS region_name
+                FROM work_event a JOIN mysql.help_topic b ON b.help_topic_id <![CDATA[ < ]]> (length(a.depart_name) - length(REPLACE (a.depart_name, ',', '')) + 1)
+                union
+                SELECT '工单总数' name,  r.id, r.cycle type, substring_index(substring_index(r.dept_names,',',b.help_topic_id + 1),',' ,- 1) AS region_name
+                FROM wf_event_report r JOIN mysql.help_topic b ON b.help_topic_id <![CDATA[ < ]]> (length(r.dept_names) - length(REPLACE (r.dept_names, ',', '')) + 1)
+                union
+                SELECT '办结总数' name, a.id, a.check_name type, substring_index(substring_index(a.depart_name,',',b.help_topic_id + 1),',' ,- 1) AS region_name
+                FROM work_event a JOIN mysql.help_topic b ON b.help_topic_id <![CDATA[ < ]]> (length(a.depart_name) - length(REPLACE (a.depart_name, ',', '')) + 1) where a.state = 3
+                union
+                SELECT '办结总数' name, r.id, r.cycle type, substring_index(substring_index(r.dept_names,',',b.help_topic_id + 1),',' ,- 1) AS region_name
+                FROM wf_event_report r JOIN mysql.help_topic b ON b.help_topic_id <![CDATA[ < ]]> (length(r.dept_names) - length(REPLACE (r.dept_names, ',', '')) + 1) where r.status = 60
+            ) data
+            where region_name not in (select name from sys_dept where type = 2) and region_name != ''
+            group by region_name, name, type
+        ) cc
+        <where>
+            <if test="cycle != null and cycle != ''">
+                and type = #{cycle}
+            </if>
+        </where>
+        GROUP BY region_name, name  order by count desc
+    </select>
+
+
+    <select id="getEventCount" resultType="java.lang.Integer">
+        select  IFNULL(sum(count), 0)
+        from (
+            select count(1) count from work_event
+            union
+            select count(1) count from wf_event_report
+        ) data
+    </select>
+
+</mapper>

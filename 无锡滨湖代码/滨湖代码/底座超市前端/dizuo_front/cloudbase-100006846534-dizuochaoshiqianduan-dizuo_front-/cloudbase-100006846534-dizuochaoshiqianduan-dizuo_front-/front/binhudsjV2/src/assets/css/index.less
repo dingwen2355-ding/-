@@ -1,0 +1,683 @@
+// 整体框架
+.ant-layout.ant-layout-has-sider {
+}
+
+// 左侧菜单样式
+.ant-layout-sider.ant-layout-sider-dark {
+  min-width: 240px !important;
+  max-width: 240px !important;
+  height: 100%;
+}
+
+.ant-layout-sider {
+  background: #0e2a61 !important;
+}
+
+.ant-menu-dark,
+.ant-menu-dark .ant-menu-sub {
+  background: #0e2a61 !important;
+}
+
+.ant-menu-submenu-open .ant-menu-submenu-title {
+  background: #123676 !important;
+}
+
+.ant-menu-inline .ant-menu-submenu-title,
+.ant-menu-inline .ant-menu-item {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.ant-menu-dark .ant-menu-item:hover {
+  background: #1a4ca3;
+}
+
+.ant-menu-dark .ant-menu-submenu-active {
+  background: #1a4ca3;
+}
+
+.ant-menu-sub.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title,
+.ant-menu-sub.ant-menu-inline > .ant-menu-item,
+.ant-menu-inline > .ant-menu-item,
+.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title {
+  height: 55px;
+  line-height: 55px;
+  font-size: 14px;
+  color: white;
+}
+
+.ant-menu-dark.ant-menu-inline {
+  overflow-y: scroll !important;
+  height: calc(100% - 54px);
+}
+
+.ant-menu-dark.ant-menu-inline::-webkit-scrollbar {
+  display: none;
+}
+
+.ant-menu-dark.ant-menu-inline {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.ant-menu-inline .ant-menu-item:not(:last-child) {
+  margin-bottom: 0;
+}
+
+// 顶部样式
+.ant-layout-header {
+  height: 64px;
+}
+
+.ant-breadcrumb {
+  font-size: 14px;
+  font-weight: 400;
+  color: #00000045;
+}
+
+.ant-breadcrumb > span:last-child {
+  font-size: 14px;
+  font-weight: 400;
+  color: #00000085;
+}
+
+// 窗口路由样式
+.ant-layout-content {
+  overflow-y: scroll;
+}
+
+.ant-layout-content::-webkit-scrollbar {
+  width: 10px;
+  height: 1px;
+}
+
+.ant-layout-content::-webkit-scrollbar-thumb {
+  background: #dbdbdb;
+}
+
+.ant-layout-content::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+.routerContent {
+  width: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 23px;
+  height: calc(100% - 112px);
+}
+
+// 表单样式修改
+.ant-form label {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.ant-alert-message {
+  color: #fff !important;
+}
+
+.ant-input {
+  height: 32px;
+  padding: 14px 14px;
+}
+
+.head_input {
+  width: 192px;
+}
+
+.h100 .ant-form-item {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.ant-calendar-picker-input {
+  padding: 0 14px !important;
+}
+
+// 表单弹窗边距修改
+.formDilaog .ant-modal-body {
+  padding: 25px;
+  padding-bottom: 20px;
+}
+
+.Dilaoglonely .ant-modal-body {
+  min-height: 26vw;
+  height: 30vw;
+  // max-height: 33vw;
+  overflow-y: auto;
+}
+
+// 实有房屋 人口绑定 新增人口的弹窗
+.addDialog .ant-modal {
+  width: 770px !important;
+
+  .ant-modal-content {
+    width: 100%;
+  }
+}
+
+.addDialog .ant-modal-body {
+  min-height: 26vw;
+  max-height: 33vw;
+  overflow-y: auto;
+}
+
+// 地图弹窗
+#mapDialog .ant-modal {
+  width: 770px !important;
+
+  .ant-modal-content {
+    width: 100%;
+  }
+}
+
+#mapDialog .ant-modal-body {
+  min-height: 23vw;
+  overflow-y: auto;
+}
+
+.stepsWrap {
+  padding-bottom: 21px;
+  border-bottom: 1px solid #ebebeb;
+
+  .stepsBox {
+    width: 417px;
+    margin: 0 auto;
+  }
+}
+
+.steps-content {
+  margin-top: 17px;
+}
+
+// 表单详情
+.detailDialog .basicInfo {
+  width: 100%;
+  position: relative;
+
+  li {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+}
+
+.detailDialog .basicInfo li {
+  height: 56px;
+  line-height: 56px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.detailDialog .basicInfo li:last-child {
+  border-bottom: none;
+}
+
+.detailDialog .basicList > span {
+  display: inline-block;
+  width: 33%;
+}
+
+.detailDialog .basicList > span.span2 {
+  width: 66%;
+}
+
+.detailDialog .basicList > span.span3 {
+  width: 100%;
+}
+
+.detailDialog .basicList > span > span {
+  color: #000;
+  opacity: 0.85;
+}
+
+.detailDialog .basicList.basicImgList {
+  height: 8vw;
+}
+
+.detailDialog .basicList.basicImgList > span {
+  display: flex;
+  align-items: center;
+}
+
+.detailDialog .basicRow span span {
+  color: #000;
+  opacity: 0.85;
+}
+
+.detailDialog .basicInfo label {
+  font-weight: 400;
+  font-size: 14px;
+  color: #000;
+  margin-right: 15px;
+  float: left;
+  text-align: right;
+}
+
+.detailDialog .basicInfo .buildName {
+  display: inline-block;
+  width: 120px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.picture {
+  position: absolute !important;
+  right: 0px;
+  top: 40px;
+  width: 260px;
+  height: 260px;
+  background: #fff;
+
+  .border {
+    width: calc(100% - 3.9vw);
+    height: calc(100% - 2vw);
+    margin: 0.5vw auto;
+    border: 1px solid #e9e9e9;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 163px;
+      height: 204px;
+      object-fit: contain;
+    }
+  }
+}
+
+.detailDialog .imgList {
+  display: inline-block;
+  background: #fff;
+  height: 6vw;
+  width: calc(100% - 200px);
+
+  img {
+    width: 21%;
+    height: 100%;
+    padding: 2%;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 2px;
+    background: #fff;
+    margin: 0vw 2%;
+  }
+}
+.detailDialog .imgList img:nth-of-type(1) {
+  margin-left: 0;
+}
+
+.detailDialog .legalImgs {
+  img {
+    border: 0px solid rgba(0, 0, 0, 0.15) !important;
+    padding: 0px;
+  }
+}
+
+.detailDialog .houseImgs {
+  img {
+    border: 0px solid rgba(0, 0, 0, 0.15) !important;
+    padding: 0px;
+    margin: 0;
+    margin-right: 10px;
+  }
+}
+
+.spacing {
+  padding: 20px 0;
+}
+
+// 滚动条修改
+.ocnscrollbarno.ant-menu-inline::-webkit-scrollbar {
+  display: none;
+}
+
+.ocnscrollbarno {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #dbdbdb;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+//切换tab样式
+.ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab {
+  border-radius: 2px 2px 0 0 !important;
+  background: #fff;
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 14px;
+  margin-right: 15px;
+  height: 36px;
+  font-weight: 400;
+}
+
+.ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-nav-container {
+  height: 36px;
+}
+
+.ant-tabs-bar {
+  margin: 0;
+}
+
+//tab选中
+.ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab-active {
+  color: #fff;
+  background: #1890ff;
+}
+
+//表格顶部按钮和图标样式
+//表格顶部按钮和图标样式
+.redColor {
+  width: 50px;
+  color: #ff4d4f;
+}
+
+.redColor:hover {
+  color: #ff3a3c;
+}
+
+.green {
+  color: #52c41a;
+}
+
+.blue {
+  color: #1890ff;
+}
+
+.ant-table-placeholder {
+  border-bottom: none !important;
+}
+
+.tool_icon {
+  width: 40px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.ant_line {
+  border-bottom: 1px solid #e9e9e9;
+}
+
+/*表格样式*/
+.tableWap {
+  background: #ffffff;
+  height: 92%;
+}
+.tableWap .ant_row {
+  margin-bottom: 0;
+}
+
+.extTable .ant-table-column-title {
+  // font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.extTable .ant-table-pagination.ant-pagination {
+  padding-right: 24px;
+}
+
+.extTable .ant-pagination-total-text {
+  position: absolute !important;
+  left: 24px !important;
+  cursor: pointer;
+}
+
+.routerContent .extTable .ant-spin-nested-loading,
+.routerContent .extTable .ant-spin-container,
+.routerContent .extTable .ant-table-empty,
+.routerContent .extTable .ant-table-content {
+  height: 100%;
+}
+
+.routerContent .extTable .ant-table-placeholder {
+  height: calc(100% - 40px);
+}
+
+.routerContent .extTable .ant-table-placeholder .ant-empty-normal {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.extTable {
+  height: calc(100% - 70px);
+}
+
+.extTable .ant-table-tbody td > span {
+  color: rgba(0, 0, 0, 0.65);
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.extTable .ant-table-tbody td:nth-of-type(2) span {
+  color: #1890ff;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.tabextTablele .ant-table-tbody td a {
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.extTable .ant-table-thead > tr > th,
+.extTable .ant-table-tbody > tr > td {
+  padding: 13px !important;
+  height: 48px !important;
+}
+
+.table_btn {
+  text-decoration: none;
+}
+
+// 按钮间隔
+.btn_space {
+  margin-left: 18px;
+}
+
+//按钮 间隔线
+.table_btn::after {
+  display: inline-block;
+  width: 1px;
+  height: 20px;
+  margin: 0 6px;
+  content: "|";
+  color: rgba(0, 0, 0, 0.1);
+}
+
+.anticon {
+  font-size: 16px !important;
+}
+
+//按钮 批量删除
+.btn_warning {
+  background: #faad14;
+  color: #fff;
+  border-color: #faad14;
+}
+
+.btn_warning:hover {
+  background: #fbbd42;
+  border-color: #faad14;
+  color: white;
+}
+
+//框架栅格样式修改
+.ant_row {
+  margin-bottom: 8px;
+  padding: 0 24px;
+  background: #fff;
+  min-height: 50px;
+}
+
+//文字加粗样式
+.fbold {
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 22px;
+  color: #171717;
+}
+
+//列表时间选择中间间距
+.ant-calendar-picker {
+  margin-right: 10px;
+}
+
+//tooltip字体样式
+.ant-tooltip-inner {
+  font-size: 14px;
+  // font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #ffffff;
+}
+
+//提示信息
+.ant-message {
+  top: 258px !important;
+}
+
+.pswp--zoom-allowed .pswp__img {
+  cursor: default !important;
+}
+
+.zizhu {
+  display: flex;
+  align-items: center;
+
+  i {
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(180deg, #52c41a 0%, #3fae08 100%);
+    border-radius: 50%;
+    opacity: 1;
+  }
+
+  p {
+    font-size: 14px;
+    font-weight: 400;
+    color: #302626;
+    margin-left: 4px;
+  }
+}
+
+.chuzu {
+  display: flex;
+  align-items: center;
+
+  i {
+    width: 12px;
+    height: 12px;
+
+    background: #ff4d4f;
+    border-radius: 50%;
+    opacity: 1;
+  }
+
+  p {
+    font-size: 14px;
+    font-weight: 400;
+    color: #302626;
+    margin-left: 4px;
+  }
+}
+
+.kongguan {
+  display: flex;
+  align-items: center;
+
+  i {
+    width: 12px;
+    height: 12px;
+    background: #d4d7dc;
+    border-radius: 50%;
+    opacity: 1;
+  }
+
+  p {
+    font-size: 14px;
+    font-weight: 400;
+    color: #302626;
+    margin-left: 4px;
+  }
+}
+
+.tableWap .btn_warning:focus,
+.buttonGroups .btn_warning:focus {
+  background: #faad14;
+  border-color: #faad14;
+  color: #fff;
+}
+
+.ant-form-inline .ant-form-item {
+  margin-right: 0.6vw !important;
+}
+
+// 弹窗标题加粗
+.ant-modal-title {
+  font-weight: bold;
+}
+.imgess {
+  width: 23px;
+  height: 23px;
+}
+
+.btn-success {
+  color: #fff;
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+}
+.sta-account {
+  float: left;
+  margin: 0px 20px 0px 5px;
+  overflow: hidden;
+  width: 200px;
+  color: #ffffff;
+  padding: 10px;
+  font-family: "microsoft yahei";
+  border-radius: 4px;
+}
+.btn-info {
+  color: #fff;
+  background-color: #5bc0de;
+  border-color: #46b8da;
+}
+.dataList {
+  display: flex;
+  align-items: center;
+  min-height: 100px;
+}
+.typeList {
+  display: flex;
+}
+.typeList > img {
+  margin-right: 10px;
+  width: 45px;
+  height: 45px;
+}
+.sta-detail {
+  padding-left: 10px;
+  border-left: 1px solid #fff;
+}
+.chartstyle {
+  width: 40vw;
+  height: 350px;
+  margin: 10px;
+  border: 1px solid #f2f2f2;
+  padding: 20px;
+}

@@ -1,0 +1,40 @@
+server:
+  port: 9200
+
+jccloud:
+  nacos:
+    server-addr: 116.204.86.231:8848
+    namespace: civilization
+    username: nacos
+    password: nacos
+#    server-addr: localhost:8848
+#    namespace: test
+
+# Spring
+spring:
+  application:
+    # 应用名称
+    name: jc-file
+  profiles:
+    # 环境配置
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: ${jccloud.nacos.server-addr}
+        namespace: ${jccloud.nacos.namespace}
+        username: ${jccloud.nacos.username}
+        password: ${jccloud.nacos.password}
+      config:
+        # 配置中心地址
+        server-addr: ${jccloud.nacos.server-addr}
+        namespace: ${jccloud.nacos.namespace}
+        username: ${jccloud.nacos.username}
+        password: ${jccloud.nacos.password}
+        # 配置文件格式
+        file-extension: yml
+        # 共享配置
+        shared-configs:
+          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+          - datasource-system-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}

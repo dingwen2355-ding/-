@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslc.modules.szbh.mapper.AuthorityApplyForMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="authorityApplyForResultMap" type="com.jslc.modules.szbh.entity.AuthorityApplyFor">
+        <result column="id" property="id"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="account" property="account"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="application_management_id" property="applicationManagementId"/>
+        <result column="biz_id" property="bizId"/>
+        <result column="reason" property="reason"/>
+        <result column="review_opinion" property="reviewOpinion"/>
+        <result column="review_status" property="reviewStatus"/>
+        <result column="applicant_dept_type" property="applicantDeptType"/>
+        <result column="applicant_name" property="applicantName"/>
+        <result column="applicant_phone" property="applicantPhone"/>
+        <result column="dept_name" property="deptName"/>
+    </resultMap>
+
+    <resultMap id="authorityApplyForVOResultMap" type="com.jslc.modules.szbh.vo.AuthorityApplyForVO" extends="authorityApplyForResultMap">
+
+    </resultMap>
+
+
+    <select id="selectAuthorityApplyForPage" resultMap="authorityApplyForVOResultMap">
+        select baaf.*,bam.name as appName from bh_authority_apply_for baaf
+        inner join bh_application_management bam on bam.id = baaf.application_management_id and bam.is_deleted = 0
+        where baaf.is_deleted = 0
+        <if test="managementIds != null">
+            and bam.id in
+            <foreach collection="managementIds" item="managementId" index="index" open="(" close=")" separator=",">
+                #{managementId}
+            </foreach>
+        </if>
+        order by baaf.create_time desc
+    </select>
+    <select id="getDetail" resultMap="authorityApplyForVOResultMap">
+        select baaf.* ,bam.name as appName  from bh_authority_apply_for baaf
+--         left join bh_dept bd on bd.dept_id = baaf.dept_id and bd.is_deleted = 0
+        inner join bh_application_management bam on bam.id = baaf.application_management_id and bam.is_deleted = 0
+--         left join bh_user bu on bu.account = baaf.applicant and bu.is_deleted = 0
+        where baaf.is_deleted = 0 and baaf.id = #{id}
+    </select>
+
+    <select id="authorityApplyForList" resultType="com.jslc.modules.szbh.vo.AuthorityApplyForRestVO">
+        select baaf.*,bd.name as deptName ,bam.name as applicationName,bu.name as applicantName,
+        baaf.create_time applicationTime,baaf.update_time approveTime,bd1.name applicationDeptName
+        from bh_authority_apply_for baaf
+        left join bh_dept bd on bd.dept_id = baaf.dept_id and bd.is_deleted = 0
+        left join bh_application_management bam on bam.id = baaf.application_management_id and bam.is_deleted = 0
+        left join bh_dept bd1 on bd1.dept_id = bam.dept_id and bd1.is_deleted = 0
+        left join bh_user bu on bu.account = baaf.applicant and bu.is_deleted = 0
+        where baaf.is_deleted = 0 and baaf.applicant = #{applicant}
+        order by baaf.create_time desc
+    </select>
+    <select id="getUserApplyFor" resultMap="authorityApplyForVOResultMap">
+        select baaf.*,bd.name as deptName ,bam.name as appName,bam.app_id as appId
+        from bh_authority_apply_for baaf
+        left join bh_dept bd on bd.dept_id = baaf.dept_id and bd.is_deleted = 0
+        left join bh_application_management bam on bam.id = baaf.application_management_id and bam.is_deleted = 0
+        left join bh_user bu on bu.account = baaf.applicant and bu.is_deleted = 0
+        where baaf.is_deleted = 0
+        <if test="reviewStatus != null">
+            and baaf.review_status = #{reviewStatus}
+        </if>
+        <if test="account != null">
+            and baaf.applicant = #{account}
+        </if>
+        order by baaf.create_time desc
+
+    </select>
+    <select id="getApplicationApplyForRanking" resultMap="authorityApplyForVOResultMap">
+        select baaf.* ,bam.name as appName,bam.app_id as appId
+        from bh_authority_apply_for baaf
+        inner join bh_application_management bam on bam.id = baaf.application_management_id and bam.is_deleted = 0
+        where baaf.is_deleted = 0 and baaf.review_status = 1 and baaf.update_time between #{start} and #{end}
+
+    </select>
+    <select id="getApplyForStatistics" resultMap="authorityApplyForVOResultMap">
+        select baaf.* ,bam.name as appName,bam.app_id as appId
+        from bh_authority_apply_for baaf
+        inner join bh_application_management bam on bam.id = baaf.application_management_id and bam.is_deleted = 0
+        where baaf.is_deleted = 0
+        <if test="start != null and end != null">
+            and baaf.create_time between #{start} and #{end}
+        </if>
+    </select>
+    <select id="getUserInfo" resultType="com.jslc.modules.szbh.vo.DeptUserVO">
+        select bu.name as userName,bu.phone,bd.dept_name as deptName
+        from blade_user bu
+        left join blade_dept bd on bd.id = bu.dept_id and bd.is_deleted =0
+        where bu.is_deleted = 0 and bu.account = #{userAccount}
+    </select>
+</mapper>

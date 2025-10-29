@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.screen.web.mapper.CivilizationMapper">
+
+    <select id="activityCount" resultType="cn.wxgis.jc.screen.domain.vo.civilization.CivilizationCountVo">
+        select region_name type, count from screen_activity
+        order by count desc
+    </select>
+
+    <select id="activityList" resultType="cn.wxgis.jc.screen.domain.vo.civilization.ActivityVo">
+        select va.*, r.name region_name, dd.dict_label type_name, f.url icon_img
+        from data_volunteer_activity va
+            left join sys_dict_data dd on dd.dict_value = va.type and dd.dict_type = 'data_volunteer_activity_type'
+            left join sys_dept r on r.id = va.region_code
+            left join sys_file f on f.id = va.icon
+        order by va.create_time desc
+    </select>
+
+    <select id="advancedCountByType" resultType="cn.wxgis.jc.screen.domain.vo.civilization.CivilizationCountVo">
+        select type, count(id) count from (
+            select id, '新时代好少年' type  from data_civilization_advanced where del_flag = 0 and recommend_type = 1
+            union
+            select id, '身边好人' type from data_civilization_advanced where del_flag = 0 and recommend_type = 2
+            union
+            select id, '最美人物' type from data_civilization_advanced where del_flag = 0 and recommend_type = 3
+            union
+            select id, '岗位学雷锋标兵' type  from data_civilization_advanced where del_flag = 0 and recommend_type = 4
+        ) t group by type
+    </select>
+
+    <select id="advancedCountByRegion"
+            resultType="cn.wxgis.jc.screen.domain.vo.civilization.AdvancedCountRegionVo">
+        select recommend_type, region_name, dict_label type, count(1) count
+        from (
+            select a.recommend_type, IFNULL(r.name, '其它单位') region_name, dd.dict_label
+            from data_civilization_advanced a
+            left join sys_dept r on r.id = a.region_code
+            left join sys_dict_data dd on dd.dict_value = a.recommend_type and dd.dict_type = 'data_recommend_type'
+            ) t
+        group by region_name, recommend_type
+    </select>
+
+    <select id="advancedKeyword" resultType="cn.wxgis.jc.screen.domain.vo.civilization.CivilizationCountVo">
+        select IFNULL(dd.dict_label, '其它') type, count(1) count
+        from data_civilization_advanced a
+            left join sys_dict_data dd on dd.dict_value = a.select_type and dd.dict_type = 'data_civilization_advanced_type'
+        group by a.select_type
+            limit 0, 5
+    </select>
+
+    <select id="advancedList" resultType="cn.wxgis.jc.screen.domain.vo.civilization.AdvancedVo">
+        select a.*, dr.dict_label recommend_name, dt.dict_label type, r.name region_name
+        from data_civilization_advanced a
+         left join sys_dict_data dr on dr.dict_value = a.recommend_type and dr.dict_type = 'data_recommend_type'
+         left join sys_dict_data dt on dt.dict_value = a.select_type and dt.dict_type = 'data_civilization_advanced_type'
+         left join sys_dept r on r.id = a.region_code
+            order by a.create_time desc
+    </select>
+
+    <select id="townList" resultType="cn.wxgis.jc.screen.domain.vo.civilization.TownVo">
+        select t.*, dt.dict_label type, r.name region_name, f.url icon_img
+        from data_civilization_town t
+        left join sys_dict_data dt on dt.dict_value = t.select_type and dt.dict_type = 'data_civilization_town_type'
+        left join sys_dept r on r.id = t.region_code
+        left join sys_file f on f.id = t.icon
+        order by t.create_time desc
+    </select>
+
+    <select id="companyCount" resultType="cn.wxgis.jc.screen.domain.vo.civilization.CivilizationCountVo">
+        select d.dict_label type, count(1) count
+        from data_civilization_company c
+            left join sys_dict_data d on d.dict_type = 'data_civilization_company_type' and d.dict_value = c.select_type
+        group by c.select_type
+    </select>
+
+    <select id="companyList" resultType="cn.wxgis.jc.screen.domain.vo.civilization.CompanyVo">
+        select c.*, dt.dict_label type, r.name region_name, f.url icon_img
+        from data_civilization_company c
+        left join sys_dict_data dt on dt.dict_value = c.select_type and dt.dict_type = 'data_civilization_company_type'
+        left join sys_dept r on r.id = c.region_code
+        left join sys_file f on f.id = c.icon
+        order by c.create_time desc
+    </select>
+
+    <select id="schoolCount" resultType="cn.wxgis.jc.screen.domain.vo.civilization.CivilizationCountVo">
+        select d.dict_label type, count(1) count
+        from data_civilization_school s
+            left join sys_dict_data d on d.dict_type = 'data_civilization_school_type' and d.dict_value = s.select_type
+        group by s.select_type
+    </select>
+
+    <select id="schoolList" resultType="cn.wxgis.jc.screen.domain.vo.civilization.SchoolVo">
+        select s.*, da.dict_label attribute_name, dt.dict_label type, r.name region_name, f.url icon_img
+        from data_civilization_school s
+        left join sys_dict_data da on da.dict_value = s.attribute and da.dict_type = 'data_civilization_school_attribute'
+        left join sys_dict_data dt on dt.dict_value = s.select_type and dt.dict_type = 'data_civilization_school_type'
+        left join sys_dept r on r.id = s.region_code
+        left join sys_file f on f.id = s.icon
+        order by s.create_time desc
+    </select>
+
+    <select id="familyList" resultType="cn.wxgis.jc.screen.domain.vo.civilization.FamilyVo">
+        select f.*, r.name region_name, ff.url icon_img
+        from data_civilization_family f
+        left join sys_dept r on r.id = f.region_code
+        left join sys_file ff on ff.id = f.icon
+        order by f.create_time desc
+    </select>
+
+
+</mapper>

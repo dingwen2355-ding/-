@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.wxgis.jc.screen.web.mapper.AssessMapper">
+
+    <select id="getMonth" resultType="java.lang.String">
+        select month from assess_civilization_level group by month order by month desc
+        <if test="limit != null">
+            limit 0, #{limit}
+        </if>
+    </select>
+
+    <select id="getCycle" resultType="java.lang.String">
+        select name from quota_assess_cycle group by `name` order by number desc
+        <if test="limit != null">
+            limit 0, #{limit}
+        </if>
+    </select>
+
+    <select id="assessList" resultType="cn.wxgis.jc.screen.domain.vo.assess.AssessVo">
+        select * from assess_civilization_level
+        <where>
+            and month = #{month}
+            <if test="null != type and type != ''">
+                and type = #{type}
+            </if>
+        </where>
+        order by score desc
+    </select>
+
+
+    <select id="assessListGroupByRegion" resultType="cn.wxgis.jc.screen.domain.vo.assess.AssessVo">
+        select region_name, month, score from assess_civilization_level
+        where month in
+        <foreach collection="cycles" open="(" close=")" separator="," item = "cycle" index="index">
+            #{cycle}
+        </foreach>
+        group by region_name, month
+        order by month desc
+    </select>
+
+    <select id="assessTrend" resultType="cn.wxgis.jc.screen.domain.vo.assess.AssessVo">
+        select month, sum(score) score from assess_civilization_level
+        where month in
+        <foreach collection="cycles" open="(" close=")" separator="," item = "cycle" index="index">
+            #{cycle}
+        </foreach>
+        <if test="regionName != null and regionName != ''">
+            and region_name = #{regionName}
+        </if>
+        group by month
+    </select>
+
+</mapper>

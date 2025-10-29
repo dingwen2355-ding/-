@@ -1,0 +1,68 @@
+<template>
+    <div>
+        <div style="padding:10px 0 5px 0;" class="table-operator">
+        <a-switch v-model="carousel" checked-children="轮播" un-checked-children="固定" style="margin:0 5px" />
+        <a-button type="primary">
+        <a-icon type="left" />上一页
+      </a-button>
+      <a-button type="primary">
+        下一页<a-icon type="right" />
+      </a-button>
+      布局：<a-select :value="grid.join('X')" @change="changeGrid" :options="gridOptions">
+        <!-- <a-select-option key="2*2" :value=""></a-select-option> -->
+      </a-select>
+</div>
+   
+<a-row type="flex" justify="space-between" align="middle">
+  <a-col v-for="(item,index) in dataSource" :key="index" :span="24/grid[1]">
+    <VideoFlv    style="margin: 4px;">
+
+</VideoFlv>
+</a-col>
+</a-row>
+ <!--    <div style="display:flex;    justify-content: space-evenly;    flex-wrap: wrap;">
+        <template v-for="item in dataSource">
+            <VideoFlv    style="margin: 4px;width: 400px;height: 300px">
+
+</VideoFlv>
+        </template>
+       
+    </div> -->
+</div>
+</template>
+
+<script>
+import VideoFlv from "../../../components/Video/videoFlv.vue";
+import { JeecgListMixin } from "../../../mixins/JeecgListMixin";
+let gridOptions=[{label:'2X2',value:'2X2'},
+{label:'2X3',value:'2X3'},
+{label:'3X3',value:'3X3'},
+{label:'3X4',value:'3X4'},
+]
+export default {
+    components: { VideoFlv },
+    mixins:[JeecgListMixin],
+    data(){
+        return{
+        carousel:true,
+        grid:[3,3],  // index0==row,  index1==col
+        gridOptions,
+        dataSource:[]}},
+    methods:{
+        loadData(){
+            this.dataSource=[]
+            for(let index=0;index<this.grid[0]*this.grid[1];index++){
+                this.dataSource.push({})
+            }
+        },
+        changeGrid(value){
+           this.grid=value.split('X')
+           this.loadData()
+        }
+    }
+}
+</script>
+
+<style>
+
+</style>
